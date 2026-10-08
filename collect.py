@@ -41,13 +41,13 @@ def evaluate_signal(prix_eur, item):
     strong = item.get("target_strong_buy")
     target = item.get("target_buy")
     if strong and prix_eur <= strong:
-        return "STRONG_BUY", f"🔥🔥 ACHAT FORT : {prix_eur:.0f} EUR <= {strong} EUR"
+        return "STRONG_BUY", f"ACHAT FORT : {prix_eur:.0f} EUR <= {strong} EUR"
     if target and prix_eur <= target:
-        return "BUY", f"🔥 ACHAT : {prix_eur:.0f} EUR <= {target} EUR"
+        return "BUY", f"ACHAT : {prix_eur:.0f} EUR <= {target} EUR"
     if target:
         ecart = (prix_eur - target) / target * 100
-        return "WAIT", f"⏸  ATTENDRE : {prix_eur:.0f} EUR > {target} EUR (+{ecart:.0f}%)"
-    return "WATCH", f"👁  WATCH : {prix_eur:.0f} EUR"
+        return "WAIT", f"ATTENDRE : {prix_eur:.0f} EUR > {target} EUR (+{ecart:.0f}%)"
+    return "WATCH", f"WATCH : {prix_eur:.0f} EUR"
 
 
 def fetch_one(item):
