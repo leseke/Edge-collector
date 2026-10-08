@@ -1,43 +1,53 @@
-import os, requests
+import os
 from datetime import datetime
 
-APIFY = os.environ["APIFY_TOKEN"]
-ACTOR = "daddyapi~vinted-scraper"
+# Import resilient
+try:
+    from vinted import Vinted
+    VINTED_AVAILABLE = True
+except ImportError:
+    VINTED_AVAILABLE = False
+    print("[vinted] module 'vinted-api-wrapper' non installe", flush=True)
 
 
 def fetch_vinted(query, domain="fr", count=50):
-    """Vinted via Apify (temporaire en attendant une solution gratuite)."""
-    url = (f"https://api.apify.com/v2/acts/{ACTOR}"
-           f"/run-sync-get-dataset-items?token={APIFY}")
-    payload = {"searchQuery": query, "domain": domain, "maxItems": count}
+    """Recherche des annonces Vinted via vinted-api-wrapper."""
+    if not VINTED_AVAILABLE:
+        return None
     try:
-        r = requests.post(url, json=payload, timeout=300)
+        vinted = Vinted(domain=domain)
+        # L'API attend une URL de recherche
+        search_url = f"https://www.vinted.{domain}/catalog?search_text={query}"
+        items = vinted.items.search(search_url, count, 1)
     except Exception as e:
-        print(f"[vinted] exception reseau : {e}", flush=True)
+        print(f"[vinted] exception : {e}", flush=True)
         return None
-    if r.status_code != 200:
-        print(f"[vinted] HTTP {r.status_code} : {r.text[:200]}", flush=True)
-        return None
-    items = r.json()
+
     if not items:
+        print(f"[vinted] {query} : aucun item", flush=True)
         return None
+
     prices = []
     for it in items:
-        p = it.get("price") or it.get("priceEur")
+        p = getattr(it, "price", None) or getattr(it, "price_eur", None)
         if p is None:
             continue
         try:
             prices.append(float(str(p).replace("€", "").replace(",", ".").strip()))
         except (ValueError, TypeError):
             continue
+
     if not prices:
+        print(f"[vinted] aucun prix sur {len(items)} items", flush=True)
         return None
+
     prices_sorted = sorted(prices)
     n = len(prices_sorted)
     median = prices_sorted[n // 2]
     k = max(1, n // 10)
     trimmed = prices_sorted[k:n-k] if n > 2*k else prices_sorted
     trimmed_avg = sum(trimmed) / len(trimmed)
+
     return {
         "product_id": query.lower().replace(" ", "_"),
         "source": "vinted_fr",
