@@ -5,8 +5,11 @@ APIFY = os.environ["APIFY_TOKEN"]
 ACTOR = "caffein.dev~ebay-sold-listings"
 
 
-def fetch_sold(query, days=90, count=200, condition="any"):
-    """Recupere les ventes eBay confirmees via Apify."""
+def fetch_sold(query, days=90, count=100, condition="new"):
+    """Recupere les ventes eBay confirmees via Apify.
+    condition='new' filtre les produits neufs uniquement.
+    Dédoublonne par itemId pour eviter les faux comptes.
+    """
     url = (f"https://api.apify.com/v2/acts/{ACTOR}"
            f"/run-sync-get-dataset-items?token={APIFY}")
     payload = {
@@ -20,6 +23,27 @@ def fetch_sold(query, days=90, count=200, condition="any"):
     if not items:
         return None
 
+    # Filtre 1 : etat du produit (si 'new')
+    if condition == "new":
+        items = [it for it in items
+                 if (it.get("condition") or "").lower() in
+                 ("brand new", "new", "neu", "neuf")]
+        if not items:
+            return None
+
+    # Filtre 2 : dedoublonnage par itemId
+    seen = set()
+    unique = []
+    for it in items:
+        iid = it.get("itemId")
+        if iid and iid in seen:
+            continue
+        if iid:
+            seen.add(iid)
+        unique.append(it)
+    items = unique
+
+    # Extraction des prix
     prices = []
     for it in items:
         p = it.get("soldPrice")
@@ -36,6 +60,7 @@ def fetch_sold(query, days=90, count=200, condition="any"):
     prices_sorted = sorted(prices)
     median = prices_sorted[len(prices_sorted) // 2]
 
+    # Comptage des ventes sur 30 jours glissants
     now = datetime.utcnow()
     cutoff_30 = now - timedelta(days=30)
     recent_30 = 0
@@ -52,7 +77,7 @@ def fetch_sold(query, days=90, count=200, condition="any"):
 
     return {
         "product_id": query.lower().replace(" ", "_"),
-        "source": "ebay_sold",
+        "source": "ebay_sold_us",
         "captured_at": now.isoformat(),
         "sold_price_avg": round(sum(prices) / len(prices), 2),
         "sold_price_median": round(median, 2),
