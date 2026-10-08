@@ -1,6 +1,5 @@
 from datetime import datetime
 
-# Import resilient : si 'redd' n'est pas installe, on desactive le connecteur
 try:
     from redd import Redd
     REDD_AVAILABLE = True
@@ -14,16 +13,20 @@ def fetch_reddit(subreddit, query, limit=30):
         return None
     try:
         with Redd() as r:
-            posts = list(r.search(query, subreddit=subreddit, limit=limit))
+            posts = list(r.search(query, limit=limit))
     except Exception as e:
         print(f"[reddit] exception : {e}", flush=True)
         return None
+
     if not posts:
+        print(f"[reddit] {query} : aucun post", flush=True)
         return None
+
     scores = [p.score for p in posts if hasattr(p, "score")]
     comments = [p.num_comments for p in posts if hasattr(p, "num_comments")]
     avg_score = sum(scores) / len(scores) if scores else 0
     avg_comments = sum(comments) / len(comments) if comments else 0
+
     now = datetime.utcnow()
     recent = 0
     for p in posts:
@@ -31,6 +34,7 @@ def fetch_reddit(subreddit, query, limit=30):
             dt = datetime.utcfromtimestamp(p.created_utc)
             if (now - dt).days <= 30:
                 recent += 1
+
     return {
         "product_id": f"reddit_{subreddit}_{query}".lower().replace(" ", "_"),
         "source": "reddit",
