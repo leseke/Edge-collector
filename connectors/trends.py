@@ -1,40 +1,74 @@
-import os, requests
+import os
+import requests
 from datetime import datetime
 
-APIFY = os.environ["APIFY_TOKEN"]
-ACTOR = "apify~google-trends-scraper"
-
+API_KEY = os.environ.get("TRENDSMCP_API_KEY")
+ENDPOINT = "https://api.trendsmcp.ai/mcp"
 
 def fetch_trends(keyword, geo="FR", timeframe="today 12-m"):
-    url = (f"https://api.apify.com/v2/acts/{ACTOR}"
-           f"/run-sync-get-dataset-items?token={APIFY}")
-    payload = {"searchTerms": [keyword]}
-    r = requests.post(url, json=payload, timeout=300)
+    """Récupère l'accélération Google Trends via l'API trendsmcp.ai."""
+    if not API_KEY:
+        print("[trends] TRENDSMCP_API_KEY absent", flush=True)
+        return None
+
+    payload = {
+        "jsonrpc": "2.0",
+        "method": "tools/call",
+        "params": {
+            "name": "google_trends_interest_over_time",
+            "arguments": {
+                "query": keyword,
+                "geo": geo,
+                "time_range": timeframe,
+            },
+        },
+        "id": 1,
+    }
+
+    try:
+        r = requests.post(
+            ENDPOINT,
+            json=payload,
+            headers={"Authorization": f"Bearer {API_KEY}"},
+            timeout=60,
+        )
+    except Exception as e:
+        print(f"[trends] exception réseau : {e}", flush=True)
+        return None
+
     if r.status_code != 200:
-        print(f"[trends] HTTP {r.status_code} - {r.text[:200]}", flush=True)
+        print(f"[trends] HTTP {r.status_code} - {r.text[:300]}", flush=True)
         return None
 
     data = r.json()
-    if not data or not isinstance(data, list):
-        print("[trends] reponse invalide", flush=True)
+    result = data.get("result", {})
+    content = result.get("content", [])
+    if not content:
+        print("[trends] pas de contenu dans la réponse", flush=True)
         return None
 
-    first = data[0]
-    timeline = first.get("interestOverTime_timelineData", [])
+    # La réponse peut être du texte JSON ou un objet structuré
+    timeline = []
+    for c in content:
+        if isinstance(c, dict) and c.get("type") == "text":
+            try:
+                inner = c.get("text", "[]")
+                timeline = eval(inner) if isinstance(inner, str) else inner
+            except Exception:
+                pass
     if not timeline:
-        timeline = first.get("timelineData", [])
-    if not timeline:
-        print("[trends] pas de timeline", flush=True)
+        print("[trends] timeline vide", flush=True)
         return None
 
     values = []
     for d in timeline:
         v = d.get("value")
-        if v and isinstance(v, list) and len(v) > 0:
+        if v:
             try:
-                values.append(int(v[0]))
+                values.append(int(v))
             except (ValueError, TypeError):
                 continue
+
     if not values:
         return None
 
@@ -43,7 +77,7 @@ def fetch_trends(keyword, geo="FR", timeframe="today 12-m"):
     elif len(values) >= 12:
         recent, older = values[-6:], values[-12:-6]
     else:
-        recent, older = values[-3:], values[:len(values)//2]
+        recent, older = values[-3:], values[:len(values) // 2]
 
     avg_recent = sum(recent) / len(recent) if recent else 0
     avg_older = sum(older) / len(older) if older else 0
