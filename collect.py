@@ -1,9 +1,6 @@
 import os
 from connectors.ebay import fetch_sold as fetch_ebay
 from connectors.cardmarket import fetch_cardmarket
-from connectors.vinted import fetch_vinted
-from connectors.trends import fetch_trends
-from connectors.reddit import fetch_reddit
 from connectors.telegram import send_message, format_alert, send_daily_digest
 from storage import init_db, insert_snapshots
 
@@ -32,11 +29,6 @@ WATCHLIST = [
      "must_all": ["radiance"], "must_any": ["booster box", "display"],
      "must_not": ["case", "sleeve", "playmat", "bundle"],
      "target_buy": 110, "target_strong_buy": 100},
-    {"id": "one_piece_op18_box", "source": "cardmarket",
-     "game": "onepiece", "search_query": "OP-18",
-     "must_all": ["op-18"], "must_any": ["booster box", "display"],
-     "must_not": ["case", "sleeve", "playmat"],
-     "target_buy": 90, "target_strong_buy": 80},
 ]
 
 
@@ -70,7 +62,6 @@ def run():
     init_db()
     results, alerts, digest = [], [], []
 
-    # --- Watchlist principale ---
     for item in WATCHLIST:
         try:
             snap = fetch_one(item)
@@ -101,69 +92,6 @@ def run():
 
         except Exception as e:
             print(f"[{item['source']}] {item['id']} ERROR: {e}", flush=True)
-
-    # --- VINTED ---
-    print("[vinted] debut section vinted", flush=True)
-    VINTED_WATCH = [
-        {"query": "Lorcana Hyperia City", "id": "lorcana_vinted"},
-        {"query": "LEGO Wallace Gromit", "id": "lego_21371_vinted"},
-    ]
-    for item in VINTED_WATCH:
-        try:
-            snap = fetch_vinted(item["query"], domain="fr", count=50)
-            if snap:
-                snap["product_id"] = item["id"]
-                results.append(snap)
-                print(f"[vinted] {item['id']}: "
-                      f"median {snap['sold_price_median']} EUR | "
-                      f"n={snap['_n_listings']} annonces", flush=True)
-            else:
-                print(f"[vinted] {item['id']}: aucun resultat", flush=True)
-        except Exception as e:
-            print(f"[vinted] {item['id']} ERROR: {e}", flush=True)
-
-    # --- GOOGLE TRENDS ---
-    print("[trends] debut section trends", flush=True)
-    TRENDS_WATCH = [
-        {"keyword": "Lorcana", "id": "trends_lorcana"},
-        {"keyword": "LEGO Fortnite", "id": "trends_lego_fortnite"},
-    ]
-    for item in TRENDS_WATCH:
-        try:
-            trend = fetch_trends(item["keyword"])
-            if trend:
-                trend["product_id"] = item["id"]
-                results.append(trend)
-                print(f"[trends] {item['id']}: "
-                      f"acceleration x{trend['trend_acceleration']} "
-                      f"({trend['trend_recent_avg']} vs "
-                      f"{trend['trend_older_avg']})", flush=True)
-            else:
-                print(f"[trends] {item['id']}: aucun resultat", flush=True)
-        except Exception as e:
-            print(f"[trends] {item['id']} ERROR: {e}", flush=True)
-
-    # --- REDDIT ---
-    print("[reddit] debut section reddit", flush=True)
-    REDDIT_WATCH = [
-        {"subreddit": "Lorcana", "query": "Hyperia"},
-        {"subreddit": "LEGO", "query": "Wallace Gromit"},
-        {"subreddit": "OnePieceTCG", "query": "OP-18"},
-    ]
-    for item in REDDIT_WATCH:
-        try:
-            snap = fetch_reddit(item["subreddit"], item["query"], limit=30)
-            if snap:
-                snap["product_id"] = f"reddit_{item['subreddit']}_{item['query']}".lower().replace(" ", "_")
-                results.append(snap)
-                print(f"[reddit] r/{item['subreddit']} '{item['query']}': "
-                      f"{snap['reddit_total']} posts | "
-                      f"score moy {snap['reddit_avg_score']} | "
-                      f"recent 30j {snap['reddit_recent_30d']}", flush=True)
-            else:
-                print(f"[reddit] r/{item['subreddit']} '{item['query']}': aucun resultat", flush=True)
-        except Exception as e:
-            print(f"[reddit] {item['subreddit']} ERROR: {e}", flush=True)
 
     if results:
         insert_snapshots([_flatten(r) for r in results])
