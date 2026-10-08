@@ -9,25 +9,32 @@ def fetch_trends(keyword, geo="FR", timeframe="today 12-m"):
     url = (f"https://api.apify.com/v2/acts/{ACTOR}"
            f"/run-sync-get-dataset-items?token={APIFY}")
     payload = {"searchTerms": [keyword]}
-    print(f"[trends] payload: {payload}", flush=True)
-    r = requests.post(url, json=payload, timeout=180)
-    print(f"[trends] HTTP {r.status_code}", flush=True)
+    r = requests.post(url, json=payload, timeout=300)
     if r.status_code != 200:
-        print(f"[trends] reponse: {r.text[:300]}", flush=True)
+        print(f"[trends] HTTP {r.status_code} - {r.text[:200]}", flush=True)
         return None
+
     data = r.json()
-    if not data:
-        print("[trends] reponse vide", flush=True)
+    if not data or not isinstance(data, list):
+        print("[trends] reponse invalide", flush=True)
         return None
 
-    timeline = []
-    if isinstance(data, list) and data:
-        timeline = data[0].get("timelineData", [])
+    first = data[0]
+    timeline = first.get("interestOverTime_timelineData", [])
     if not timeline:
-        print("[trends] pas de timelineData", flush=True)
+        timeline = first.get("timelineData", [])
+    if not timeline:
+        print("[trends] pas de timeline", flush=True)
         return None
 
-    values = [int(d.get("value", [0])[0]) for d in timeline if d.get("value")]
+    values = []
+    for d in timeline:
+        v = d.get("value")
+        if v and isinstance(v, list) and len(v) > 0:
+            try:
+                values.append(int(v[0]))
+            except (ValueError, TypeError):
+                continue
     if not values:
         return None
 
