@@ -69,7 +69,7 @@ def run():
     init_db()
     results, alerts, digest = [], [], []
 
-    # Watchlist principale (prix)
+    # --- Watchlist principale ---
     for item in WATCHLIST:
         try:
             snap = fetch_one(item)
@@ -101,24 +101,30 @@ def run():
         except Exception as e:
             print(f"[{item['source']}] {item['id']} ERROR: {e}", flush=True)
 
-    # Vinted — surveiller les annonces pour arbitrage
+    # --- VINTED ---
+    print("[vinted] debut section vinted", flush=True)
     VINTED_WATCH = [
         {"query": "Lorcana Hyperia City", "id": "lorcana_vinted"},
         {"query": "LEGO Wallace Gromit", "id": "lego_21371_vinted"},
     ]
     for item in VINTED_WATCH:
         try:
+            print(f"[vinted] appel fetch_vinted pour '{item['query']}'", flush=True)
             snap = fetch_vinted(item["query"], domain="fr", count=50)
+            print(f"[vinted] fetch_vinted retourne : {type(snap).__name__}", flush=True)
             if snap:
                 snap["product_id"] = item["id"]
                 results.append(snap)
                 print(f"[vinted] {item['id']}: "
                       f"median {snap['sold_price_median']} EUR | "
                       f"n={snap['_n_listings']} annonces", flush=True)
+            else:
+                print(f"[vinted] {item['id']}: aucun resultat retourne", flush=True)
         except Exception as e:
             print(f"[vinted] {item['id']} ERROR: {e}", flush=True)
 
-    # Google Trends — signal culturel
+    # --- GOOGLE TRENDS ---
+    print("[trends] debut section trends", flush=True)
     TRENDS_WATCH = [
         {"keyword": "Lorcana", "id": "trends_lorcana"},
         {"keyword": "LEGO Fortnite", "id": "trends_lego_fortnite"},
@@ -133,6 +139,8 @@ def run():
                       f"acceleration x{trend['trend_acceleration']} "
                       f"({trend['trend_recent_avg']} vs "
                       f"{trend['trend_older_avg']})", flush=True)
+            else:
+                print(f"[trends] {item['id']}: aucun resultat", flush=True)
         except Exception as e:
             print(f"[trends] {item['id']} ERROR: {e}", flush=True)
 
