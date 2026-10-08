@@ -25,24 +25,6 @@ WATCHLIST = [
         "must_all": ["21371"],
         "must_any": ["lego", "wallace", "gromit"],
     },
-    {
-        "id": "lorcana_hyperia",
-        "query": "Lorcana Hyperia City",
-        "must_all": ["hyperia"],
-        "must_any": ["lorcana", "booster", "box", "coco"],
-    },
-    {
-        "id": "riftbound_radiance",
-        "query": "Riftbound Radiance",
-        "must_all": ["radiance"],
-        "must_any": ["riftbound", "booster", "box"],
-    },
-    {
-        "id": "one_piece_op18",
-        "query": "One Piece OP-18",
-        "must_all": ["op-18"],
-        "must_any": ["one piece", "booster", "box"],
-    },
 ]
 
 
