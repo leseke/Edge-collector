@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<title>EDGE</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: #0a0a0f;
+    color: #e8e8ee;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 0 0 100px; }
+
+  /* ===== HEADER ===== */
+  .header {
+    padding: 20px 20px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #6ee7ff 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .refresh {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #14141c;
+    border: 1px solid #1f1f2a;
+    display: flex; align-items: center; justify-content: center;
+    color: #94a3b8;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .refresh:active { transform: rotate(180deg); }
+
+  /* ===== COMMAND CENTER ===== */
+  .command {
+    margin: 8px 16px 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #14141c 0%, #1a1a28 100%);
+    border-radius: 22px;
+    border: 1px solid #1f1f2a;
+    position: relative;
+    overflow: hidden;
+  }
+  .command::before {
+    content: "";
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(110,231,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .command-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .capital-label {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+  }
+  .capital-value {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .capital-value .unit { font-size: 18px; color: #6b7280; font-weight: 500; margin-left: 4px; }
+  .edit-capital {
+    padding: 6px 12px;
+    background: #0a0a12;
+    border: 1px solid #1f1f2a;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #94a3b8;
+    cursor: pointer;
+  }
+  .capital-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+    position: relative;
+  }
+  .capital-detail .item .lbl {
+    font-size: 11px; color: #6b7280;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 3px;
+  }
+  .capital-detail .item .val {
+    font-size: 18px; font-weight: 600;
+  }
+  .capital-detail .item .val.warn { color: #fbbf24; }
+  .capital-detail .item .val.ok { color: #4ade80; }
+
+  /* Decision banner */
+  .decision {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid #1f1f2a;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+  .decision .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot.cash { background: #94a3b8; box-shadow: 0 0 12px rgba(148,163,184,0.5); }
+  .dot.buy { background: #4ade80; box-shadow: 0 0 12px rgba(74,222,128,0.6); animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  .decision-text { flex: 1; }
+  .decision-text .title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .decision-text .sub {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    margin: 0 16px 28px;
+  }
+  .section-title {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  /* ===== CAROUSEL ===== */
+  .carousel {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 4px 16px 12px;
+    margin: 0 -16px;
+    scrollbar-width: none;
+  }
+  .carousel::-webkit-scrollbar { display: none; }
+  .featured {
+    flex: 0 0 78%;
+    scroll-snap-align: center;
+    background: #14141c;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #1f1f2a;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .featured:active { transform: scale(0.97); }
+  .featured .img-box {
+    width: 100%;
+    height: 180px;
+    background: #0a0a12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    overflow: hidden;
+    position: relative;
+  }
+  .featured .img-box img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+  .featured .body { padding: 16px; }
+  .featured .name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.35;
+    min-height: 40px;
+  }
+  .featured .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .featured .price {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .featured .ecart {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .featured .bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ===== LIST ITEM ===== */
+  .item {
+    background: #14141c;
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #1f1f2a;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .item:active { transform: scale(0.98); }
+  .item .thumb {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: #0a0a12;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .item .thumb img { width: 100%; height: 100%; object-fit: contain; }
+  .item .info {
+    flex: 1; min-width: 0;
+  }
+  .item .name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .item .meta {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .item .meta .price {
+    color: #e8e8ee;
+    font-weight: 600;
+  }
+  .item .right { flex-shrink: 0; }
+
+  /* ===== BADGES ===== */
+  .badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+  }
+  .badge.buy { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .badge.strong_buy { background: rgba(74,222,128,0.28); color: #4ade80; }
+  .badge.wait { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .badge.watch { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .badge.no_data, .badge.error { background: rgba(100,116,139,0.15); color: #64748b; }
+
+  /* ===== CYCLE BAR ===== */
+  .cycle {
+    display: flex;
+    gap: 3px;
+    margin-top: 6px;
+  }
+  .cycle .seg {
+    flex: 1;
+    height: 4px;
+    background: #1f1f2a;
+    border-radius: 2px;
+  }
+  .cycle .seg.on { background: #a78bfa; }
+  .cycle .seg.on.hot { background: #f87171; }
+
+  /* ===== DETAIL SHEET ===== */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 100;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+
+  .sheet {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    max-height: 92vh;
+    background: #0e0e14;
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid #1f1f2a;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow-y: auto;
+    z-index: 101;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle {
+    width: 40px; height: 4px;
+    background: #2a2a36;
+    border-radius: 2px;
+    margin: 10px auto 0;
+  }
+  .sheet-img {
+    width: 100%;
+    height: 220px;
+    background: #0a0a12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    overflow: hidden;
+  }
+  .sheet-img img { width: 100%; height: 100%; object-fit: contain; }
+  .sheet-body { padding: 20px 20px 40px; }
+  .sheet-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .sheet-cat {
+    display: inline-block;
+    font-size: 10px;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .sheet-price-block {
+    background: #14141c;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #1f1f2a;
+  }
+  .sheet-price-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .sheet-price-main .current {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .sheet-price-main .ecart {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fbbf24;
+  }
+  .sheet-price-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+  }
+  .sheet-price-row .lbl { color: #6b7280; }
+  .sheet-price-row .val { font-weight: 600; }
+
+  .sheet-block {
+    background: #14141c;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #1f1f2a;
+  }
+  .sheet-block .lbl {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .sheet-block .txt {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #d1d5db;
+  }
+  .sheet-block .txt.warn { color: #fbbf24; }
+  .sheet-block .txt.danger { color: #f87171; }
+  .sheet-block .txt.ok { color: #4ade80; }
+
+  .cycle-row {
+    display: flex;
+    gap: 4px;
+    margin: 8px 0 4px;
+  }
+  .cycle-row .seg {
+    flex: 1;
+    height: 6px;
+    background: #1f1f2a;
+    border-radius: 3px;
+  }
+  .cycle-row .seg.on { background: #a78bfa; }
+
+  /* ===== CAPITAL EDITOR ===== */
+  .modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    background: #14141c;
+    border-radius: 20px;
+    padding: 24px;
+    width: calc(100% - 48px);
+    max-width: 360px;
+    border: 1px solid #1f1f2a;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 200;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 18px;
+  }
+  .modal input {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 18px;
+    font-weight: 600;
+    background: #0a0a12;
+    border: 1px solid #1f1f2a;
+    border-radius: 12px;
+    color: #e8e8ee;
+    margin-bottom: 16px;
+    font-family: inherit;
+  }
+  .modal input:focus { outline: none; border-color: #6ee7ff; }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .modal-actions button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-cancel {
+    background: #1f1f2a;
+    color: #94a3b8;
+  }
+  .btn-save {
+    background: linear-gradient(135deg, #6ee7ff, #a78bfa);
+    color: #0a0a0f;
+  }
+  .modal-note {
+    font-size: 11px;
+    color: #4b5563;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    padding: 24px 20px 12px;
+    font-size: 11px;
+    color: #4b5563;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ===== EMPTY / LOADING ===== */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, #14141c 0%, #1a1a28 50%, #14141c 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 12px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">EDGE</div>
+  <div class="refresh" onclick="reload()">↻</div>
+</div>
+
+<div id="app">
+  <div class="empty">Chargement…</div>
+</div>
+
+<footer>
+  <div id="footer-stamp"></div>
+  <div style="margin-top:6px;">eBay · Cardmarket · Mis à jour à chaque run</div>
+</footer>
+
+<!-- Detail sheet -->
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div id="sheet-content"></div>
+</div>
+
+<!-- Capital editor -->
+<div class="modal" id="capital-modal">
+  <div class="modal-title">Modifier le capital</div>
+  <div class="modal-sub">Simulation locale uniquement</div>
+  <input type="number" id="capital-input" inputmode="numeric" placeholder="300">
+  <div class="modal-actions">
+    <button class="btn-cancel" onclick="closeCapital()">Annuler</button>
+    <button class="btn-save" onclick="saveCapital()">Appliquer</button>
+  </div>
+  <div class="modal-note">
+    Cette valeur est stockée dans ton navigateur pour simuler différents scénarios. Pour la modifier de façon permanente (pipeline GitHub), édite <code>config.json</code> dans le repo.
+  </div>
+</div>
+
+<script>
+const LABELS = {
+  STRONG_BUY: "Achat fort",
+  BUY: "Achat",
+  WAIT: "Attendre",
+  WATCH: "Watch",
+  NO_DATA: "Pas de données",
+  ERROR: "Erreur"
+};
+
+let RADAR = null;
+let SIM_CAPITAL = null;
+
+function loadSimCapital() {
+  const v = localStorage.getItem("edge_sim_capital");
+  return v ? parseFloat(v) : null;
+}
+
+function saveSimCapital(v) {
+  if (v == null) localStorage.removeItem("edge_sim_capital");
+  else localStorage.setItem("edge_sim_capital", String(v));
+  SIM_CAPITAL = v;
+}
+
+function getEffectiveCapital() {
+  if (!RADAR) return 0;
+  return SIM_CAPITAL != null ? SIM_CAPITAL : RADAR.config.capital_monthly;
+}
+
+function getAvailableCapital() {
+  if (!RADAR) return 0;
+  return getEffectiveCapital() - (RADAR.config.capital_engaged || 0);
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString('fr-FR', {
+    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+  });
+}
+
+function thumbHTML(p, size) {
+  const s = size || 24;
+  if (p.image_url) {
+    return `<img src="${p.image_url}" alt="" loading="lazy"
+      onerror="this.style.display='none';this.parentNode.innerHTML='${p.emoji}'">`;
+  }
+  return p.emoji || "?";
+}
+
+function cycleHTML(num, total) {
+  total = total || 7;
+  let html = '<div class="cycle">';
+  for (let i = 1; i <= total; i++) {
+    let cls = "seg";
+    if (i <= num) cls += " on";
+    if (i <= num && i >= 5) cls += " hot";
+    html += `<div class="${cls}"></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function computeAllocRange(product) {
+  const cap = getAvailableCapital();
+  if (product.decision === "BUY" || product.decision === "STRONG_BUY") {
+    const lo = RADAR.config.allocation_buy_pct[0];
+    const hi = RADAR.config.allocation_buy_pct[1];
+    return [Math.round(cap * lo / 100), Math.round(cap * hi / 100)];
+  }
+  if (product.categorie === "FUTURE_CLASSIC") {
+    const lo = RADAR.config.allocation_future_classic_pct[0];
+    const hi = RADAR.config.allocation_future_classic_pct[1];
+    return [Math.round(cap * lo / 100), Math.round(cap * hi / 100)];
+  }
+  return [0, 0];
+}
+
+function render(data) {
+  RADAR = data;
+  const s = data.summary;
+  const capital = getEffectiveCapital();
+  const engaged = s.capital_engaged || 0;
+  const available = capital - engaged;
+
+  const nBuy = data.products.filter(p => p.decision === "BUY" || p.decision === "STRONG_BUY").length;
+  const decisionTxt = nBuy === 0
+    ? "CASH — Aucun signal actif"
+    : `${nBuy} signal${nBuy > 1 ? "x" : ""} d'achat détecté${nBuy > 1 ? "s" : ""}`;
+  const decisionSub = nBuy === 0
+    ? "Aucun produit n'est sous sa cible d'achat aujourd'hui."
+    : "Ouvre un produit pour voir la thèse et l'allocation.";
+
+  let html = '';
+
+  // Command Center
+  html += `
+    <div class="command">
+      <div class="command-top">
+        <div>
+          <div class="capital-label">Capital mensuel</div>
+          <div class="capital-value">${capital}<span class="unit">€</span></div>
+        </div>
+        <button class="edit-capital" onclick="openCapital()">Modifier</button>
+      </div>
+      <div class="capital-detail">
+        <div class="item">
+          <div class="lbl">Engagé</div>
+          <div class="val ${engaged > 0 ? 'warn' : ''}">${engaged} €</div>
+        </div>
+        <div class="item">
+          <div class="lbl">Disponible</div>
+          <div class="val ${available > 0 ? 'ok' : 'warn'}">${available} €</div>
+        </div>
+      </div>
+      <div class="decision">
+        <div class="dot ${nBuy === 0 ? 'cash' : 'buy'}"></div>
+        <div class="decision-text">
+          <div class="title">${decisionTxt}</div>
+          <div class="sub">${decisionSub}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Carousel
+  if (data.products.length > 0) {
+    html += `<div class="section"><div class="section-title">À la une</div><div class="carousel">`;
+    data.products.slice(0, 5).forEach(p => {
+      const alloc = computeAllocRange(p);
+      html += `
+        <div class="featured" onclick="openSheet('${p.id}')">
+          <div class="img-box">${thumbHTML(p, 64)}</div>
+          <div class="body">
+            <div class="name">${p.name}</div>
+            <div class="price-row">
+              <div class="price">${p.price_eur != null ? Math.round(p.price_eur) + " €" : "—"}</div>
+              <div class="ecart">${p.ecart_pct != null ? (p.ecart_pct > 0 ? "+" : "") + p.ecart_pct.toFixed(0) + "%" : ""}</div>
+            </div>
+            ${cycleHTML(p.cycle_num)}
+            <div class="bottom-row" style="margin-top:10px;">
+              <span class="badge ${p.decision.toLowerCase()}">${LABELS[p.decision] || p.decision}</span>
+              ${alloc[1] > 0 ? `<span style="font-size:11px;color:#6b7280;">${alloc[0]}–${alloc[1]} €</span>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  }
+
+  // Full list
+  html += `<div class="section"><div class="section-title">Tous les produits</div>`;
+  data.products.forEach(p => {
+    html += `
+      <div class="item" onclick="openSheet('${p.id}')">
+        <div class="thumb">${thumbHTML(p, 24)}</div>
+        <div class="info">
+          <div class="name">${p.name}</div>
+          <div class="meta">
+            ${p.price_eur != null
+              ? `<span class="price">${Math.round(p.price_eur)} €</span> · cible ${p.target_buy} €`
+              : `cible ${p.target_buy} €`}
+          </div>
+        </div>
+        <div class="right">
+          <span class="badge ${p.decision.toLowerCase()}">${LABELS[p.decision] || p.decision}</span>
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+
+  document.getElementById("app").innerHTML = html;
+  document.getElementById("footer-stamp").textContent =
+    "Dernier run : " + fmtDate(data.generated_at) + " · " + s.total + " produits suivis";
+}
+
+function openSheet(id) {
+  const p = RADAR.products.find(x => x.id === id);
+  if (!p) return;
+  const alloc = computeAllocRange(p);
+  const available = getAvailableCapital();
+
+  let html = `
+    <div class="sheet-img">${thumbHTML(p, 80)}</div>
+    <div class="sheet-body">
+      <div class="sheet-title">${p.name}</div>
+      <div class="sheet-cat">${p.categorie === "FUTURE_CLASSIC" ? "Future Classic" : "Flip"} · ${p.source}</div>
+
+      <div class="sheet-price-block">
+        <div class="sheet-price-main">
+          <div class="current">${p.price_eur != null ? Math.round(p.price_eur) + " €" : "—"}</div>
+          ${p.ecart_pct != null ? `<div class="ecart">${p.ecart_pct > 0 ? "+" : ""}${p.ecart_pct.toFixed(0)}% vs cible</div>` : ""}
+        </div>
+        <div class="sheet-price-row"><span class="lbl">Cible achat</span><span class="val">${p.target_buy} €</span></div>
+        <div class="sheet-price-row"><span class="lbl">Cible achat fort</span><span class="val">${p.target_strong_buy} €</span></div>
+        ${p.median != null ? `<div class="sheet-price-row"><span class="lbl">Prix médian source</span><span class="val">${p.median} ${p.currency_src}</span></div>` : ""}
+        ${p.low != null ? `<div class="sheet-price-row"><span class="lbl">Meilleur prix</span><span class="val">${p.low} ${p.currency_src}</span></div>` : ""}
+        ${p.n != null ? `<div class="sheet-price-row"><span class="lbl">Échantillon</span><span class="val">${p.n} ventes</span></div>` : ""}
+      </div>
+
+      <div class="sheet-block">
+        <div class="lbl">Décision</div>
+        <div class="txt ${p.decision === "WAIT" ? "warn" : ""}">
+          <span class="badge ${p.decision.toLowerCase()}">${LABELS[p.decision] || p.decision}</span>
+        </div>
+      </div>
+
+      <div class="sheet-block">
+        <div class="lbl">Stade du cycle — ${p.cycle_num}/7 · ${p.cycle_label}</div>
+        ${cycleHTML(p.cycle_num)}
+      </div>
+  `;
+
+  if (alloc[1] > 0) {
+    html += `
+      <div class="sheet-block">
+        <div class="lbl">Allocation suggérée</div>
+        <div class="txt">Entre <b>${alloc[0]} €</b> et <b>${alloc[1]} €</b> selon ton capital disponible de ${available} €.</div>
+      </div>
+    `;
+  }
+
+  if (p.thesis) {
+    html += `
+      <div class="sheet-block">
+        <div class="lbl">Thèse</div>
+        <div class="txt">${p.thesis}</div>
+      </div>
+    `;
+  }
+  if (p.counter_thesis) {
+    html += `
+      <div class="sheet-block">
+        <div class="lbl">Contre-thèse</div>
+        <div class="txt warn">${p.counter_thesis}</div>
+      </div>
+    `;
+  }
+  if (p.invalidation) {
+    html += `
+      <div class="sheet-block">
+        <div class="lbl">Invalidation</div>
+        <div class="txt danger">${p.invalidation}</div>
+      </div>
+    `;
+  }
+
+  html += `</div>`;
+  document.getElementById("sheet-content").innerHTML = html;
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("sheet").classList.add("open");
+}
+
+function closeSheet() {
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("sheet").classList.remove("open");
+}
+
+function openCapital() {
+  const input = document.getElementById("capital-input");
+  input.value = getEffectiveCapital();
+  document.getElementById("capital-modal").classList.add("open");
+  document.getElementById("overlay").classList.add("open");
+}
+
+function closeCapital() {
+  document.getElementById("capital-modal").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+}
+
+function saveCapital() {
+  const v = parseFloat(document.getElementById("capital-input").value);
+  if (!isNaN(v) && v > 0) {
+    saveSimCapital(v);
+    closeCapital();
+    if (RADAR) render(RADAR);
+  }
+}
+
+function reload() {
+  const url = "radar.json?t=" + Date.now();
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      render(data);
+    })
+    .catch(() => {
+      document.getElementById("app").innerHTML =
+        `<div class="empty">Impossible de charger radar.json.<br><br>Lance un run du workflow pour le générer.</div>`;
+    });
+}
+
+SIM_CAPITAL = loadSimCapital();
+reload();
+</script>
+
+</body>
+</html>
