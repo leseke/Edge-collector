@@ -2,6 +2,9 @@ name: EDGE Collect
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   collect:
     runs-on: ubuntu-latest
@@ -16,6 +19,13 @@ jobs:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      - name: Commit radar.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add radar.json
+          git diff --cached --quiet || git commit -m "Update radar [skip ci]"
+          git push
       - uses: actions/upload-artifact@v4
         with:
           name: storage-db-${{ github.run_number }}
