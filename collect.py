@@ -64,6 +64,13 @@ def fetch_one(item):
 
 
 def run():
+    print("[DEBUG] run() demarre", flush=True)
+    print(f"[DEBUG] TELEGRAM_TOKEN present : {bool(os.environ.get('TELEGRAM_TOKEN'))}", flush=True)
+    print(f"[DEBUG] TELEGRAM_CHAT_ID present : {bool(os.environ.get('TELEGRAM_CHAT_ID'))}", flush=True)
+
+    send_message("EDGE debug : message initial")
+    print("[DEBUG] appel telegram initial termine", flush=True)
+
     init_db()
     results, alerts, digest = [], [], []
 
