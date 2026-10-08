@@ -3,6 +3,7 @@ from connectors.ebay import fetch_sold as fetch_ebay
 from connectors.cardmarket import fetch_cardmarket
 from connectors.vinted import fetch_vinted
 from connectors.trends import fetch_trends
+from connectors.reddit import fetch_reddit
 from connectors.telegram import send_message, format_alert, send_daily_digest
 from storage import init_db, insert_snapshots
 
@@ -109,9 +110,7 @@ def run():
     ]
     for item in VINTED_WATCH:
         try:
-            print(f"[vinted] appel fetch_vinted pour '{item['query']}'", flush=True)
             snap = fetch_vinted(item["query"], domain="fr", count=50)
-            print(f"[vinted] fetch_vinted retourne : {type(snap).__name__}", flush=True)
             if snap:
                 snap["product_id"] = item["id"]
                 results.append(snap)
@@ -119,7 +118,7 @@ def run():
                       f"median {snap['sold_price_median']} EUR | "
                       f"n={snap['_n_listings']} annonces", flush=True)
             else:
-                print(f"[vinted] {item['id']}: aucun resultat retourne", flush=True)
+                print(f"[vinted] {item['id']}: aucun resultat", flush=True)
         except Exception as e:
             print(f"[vinted] {item['id']} ERROR: {e}", flush=True)
 
@@ -143,6 +142,28 @@ def run():
                 print(f"[trends] {item['id']}: aucun resultat", flush=True)
         except Exception as e:
             print(f"[trends] {item['id']} ERROR: {e}", flush=True)
+
+    # --- REDDIT ---
+    print("[reddit] debut section reddit", flush=True)
+    REDDIT_WATCH = [
+        {"subreddit": "Lorcana", "query": "Hyperia"},
+        {"subreddit": "LEGO", "query": "Wallace Gromit"},
+        {"subreddit": "OnePieceTCG", "query": "OP-18"},
+    ]
+    for item in REDDIT_WATCH:
+        try:
+            snap = fetch_reddit(item["subreddit"], item["query"], limit=30)
+            if snap:
+                snap["product_id"] = f"reddit_{item['subreddit']}_{item['query']}".lower().replace(" ", "_")
+                results.append(snap)
+                print(f"[reddit] r/{item['subreddit']} '{item['query']}': "
+                      f"{snap['reddit_total']} posts | "
+                      f"score moy {snap['reddit_avg_score']} | "
+                      f"recent 30j {snap['reddit_recent_30d']}", flush=True)
+            else:
+                print(f"[reddit] r/{item['subreddit']} '{item['query']}': aucun resultat", flush=True)
+        except Exception as e:
+            print(f"[reddit] {item['subreddit']} ERROR: {e}", flush=True)
 
     if results:
         insert_snapshots([_flatten(r) for r in results])
