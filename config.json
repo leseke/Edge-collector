@@ -1,0 +1,9 @@
+{
+  "capital_monthly": 300,
+  "capital_max_available": 600,
+  "capital_engaged": 0,
+  "max_position_pct": 40,
+  "allocation_buy_pct": [15, 40],
+  "allocation_progressive_pct": [5, 20],
+  "allocation_future_classic_pct": [5, 15]
+}
