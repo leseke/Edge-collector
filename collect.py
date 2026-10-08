@@ -2,13 +2,14 @@ import os
 from connectors.ebay import fetch_sold
 from storage import init_db, insert_snapshots
 
+# Requetes precises : identifiants exacts, pas de mots parasites
 WATCHLIST = [
-    {"id": "lorcana_hyperia_city", "query": "Lorcana Hyperia City booster box"},
-    {"id": "lego_77073",           "query": "LEGO 77073 Fortnite Battle Bus"},
-    {"id": "lego_75639",           "query": "LEGO 75639 Going Merry One Piece"},
-    {"id": "lego_21371",           "query": "LEGO 21371 Wallace Gromit"},
-    {"id": "riftbound_radiance",   "query": "Riftbound Radiance booster box"},
-    {"id": "gundam_card_game",     "query": "Gundam Card Game booster box"},
+    {"id": "lego_77073",         "query": "77073"},
+    {"id": "lego_75639",         "query": "75639"},
+    {"id": "lego_21371",         "query": "21371"},
+    {"id": "lorcana_hyperia",    "query": "Hyperia City booster box"},
+    {"id": "riftbound_radiance", "query": "Riftbound Radiance"},
+    {"id": "one_piece_op18",     "query": "One Piece OP-18"},
 ]
 
 def run():
@@ -16,13 +17,17 @@ def run():
     results = []
     for item in WATCHLIST:
         try:
-            snap = fetch_sold(item["query"])
+            snap = fetch_sold(item["query"], count=100, condition="new")
             if snap:
                 snap["product_id"] = item["id"]
                 results.append(snap)
-                print(f"[eBay] {item['id']}: {snap['sold_count_30d']} ventes/30j, "
-                      f"median {snap['sold_price_median']:.2f} {snap['currency']}",
+                print(f"[eBay] {item['id']}: {snap['sold_count_30d']} ventes/30j | "
+                      f"median {snap['sold_price_median']} {snap['currency']} | "
+                      f"min {snap['lowest_ask']} | "
+                      f"avg {snap['sold_price_avg']}",
                       flush=True)
+            else:
+                print(f"[eBay] {item['id']}: aucun resultat exploitable", flush=True)
         except Exception as e:
             print(f"[eBay] {item['id']} ERROR: {e}", flush=True)
 
