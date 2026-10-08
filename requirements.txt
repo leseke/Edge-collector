@@ -1,1 +1,3 @@
 requests
+redd
+vinted-api-kit
