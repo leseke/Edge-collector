@@ -1,47 +1,43 @@
-import asyncio
+import os, requests
 from datetime import datetime
-from vinted_api_kit import VintedClient
 
-
-async def _search_vinted(query, domain="fr", count=50):
-    async with VintedClient(domain=domain) as client:
-        items = await client.search_items(query, per_page=count)
-        return items
+APIFY = os.environ["APIFY_TOKEN"]
+ACTOR = "daddyapi~vinted-scraper"
 
 
 def fetch_vinted(query, domain="fr", count=50):
-    """Recherche des annonces Vinted via vinted-api-kit."""
+    """Vinted via Apify (temporaire en attendant une solution gratuite)."""
+    url = (f"https://api.apify.com/v2/acts/{ACTOR}"
+           f"/run-sync-get-dataset-items?token={APIFY}")
+    payload = {"searchQuery": query, "domain": domain, "maxItems": count}
     try:
-        items = asyncio.run(_search_vinted(query, domain, count))
+        r = requests.post(url, json=payload, timeout=300)
     except Exception as e:
-        print(f"[vinted] exception : {e}", flush=True)
+        print(f"[vinted] exception reseau : {e}", flush=True)
         return None
-
+    if r.status_code != 200:
+        print(f"[vinted] HTTP {r.status_code} : {r.text[:200]}", flush=True)
+        return None
+    items = r.json()
     if not items:
-        print(f"[vinted] {query} : aucun item", flush=True)
         return None
-
     prices = []
     for it in items:
-        price = getattr(it, "price", None) or getattr(it, "price_eur", None)
-        if price is None:
+        p = it.get("price") or it.get("priceEur")
+        if p is None:
             continue
         try:
-            prices.append(float(price))
+            prices.append(float(str(p).replace("€", "").replace(",", ".").strip()))
         except (ValueError, TypeError):
             continue
-
     if not prices:
-        print(f"[vinted] aucun prix sur {len(items)} items", flush=True)
         return None
-
     prices_sorted = sorted(prices)
     n = len(prices_sorted)
     median = prices_sorted[n // 2]
     k = max(1, n // 10)
-    trimmed = prices_sorted[k:n - k] if n > 2 * k else prices_sorted
+    trimmed = prices_sorted[k:n-k] if n > 2*k else prices_sorted
     trimmed_avg = sum(trimmed) / len(trimmed)
-
     return {
         "product_id": query.lower().replace(" ", "_"),
         "source": "vinted_fr",
