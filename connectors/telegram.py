@@ -18,7 +18,7 @@ def send_message(text):
             json={
                 "chat_id": CHAT_ID,
                 "text": text,
-                "parse_mode": "Markdown",
+                "parse_mode": "HTML",
                 "disable_web_page_preview": True,
             },
             timeout=15
@@ -37,10 +37,10 @@ def format_alert(item, prix_eur, niveau, snap):
     cible = item.get("target_strong_buy") if niveau == "STRONG_BUY" \
             else item.get("target_buy")
     lines = [
-        f"{emoji} *{niveau.replace('_', ' ')}*",
-        f"*{item['id']}*",
+        f"{emoji} <b>{niveau.replace('_', ' ')}</b>",
+        f"<b>{item['id']}</b>",
         f"",
-        f"Prix actuel : *{prix_eur:.0f} EUR*",
+        f"Prix actuel : <b>{prix_eur:.0f} EUR</b>",
         f"Cible : {cible} EUR",
         f"Source : {item['source']}",
     ]
@@ -51,7 +51,7 @@ def send_daily_digest(watchlist_results):
     if not watchlist_results:
         print("[telegram] digest vide, rien a envoyer", flush=True)
         return
-    lines = ["*EDGE — Resume*", ""]
+    lines = ["<b>EDGE - Resume</b>", ""]
     for r in watchlist_results:
         emoji = "⏸"
         if r["niveau"] == "STRONG_BUY":
@@ -65,7 +65,7 @@ def send_daily_digest(watchlist_results):
     n_buy = sum(1 for r in watchlist_results
                 if r["niveau"] in ("BUY", "STRONG_BUY"))
     if n_buy == 0:
-        lines.append("*Decision : CASH / ATTENDRE*")
+        lines.append("<b>Decision : CASH / ATTENDRE</b>")
     else:
-        lines.append(f"*{n_buy} signal(aux) d'achat*")
+        lines.append(f"<b>{n_buy} signal(aux) d'achat</b>")
     send_message("\n".join(lines))
