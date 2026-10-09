@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T08:51:50.527303+00:00",
+  "generated_at": "2026-10-09T13:15:14.508198+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -48,9 +48,9 @@
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
-      "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance. Le Battle Bus est un objet iconique du jeu, ce qui peut creer une demande de collectionneurs quand le set disparaitra des rayons.",
-      "counter_thesis": "Aucun catalyseur date confirme pour l'instant. La production LEGO peut etre prolongee si les ventes restent fortes, ce qui retarderait le retrait et casserait la these de rarete future.",
-      "invalidation": "Si LEGO annonce une prolongation de production au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre d'entree est fermee."
+      "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance.",
+      "counter_thesis": "Aucun catalyseur date confirme. La production LEGO peut etre prolongee si les ventes restent fortes.",
+      "invalidation": "Si LEGO prolonge au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre est fermee."
     },
     {
       "id": "lego_75639",
@@ -70,9 +70,9 @@
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FUTURE_CLASSIC",
-      "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe. Le Going Merry est le navire emblematique de la serie, ce qui lui donne une valeur symbolique forte. Public adulte nostalgique et collectionneurs LEGO se recoupent.",
-      "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees, repoussant la rarete. La communaute One Piece est grande mais pas necessairement fortune, ce qui peut limiter le pouvoir d'achat sur ce type de produit.",
-      "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique. Si la licence One Piece perd de sa popularite en Europe, la these s'affaiblit."
+      "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe.",
+      "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees.",
+      "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique."
     },
     {
       "id": "lego_21371",
@@ -92,9 +92,9 @@
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FUTURE_CLASSIC",
-      "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas qui signifie un tirage initial limite. Wallace et Gromit sont des personnages iconiques de la culture populaire britannique, et ce type de set se conserve generalement bien.",
-      "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence. Le set vient de sortir, donc il est encore en production, ce qui signifie que la rarete future n'est pas garantie.",
-      "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre. Si le prix median depasse 130 EUR, c'est trop tard pour entrer."
+      "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas a tirage initial limite.",
+      "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence.",
+      "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre."
     },
     {
       "id": "lorcana_hyperia_box",
@@ -114,9 +114,9 @@
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
-      "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana, ce qui peut attirer un public plus large que les joueurs de TCG habituels. La licence Coco est universellement aimee.",
-      "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables. Disney a montre par le passe qu'il pouvait reimprimer massivement quand la demande est forte, ce qui casserait la rarete.",
-      "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte. Si le prix median chute sous 80 EUR, c'est un signe de surabondance."
+      "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana.",
+      "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables.",
+      "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte."
     },
     {
       "id": "riftbound_radiance_box",
@@ -136,9 +136,9 @@
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
-      "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends. Riot a un historique de forte communaute et de production soignee sur ses produits derives.",
-      "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche, ce qui limite fortement le potentiel de rarete. Les nouveaux TCG mettent souvent plusieurs annees a trouver leur public stable.",
-      "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte. Si le prix median depasse 150 EUR sans baisse de stock, c'est un signe de speculation pure."
+      "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends.",
+      "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche.",
+      "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte."
     }
   ],
   "trends": [
@@ -151,36 +151,21 @@
       "statut": "stable x1.04"
     },
     {
-      "id": "trends_lego_goingmerry",
-      "keyword": "LEGO Going Merry",
-      "acceleration": null,
-      "recent_avg": 8.3,
-      "older_avg": 0.0,
-      "statut": "pas de base (recent 8.3, passe vide)"
-    },
-    {
-      "id": "trends_lego_wallace",
-      "keyword": "LEGO Wallace Gromit",
-      "acceleration": null,
-      "recent_avg": 16.8,
-      "older_avg": 0.0,
-      "statut": "pas de base (recent 16.8, passe vide)"
-    },
-    {
       "id": "trends_lorcana_hyperia",
       "keyword": "Lorcana Hyperia",
       "acceleration": null,
-      "recent_avg": 19.6,
+      "recent_avg": 19.5,
       "older_avg": 0.0,
-      "statut": "pas de base (recent 19.6, passe vide)"
+      "statut": "pas de base (recent 19.5, passe vide)"
     },
     {
       "id": "trends_riftbound",
       "keyword": "Riftbound",
-      "acceleration": 1.6,
-      "recent_avg": 72.4,
+      "acceleration": 1.61,
+      "recent_avg": 72.7,
       "older_avg": 45.2,
-      "statut": "ACCELERATION FORTE x1.6"
+      "statut": "ACCELERATION FORTE x1.61"
     }
-  ]
+  ],
+  "reddit": []
 }
