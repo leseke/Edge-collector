@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T13:15:14.508198+00:00",
+  "generated_at": "2026-10-09T13:34:24.483781+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -151,18 +151,26 @@
       "statut": "stable x1.04"
     },
     {
+      "id": "trends_lego_goingmerry",
+      "keyword": "LEGO Going Merry",
+      "acceleration": null,
+      "recent_avg": 8.3,
+      "older_avg": 0.0,
+      "statut": "pas de base (recent 8.3, passe vide)"
+    },
+    {
       "id": "trends_lorcana_hyperia",
       "keyword": "Lorcana Hyperia",
       "acceleration": null,
-      "recent_avg": 19.5,
+      "recent_avg": 19.2,
       "older_avg": 0.0,
-      "statut": "pas de base (recent 19.5, passe vide)"
+      "statut": "pas de base (recent 19.2, passe vide)"
     },
     {
       "id": "trends_riftbound",
       "keyword": "Riftbound",
       "acceleration": 1.61,
-      "recent_avg": 72.7,
+      "recent_avg": 72.6,
       "older_avg": 45.2,
       "statut": "ACCELERATION FORTE x1.61"
     }
