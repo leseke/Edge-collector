@@ -130,7 +130,7 @@ def fetch_one(item):
                                 search_query=item["search_query"],
                                 must_all=item.get("must_all"),
                                 must_any=item.get("must_any"),
-                                must_not=item.get("must_not"))
+ (                                must_not=item.get("must_not"))
     raise ValueError(f"source inconnue : {item['source']}")
 
 
@@ -150,7 +150,7 @@ def run():
     trends_signals = []
     reddit_signals = []
 
-    # --- Section 1 : Watchlist principale (prix) ---
+    # --- Section 1 : Watchlist principaleprix) ---
     print("\n[main] === section prix ===", flush=True)
     for item in WATCHLIST:
         try:
