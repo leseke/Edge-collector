@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T13:34:24.483781+00:00",
+  "generated_at": "2026-10-09T21:24:25.651359+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -143,36 +143,20 @@
   ],
   "trends": [
     {
-      "id": "trends_lego_fortnite",
-      "keyword": "LEGO Fortnite",
-      "acceleration": 1.04,
-      "recent_avg": 20.2,
-      "older_avg": 19.4,
-      "statut": "stable x1.04"
-    },
-    {
-      "id": "trends_lego_goingmerry",
-      "keyword": "LEGO Going Merry",
-      "acceleration": null,
-      "recent_avg": 8.3,
-      "older_avg": 0.0,
-      "statut": "pas de base (recent 8.3, passe vide)"
-    },
-    {
-      "id": "trends_lorcana_hyperia",
-      "keyword": "Lorcana Hyperia",
-      "acceleration": null,
-      "recent_avg": 19.2,
-      "older_avg": 0.0,
-      "statut": "pas de base (recent 19.2, passe vide)"
-    },
-    {
       "id": "trends_riftbound",
       "keyword": "Riftbound",
       "acceleration": 1.61,
-      "recent_avg": 72.6,
-      "older_avg": 45.2,
+      "recent_avg": 72.8,
+      "older_avg": 45.1,
       "statut": "ACCELERATION FORTE x1.61"
+    },
+    {
+      "id": "trends_lego_fortnite",
+      "keyword": "LEGO Fortnite",
+      "acceleration": 1.05,
+      "recent_avg": 20.2,
+      "older_avg": 19.2,
+      "statut": "stable x1.05"
     }
   ],
   "reddit": []
