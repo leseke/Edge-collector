@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timezone
 
 try:
@@ -8,14 +9,21 @@ except ImportError:
     print("[trends] module 'trendspy' non installe", flush=True)
 
 
+# Delai entre deux requetes Google Trends (en secondes)
+# Augmente si Google continue a rate-limiter
+REQUEST_DELAY = 8
+
+
 def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
     """Recupere l'acceleration Google Trends via trendspy.
 
-    Retourne un dict normalise, ou None en cas d'echec.
-    Si la periode precedente est vide, acceleration = None (pas de base).
+    Un delai de REQUEST_DELAY secondes est applique AVANT chaque appel
+    pour eviter les erreurs 429 de Google.
     """
     if not TRENDSPY_AVAILABLE:
         return None
+
+    time.sleep(REQUEST_DELAY)
 
     try:
         tr = Trends()
@@ -55,13 +63,11 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
     avg_recent = sum(recent) / len(recent) if recent else 0
     avg_older = sum(older) / len(older) if older else 0
 
-    # Acceleration : None si pas de base de comparaison
     if avg_older > 0:
         acceleration = round(avg_recent / avg_older, 2)
     else:
         acceleration = None
 
-    # Statut lisible
     if acceleration is None:
         statut = f"pas de base (recent {avg_recent:.1f}, passe vide)"
     elif acceleration >= 1.5:
