@@ -1,6 +1,5 @@
 from datetime import datetime, timezone
 
-# Import resilient
 try:
     from redd import Redd
     REDD_AVAILABLE = True
@@ -16,7 +15,6 @@ def fetch_reddit(subreddit, query, limit=25):
 
     try:
         with Redd() as r:
-            # Utilise search_subreddit pour rechercher dans un subreddit
             posts = list(r.search_subreddit(subreddit, query, limit=limit))
     except Exception as e:
         print(f"[reddit] exception r/{subreddit} '{query}' : {e}", flush=True)
