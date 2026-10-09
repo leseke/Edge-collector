@@ -10,21 +10,19 @@ except ImportError:
 
 
 # Delai entre deux requetes Google Trends (en secondes)
-# Augmente si Google continue a rate-limiter. 15s = prudence.
-REQUEST_DELAY = 15
+# Augmente si Google continue a rate-limiter
+REQUEST_DELAY = 20
 
 
 def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
-    """Recupere l'acceleration Google Trends via trendspy.
-    Un delai de REQUEST_DELAY secondes est applique AVANT chaque appel.
-    """
+    """Recupere l'acceleration Google Trends via trendspy."""
     if not TRENDSPY_AVAILABLE:
         return None
 
     time.sleep(REQUEST_DELAY)
 
     try:
-        tr = Trends(request_delay=2.0)
+        tr = Trends(request_delay=4.0)
         df = tr.interest_over_time(
             [keyword],
             timeframe=timeframe,
