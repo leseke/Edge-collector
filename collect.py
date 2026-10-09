@@ -101,7 +101,7 @@ WATCHLIST = [
 ]
 
 
-TRENDS_WATCH = [
+TRENDS_POOL = [
     {"keyword": "LEGO Fortnite", "id": "trends_lego_fortnite"},
     {"keyword": "LEGO Going Merry", "id": "trends_lego_goingmerry"},
     {"keyword": "LEGO Wallace Gromit", "id": "trends_lego_wallace"},
@@ -119,6 +119,16 @@ REDDIT_WATCH = [
 ]
 
 
+def _get_trends_watch():
+    """Rotation : 2 mots-cles par run pour eviter le rate-limit Google."""
+    try:
+        run_n = int(os.environ.get("GITHUB_RUN_NUMBER", "0"))
+    except (ValueError, TypeError):
+        run_n = 0
+    start = (run_n * 2) % len(TRENDS_POOL)
+    return [TRENDS_POOL[(start + i) % len(TRENDS_POOL)] for i in range(2)]
+
+
 def fetch_one(item):
     if item["source"] == "ebay":
         return fetch_ebay(item["query"],
@@ -130,7 +140,7 @@ def fetch_one(item):
                                 search_query=item["search_query"],
                                 must_all=item.get("must_all"),
                                 must_any=item.get("must_any"),
-                                 must_not=item.get("must_not"))
+                                must_not=item.get("must_not"))
     raise ValueError(f"source inconnue : {item['source']}")
 
 
@@ -150,7 +160,7 @@ def run():
     trends_signals = []
     reddit_signals = []
 
-    # --- Section 1 : Watchlist principaleprix) ---
+    # --- Section 1 : Watchlist principale (prix) ---
     print("\n[main] === section prix ===", flush=True)
     for item in WATCHLIST:
         try:
@@ -251,9 +261,12 @@ def run():
                 "invalidation": item.get("invalidation", ""),
             })
 
-    # --- Section 2 : Google Trends (gratuit via trendspy) ---
+    # --- Section 2 : Google Trends (rotation 2/run) ---
     print("\n[trends] === section Google Trends ===", flush=True)
-    for item in TRENDS_WATCH:
+    trends_watch = _get_trends_watch()
+    print(f"[trends] mots-cles de ce run : "
+          f"{[t['keyword'] for t in trends_watch]}", flush=True)
+    for item in trends_watch:
         try:
             trend = fetch_trends_spy(item["keyword"])
             if trend:
@@ -277,7 +290,7 @@ def run():
         except Exception as e:
             print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Reddit (gratuit via 'redd') ---
+    # --- Section 3 : Reddit ---
     print("\n[reddit] === section Reddit ===", flush=True)
     for item in REDDIT_WATCH:
         try:
