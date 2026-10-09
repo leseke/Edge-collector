@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 try:
     from trendspy import Trends
@@ -12,6 +12,7 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
     """Recupere l'acceleration Google Trends via trendspy.
 
     Retourne un dict normalise, ou None en cas d'echec.
+    Si la periode precedente est vide, acceleration = None (pas de base).
     """
     if not TRENDSPY_AVAILABLE:
         return None
@@ -31,18 +32,15 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
         print(f"[trends] '{keyword}' : aucune donnee", flush=True)
         return None
 
-    # Extraire les valeurs pour le mot-cle
     try:
         values = df[keyword].tolist()
     except KeyError:
-        # si le nom de colonne differe legerement
         col = df.columns[0]
         values = df[col].tolist()
 
     if not values:
         return None
 
-    # Acceleration : recent vs plus ancien
     n = len(values)
     if n >= 24:
         recent = values[-12:]
@@ -56,12 +54,29 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
 
     avg_recent = sum(recent) / len(recent) if recent else 0
     avg_older = sum(older) / len(older) if older else 0
-    acceleration = avg_recent / avg_older if avg_older > 0 else 1.0
+
+    # Acceleration : None si pas de base de comparaison
+    if avg_older > 0:
+        acceleration = round(avg_recent / avg_older, 2)
+    else:
+        acceleration = None
+
+    # Statut lisible
+    if acceleration is None:
+        statut = f"pas de base (recent {avg_recent:.1f}, passe vide)"
+    elif acceleration >= 1.5:
+        statut = f"ACCELERATION FORTE x{acceleration}"
+    elif acceleration >= 1.2:
+        statut = f"acceleration x{acceleration}"
+    elif acceleration >= 0.9:
+        statut = f"stable x{acceleration}"
+    else:
+        statut = f"deceleration x{acceleration}"
 
     return {
         "product_id": keyword.lower().replace(" ", "_"),
         "source": "google_trends_fr",
-        "captured_at": datetime.utcnow().isoformat(),
+        "captured_at": datetime.now(timezone.utc).isoformat(),
         "sold_price_avg": None,
         "sold_price_median": None,
         "sold_count_30d": None,
@@ -72,5 +87,6 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
         "raw_json": None,
         "trend_recent_avg": round(avg_recent, 1),
         "trend_older_avg": round(avg_older, 1),
-        "trend_acceleration": round(acceleration, 2),
+        "trend_acceleration": acceleration,
+        "trend_statut": statut,
     }
