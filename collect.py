@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 from connectors.ebay import fetch_sold as fetch_ebay
 from connectors.cardmarket import fetch_cardmarket
@@ -25,9 +25,9 @@ WATCHLIST = [
         "must_any": ["lego", "fortnite", "battle bus"],
         "target_buy": 60,
         "target_strong_buy": 50,
-        "thesis": "Licence Fortnite extremement populaire, retrait LEGO souvent annonce tardivement.",
-        "counter_thesis": "Aucun catalyseur date confirme. Production possiblement prolongee.",
-        "invalidation": "Prolongation au-dela de 2027 ou prix > 100 EUR.",
+        "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance. Le Battle Bus est un objet iconique du jeu, ce qui peut creer une demande de collectionneurs quand le set disparaitra des rayons.",
+        "counter_thesis": "Aucun catalyseur date confirme pour l'instant. La production LEGO peut etre prolongee si les ventes restent fortes, ce qui retarderait le retrait et casserait la these de rarete future.",
+        "invalidation": "Si LEGO annonce une prolongation de production au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre d'entree est fermee.",
     },
     {
         "id": "lego_75639",
@@ -41,9 +41,9 @@ WATCHLIST = [
         "must_any": ["lego", "one piece", "going merry"],
         "target_buy": 90,
         "target_strong_buy": 80,
-        "thesis": "Premier set LEGO One Piece, licence culte au Japon.",
-        "counter_thesis": "Production possiblement longue, rarete non garantie.",
-        "invalidation": "Reedition amelioree ou perte de popularite One Piece.",
+        "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe. Le Going Merry est le navire emblematique de la serie, ce qui lui donne une valeur symbolique forte. Public adulte nostalgique et collectionneurs LEGO se recoupent.",
+        "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees, repoussant la rarete. La communaute One Piece est grande mais pas necessairement fortune, ce qui peut limiter le pouvoir d'achat sur ce type de produit.",
+        "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique. Si la licence One Piece perd de sa popularite en Europe, la these s'affaiblit.",
     },
     {
         "id": "lego_21371",
@@ -57,9 +57,9 @@ WATCHLIST = [
         "must_any": ["lego", "wallace", "gromit"],
         "target_buy": 85,
         "target_strong_buy": 70,
-        "thesis": "Licence culte des annees 90, LEGO Ideas a tirage initial limite.",
-        "counter_thesis": "Marche europeen moins demande que US.",
-        "invalidation": "Production prolongee au-dela de 2027.",
+        "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas qui signifie un tirage initial limite. Wallace et Gromit sont des personnages iconiques de la culture populaire britannique, et ce type de set se conserve generalement bien.",
+        "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence. Le set vient de sortir, donc il est encore en production, ce qui signifie que la rarete future n'est pas garantie.",
+        "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre. Si le prix median depasse 130 EUR, c'est trop tard pour entrer.",
     },
     {
         "id": "lorcana_hyperia_box",
@@ -75,9 +75,9 @@ WATCHLIST = [
         "must_not": ["case", "sleeve", "playmat", "bundle", "single"],
         "target_buy": 100,
         "target_strong_buy": 85,
-        "thesis": "Disney et Pixar se croisent sur Lorcana, licence Coco universellement aimee.",
-        "counter_thesis": "Historique de ventes secondaires trop court.",
-        "invalidation": "Reimpression massive Disney ou chute sous 80 EUR.",
+        "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana, ce qui peut attirer un public plus large que les joueurs de TCG habituels. La licence Coco est universellement aimee.",
+        "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables. Disney a montre par le passe qu'il pouvait reimprimer massivement quand la demande est forte, ce qui casserait la rarete.",
+        "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte. Si le prix median chute sous 80 EUR, c'est un signe de surabondance.",
     },
     {
         "id": "riftbound_radiance_box",
@@ -93,9 +93,9 @@ WATCHLIST = [
         "must_not": ["case", "sleeve", "playmat", "bundle"],
         "target_buy": 110,
         "target_strong_buy": 100,
-        "thesis": "Nouveau jeu Riot Games, capitalise sur League of Legends.",
-        "counter_thesis": "Riot reimprime agressivement. Nouveau TCG met du temps a trouver son public.",
-        "invalidation": "Seconde impression Riot dans les six mois.",
+        "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends. Riot a un historique de forte communaute et de production soignee sur ses produits derives.",
+        "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche, ce qui limite fortement le potentiel de rarete. Les nouveaux TCG mettent souvent plusieurs annees a trouver leur public stable.",
+        "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte. Si le prix median depasse 150 EUR sans baisse de stock, c'est un signe de speculation pure.",
     },
 ]
 
@@ -131,6 +131,7 @@ def run():
 
     print(f"[config] capital mensuel : {config['capital_monthly']} EUR", flush=True)
     print(f"[config] capital engage : {config['capital_engaged']} EUR", flush=True)
+    print(f"[config] positions en cours : {len(portfolio.get('positions', []))}", flush=True)
 
     results = []
     alerts = []
@@ -176,6 +177,8 @@ def run():
             print(f"[{item['source']}] {item['id']} : median {snap['sold_price_median']} {snap['currency']}", flush=True)
             print(f"   {decision['message']}", flush=True)
             print(f"   Cycle : {decision['cycle_num']}/7 ({decision['cycle_label']})", flush=True)
+            if decision["allocation_eur"][1] > 0:
+                print(f"   Allocation suggeree : {decision['allocation_eur'][0]} a {decision['allocation_eur'][1]} EUR", flush=True)
 
             radar_products.append({
                 "id": item["id"],
@@ -244,22 +247,25 @@ def run():
             if trend:
                 trend["product_id"] = item["id"]
                 results.append(trend)
-                print(f"[trends] {item['id']} : acceleration x{trend['trend_acceleration']} "
+                acc = trend.get("trend_acceleration")
+                acc_str = f"x{acc}" if acc is not None else "xNone"
+                print(f"[trends] {item['id']} : acceleration {acc_str} "
                       f"(recent {trend['trend_recent_avg']} vs passe {trend['trend_older_avg']})",
                       flush=True)
                 trends_signals.append({
                     "id": item["id"],
                     "keyword": item["keyword"],
-                    "acceleration": trend["trend_acceleration"],
+                    "acceleration": acc,
                     "recent_avg": trend["trend_recent_avg"],
                     "older_avg": trend["trend_older_avg"],
+                    "statut": trend.get("trend_statut", ""),
                 })
             else:
                 print(f"[trends] {item['id']} : aucun resultat", flush=True)
         except Exception as e:
             print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Ecriture radar.json ---
+    # --- Section 3 : Ecriture radar.json ---
     n_buy = sum(1 for p in radar_products if p["decision"] in ("BUY", "STRONG_BUY"))
     n_wait = sum(1 for p in radar_products if p["decision"] == "WAIT")
     n_watch = sum(1 for p in radar_products if p["decision"] == "WATCH")
@@ -268,7 +274,7 @@ def run():
     capital_available = config["capital_max_available"] - config["capital_engaged"]
 
     radar = {
-        "generated_at": datetime.utcnow().isoformat() + "Z",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "config": config,
         "summary": {
             "n_buy": n_buy,
