@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from connectors.ebay import fetch_sold as fetch_ebay
 from connectors.cardmarket import fetch_cardmarket
 from connectors.trends_spy import fetch_trends_spy
+from connectors.reddit import fetch_reddit
 from connectors.telegram import send_message, format_alert, send_daily_digest
 from storage import init_db, insert_snapshots
 from edge_engine import load_config, load_portfolio, decide
@@ -25,9 +26,9 @@ WATCHLIST = [
         "must_any": ["lego", "fortnite", "battle bus"],
         "target_buy": 60,
         "target_strong_buy": 50,
-        "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance. Le Battle Bus est un objet iconique du jeu, ce qui peut creer une demande de collectionneurs quand le set disparaitra des rayons.",
-        "counter_thesis": "Aucun catalyseur date confirme pour l'instant. La production LEGO peut etre prolongee si les ventes restent fortes, ce qui retarderait le retrait et casserait la these de rarete future.",
-        "invalidation": "Si LEGO annonce une prolongation de production au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre d'entree est fermee.",
+        "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance.",
+        "counter_thesis": "Aucun catalyseur date confirme. La production LEGO peut etre prolongee si les ventes restent fortes.",
+        "invalidation": "Si LEGO prolonge au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre est fermee.",
     },
     {
         "id": "lego_75639",
@@ -41,9 +42,9 @@ WATCHLIST = [
         "must_any": ["lego", "one piece", "going merry"],
         "target_buy": 90,
         "target_strong_buy": 80,
-        "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe. Le Going Merry est le navire emblematique de la serie, ce qui lui donne une valeur symbolique forte. Public adulte nostalgique et collectionneurs LEGO se recoupent.",
-        "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees, repoussant la rarete. La communaute One Piece est grande mais pas necessairement fortune, ce qui peut limiter le pouvoir d'achat sur ce type de produit.",
-        "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique. Si la licence One Piece perd de sa popularite en Europe, la these s'affaiblit.",
+        "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe.",
+        "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees.",
+        "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique.",
     },
     {
         "id": "lego_21371",
@@ -57,9 +58,9 @@ WATCHLIST = [
         "must_any": ["lego", "wallace", "gromit"],
         "target_buy": 85,
         "target_strong_buy": 70,
-        "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas qui signifie un tirage initial limite. Wallace et Gromit sont des personnages iconiques de la culture populaire britannique, et ce type de set se conserve generalement bien.",
-        "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence. Le set vient de sortir, donc il est encore en production, ce qui signifie que la rarete future n'est pas garantie.",
-        "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre. Si le prix median depasse 130 EUR, c'est trop tard pour entrer.",
+        "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas a tirage initial limite.",
+        "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence.",
+        "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre.",
     },
     {
         "id": "lorcana_hyperia_box",
@@ -75,9 +76,9 @@ WATCHLIST = [
         "must_not": ["case", "sleeve", "playmat", "bundle", "single"],
         "target_buy": 100,
         "target_strong_buy": 85,
-        "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana, ce qui peut attirer un public plus large que les joueurs de TCG habituels. La licence Coco est universellement aimee.",
-        "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables. Disney a montre par le passe qu'il pouvait reimprimer massivement quand la demande est forte, ce qui casserait la rarete.",
-        "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte. Si le prix median chute sous 80 EUR, c'est un signe de surabondance.",
+        "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana.",
+        "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables.",
+        "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte.",
     },
     {
         "id": "riftbound_radiance_box",
@@ -93,9 +94,9 @@ WATCHLIST = [
         "must_not": ["case", "sleeve", "playmat", "bundle"],
         "target_buy": 110,
         "target_strong_buy": 100,
-        "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends. Riot a un historique de forte communaute et de production soignee sur ses produits derives.",
-        "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche, ce qui limite fortement le potentiel de rarete. Les nouveaux TCG mettent souvent plusieurs annees a trouver leur public stable.",
-        "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte. Si le prix median depasse 150 EUR sans baisse de stock, c'est un signe de speculation pure.",
+        "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends.",
+        "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche.",
+        "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte.",
     },
 ]
 
@@ -106,6 +107,15 @@ TRENDS_WATCH = [
     {"keyword": "LEGO Wallace Gromit", "id": "trends_lego_wallace"},
     {"keyword": "Lorcana Hyperia", "id": "trends_lorcana_hyperia"},
     {"keyword": "Riftbound", "id": "trends_riftbound"},
+]
+
+
+REDDIT_WATCH = [
+    {"subreddit": "lego", "query": "Fortnite Battle Bus", "id": "reddit_lego_77073"},
+    {"subreddit": "lego", "query": "Going Merry", "id": "reddit_lego_75639"},
+    {"subreddit": "lego", "query": "Wallace Gromit", "id": "reddit_lego_21371"},
+    {"subreddit": "Lorcana", "query": "Hyperia", "id": "reddit_lorcana_hyperia"},
+    {"subreddit": "Riftbound", "query": "Radiance", "id": "reddit_riftbound"},
 ]
 
 
@@ -137,8 +147,11 @@ def run():
     alerts = []
     digest = []
     radar_products = []
+    trends_signals = []
+    reddit_signals = []
 
     # --- Section 1 : Watchlist principale (prix) ---
+    print("\n[main] === section prix ===", flush=True)
     for item in WATCHLIST:
         try:
             snap = fetch_one(item)
@@ -238,9 +251,8 @@ def run():
                 "invalidation": item.get("invalidation", ""),
             })
 
-    # --- Section 2 : Google Trends via trendspy (gratuit) ---
+    # --- Section 2 : Google Trends (gratuit via trendspy) ---
     print("\n[trends] === section Google Trends ===", flush=True)
-    trends_signals = []
     for item in TRENDS_WATCH:
         try:
             trend = fetch_trends_spy(item["keyword"])
@@ -265,7 +277,34 @@ def run():
         except Exception as e:
             print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Ecriture radar.json ---
+    # --- Section 3 : Reddit (gratuit via 'redd') ---
+    print("\n[reddit] === section Reddit ===", flush=True)
+    for item in REDDIT_WATCH:
+        try:
+            snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
+            if snap:
+                snap["product_id"] = item["id"]
+                results.append(snap)
+                print(f"[reddit] {item['id']} : {snap['reddit_total']} posts, "
+                      f"{snap['reddit_recent_30d']} recents 30j, "
+                      f"score moy {snap['reddit_avg_score']}, "
+                      f"comm moy {snap['reddit_avg_comments']}",
+                      flush=True)
+                reddit_signals.append({
+                    "id": item["id"],
+                    "subreddit": item["subreddit"],
+                    "query": item["query"],
+                    "total": snap["reddit_total"],
+                    "recent_30d": snap["reddit_recent_30d"],
+                    "avg_score": snap["reddit_avg_score"],
+                    "avg_comments": snap["reddit_avg_comments"],
+                })
+            else:
+                print(f"[reddit] {item['id']} : aucun resultat", flush=True)
+        except Exception as e:
+            print(f"[reddit] {item['id']} ERREUR : {e}", flush=True)
+
+    # --- Section 4 : Ecriture radar.json ---
     n_buy = sum(1 for p in radar_products if p["decision"] in ("BUY", "STRONG_BUY"))
     n_wait = sum(1 for p in radar_products if p["decision"] == "WAIT")
     n_watch = sum(1 for p in radar_products if p["decision"] == "WATCH")
@@ -289,6 +328,7 @@ def run():
         },
         "products": radar_products,
         "trends": trends_signals,
+        "reddit": reddit_signals,
     }
 
     with open("radar.json", "w") as f:
