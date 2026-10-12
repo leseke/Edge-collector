@@ -110,21 +110,33 @@ TRENDS_POOL = [
 ]
 
 
-REDDIT_WATCH = [
+# Un seul mot-cle Reddit par run (rotation) pour eviter le rate-limit Arctic Shift
+REDDIT_POOL = [
     {"subreddit": "lego", "query": "Going Merry", "id": "reddit_lego_75639"},
     {"subreddit": "Lorcana", "query": "Hyperia", "id": "reddit_lorcana_hyperia"},
     {"subreddit": "Riftbound", "query": "Radiance", "id": "reddit_riftbound"},
 ]
 
 
+def _get_run_number():
+    try:
+        return int(os.environ.get("GITHUB_RUN_NUMBER", "0"))
+    except (ValueError, TypeError):
+        return 0
+
+
 def _get_trends_watch():
     """Rotation : 2 mots-cles par run pour eviter le rate-limit Google."""
-    try:
-        run_n = int(os.environ.get("GITHUB_RUN_NUMBER", "0"))
-    except (ValueError, TypeError):
-        run_n = 0
+    run_n = _get_run_number()
     start = (run_n * 2) % len(TRENDS_POOL)
     return [TRENDS_POOL[(start + i) % len(TRENDS_POOL)] for i in range(2)]
+
+
+def _get_reddit_watch():
+    """Rotation : 1 mot-cle par run pour eviter le rate-limit Arctic Shift."""
+    run_n = _get_run_number()
+    start = run_n % len(REDDIT_POOL)
+    return [REDDIT_POOL[start]]
 
 
 def fetch_one(item):
@@ -288,9 +300,12 @@ def run():
         except Exception as e:
             print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Reddit via Arctic Shift ---
+    # --- Section 3 : Reddit via Arctic Shift (rotation 1/run) ---
     print("\n[reddit] === section Reddit ===", flush=True)
-    for item in REDDIT_WATCH:
+    reddit_watch = _get_reddit_watch()
+    print(f"[reddit] mot-cle de ce run : "
+          f"{[r['query'] for r in reddit_watch]}", flush=True)
+    for item in reddit_watch:
         try:
             snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
             if snap:
