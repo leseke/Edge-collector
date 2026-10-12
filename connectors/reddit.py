@@ -1,25 +1,41 @@
+import requests
 from datetime import datetime, timezone
 
-try:
-    from redd import Redd
-    REDD_AVAILABLE = True
-except ImportError:
-    REDD_AVAILABLE = False
-    print("[reddit] module 'redd' non installe, connecteur desactive", flush=True)
+BASE_URL = "https://arctic-shift.photon-reddit.com/api"
 
 
 def fetch_reddit(subreddit, query, limit=25):
-    """Recupere les posts Reddit via la bibliotheque 'redd'."""
-    if not REDD_AVAILABLE:
-        return None
+    """Recupere les posts Reddit via l'archive publique Arctic Shift.
+
+    Arctic Shift est une archive communautaire de Reddit qui accepte les
+    requetes depuis n'importe quelle IP, y compris GitHub Actions.
+    Aucune cle API, aucun compte necessaire.
+    """
+    url = f"{BASE_URL}/posts/search"
+    params = {
+        "subreddit": subreddit,
+        "title": query,
+        "limit": min(limit, 100),
+        "sort": "desc",
+    }
 
     try:
-        with Redd() as r:
-            posts = list(r.search_subreddit(subreddit, query, limit=limit))
+        r = requests.get(url, params=params, timeout=60)
     except Exception as e:
         print(f"[reddit] exception r/{subreddit} '{query}' : {e}", flush=True)
         return None
 
+    if r.status_code != 200:
+        print(f"[reddit] HTTP {r.status_code} sur r/{subreddit} '{query}' : {r.text[:200]}", flush=True)
+        return None
+
+    try:
+        data = r.json()
+    except Exception as e:
+        print(f"[reddit] reponse non-JSON : {e}", flush=True)
+        return None
+
+    posts = data.get("data", [])
     if not posts:
         print(f"[reddit] r/{subreddit} '{query}' : aucun post", flush=True)
         return None
@@ -30,13 +46,13 @@ def fetch_reddit(subreddit, query, limit=25):
     now = datetime.now(timezone.utc)
 
     for p in posts:
-        s = getattr(p, "score", None)
+        s = p.get("score")
         if s is not None:
             scores.append(s)
-        c = getattr(p, "num_comments", None)
+        c = p.get("num_comments")
         if c is not None:
             comments.append(c)
-        created = getattr(p, "created_utc", None)
+        created = p.get("created_utc")
         if created:
             try:
                 dt = datetime.fromtimestamp(created, tz=timezone.utc)
@@ -50,7 +66,7 @@ def fetch_reddit(subreddit, query, limit=25):
 
     return {
         "product_id": f"reddit_{subreddit}_{query}".lower().replace(" ", "_"),
-        "source": "reddit",
+        "source": "reddit_arctic",
         "captured_at": now.isoformat(),
         "sold_price_avg": None,
         "sold_price_median": None,
