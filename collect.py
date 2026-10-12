@@ -125,17 +125,20 @@ def _get_run_number():
 
 
 def _get_trends_watch():
-    """Rotation : 1 mot-cle par run pour eviter le rate-limit Google."""
     run_n = _get_run_number()
     start = run_n % len(TRENDS_POOL)
     return [TRENDS_POOL[start]]
 
 
 def _get_reddit_watch():
-    """Rotation : 1 mot-cle par run pour eviter le rate-limit Arctic Shift."""
     run_n = _get_run_number()
     start = (run_n + 1) % len(REDDIT_POOL)
     return [REDDIT_POOL[start]]
+
+
+def _is_enabled(config, source_name):
+    """Verifie si une source est active dans config.json."""
+    return config.get("enabled_sources", {}).get(source_name, True)
 
 
 def fetch_one(item):
@@ -158,9 +161,13 @@ def run():
     config = load_config()
     portfolio = load_portfolio()
 
+    enabled = config.get("enabled_sources", {})
     print(f"[config] capital mensuel : {config['capital_monthly']} EUR", flush=True)
     print(f"[config] capital engage : {config['capital_engaged']} EUR", flush=True)
-    print(f"[config] positions en cours : {len(portfolio.get('positions', []))}", flush=True)
+    print(f"[config] sources actives : "
+          f"{[k for k, v in enabled.items() if v]}", flush=True)
+    print(f"[config] sources desactivees : "
+          f"{[k for k, v in enabled.items() if not v]}", flush=True)
 
     results = []
     alerts = []
@@ -171,7 +178,14 @@ def run():
 
     # --- Section 1 : Watchlist principale (prix) ---
     print("\n[main] === section prix ===", flush=True)
+    if not _is_enabled(config, "ebay") and not _is_enabled(config, "cardmarket"):
+        print("[main] toutes les sources prix sont desactivees, section ignoree", flush=True)
     for item in WATCHLIST:
+        # Verifier si la source est active
+        if not _is_enabled(config, item["source"]):
+            print(f"[{item['source']}] {item['id']} : source desactivee, ignore", flush=True)
+            continue
+
         try:
             snap = fetch_one(item)
             if not snap:
@@ -270,64 +284,70 @@ def run():
                 "invalidation": item.get("invalidation", ""),
             })
 
-    # --- Section 2 : Google Trends (rotation 1/run) ---
+    # --- Section 2 : Google Trends (si active) ---
     print("\n[trends] === section Google Trends ===", flush=True)
-    trends_watch = _get_trends_watch()
-    print(f"[trends] mot-cle de ce run : "
-          f"{[t['keyword'] for t in trends_watch]}", flush=True)
-    for item in trends_watch:
-        try:
-            trend = fetch_trends_spy(item["keyword"])
-            if trend:
-                trend["product_id"] = item["id"]
-                results.append(trend)
-                acc = trend.get("trend_acceleration")
-                acc_str = f"x{acc}" if acc is not None else "xNone"
-                print(f"[trends] {item['id']} : acceleration {acc_str} "
-                      f"(recent {trend['trend_recent_avg']} vs passe {trend['trend_older_avg']})",
-                      flush=True)
-                trends_signals.append({
-                    "id": item["id"],
-                    "keyword": item["keyword"],
-                    "acceleration": acc,
-                    "recent_avg": trend["trend_recent_avg"],
-                    "older_avg": trend["trend_older_avg"],
-                    "statut": trend.get("trend_statut", ""),
-                })
-            else:
-                print(f"[trends] {item['id']} : aucun resultat", flush=True)
-        except Exception as e:
-            print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
+    if not _is_enabled(config, "trends"):
+        print("[trends] source desactivee dans config.json, section ignoree", flush=True)
+    else:
+        trends_watch = _get_trends_watch()
+        print(f"[trends] mot-cle de ce run : "
+              f"{[t['keyword'] for t in trends_watch]}", flush=True)
+        for item in trends_watch:
+            try:
+                trend = fetch_trends_spy(item["keyword"])
+                if trend:
+                    trend["product_id"] = item["id"]
+                    results.append(trend)
+                    acc = trend.get("trend_acceleration")
+                    acc_str = f"x{acc}" if acc is not None else "xNone"
+                    print(f"[trends] {item['id']} : acceleration {acc_str} "
+                          f"(recent {trend['trend_recent_avg']} vs passe {trend['trend_older_avg']})",
+                          flush=True)
+                    trends_signals.append({
+                        "id": item["id"],
+                        "keyword": item["keyword"],
+                        "acceleration": acc,
+                        "recent_avg": trend["trend_recent_avg"],
+                        "older_avg": trend["trend_older_avg"],
+                        "statut": trend.get("trend_statut", ""),
+                    })
+                else:
+                    print(f"[trends] {item['id']} : aucun resultat", flush=True)
+            except Exception as e:
+                print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Reddit via Arctic Shift (rotation 1/run) ---
+    # --- Section 3 : Reddit via Arctic Shift (si active) ---
     print("\n[reddit] === section Reddit ===", flush=True)
-    reddit_watch = _get_reddit_watch()
-    print(f"[reddit] mot-cle de ce run : "
-          f"{[r['query'] for r in reddit_watch]}", flush=True)
-    for item in reddit_watch:
-        try:
-            snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
-            if snap:
-                snap["product_id"] = item["id"]
-                results.append(snap)
-                print(f"[reddit] {item['id']} : {snap['reddit_total']} posts, "
-                      f"{snap['reddit_recent_30d']} recents 30j, "
-                      f"score moy {snap['reddit_avg_score']}, "
-                      f"comm moy {snap['reddit_avg_comments']}",
-                      flush=True)
-                reddit_signals.append({
-                    "id": item["id"],
-                    "subreddit": item["subreddit"],
-                    "query": item["query"],
-                    "total": snap["reddit_total"],
-                    "recent_30d": snap["reddit_recent_30d"],
-                    "avg_score": snap["reddit_avg_score"],
-                    "avg_comments": snap["reddit_avg_comments"],
-                })
-            else:
-                print(f"[reddit] {item['id']} : aucun resultat", flush=True)
-        except Exception as e:
-            print(f"[reddit] {item['id']} ERREUR : {e}", flush=True)
+    if not _is_enabled(config, "reddit"):
+        print("[reddit] source desactivee dans config.json, section ignoree", flush=True)
+    else:
+        reddit_watch = _get_reddit_watch()
+        print(f"[reddit] mot-cle de ce run : "
+              f"{[r['query'] for r in reddit_watch]}", flush=True)
+        for item in reddit_watch:
+            try:
+                snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
+                if snap:
+                    snap["product_id"] = item["id"]
+                    results.append(snap)
+                    print(f"[reddit] {item['id']} : {snap['reddit_total']} posts, "
+                          f"{snap['reddit_recent_30d']} recents 30j, "
+                          f"score moy {snap['reddit_avg_score']}, "
+                          f"comm moy {snap['reddit_avg_comments']}",
+                          flush=True)
+                    reddit_signals.append({
+                        "id": item["id"],
+                        "subreddit": item["subreddit"],
+                        "query": item["query"],
+                        "total": snap["reddit_total"],
+                        "recent_30d": snap["reddit_recent_30d"],
+                        "avg_score": snap["reddit_avg_score"],
+                        "avg_comments": snap["reddit_avg_comments"],
+                    })
+                else:
+                    print(f"[reddit] {item['id']} : aucun resultat", flush=True)
+            except Exception as e:
+                print(f"[reddit] {item['id']} ERREUR : {e}", flush=True)
 
     # --- Section 4 : Ecriture radar.json ---
     n_buy = sum(1 for p in radar_products if p["decision"] in ("BUY", "STRONG_BUY"))
