@@ -9,9 +9,9 @@ except ImportError:
     print("[trends] module 'trendspy' non installe", flush=True)
 
 
-# Delai entre deux requetes Google Trends (en secondes)
-# Augmente si Google continue a rate-limiter
-REQUEST_DELAY = 20
+# Delai entre le demarrage et la requete (en secondes).
+# Google rate-limite tres vite, il faut y aller doucement.
+REQUEST_DELAY = 30
 
 
 def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
@@ -22,7 +22,7 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
     time.sleep(REQUEST_DELAY)
 
     try:
-        tr = Trends(request_delay=4.0)
+        tr = Trends(request_delay=8.0)
         df = tr.interest_over_time(
             [keyword],
             timeframe=timeframe,
