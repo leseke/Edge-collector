@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T09:31:16.556131+00:00",
+  "generated_at": "2026-10-12T09:35:50.614850+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -141,34 +141,8 @@
       "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte."
     }
   ],
-  "trends": [
-    {
-      "id": "trends_lorcana_hyperia",
-      "keyword": "Lorcana Hyperia",
-      "acceleration": null,
-      "recent_avg": 14.7,
-      "older_avg": 0.0,
-      "statut": "pas de base (recent 14.7, passe vide)"
-    },
-    {
-      "id": "trends_riftbound",
-      "keyword": "Riftbound",
-      "acceleration": 1.46,
-      "recent_avg": 70.6,
-      "older_avg": 48.4,
-      "statut": "acceleration x1.46"
-    }
-  ],
+  "trends": [],
   "reddit": [
-    {
-      "id": "reddit_lego_75639",
-      "subreddit": "lego",
-      "query": "Going Merry",
-      "total": 25,
-      "recent_30d": 2,
-      "avg_score": 20.8,
-      "avg_comments": 3.8
-    },
     {
       "id": "reddit_riftbound",
       "subreddit": "Riftbound",
