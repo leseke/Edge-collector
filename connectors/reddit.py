@@ -4,33 +4,24 @@ from datetime import datetime, timezone, timedelta
 
 BASE_URL = "https://arctic-shift.photon-reddit.com/api"
 
-# Delai entre deux requetes Arctic Shift (en secondes)
-REQUEST_DELAY = 20
-
-_last_call = [0.0]
-
-
-def _wait():
-    now = time.time()
-    elapsed = now - _last_call[0]
-    if elapsed < REQUEST_DELAY:
-        time.sleep(REQUEST_DELAY - elapsed)
-    _last_call[0] = time.time()
+# Arctic Shift est une archive benevole : elle rate-limite agressivement.
+# Un seul appel par run + retries genereux + delai long = fiable.
+REQUEST_DELAY = 25
 
 
-def _try_fetch(url, params, retries=3):
-    """Appel HTTP avec retry automatique en cas de 422 (timeout server)."""
+def _try_fetch(url, params, retries=4):
+    """Appel HTTP avec retry progressif en cas de 422 (timeout server)."""
     for attempt in range(retries + 1):
         try:
             r = requests.get(url, params=params, timeout=90)
         except Exception as e:
             print(f"[reddit] exception reseau (essai {attempt+1}) : {e}", flush=True)
-            time.sleep(6)
+            time.sleep(8)
             continue
         if r.status_code == 200:
             return r
         if r.status_code == 422 and attempt < retries:
-            wait = 8 + attempt * 4
+            wait = 10 + attempt * 5
             print(f"[reddit] 422 timeout serveur, retry dans {wait}s (essai {attempt+1})", flush=True)
             time.sleep(wait)
             continue
@@ -39,15 +30,10 @@ def _try_fetch(url, params, retries=3):
 
 
 def fetch_reddit(subreddit, query, limit=25):
-    """Recupere les posts Reddit via l'archive publique Arctic Shift.
-
-    Arctic Shift accepte les requetes depuis n'importe quelle IP mais
-    rate-limite quand on envoie trop de requetes rapidement.
-    """
-    _wait()
+    """Recupere les posts Reddit via l'archive publique Arctic Shift."""
+    time.sleep(REQUEST_DELAY)
 
     url = f"{BASE_URL}/posts/search"
-    # Limiter la recherche aux 12 derniers mois pour accelerer la requete
     twelve_months_ago = int(
         (datetime.now(timezone.utc) - timedelta(days=365)).timestamp()
     )
@@ -59,7 +45,7 @@ def fetch_reddit(subreddit, query, limit=25):
         "after": twelve_months_ago,
     }
 
-    r = _try_fetch(url, params, retries=3)
+    r = _try_fetch(url, params, retries=4)
     if r is None:
         print(f"[reddit] r/{subreddit} '{query}' : echec apres retries", flush=True)
         return None
