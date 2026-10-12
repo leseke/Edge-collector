@@ -11,4 +11,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python -u diagnose_redd.py
+      - run: python -u diagnose_redd2.py
