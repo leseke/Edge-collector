@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T09:35:50.614850+00:00",
+  "generated_at": "2026-10-12T13:01:31.319927+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -16,7 +16,14 @@
     "allocation_future_classic_pct": [
       5,
       15
-    ]
+    ],
+    "enabled_sources": {
+      "ebay": true,
+      "cardmarket": true,
+      "trends": false,
+      "reddit": true,
+      "scavio": true
+    }
   },
   "summary": {
     "n_buy": 0,
@@ -144,13 +151,14 @@
   "trends": [],
   "reddit": [
     {
-      "id": "reddit_riftbound",
-      "subreddit": "Riftbound",
-      "query": "Radiance",
+      "id": "reddit_lego_75639",
+      "subreddit": "lego",
+      "query": "Going Merry",
       "total": 25,
-      "recent_30d": 25,
-      "avg_score": 19.9,
-      "avg_comments": 7.0
+      "recent_30d": 2,
+      "avg_score": 20.8,
+      "avg_comments": 3.8
     }
-  ]
+  ],
+  "scavio_offers": []
 }
