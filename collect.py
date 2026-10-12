@@ -6,6 +6,7 @@ from connectors.ebay import fetch_sold as fetch_ebay
 from connectors.cardmarket import fetch_cardmarket
 from connectors.trends_spy import fetch_trends_spy
 from connectors.reddit import fetch_reddit
+from connectors.scavio import fetch_scavio_offers
 from connectors.telegram import send_message, format_alert, send_daily_digest
 from storage import init_db, insert_snapshots
 from edge_engine import load_config, load_portfolio, decide
@@ -117,6 +118,15 @@ REDDIT_POOL = [
 ]
 
 
+SCAVIO_WATCH = [
+    {"query": "LEGO 75639 Going Merry", "id": "scavio_lego_75639"},
+    {"query": "LEGO 77073 Fortnite", "id": "scavio_lego_77073"},
+    {"query": "LEGO 21371 Wallace Gromit", "id": "scavio_lego_21371"},
+    {"query": "Lorcana Hyperia City booster box", "id": "scavio_lorcana_hyperia"},
+    {"query": "Riftbound Radiance booster box", "id": "scavio_riftbound_radiance"},
+]
+
+
 def _get_run_number():
     try:
         return int(os.environ.get("GITHUB_RUN_NUMBER", "0"))
@@ -137,7 +147,6 @@ def _get_reddit_watch():
 
 
 def _is_enabled(config, source_name):
-    """Verifie si une source est active dans config.json."""
     return config.get("enabled_sources", {}).get(source_name, True)
 
 
@@ -175,13 +184,11 @@ def run():
     radar_products = []
     trends_signals = []
     reddit_signals = []
+    scavio_offers = []
 
     # --- Section 1 : Watchlist principale (prix) ---
     print("\n[main] === section prix ===", flush=True)
-    if not _is_enabled(config, "ebay") and not _is_enabled(config, "cardmarket"):
-        print("[main] toutes les sources prix sont desactivees, section ignoree", flush=True)
     for item in WATCHLIST:
-        # Verifier si la source est active
         if not _is_enabled(config, item["source"]):
             print(f"[{item['source']}] {item['id']} : source desactivee, ignore", flush=True)
             continue
@@ -191,19 +198,15 @@ def run():
             if not snap:
                 print(f"[{item['source']}] {item['id']} : aucun resultat", flush=True)
                 radar_products.append({
-                    "id": item["id"],
-                    "name": item["name"],
+                    "id": item["id"], "name": item["name"],
                     "emoji": item.get("emoji", "?"),
                     "image_url": item.get("image_url", ""),
-                    "source": item["source"],
-                    "decision": "NO_DATA",
+                    "source": item["source"], "decision": "NO_DATA",
                     "price_eur": None,
                     "target_buy": item.get("target_buy"),
                     "target_strong_buy": item.get("target_strong_buy"),
-                    "ecart_pct": None,
-                    "allocation_eur": [0, 0],
-                    "cycle_num": 0,
-                    "cycle_label": "Inconnu",
+                    "ecart_pct": None, "allocation_eur": [0, 0],
+                    "cycle_num": 0, "cycle_label": "Inconnu",
                     "categorie": item.get("category", "flip").upper(),
                     "thesis": item.get("thesis", ""),
                     "counter_thesis": item.get("counter_thesis", ""),
@@ -222,13 +225,9 @@ def run():
 
             print(f"[{item['source']}] {item['id']} : median {snap['sold_price_median']} {snap['currency']}", flush=True)
             print(f"   {decision['message']}", flush=True)
-            print(f"   Cycle : {decision['cycle_num']}/7 ({decision['cycle_label']})", flush=True)
-            if decision["allocation_eur"][1] > 0:
-                print(f"   Allocation suggeree : {decision['allocation_eur'][0]} a {decision['allocation_eur'][1]} EUR", flush=True)
 
             radar_products.append({
-                "id": item["id"],
-                "name": item["name"],
+                "id": item["id"], "name": item["name"],
                 "emoji": item.get("emoji", "?"),
                 "image_url": item.get("image_url", ""),
                 "source": item["source"],
@@ -250,12 +249,8 @@ def run():
                 "invalidation": item.get("invalidation", ""),
             })
 
-            digest.append({
-                "id": item["id"],
-                "niveau": decision["decision"],
-                "prix_eur": prix_eur,
-                "source": item["source"],
-            })
+            digest.append({"id": item["id"], "niveau": decision["decision"],
+                           "prix_eur": prix_eur, "source": item["source"]})
 
             if decision["decision"] in ("BUY", "STRONG_BUY"):
                 alerts.append(item)
@@ -265,33 +260,28 @@ def run():
         except Exception as e:
             print(f"[{item['source']}] {item['id']} ERREUR : {e}", flush=True)
             radar_products.append({
-                "id": item["id"],
-                "name": item["name"],
+                "id": item["id"], "name": item["name"],
                 "emoji": item.get("emoji", "?"),
                 "image_url": item.get("image_url", ""),
-                "source": item["source"],
-                "decision": "ERROR",
+                "source": item["source"], "decision": "ERROR",
                 "price_eur": None,
                 "target_buy": item.get("target_buy"),
                 "target_strong_buy": item.get("target_strong_buy"),
-                "ecart_pct": None,
-                "allocation_eur": [0, 0],
-                "cycle_num": 0,
-                "cycle_label": "Inconnu",
+                "ecart_pct": None, "allocation_eur": [0, 0],
+                "cycle_num": 0, "cycle_label": "Inconnu",
                 "categorie": item.get("category", "flip").upper(),
                 "thesis": item.get("thesis", ""),
                 "counter_thesis": item.get("counter_thesis", ""),
                 "invalidation": item.get("invalidation", ""),
             })
 
-    # --- Section 2 : Google Trends (si active) ---
+    # --- Section 2 : Google Trends ---
     print("\n[trends] === section Google Trends ===", flush=True)
     if not _is_enabled(config, "trends"):
         print("[trends] source desactivee dans config.json, section ignoree", flush=True)
     else:
         trends_watch = _get_trends_watch()
-        print(f"[trends] mot-cle de ce run : "
-              f"{[t['keyword'] for t in trends_watch]}", flush=True)
+        print(f"[trends] mot-cle de ce run : {[t['keyword'] for t in trends_watch]}", flush=True)
         for item in trends_watch:
             try:
                 trend = fetch_trends_spy(item["keyword"])
@@ -304,26 +294,22 @@ def run():
                           f"(recent {trend['trend_recent_avg']} vs passe {trend['trend_older_avg']})",
                           flush=True)
                     trends_signals.append({
-                        "id": item["id"],
-                        "keyword": item["keyword"],
+                        "id": item["id"], "keyword": item["keyword"],
                         "acceleration": acc,
                         "recent_avg": trend["trend_recent_avg"],
                         "older_avg": trend["trend_older_avg"],
                         "statut": trend.get("trend_statut", ""),
                     })
-                else:
-                    print(f"[trends] {item['id']} : aucun resultat", flush=True)
             except Exception as e:
                 print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Reddit via Arctic Shift (si active) ---
+    # --- Section 3 : Reddit ---
     print("\n[reddit] === section Reddit ===", flush=True)
     if not _is_enabled(config, "reddit"):
         print("[reddit] source desactivee dans config.json, section ignoree", flush=True)
     else:
         reddit_watch = _get_reddit_watch()
-        print(f"[reddit] mot-cle de ce run : "
-              f"{[r['query'] for r in reddit_watch]}", flush=True)
+        print(f"[reddit] mot-cle de ce run : {[r['query'] for r in reddit_watch]}", flush=True)
         for item in reddit_watch:
             try:
                 snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
@@ -332,24 +318,46 @@ def run():
                     results.append(snap)
                     print(f"[reddit] {item['id']} : {snap['reddit_total']} posts, "
                           f"{snap['reddit_recent_30d']} recents 30j, "
-                          f"score moy {snap['reddit_avg_score']}, "
-                          f"comm moy {snap['reddit_avg_comments']}",
+                          f"score moy {snap['reddit_avg_score']}",
                           flush=True)
                     reddit_signals.append({
-                        "id": item["id"],
-                        "subreddit": item["subreddit"],
+                        "id": item["id"], "subreddit": item["subreddit"],
                         "query": item["query"],
                         "total": snap["reddit_total"],
                         "recent_30d": snap["reddit_recent_30d"],
                         "avg_score": snap["reddit_avg_score"],
                         "avg_comments": snap["reddit_avg_comments"],
                     })
-                else:
-                    print(f"[reddit] {item['id']} : aucun resultat", flush=True)
             except Exception as e:
                 print(f"[reddit] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 4 : Ecriture radar.json ---
+    # --- Section 4 : Scavio (offres retail FR) ---
+    print("\n[scavio] === section Scavio Google Shopping ===", flush=True)
+    if not _is_enabled(config, "scavio"):
+        print("[scavio] source desactivee dans config.json, section ignoree", flush=True)
+    else:
+        for item in SCAVIO_WATCH:
+            try:
+                snap = fetch_scavio_offers(item["query"], gl="fr", hl="fr", limit=10)
+                if snap:
+                    snap["product_id"] = item["id"]
+                    scavio_offers.append({
+                        "id": item["id"],
+                        "query": item["query"],
+                        "n_offers": snap["n_offers"],
+                        "min_price_eur": snap["min_price_eur"],
+                        "offers": snap["offers"][:5],
+                    })
+                    print(f"[scavio] {item['id']} : {snap['n_offers']} offres, "
+                          f"min {snap['min_price_eur']} EUR", flush=True)
+                    for o in snap["offers"][:3]:
+                        print(f"   - {o['seller']} : {o['price_raw']}", flush=True)
+                else:
+                    print(f"[scavio] {item['id']} : aucun resultat", flush=True)
+            except Exception as e:
+                print(f"[scavio] {item['id']} ERREUR : {e}", flush=True)
+
+    # --- Section 5 : Ecriture radar.json ---
     n_buy = sum(1 for p in radar_products if p["decision"] in ("BUY", "STRONG_BUY"))
     n_wait = sum(1 for p in radar_products if p["decision"] == "WAIT")
     n_watch = sum(1 for p in radar_products if p["decision"] == "WATCH")
@@ -361,11 +369,8 @@ def run():
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "config": config,
         "summary": {
-            "n_buy": n_buy,
-            "n_wait": n_wait,
-            "n_watch": n_watch,
-            "n_nodata": n_nodata,
-            "total": len(radar_products),
+            "n_buy": n_buy, "n_wait": n_wait, "n_watch": n_watch,
+            "n_nodata": n_nodata, "total": len(radar_products),
             "capital_available": capital_available,
             "capital_engaged": config["capital_engaged"],
             "capital_monthly": config["capital_monthly"],
@@ -374,6 +379,7 @@ def run():
         "products": radar_products,
         "trends": trends_signals,
         "reddit": reddit_signals,
+        "scavio_offers": scavio_offers,
     }
 
     with open("radar.json", "w") as f:
@@ -395,10 +401,10 @@ def run():
 
 def _flatten(s):
     return (s["product_id"], s["source"], s["captured_at"],
-            s["sold_price_avg"], s["sold_price_median"],
-            s["sold_count_30d"], s["active_listings"],
-            s["sell_through"], s["lowest_ask"],
-            s["currency"], s["raw_json"])
+            s.get("sold_price_avg"), s.get("sold_price_median"),
+            s.get("sold_count_30d"), s.get("active_listings"),
+            s.get("sell_through"), s.get("lowest_ask"),
+            s.get("currency"), s.get("raw_json"))
 
 
 if __name__ == "__main__":
