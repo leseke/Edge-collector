@@ -50,10 +50,10 @@ WATCHLIST = [
         "id": "lego_21371",
         "name": "LEGO 21371 Wallace & Gromit",
         "emoji": "🧀",
-        "image_url": "https://img.bricklink.com/ItemImage/SN/0/21371-1.png",
+        "image_url": "https://img.bqueryricklink.com/ItemImage/SN/0/21371-1.png",
         "source": "ebay",
         "category": "future_classic",
-        "query": "LEGO 21371",
+        "": "LEGO 21371",
         "must_all": ["21371"],
         "must_any": ["lego", "wallace", "gromit"],
         "target_buy": 85,
@@ -111,9 +111,7 @@ TRENDS_POOL = [
 
 
 REDDIT_WATCH = [
-    {"subreddit": "lego", "query": "Fortnite Battle Bus", "id": "reddit_lego_77073"},
     {"subreddit": "lego", "query": "Going Merry", "id": "reddit_lego_75639"},
-    {"subreddit": "lego", "query": "Wallace Gromit", "id": "reddit_lego_21371"},
     {"subreddit": "Lorcana", "query": "Hyperia", "id": "reddit_lorcana_hyperia"},
     {"subreddit": "Riftbound", "query": "Radiance", "id": "reddit_riftbound"},
 ]
@@ -290,7 +288,7 @@ def run():
         except Exception as e:
             print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
 
-    # --- Section 3 : Reddit ---
+    # --- Section 3 : Reddit via Arctic Shift ---
     print("\n[reddit] === section Reddit ===", flush=True)
     for item in REDDIT_WATCH:
         try:
