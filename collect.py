@@ -110,7 +110,6 @@ TRENDS_POOL = [
 ]
 
 
-# Un seul mot-cle Reddit par run (rotation) pour eviter le rate-limit Arctic Shift
 REDDIT_POOL = [
     {"subreddit": "lego", "query": "Going Merry", "id": "reddit_lego_75639"},
     {"subreddit": "Lorcana", "query": "Hyperia", "id": "reddit_lorcana_hyperia"},
@@ -126,16 +125,16 @@ def _get_run_number():
 
 
 def _get_trends_watch():
-    """Rotation : 2 mots-cles par run pour eviter le rate-limit Google."""
+    """Rotation : 1 mot-cle par run pour eviter le rate-limit Google."""
     run_n = _get_run_number()
-    start = (run_n * 2) % len(TRENDS_POOL)
-    return [TRENDS_POOL[(start + i) % len(TRENDS_POOL)] for i in range(2)]
+    start = run_n % len(TRENDS_POOL)
+    return [TRENDS_POOL[start]]
 
 
 def _get_reddit_watch():
     """Rotation : 1 mot-cle par run pour eviter le rate-limit Arctic Shift."""
     run_n = _get_run_number()
-    start = run_n % len(REDDIT_POOL)
+    start = (run_n + 1) % len(REDDIT_POOL)
     return [REDDIT_POOL[start]]
 
 
@@ -271,10 +270,10 @@ def run():
                 "invalidation": item.get("invalidation", ""),
             })
 
-    # --- Section 2 : Google Trends (rotation 2/run) ---
+    # --- Section 2 : Google Trends (rotation 1/run) ---
     print("\n[trends] === section Google Trends ===", flush=True)
     trends_watch = _get_trends_watch()
-    print(f"[trends] mots-cles de ce run : "
+    print(f"[trends] mot-cle de ce run : "
           f"{[t['keyword'] for t in trends_watch]}", flush=True)
     for item in trends_watch:
         try:
