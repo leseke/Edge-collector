@@ -1,4 +1,2 @@
 requests
 trendspy
-redd
-httpx
