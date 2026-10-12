@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12T09:05:55.140191+00:00",
+  "generated_at": "2026-10-12T09:31:16.556131+00:00",
   "config": {
     "capital_monthly": 300,
     "capital_max_available": 600,
@@ -78,7 +78,7 @@
       "id": "lego_21371",
       "name": "LEGO 21371 Wallace & Gromit",
       "emoji": "🧀",
-      "image_url": "https://img.bqueryricklink.com/ItemImage/SN/0/21371-1.png",
+      "image_url": "https://img.bricklink.com/ItemImage/SN/0/21371-1.png",
       "source": "ebay",
       "decision": "ERROR",
       "price_eur": null,
@@ -143,23 +143,31 @@
   ],
   "trends": [
     {
-      "id": "trends_lego_wallace",
-      "keyword": "LEGO Wallace Gromit",
+      "id": "trends_lorcana_hyperia",
+      "keyword": "Lorcana Hyperia",
       "acceleration": null,
-      "recent_avg": 17.9,
+      "recent_avg": 14.7,
       "older_avg": 0.0,
-      "statut": "pas de base (recent 17.9, passe vide)"
+      "statut": "pas de base (recent 14.7, passe vide)"
+    },
+    {
+      "id": "trends_riftbound",
+      "keyword": "Riftbound",
+      "acceleration": 1.46,
+      "recent_avg": 70.6,
+      "older_avg": 48.4,
+      "statut": "acceleration x1.46"
     }
   ],
   "reddit": [
     {
-      "id": "reddit_lorcana_hyperia",
-      "subreddit": "Lorcana",
-      "query": "Hyperia",
+      "id": "reddit_lego_75639",
+      "subreddit": "lego",
+      "query": "Going Merry",
       "total": 25,
-      "recent_30d": 25,
-      "avg_score": 23.5,
-      "avg_comments": 12.1
+      "recent_30d": 2,
+      "avg_score": 20.8,
+      "avg_comments": 3.8
     },
     {
       "id": "reddit_riftbound",
