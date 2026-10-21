@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "reports": [
+    {
+      "report_id": "eir_q-43ce53735693566b",
+      "report_version": 1,
+      "content_sha256": "ea1d86f801b5f1d546786d0a01f707f42651ff62c1fe9368c6cfab7fc86bf435",
+      "path": "reports/eir_q-43ce53735693566b/v0001.json",
+      "title": "Pokemon en Chine, interet international et revente en France — EXEMPLE FICTIF",
+      "market": "Pokemon TCG (Chine, international, France)",
+      "region": "CN",
+      "created_at": "2026-10-19T12:00:00+00:00",
+      "production_status": "partial",
+      "simulated": true,
+      "verification_level": "simulated",
+      "label": "DONNEES SIMULEES — exemple, aucune valeur reelle",
+      "edge_decision": "NOT_EVALUATED",
+      "data_as_of": "2026-10-15T00:00:00+00:00",
+      "max_data_age_days": 30,
+      "freshness_policy": "declared",
+      "dossier_path": "dossiers/eir_q-43ce53735693566b/v0001.json",
+      "dossier_sha256": "68cd181639856ce46e051d01cf75f36837928842eb9bbcffdf80a35b1f426c53"
+    }
+  ]
+}

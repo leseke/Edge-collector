@@ -1,0 +1,323 @@
+{
+  "corpus_schema": "edge.corpus.v1",
+  "corpus_id": "pokemon-cn-sc-real",
+  "simulated": false,
+  "data_as_of": "2026-10-19T12:00:00+00:00",
+  "subject": {
+    "title": "Cartes Pokemon en chinois simplifie — observations publiques collectees",
+    "market": "Pokemon TCG, chinois simplifie (Chine continentale)",
+    "category": "tcg",
+    "region": "CN",
+    "language": "fr",
+    "tags": [
+      "reel",
+      "ai-002c"
+    ]
+  },
+  "freshness": {
+    "max_data_age_days": 90
+  },
+  "entities": [
+    "chinois simplifie",
+    "simplified chinese"
+  ],
+  "topics": [
+    {
+      "topic_id": "domestic_demand",
+      "question": "Quelle est la demande interieure chinoise ?",
+      "keywords": [
+        "demande",
+        "demande interieure"
+      ]
+    },
+    {
+      "topic_id": "intl_interest",
+      "question": "Quel est l'interet international pour ces cartes ?",
+      "keywords": [
+        "interet international",
+        "international"
+      ]
+    },
+    {
+      "topic_id": "volumes",
+      "question": "Quels volumes de ventes sont documentes ?",
+      "keywords": [
+        "volumes",
+        "volume"
+      ]
+    },
+    {
+      "topic_id": "realized_prices",
+      "question": "Comment evoluent les prix realises ?",
+      "keywords": [
+        "prix realises",
+        "prix"
+      ]
+    },
+    {
+      "topic_id": "availability",
+      "question": "Depuis quand et comment ces cartes sont-elles disponibles ?",
+      "keywords": [
+        "disponibilite",
+        "lancement"
+      ]
+    },
+    {
+      "topic_id": "reprints",
+      "question": "Quelles reimpressions sont documentees ?",
+      "keywords": [
+        "reimpressions",
+        "reimpression"
+      ]
+    },
+    {
+      "topic_id": "cn_eu_comparison",
+      "question": "Comment la Chine se compare-t-elle a l'Europe ?",
+      "keywords": [
+        "europe",
+        "comparaison"
+      ]
+    },
+    {
+      "topic_id": "exclusivities",
+      "question": "Quelles exclusivites existent ?",
+      "keywords": [
+        "exclusivites",
+        "exclusivite"
+      ]
+    },
+    {
+      "topic_id": "anniversaries",
+      "question": "Quels anniversaires ou evenements sont prevus ?",
+      "keywords": [
+        "anniversaires",
+        "anniversaire"
+      ]
+    },
+    {
+      "topic_id": "retail_prices",
+      "question": "Quels sont les prix publics de detail ?",
+      "keywords": [
+        "prix publics",
+        "prix de detail"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "src_9d2922c4b23b",
+      "title": "Bulbapedia (wiki communautaire) (page_fetch)",
+      "publisher": "Bulbapedia (wiki communautaire)",
+      "url": "https://bulbapedia.bulbagarden.net/wiki/CSM1a",
+      "published_at": "2026-09-18",
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : quote_only ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_beb5b02b93cd",
+      "title": "Bulbanews (Bulbagarden) (search_snippet)",
+      "publisher": "Bulbanews (Bulbagarden)",
+      "url": "https://bulbagarden.net/threads/294654",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : quote_only ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_411cca71c8bc",
+      "title": "SNKRDUNK Magazine (editeur lie a une place de marche) (search_snippet)",
+      "publisher": "SNKRDUNK Magazine (editeur lie a une place de marche)",
+      "url": "https://snkrdunk.com/en/magazine/?p=389062",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : quote_only ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_a8d2ac47546f",
+      "title": "Wargamer (search_snippet)",
+      "publisher": "Wargamer",
+      "url": "https://www.wargamer.com/pokemon-trading-card-game/simplified-chinese-151-pikachu",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : quote_only ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_a49ed226bb41",
+      "title": "TCG Buyers Club (lettre d'information) (search_snippet)",
+      "publisher": "TCG Buyers Club (lettre d'information)",
+      "url": "https://tcgbuyersclub.beehiiv.com/p/pokemon-isn-t-printing-enough-in-2025",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : quote_only ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_2fa652c24f31",
+      "title": "Guide non signe (site de contenu) (search_snippet)",
+      "publisher": "Guide non signe (site de contenu)",
+      "url": "https://r2.angelcam.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : unknown ; collecteur manual:claude-web-tools"
+    },
+    {
+      "source_id": "src_bb6d6c3301ec",
+      "title": "eBay (annonce d'un vendeur professionnel) (search_snippet)",
+      "publisher": "eBay (annonce d'un vendeur professionnel)",
+      "url": "https://www.ebay.de/itm/405981431480",
+      "published_at": null,
+      "accessed_at": "2026-10-19",
+      "tier": "unverified",
+      "simulated": false,
+      "notes": "reutilisation : unknown ; collecteur manual:claude-web-tools"
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "ds_3d721617d3a1",
+      "title": "retail_price CN (CNY) — observations collectees",
+      "unit": "currency",
+      "currency": "CNY",
+      "measure": "retail_price",
+      "territory": "CN",
+      "period": {
+        "start": "2022-10-28",
+        "end": "2022-10-28"
+      },
+      "frequency": "irregular",
+      "provenance": {
+        "source_ids": [
+          "src_beb5b02b93cd"
+        ],
+        "method": "observations collectees",
+        "collected_by": "human"
+      },
+      "simulated": false,
+      "points": [
+        {
+          "t": "2022-10-28",
+          "value": 10,
+          "status": "measured"
+        }
+      ]
+    },
+    {
+      "dataset_id": "ds_51ed62da068c",
+      "title": "asking_price US (USD) — observations collectees",
+      "unit": "currency",
+      "currency": "USD",
+      "measure": "asking_price",
+      "territory": "US",
+      "period": {
+        "start": "2025-06-25",
+        "end": "2025-06-25"
+      },
+      "frequency": "irregular",
+      "provenance": {
+        "source_ids": [
+          "src_bb6d6c3301ec"
+        ],
+        "method": "observations collectees",
+        "collected_by": "human"
+      },
+      "simulated": false,
+      "points": [
+        {
+          "t": "2025-06-25",
+          "value": 28.75,
+          "status": "measured"
+        }
+      ]
+    }
+  ],
+  "dataset_topics": {
+    "ds_3d721617d3a1": [
+      "retail_prices"
+    ],
+    "ds_51ed62da068c": [
+      "intl_interest"
+    ]
+  },
+  "extracts": [
+    {
+      "extract_id": "ext_9e1b55e0b425ab9c",
+      "source_id": "src_9d2922c4b23b",
+      "topic_id": "availability",
+      "assertion_key": "first_sc_release",
+      "position": "2022",
+      "observed_on": "2026-10-19",
+      "statement": "The set was released on October 28, 2022",
+      "claim_type": "fact"
+    },
+    {
+      "extract_id": "ext_24d63e7dfeb309fe",
+      "source_id": "src_beb5b02b93cd",
+      "topic_id": "retail_prices",
+      "assertion_key": "pack5_retail_price",
+      "position": "n/a",
+      "observed_on": "2026-10-19",
+      "statement": "a 5-card pack (priced at 10 yuan)",
+      "claim_type": "fact"
+    },
+    {
+      "extract_id": "ext_13e3e9efceb259b7",
+      "source_id": "src_411cca71c8bc",
+      "topic_id": "reprints",
+      "assertion_key": "151c_reprints",
+      "position": "oui",
+      "observed_on": "2026-10-19",
+      "statement": "will be Simplified Chinese reprints of cards originally from Pokémon Card 151",
+      "claim_type": "fact"
+    },
+    {
+      "extract_id": "ext_3b0d0669cca3d307",
+      "source_id": "src_a8d2ac47546f",
+      "topic_id": "exclusivities",
+      "assertion_key": "151c_pikachu_exclusives",
+      "position": "oui",
+      "observed_on": "2026-10-19",
+      "statement": "four exclusive Art Rare variants of Pikachu",
+      "claim_type": "fact"
+    },
+    {
+      "extract_id": "ext_830b62b558a4ae38",
+      "source_id": "src_a49ed226bb41",
+      "topic_id": "domestic_demand",
+      "assertion_key": "sc_market_growth",
+      "position": "croissance",
+      "observed_on": "2026-10-19",
+      "statement": "The Simplified Chinese market grew considerably",
+      "claim_type": "opinion"
+    },
+    {
+      "extract_id": "ext_4a6dc9b700fccba6",
+      "source_id": "src_2fa652c24f31",
+      "topic_id": "availability",
+      "assertion_key": "first_sc_release",
+      "position": "1999",
+      "observed_on": "2026-10-19",
+      "statement": "The first Simplified Chinese Pokémon cards were introduced in 1999",
+      "claim_type": "fact"
+    },
+    {
+      "extract_id": "ext_52b0145f52276cb1",
+      "source_id": "src_bb6d6c3301ec",
+      "topic_id": "intl_interest",
+      "assertion_key": "listing_405981431480",
+      "position": "n/a",
+      "observed_on": "2026-10-19",
+      "statement": "2025 Pokemon 151 Chinese's Simplified Pokemon",
+      "claim_type": "commercial_claim"
+    }
+  ]
+}

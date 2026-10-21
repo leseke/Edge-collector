@@ -1,0 +1,451 @@
+{
+ "_note": "Reponses FICTIVES au format documente des API (eBay Browse, BrickLink, Brickset, TCGdex). Numeros de sets 900xx inventes. Ne constitue pas une collecte reelle.",
+ "routes": [
+  {
+   "method": "POST",
+   "url": "https://api.ebay.com/identity/v1/oauth2/token",
+   "response": {
+    "access_token": "fixture-token",
+    "expires_in": 7200,
+    "token_type": "Application Access Token"
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.ebay.com/buy/browse/v1/item_summary/search",
+   "match": {
+    "q": "LEGO Icons"
+   },
+   "response": {
+    "total": 5,
+    "itemSummaries": [
+     {
+      "itemId": "v1|1001|0",
+      "title": "LEGO 90001 Set Fictif A neuf scellé",
+      "price": {
+       "value": "249.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/1001",
+      "conditionId": "1000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "0.00",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     },
+     {
+      "itemId": "v1|1002|0",
+      "title": "LEGO 90002 Set Fictif B neuf",
+      "price": {
+       "value": "59.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/1002",
+      "conditionId": "1000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "4.99",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     },
+     {
+      "itemId": "v1|1003|0",
+      "title": "LEGO 90003 Set Fictif C neuf",
+      "price": {
+       "value": "120.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/1003",
+      "conditionId": "1000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "0.00",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     },
+     {
+      "itemId": "v1|1004|0",
+      "title": "LEGO 90004 Set Fictif D neuf",
+      "price": {
+       "value": "89.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/1004",
+      "conditionId": "1000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "0.00",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     },
+     {
+      "itemId": "v1|1005|0",
+      "title": "LEGO 90001 Set Fictif A occasion",
+      "price": {
+       "value": "150.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/1005",
+      "conditionId": "3000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "0.00",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.ebay.com/buy/browse/v1/item_summary/search",
+   "match": {
+    "q": "Pokemon display scelle"
+   },
+   "response": {
+    "total": 1,
+    "itemSummaries": [
+     {
+      "itemId": "v1|2001|0",
+      "title": "Pokemon Display Fictive 36 boosters scellé",
+      "price": {
+       "value": "139.00",
+       "currency": "EUR"
+      },
+      "itemWebUrl": "https://www.ebay.fr/itm/2001",
+      "conditionId": "1000",
+      "condition": "Neuf",
+      "seller": {
+       "username": "vendeur_fictif",
+       "feedbackPercentage": "99.5"
+      },
+      "shippingOptions": [
+       {
+        "shippingCost": {
+         "value": "0.00",
+         "currency": "EUR"
+        }
+       }
+      ],
+      "buyingOptions": [
+       "FIXED_PRICE"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.bricklink.com/api/store/v1/items/SET/90001-1/price",
+   "match": {
+    "guide_type": "sold",
+    "new_or_used": "N"
+   },
+   "response": {
+    "meta": {
+     "code": 200,
+     "message": "OK"
+    },
+    "data": {
+     "item": {
+      "no": "90001-1",
+      "type": "SET"
+     },
+     "new_or_used": "N",
+     "currency_code": "EUR",
+     "min_price": "330.0000",
+     "max_price": "520.0000",
+     "avg_price": "410.0000",
+     "qty_avg_price": "398.0000",
+     "unit_quantity": 18,
+     "total_quantity": 42,
+     "price_detail": []
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.bricklink.com/api/store/v1/items/SET/90002-1/price",
+   "match": {
+    "guide_type": "sold",
+    "new_or_used": "N"
+   },
+   "response": {
+    "meta": {
+     "code": 200,
+     "message": "OK"
+    },
+    "data": {
+     "item": {
+      "no": "90002-1",
+      "type": "SET"
+     },
+     "new_or_used": "N",
+     "currency_code": "EUR",
+     "min_price": "100.0000",
+     "max_price": "140.0000",
+     "avg_price": "120.0000",
+     "qty_avg_price": "118.0000",
+     "unit_quantity": 3,
+     "total_quantity": 6,
+     "price_detail": []
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.bricklink.com/api/store/v1/items/SET/90003-1/price",
+   "match": {
+    "guide_type": "sold",
+    "new_or_used": "N"
+   },
+   "response": {
+    "meta": {
+     "code": 200,
+     "message": "OK"
+    },
+    "data": {
+     "item": {
+      "no": "90003-1",
+      "type": "SET"
+     },
+     "new_or_used": "N",
+     "currency_code": "EUR",
+     "min_price": "50.0000",
+     "max_price": "900.0000",
+     "avg_price": "300.0000",
+     "qty_avg_price": "260.0000",
+     "unit_quantity": 12,
+     "total_quantity": 25,
+     "price_detail": []
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.bricklink.com/api/store/v1/items/SET/90004-1/price",
+   "match": {
+    "guide_type": "sold",
+    "new_or_used": "N"
+   },
+   "response": {
+    "meta": {
+     "code": 200,
+     "message": "OK"
+    },
+    "data": {
+     "item": {
+      "no": "90004-1",
+      "type": "SET"
+     },
+     "new_or_used": "N",
+     "currency_code": "EUR",
+     "min_price": "0.0000",
+     "max_price": "0.0000",
+     "avg_price": "0.0000",
+     "qty_avg_price": "0.0000",
+     "unit_quantity": 0,
+     "total_quantity": 0,
+     "price_detail": []
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://brickset.com/api/v3.asmx/getSets",
+   "match": {
+    "params": "{\"setNumber\": \"90001-1\"}"
+   },
+   "response": {
+    "status": "success",
+    "matches": 1,
+    "sets": [
+     {
+      "number": "90001",
+      "numberVariant": 1,
+      "name": "Set Fictif A",
+      "year": 2023,
+      "theme": "Fictif",
+      "LEGOCom": {
+       "DE": {
+        "retailPrice": 299.99,
+        "dateFirstAvailable": "2023-03-01",
+        "dateLastAvailable": "2025-12-31"
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://brickset.com/api/v3.asmx/getSets",
+   "match": {
+    "params": "{\"setNumber\": \"90002-1\"}"
+   },
+   "response": {
+    "status": "success",
+    "matches": 1,
+    "sets": [
+     {
+      "number": "90002",
+      "numberVariant": 1,
+      "name": "Set Fictif B",
+      "year": 2023,
+      "theme": "Fictif",
+      "LEGOCom": {
+       "DE": {
+        "retailPrice": 89.99,
+        "dateFirstAvailable": "2024-01-01",
+        "dateLastAvailable": null
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://brickset.com/api/v3.asmx/getSets",
+   "match": {
+    "params": "{\"setNumber\": \"90003-1\"}"
+   },
+   "response": {
+    "status": "success",
+    "matches": 1,
+    "sets": [
+     {
+      "number": "90003",
+      "numberVariant": 1,
+      "name": "Set Fictif C",
+      "year": 2023,
+      "theme": "Fictif",
+      "LEGOCom": {
+       "DE": {
+        "retailPrice": 149.99,
+        "dateFirstAvailable": "2023-06-01",
+        "dateLastAvailable": "2026-06-30"
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://brickset.com/api/v3.asmx/getSets",
+   "match": {
+    "params": "{\"setNumber\": \"90004-1\"}"
+   },
+   "response": {
+    "status": "success",
+    "matches": 1,
+    "sets": [
+     {
+      "number": "90004",
+      "numberVariant": 1,
+      "name": "Set Fictif D",
+      "year": 2023,
+      "theme": "Fictif",
+      "LEGOCom": {
+       "DE": {
+        "retailPrice": 99.99,
+        "dateFirstAvailable": "2022-01-01",
+        "dateLastAvailable": "2025-06-30"
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "method": "GET",
+   "url": "https://api.tcgdex.net/v2/en/cards",
+   "match": {
+    "name": "Dracaufeu Fictif"
+   },
+   "response": [
+    {
+     "id": "fx1-001",
+     "localId": "001",
+     "name": "Dracaufeu Fictif"
+    }
+   ]
+  },
+  {
+   "method": "GET",
+   "url": "https://api.tcgdex.net/v2/en/cards/fx1-001",
+   "response": {
+    "id": "fx1-001",
+    "name": "Dracaufeu Fictif",
+    "pricing": {
+     "cardmarket": {
+      "unit": "EUR",
+      "avg": 42.0,
+      "low": 30.0,
+      "trend": 40.0,
+      "avg7": 41.0,
+      "avg30": 39.0,
+      "updated": "2026-10-17T00:00:00Z"
+     }
+    }
+   }
+  }
+ ]
+}

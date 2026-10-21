@@ -1,8 +1,25 @@
 import os, re, requests
 from datetime import datetime, timedelta
 
-APIFY = os.environ["APIFY_TOKEN"]
+
+
+def _apify_token():
+    """Lecture differee : l'import ne plante plus sans token.
+    L'absence de token devient une erreur explicite au moment de l'appel."""
+    token = os.environ.get("APIFY_TOKEN")
+    if not token:
+        raise RuntimeError("APIFY_TOKEN absent")
+    return token
 ACTOR = "caffein.dev~ebay-sold-listings"
+
+
+def actor_input(query, count, days=90):
+    """Format d'entree de l'acteur caffein.dev/ebay-sold-listings, aligne
+    sur ses exemples publics ("keywords" liste + "count"). L'ancien format
+    ("keyword"/"maxItems") ne correspondait pas a ces exemples. A confirmer
+    au premier appel reel (le schema de l'acteur fait foi)."""
+    return {"keywords": [query], "count": int(count), "daysToScrape": int(days),
+            "ebaySite": "ebay.com", "itemCondition": "any"}
 
 
 def fetch_sold(query, must_all=None, must_any=None, count=100,
@@ -15,11 +32,13 @@ def fetch_sold(query, must_all=None, must_any=None, count=100,
     must_all = [m.lower() for m in (must_all or [])]
     must_any = [m.lower() for m in (must_any or [])]
 
-    url = (f"https://api.apify.com/v2/acts/{ACTOR}"
-           f"/run-sync-get-dataset-items?token={APIFY}")
-    payload = {"keyword": query, "maxItems": count}
+    # Token en en-tete (et non dans l'URL) : une erreur HTTP ne l'expose
+    # plus dans les logs.
+    url = f"https://api.apify.com/v2/acts/{ACTOR}/run-sync-get-dataset-items"
+    headers = {"Authorization": f"Bearer {_apify_token()}"}
+    payload = actor_input(query, count)
 
-    r = requests.post(url, json=payload, timeout=300)
+    r = requests.post(url, json=payload, headers=headers, timeout=300)
     r.raise_for_status()
     items = r.json()
     if not items:
@@ -112,3 +131,18 @@ def fetch_sold(query, must_all=None, must_any=None, count=100,
         "_cv": round(cv, 2),
         "_filtered_out": count - n,
     }
+
+
+def fetch_sold_items(query, count=100):
+    """Ventes conclues brutes (une entree par vente) pour Discovery.
+
+    Pas de filtre de titre : c'est le pipeline Discovery qui identifie
+    le produit. Retourne une liste (eventuellement vide) ; leve en cas
+    d'erreur reseau ou d'authentification (jamais d'echec silencieux).
+    """
+    url = f"https://api.apify.com/v2/acts/{ACTOR}/run-sync-get-dataset-items"
+    headers = {"Authorization": f"Bearer {_apify_token()}"}
+    r = requests.post(url, json=actor_input(query, count),
+                      headers=headers, timeout=300)
+    r.raise_for_status()
+    return r.json() or []

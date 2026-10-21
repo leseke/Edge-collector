@@ -1,0 +1,295 @@
+{
+ "LEGO Icons fin de serie": [
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/10399/1",
+   "external_id": "10399-o1",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "LEGO Icons 10399 Exemple Fictif Neuf",
+   "price_eur": 259.0,
+   "shipping_eur": 0,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  },
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/10398/1",
+   "external_id": "10398-o1",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "LEGO Icons 10398 Autre Exemple Neuf",
+   "price_eur": 95.0,
+   "shipping_eur": 4.9,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  },
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/10398/2",
+   "external_id": "10398-o2",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "LEGO Icons 10398 Autre Exemple Neuf",
+   "price_eur": 99.0,
+   "shipping_eur": 0,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  },
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/x/3",
+   "external_id": "x-o3",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "Notice LEGO 10399 seule",
+   "price_eur": 9.0,
+   "shipping_eur": 0,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  }
+ ],
+ "LEGO 10399": [
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/0",
+   "external_id": "10399-s0",
+   "observed_at": "2026-10-13T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 402,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/1",
+   "external_id": "10399-s1",
+   "observed_at": "2026-10-07T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 415,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/2",
+   "external_id": "10399-s2",
+   "observed_at": "2026-10-01T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 398,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/3",
+   "external_id": "10399-s3",
+   "observed_at": "2026-09-25T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 420,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/4",
+   "external_id": "10399-s4",
+   "observed_at": "2026-09-19T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 409,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/5",
+   "external_id": "10399-s5",
+   "observed_at": "2026-09-13T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 431,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/6",
+   "external_id": "10399-s6",
+   "observed_at": "2026-09-07T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 395,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/7",
+   "external_id": "10399-s7",
+   "observed_at": "2026-09-01T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 412,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/8",
+   "external_id": "10399-s8",
+   "observed_at": "2026-08-26T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 405,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/9",
+   "external_id": "10399-s9",
+   "observed_at": "2026-08-20T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 418,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10399/10",
+   "external_id": "10399-s10",
+   "observed_at": "2026-08-14T12:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif sealed",
+   "price_eur": 401,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/10399b/2",
+   "external_id": "10399b-o2",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "LEGO 10399 Exemple Fictif Neuf",
+   "price_eur": 389.0,
+   "shipping_eur": 0,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  }
+ ],
+ "LEGO 10398": [
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/0",
+   "external_id": "10398-s0",
+   "observed_at": "2026-10-13T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 104,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/1",
+   "external_id": "10398-s1",
+   "observed_at": "2026-10-07T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 99,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/2",
+   "external_id": "10398-s2",
+   "observed_at": "2026-10-01T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 108,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/3",
+   "external_id": "10398-s3",
+   "observed_at": "2026-09-25T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 101,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/4",
+   "external_id": "10398-s4",
+   "observed_at": "2026-09-19T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 97,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/10398/5",
+   "external_id": "10398-s5",
+   "observed_at": "2026-09-13T12:00:00Z",
+   "name": "LEGO 10398 Autre Exemple new",
+   "price_eur": 103,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  }
+ ],
+ "Pokemon coffret": [
+  {
+   "source": "fixture_retail",
+   "source_url": "https://example.com/offer/pkm1/1",
+   "external_id": "pkm1-o1",
+   "observed_at": "2026-10-18T08:00:00Z",
+   "name": "Pokemon Coffret Fictif Anniversaire scelle",
+   "price_eur": 44.9,
+   "shipping_eur": 3.5,
+   "evidence_type": "RETAIL_OFFER",
+   "seller": "Boutique fictive",
+   "seller_type": "PRO"
+  }
+ ],
+ "Pokemon coffret anniversaire": "__ERROR__",
+ "Pokemon coffret anniversaire fictif": [
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/pkm1/0",
+   "external_id": "pkm1-s0",
+   "observed_at": "2026-10-08T12:00:00Z",
+   "name": "Pokemon Coffret Fictif Anniversaire scelle",
+   "price_eur": 69,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/pkm1/1",
+   "external_id": "pkm1-s1",
+   "observed_at": "2026-09-28T12:00:00Z",
+   "name": "Pokemon Coffret Fictif Anniversaire scelle",
+   "price_eur": 72,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/pkm1/2",
+   "external_id": "pkm1-s2",
+   "observed_at": "2026-09-18T12:00:00Z",
+   "name": "Pokemon Coffret Fictif Anniversaire scelle",
+   "price_eur": 66,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  },
+  {
+   "source": "fixture_sold",
+   "source_url": "https://example.com/sold/pkm1/3",
+   "external_id": "pkm1-s3",
+   "observed_at": "2026-09-08T12:00:00Z",
+   "name": "Pokemon Coffret Fictif Anniversaire scelle",
+   "price_eur": 75,
+   "evidence_type": "SOLD",
+   "condition": "new"
+  }
+ ]
+}

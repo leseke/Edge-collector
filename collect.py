@@ -9,7 +9,10 @@ from connectors.reddit import fetch_reddit
 from connectors.scavio import fetch_scavio_offers
 from connectors.telegram import send_message, format_alert, send_daily_digest
 from storage import init_db, insert_snapshots
-from edge_engine import load_config, load_portfolio, decide
+from edge_engine import (load_config, load_portfolio, decide, capital_state,
+                         summarize, public_policy, public_product_view,
+                         public_summary, assert_no_private_leak)
+from edge_io import atomic_write_json, redact
 
 USD_TO_EUR = 0.92
 
@@ -165,161 +168,204 @@ def fetch_one(item):
     raise ValueError(f"source inconnue : {item['source']}")
 
 
+PRIVATE_OUTPUT = os.path.join("private", "run_private.json")
+
+
+def _base_product(item):
+    return {
+        "id": item["id"], "name": item["name"],
+        "emoji": item.get("emoji", "?"),
+        "image_url": item.get("image_url", ""),
+        "source": item["source"],
+        "target_buy": item.get("target_buy"),
+        "target_strong_buy": item.get("target_strong_buy"),
+        "categorie": item.get("category", "flip").upper(),
+        "thesis": item.get("thesis", ""),
+        "counter_thesis": item.get("counter_thesis", ""),
+        "invalidation": item.get("invalidation", ""),
+    }
+
+
+def _failure_product(item, decision, reason):
+    p = _base_product(item)
+    p.update({"decision": decision, "price_eur": None, "ecart_pct": None,
+              "cycle_num": 0, "cycle_label": "Inconnu",
+              "opportunity_alert": False, "execution_ready": False,
+              "allocation_eur": [0, 0], "failure_reason": reason,
+              "price_basis": None})
+    return p
+
+
+def scavio_id_for(item_id):
+    return "scavio_" + item_id
+
+
+def match_verified_offer(item, scavio_entry):
+    """Meilleure offre retail dont le titre contient tous les must_all.
+
+    Une offre sans lien https ou sans prix EUR n'est pas verifiable.
+    """
+    if not scavio_entry:
+        return None
+    must_all = [m.lower() for m in item.get("must_all", [])]
+    best = None
+    for o in scavio_entry.get("offers", []):
+        title = (o.get("title") or "").lower()
+        link = o.get("product_link") or ""
+        price = o.get("price_eur")
+        if not title or not link.startswith("https://") or not price:
+            continue
+        if not all(w in title for w in must_all):
+            continue
+        if best is None or price < best["price_eur"]:
+            best = {"price_eur": price, "url": link, "seller": o.get("seller"),
+                    "title": o.get("title")}
+    return best
+
+
+def evaluate_product(item, snap, config, offer=None):
+    """Snapshot -> produit radar complet (prive). Pur, testable hors reseau."""
+    if not snap:
+        return _failure_product(item, "NO_DATA", "aucun resultat")
+    median = snap.get("sold_price_median")
+    if median is None:
+        return _failure_product(item, "NO_DATA", "prix median absent")
+    prix_eur = median * USD_TO_EUR if item["source"] == "ebay" else median
+    d = decide(item, prix_eur, snap, config, offer=offer)
+    p = _base_product(item)
+    p.update({
+        "decision": d["decision"],
+        "message": d["message"],
+        "price_eur": round(prix_eur, 2),
+        # Base du prix : vente conclue (eBay) ou tendance marche (Cardmarket).
+        # Ce n'est PAS une offre achetable.
+        "price_basis": "SOLD_MEDIAN" if item["source"] == "ebay" else "MARKET_TREND",
+        "median": median,
+        "currency_src": snap.get("currency"),
+        "low": snap.get("lowest_ask"),
+        "n": snap.get("_n_matched") or snap.get("_n_filtered"),
+        "ecart_pct": d["ecart_pct"],
+        "cycle_num": d["cycle_num"],
+        "cycle_label": d["cycle_label"],
+        "opportunity_alert": d["opportunity_alert"],
+        "verified_offer": offer,
+        "allocation_eur": d["allocation_eur"],
+        "capital_sufficient": d["capital_sufficient"],
+        "allocation_sufficient": d["allocation_sufficient"],
+        "execution_ready": d["execution_ready"],
+        "execution_blockers": d["execution_blockers"],
+    })
+    return p
+
+
+def build_outputs(products, config, sources_failed, trends_signals,
+                  reddit_signals, scavio_offers, generated_at):
+    """Construit (radar public, rapport prive). Leve si fuite ou compteurs
+    incoherents : mieux vaut aucun radar qu'un radar faux."""
+    summary = summarize(products, config, sources_failed)
+    state = capital_state(config)
+    radar = {
+        "schema_version": 4,
+        "generated_at": generated_at,
+        "policy": public_policy(config),
+        "summary": public_summary(summary),
+        "products": [public_product_view(p) for p in products],
+        "trends": trends_signals,
+        "reddit": reddit_signals,
+        "scavio_offers": scavio_offers,
+    }
+    assert_no_private_leak(radar)
+    private = {
+        "generated_at": generated_at,
+        "capital": state,
+        "summary": summary,
+        "funding": [{k: p.get(k) for k in (
+            "id", "decision", "opportunity_alert", "allocation_eur",
+            "capital_sufficient", "allocation_sufficient",
+            "execution_ready", "execution_blockers", "verified_offer")}
+            for p in products],
+    }
+    return radar, private
+
+
 def run():
-    init_db()
+    init_db().close()
     config = load_config()
     portfolio = load_portfolio()
+    state = capital_state(config)
 
     enabled = config.get("enabled_sources", {})
-    print(f"[config] capital mensuel : {config['capital_monthly']} EUR", flush=True)
-    print(f"[config] capital engage : {config['capital_engaged']} EUR", flush=True)
-    print(f"[config] sources actives : "
-          f"{[k for k, v in enabled.items() if v]}", flush=True)
-    print(f"[config] sources desactivees : "
-          f"{[k for k, v in enabled.items() if not v]}", flush=True)
+    # Aucun montant dans les logs (logs Actions publics sur depot public).
+    print(f"[config] capital : {'renseigne' if state['capital_known'] else 'NON renseigne (execution bloquee)'}", flush=True)
+    if state["config_errors"]:
+        print(f"[config] ERREURS : {state['config_errors']} -> aucune execution autorisee", flush=True)
+    print(f"[config] sources actives : {[k for k, v in enabled.items() if v]}", flush=True)
+    print(f"[config] sources desactivees : {[k for k, v in enabled.items() if not v]}", flush=True)
 
     results = []
-    alerts = []
-    digest = []
-    radar_products = []
+    snaps = {}
     trends_signals = []
     reddit_signals = []
     scavio_offers = []
+    scavio_by_id = {}
+    sources_failed = set()
+    products = []
 
     # --- Section 1 : Watchlist principale (prix) ---
     print("\n[main] === section prix ===", flush=True)
     for item in WATCHLIST:
         if not _is_enabled(config, item["source"]):
-            print(f"[{item['source']}] {item['id']} : source desactivee, ignore", flush=True)
+            print(f"[{item['source']}] {item['id']} : source desactivee", flush=True)
+            products.append(_failure_product(item, "NO_DATA", "source desactivee"))
             continue
-
         try:
             snap = fetch_one(item)
             if not snap:
                 print(f"[{item['source']}] {item['id']} : aucun resultat", flush=True)
-                radar_products.append({
-                    "id": item["id"], "name": item["name"],
-                    "emoji": item.get("emoji", "?"),
-                    "image_url": item.get("image_url", ""),
-                    "source": item["source"], "decision": "NO_DATA",
-                    "price_eur": None,
-                    "target_buy": item.get("target_buy"),
-                    "target_strong_buy": item.get("target_strong_buy"),
-                    "ecart_pct": None, "allocation_eur": [0, 0],
-                    "cycle_num": 0, "cycle_label": "Inconnu",
-                    "categorie": item.get("category", "flip").upper(),
-                    "thesis": item.get("thesis", ""),
-                    "counter_thesis": item.get("counter_thesis", ""),
-                    "invalidation": item.get("invalidation", ""),
-                })
+                products.append(_failure_product(item, "NO_DATA", "aucun resultat"))
                 continue
-
             snap["product_id"] = item["id"]
             results.append(snap)
-
-            prix_eur = snap["sold_price_median"]
-            if item["source"] == "ebay":
-                prix_eur *= USD_TO_EUR
-
-            decision = decide(item, prix_eur, snap, config)
-
-            print(f"[{item['source']}] {item['id']} : median {snap['sold_price_median']} {snap['currency']}", flush=True)
-            print(f"   {decision['message']}", flush=True)
-
-            radar_products.append({
-                "id": item["id"], "name": item["name"],
-                "emoji": item.get("emoji", "?"),
-                "image_url": item.get("image_url", ""),
-                "source": item["source"],
-                "decision": decision["decision"],
-                "price_eur": round(prix_eur, 2),
-                "median": snap["sold_price_median"],
-                "currency_src": snap["currency"],
-                "low": snap.get("lowest_ask"),
-                "n": snap.get("_n_matched") or snap.get("_n_filtered"),
-                "target_buy": item.get("target_buy"),
-                "target_strong_buy": item.get("target_strong_buy"),
-                "ecart_pct": decision["ecart_pct"],
-                "allocation_eur": decision["allocation_eur"],
-                "cycle_num": decision["cycle_num"],
-                "cycle_label": decision["cycle_label"],
-                "categorie": decision["categorie"],
-                "thesis": item.get("thesis", ""),
-                "counter_thesis": item.get("counter_thesis", ""),
-                "invalidation": item.get("invalidation", ""),
-            })
-
-            digest.append({"id": item["id"], "niveau": decision["decision"],
-                           "prix_eur": prix_eur, "source": item["source"]})
-
-            if decision["decision"] in ("BUY", "STRONG_BUY"):
-                alerts.append(item)
-                send_message(format_alert(item, prix_eur,
-                                          decision["decision"], snap))
-
+            snaps[item["id"]] = snap
         except Exception as e:
-            print(f"[{item['source']}] {item['id']} ERREUR : {e}", flush=True)
-            radar_products.append({
-                "id": item["id"], "name": item["name"],
-                "emoji": item.get("emoji", "?"),
-                "image_url": item.get("image_url", ""),
-                "source": item["source"], "decision": "ERROR",
-                "price_eur": None,
-                "target_buy": item.get("target_buy"),
-                "target_strong_buy": item.get("target_strong_buy"),
-                "ecart_pct": None, "allocation_eur": [0, 0],
-                "cycle_num": 0, "cycle_label": "Inconnu",
-                "categorie": item.get("category", "flip").upper(),
-                "thesis": item.get("thesis", ""),
-                "counter_thesis": item.get("counter_thesis", ""),
-                "invalidation": item.get("invalidation", ""),
-            })
+            msg = redact(e)
+            print(f"[{item['source']}] {item['id']} ERREUR : {msg}", flush=True)
+            sources_failed.add(item["source"])
+            products.append(_failure_product(item, "ERROR", msg))
 
     # --- Section 2 : Google Trends ---
     print("\n[trends] === section Google Trends ===", flush=True)
     if not _is_enabled(config, "trends"):
         print("[trends] source desactivee dans config.json, section ignoree", flush=True)
     else:
-        trends_watch = _get_trends_watch()
-        print(f"[trends] mot-cle de ce run : {[t['keyword'] for t in trends_watch]}", flush=True)
-        for item in trends_watch:
+        for item in _get_trends_watch():
             try:
                 trend = fetch_trends_spy(item["keyword"])
                 if trend:
                     trend["product_id"] = item["id"]
                     results.append(trend)
-                    acc = trend.get("trend_acceleration")
-                    acc_str = f"x{acc}" if acc is not None else "xNone"
-                    print(f"[trends] {item['id']} : acceleration {acc_str} "
-                          f"(recent {trend['trend_recent_avg']} vs passe {trend['trend_older_avg']})",
-                          flush=True)
                     trends_signals.append({
                         "id": item["id"], "keyword": item["keyword"],
-                        "acceleration": acc,
+                        "acceleration": trend.get("trend_acceleration"),
                         "recent_avg": trend["trend_recent_avg"],
                         "older_avg": trend["trend_older_avg"],
                         "statut": trend.get("trend_statut", ""),
                     })
             except Exception as e:
-                print(f"[trends] {item['id']} ERREUR : {e}", flush=True)
+                sources_failed.add("trends")
+                print(f"[trends] {item['id']} ERREUR : {redact(e)}", flush=True)
 
     # --- Section 3 : Reddit ---
     print("\n[reddit] === section Reddit ===", flush=True)
     if not _is_enabled(config, "reddit"):
         print("[reddit] source desactivee dans config.json, section ignoree", flush=True)
     else:
-        reddit_watch = _get_reddit_watch()
-        print(f"[reddit] mot-cle de ce run : {[r['query'] for r in reddit_watch]}", flush=True)
-        for item in reddit_watch:
+        for item in _get_reddit_watch():
             try:
                 snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
                 if snap:
                     snap["product_id"] = item["id"]
                     results.append(snap)
-                    print(f"[reddit] {item['id']} : {snap['reddit_total']} posts, "
-                          f"{snap['reddit_recent_30d']} recents 30j, "
-                          f"score moy {snap['reddit_avg_score']}",
-                          flush=True)
                     reddit_signals.append({
                         "id": item["id"], "subreddit": item["subreddit"],
                         "query": item["query"],
@@ -329,7 +375,8 @@ def run():
                         "avg_comments": snap["reddit_avg_comments"],
                     })
             except Exception as e:
-                print(f"[reddit] {item['id']} ERREUR : {e}", flush=True)
+                sources_failed.add("reddit")
+                print(f"[reddit] {item['id']} ERREUR : {redact(e)}", flush=True)
 
     # --- Section 4 : Scavio (offres retail FR) ---
     print("\n[scavio] === section Scavio Google Shopping ===", flush=True)
@@ -338,65 +385,59 @@ def run():
     else:
         for item in SCAVIO_WATCH:
             try:
-                snap = fetch_scavio_offers(item["query"], gl="fr", hl="fr", limit=10)
+                snap = fetch_scavio_offers(item["query"], gl="fr", hl="fr",
+                                           limit=10, raise_errors=True)
                 if snap:
-                    snap["product_id"] = item["id"]
-                    scavio_offers.append({
-                        "id": item["id"],
-                        "query": item["query"],
-                        "n_offers": snap["n_offers"],
-                        "min_price_eur": snap["min_price_eur"],
-                        "offers": snap["offers"][:5],
-                    })
-                    print(f"[scavio] {item['id']} : {snap['n_offers']} offres, "
-                          f"min {snap['min_price_eur']} EUR", flush=True)
-                    for o in snap["offers"][:3]:
-                        print(f"   - {o['seller']} : {o['price_raw']}", flush=True)
+                    entry = {"id": item["id"], "query": item["query"],
+                             "n_offers": snap["n_offers"],
+                             "min_price_eur": snap["min_price_eur"],
+                             "offers": snap["offers"][:5]}
+                    scavio_offers.append(entry)
+                    scavio_by_id[item["id"]] = {**entry, "offers": snap["offers"]}
+                    print(f"[scavio] {item['id']} : {snap['n_offers']} offres", flush=True)
                 else:
                     print(f"[scavio] {item['id']} : aucun resultat", flush=True)
             except Exception as e:
-                print(f"[scavio] {item['id']} ERREUR : {e}", flush=True)
+                sources_failed.add("scavio")
+                print(f"[scavio] {item['id']} ERREUR : {redact(e)}", flush=True)
 
-    # --- Section 5 : Ecriture radar.json ---
-    n_buy = sum(1 for p in radar_products if p["decision"] in ("BUY", "STRONG_BUY"))
-    n_wait = sum(1 for p in radar_products if p["decision"] == "WAIT")
-    n_watch = sum(1 for p in radar_products if p["decision"] == "WATCH")
-    n_nodata = sum(1 for p in radar_products if p["decision"] in ("NO_DATA", "ERROR"))
+    # --- Section 5 : Decisions (capital-independantes) + financement ---
+    digest = []
+    order = {it["id"]: i for i, it in enumerate(WATCHLIST)}
+    for item in WATCHLIST:
+        if item["id"] not in snaps:
+            continue
+        offer = match_verified_offer(item, scavio_by_id.get(scavio_id_for(item["id"])))
+        p = evaluate_product(item, snaps[item["id"]], config, offer)
+        products.append(p)
+        print(f"[{item['source']}] {item['id']} : {p.get('message', p['decision'])}", flush=True)
+        if p["price_eur"] is not None:
+            digest.append({"id": item["id"], "niveau": p["decision"],
+                           "prix_eur": p["price_eur"], "source": item["source"]})
+        if p["opportunity_alert"]:
+            # L'alerte ne contient aucune donnee de capital.
+            send_message(format_alert(item, p["price_eur"], p["decision"], snaps[item["id"]]))
+    products.sort(key=lambda p: order.get(p["id"], 1e9))
 
-    capital_available = config["capital_max_available"] - config["capital_engaged"]
-
-    radar = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "config": config,
-        "summary": {
-            "n_buy": n_buy, "n_wait": n_wait, "n_watch": n_watch,
-            "n_nodata": n_nodata, "total": len(radar_products),
-            "capital_available": capital_available,
-            "capital_engaged": config["capital_engaged"],
-            "capital_monthly": config["capital_monthly"],
-            "decision": "CASH" if n_buy == 0 else f"{n_buy} SIGNAL",
-        },
-        "products": radar_products,
-        "trends": trends_signals,
-        "reddit": reddit_signals,
-        "scavio_offers": scavio_offers,
-    }
-
-    with open("radar.json", "w") as f:
-        json.dump(radar, f, indent=2, ensure_ascii=False)
-    print("\nradar.json ecrit", flush=True)
+    # --- Section 6 : Ecriture radar.json (public) + rapport prive ---
+    generated_at = datetime.now(timezone.utc).isoformat()
+    radar, private = build_outputs(products, config, sources_failed,
+                                   trends_signals, reddit_signals,
+                                   scavio_offers, generated_at)
+    atomic_write_json("radar.json", radar)
+    atomic_write_json(PRIVATE_OUTPUT, private)
+    print("\nradar.json ecrit (sans donnees financieres privees)", flush=True)
 
     if results:
         insert_snapshots([_flatten(r) for r in results])
         print(f"{len(results)} snapshots inseres dans storage.db", flush=True)
 
-    send_daily_digest(digest)
+    send_daily_digest(digest, radar["summary"])
 
+    s = radar["summary"]
     print("\n=== RESUME ===", flush=True)
-    if alerts:
-        print(f"{len(alerts)} signal ou signaux d'achat", flush=True)
-    else:
-        print("Aucun signal d'achat. Decision : CASH.", flush=True)
+    print(f"statut donnees : {s['data_status']} (couverture {s['coverage']:.0%})", flush=True)
+    print(f"posture : {s['posture']} -> {s['decision']}", flush=True)
 
 
 def _flatten(s):

@@ -1,0 +1,106 @@
+name: EDGE Discovery
+# Manuel tant que les quotas reels n'ont pas ete mesures. Pour planifier,
+# ajouter un bloc "schedule" APRES validation des couts.
+on:
+  workflow_dispatch:
+    inputs:
+      campaigns:
+        description: "ids de campagnes separes par des espaces (vide = toutes)"
+        required: false
+        default: ""
+        type: string
+      max_total_calls:
+        description: "Plafond global d'appels payants"
+        required: true
+        default: "3"
+        type: string
+      publish:
+        description: "Committer les resultats dans le depot (sinon artefact seulement)"
+        required: true
+        default: false
+        type: boolean
+
+# Lecture seule par defaut ; l'ecriture n'est accordee qu'au job "publish",
+# qui ne s'execute que si publish=true.
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-data-writes
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests
+      - name: Plan (aucun appel)
+        run: python -m discovery.cli --campaigns discovery/campaigns.json --out-dir data/discovery --plan-only
+      - name: Etat des acces aux sources
+        run: python -m tools.sources_status
+      - name: Run campaigns
+        env:
+          SCAVIO_API_KEY: ${{ secrets.SCAVIO_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          # Sources officielles : inactives tant que discovery/sources_access.json
+          # ne les marque pas VERIFIED (relecture des conditions par l'utilisateur).
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          BRICKLINK_CONSUMER_KEY: ${{ secrets.BRICKLINK_CONSUMER_KEY }}
+          BRICKLINK_CONSUMER_SECRET: ${{ secrets.BRICKLINK_CONSUMER_SECRET }}
+          BRICKLINK_TOKEN: ${{ secrets.BRICKLINK_TOKEN }}
+          BRICKLINK_TOKEN_SECRET: ${{ secrets.BRICKLINK_TOKEN_SECRET }}
+          BRICKSET_API_KEY: ${{ secrets.BRICKSET_API_KEY }}
+          EDGE_ONLY: ${{ inputs.campaigns }}
+          EDGE_MAX_CALLS: ${{ inputs.max_total_calls }}
+        run: |
+          if [ -n "$EDGE_ONLY" ]; then
+            read -ra IDS <<< "$EDGE_ONLY"
+            python -m discovery.cli --campaigns discovery/campaigns.json --out-dir data/discovery --max-total-calls "$EDGE_MAX_CALLS" --only "${IDS[@]}"
+          else
+            python -m discovery.cli --campaigns discovery/campaigns.json --out-dir data/discovery --max-total-calls "$EDGE_MAX_CALLS"
+          fi
+      - name: Controle public/prive (bloquant)
+        run: python -m tools.check_public_files data/discovery
+      - name: Resultats en artefact (aucune publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-discovery-${{ github.run_id }}
+          # Toujours le dossier data/ entier : la racine de l'artefact
+          # correspond alors a data/, quel que soit le nombre de sous-dossiers.
+          path: data
+          retention-days: 14
+          if-no-files-found: warn
+
+  publish:
+    needs: discover
+    if: ${{ inputs.publish }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: edge-discovery-${{ github.run_id }}
+          path: data_artifact
+      - name: Recopie stricte des chemins autorises
+        run: |
+          mkdir -p data && cp -r data_artifact/. data/ && rm -rf data_artifact
+          python -m tools.check_public_files data/discovery
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/discovery
+          git diff --cached --quiet || git commit -m "EDGE discovery: resultats [skip ci]"
+          git pull --rebase && git push

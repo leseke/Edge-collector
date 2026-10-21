@@ -1,0 +1,281 @@
+{
+ "corpus_schema": "edge.corpus.v1",
+ "corpus_id": "velos-nl-demo",
+ "simulated": true,
+ "data_as_of": "2026-10-10T00:00:00+00:00",
+ "subject": {
+  "title": "Velos cargo d'occasion aux Pays-Bas — EXEMPLE FICTIF",
+  "market": "Velos cargo d'occasion",
+  "category": "other",
+  "region": "NL",
+  "language": "fr",
+  "tags": [
+   "fictif",
+   "ai-002a",
+   "domaine-2"
+  ]
+ },
+ "freshness": {
+  "max_data_age_days": 60
+ },
+ "entities": [
+  "velo cargo",
+  "vélo cargo",
+  "velos cargo",
+  "vélos cargo",
+  "bakfiets"
+ ],
+ "topics": [
+  {
+   "topic_id": "nl_prices",
+   "question": "Comment evoluent les prix des velos cargo d'occasion aux Pays-Bas ?",
+   "keywords": [
+    "prix",
+    "evolution",
+    "évolution",
+    "pays-bas"
+   ]
+  },
+  {
+   "topic_id": "nl_supply",
+   "question": "L'offre disponible augmente-t-elle ?",
+   "keywords": [
+    "offre",
+    "stock",
+    "disponible",
+    "annonces"
+   ]
+  }
+ ],
+ "sources": [
+  {
+   "source_id": "src_annonces-e",
+   "title": "Releve d'annonces de velos cargo (EXEMPLE FICTIF — aucune valeur reelle)",
+   "publisher": "Site d'annonces fictif E",
+   "url": null,
+   "published_at": "2026-09-30",
+   "accessed_at": "2026-10-15",
+   "tier": "secondary",
+   "simulated": true,
+   "notes": "EXEMPLE FICTIF — aucune valeur reelle"
+  },
+  {
+   "source_id": "src_atelier-f",
+   "title": "Entretien avec un atelier (EXEMPLE FICTIF — aucune valeur reelle)",
+   "publisher": "Atelier fictif F",
+   "url": null,
+   "published_at": "2026-09-30",
+   "accessed_at": "2026-10-15",
+   "tier": "unverified",
+   "simulated": true,
+   "notes": "EXEMPLE FICTIF — aucune valeur reelle"
+  }
+ ],
+ "datasets": [
+  {
+   "dataset_id": "ds_nl-prix",
+   "title": "Prix demande median d'un velo cargo d'occasion (fictif)",
+   "unit": "currency",
+   "currency": "EUR",
+   "measure": "asking_price",
+   "territory": "NL",
+   "period": {
+    "start": "2025-10-01",
+    "end": "2026-09-01"
+   },
+   "frequency": "monthly",
+   "provenance": {
+    "source_ids": [
+     "src_annonces-e"
+    ],
+    "method": "mediane mensuelle d'annonces (fictif)",
+    "collected_by": "collector"
+   },
+   "simulated": true,
+   "points": [
+    {
+     "t": "2025-10-01",
+     "value": 1900,
+     "status": "simulated"
+    },
+    {
+     "t": "2025-11-01",
+     "value": 1880,
+     "status": "simulated"
+    },
+    {
+     "t": "2025-12-01",
+     "value": 1850,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-01-01",
+     "value": 1870,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-02-01",
+     "value": 1820,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-03-01",
+     "value": 1800,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-04-01",
+     "value": 1790,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-05-01",
+     "value": null,
+     "status": "missing",
+     "missing_reason": "mois non couvert par la source fictive"
+    },
+    {
+     "t": "2026-06-01",
+     "value": 1760,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-07-01",
+     "value": 1750,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-08-01",
+     "value": 1740,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-09-01",
+     "value": 1720,
+     "status": "simulated"
+    }
+   ]
+  },
+  {
+   "dataset_id": "ds_nl-annonces",
+   "title": "Nombre d'annonces actives (fictif)",
+   "unit": "count",
+   "currency": null,
+   "measure": "volume",
+   "territory": "NL",
+   "period": {
+    "start": "2025-10-01",
+    "end": "2026-09-01"
+   },
+   "frequency": "monthly",
+   "provenance": {
+    "source_ids": [
+     "src_annonces-e"
+    ],
+    "method": "comptage mensuel (fictif)",
+    "collected_by": "collector"
+   },
+   "simulated": true,
+   "points": [
+    {
+     "t": "2025-10-01",
+     "value": 310,
+     "status": "simulated"
+    },
+    {
+     "t": "2025-11-01",
+     "value": 320,
+     "status": "simulated"
+    },
+    {
+     "t": "2025-12-01",
+     "value": 335,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-01-01",
+     "value": 330,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-02-01",
+     "value": 350,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-03-01",
+     "value": 365,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-04-01",
+     "value": 370,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-05-01",
+     "value": null,
+     "status": "missing",
+     "missing_reason": "mois non couvert par la source fictive"
+    },
+    {
+     "t": "2026-06-01",
+     "value": 390,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-07-01",
+     "value": 400,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-08-01",
+     "value": 405,
+     "status": "simulated"
+    },
+    {
+     "t": "2026-09-01",
+     "value": 420,
+     "status": "simulated"
+    }
+   ]
+  }
+ ],
+ "dataset_topics": {
+  "ds_nl-prix": [
+   "nl_prices"
+  ],
+  "ds_nl-annonces": [
+   "nl_supply"
+  ]
+ },
+ "extracts": [
+  {
+   "extract_id": "ext_e1",
+   "source_id": "src_annonces-e",
+   "topic_id": "nl_prices",
+   "assertion_key": "nl_price_trend",
+   "position": "baisse",
+   "observed_on": "2026-10-01",
+   "statement": "Le prix demande median recule sur l'annee (releve fictif)."
+  },
+  {
+   "extract_id": "ext_e2",
+   "source_id": "src_annonces-e",
+   "topic_id": "nl_supply",
+   "assertion_key": "nl_supply_trend",
+   "position": "hausse",
+   "observed_on": "2026-10-01",
+   "statement": "Le nombre d'annonces actives augmente (releve fictif)."
+  },
+  {
+   "extract_id": "ext_f1",
+   "source_id": "src_atelier-f",
+   "topic_id": "nl_supply",
+   "assertion_key": "nl_supply_trend",
+   "position": "hausse",
+   "observed_on": "2026-09-15",
+   "statement": "L'atelier observe davantage de reprises de velos cargo (entretien fictif)."
+  }
+ ]
+}

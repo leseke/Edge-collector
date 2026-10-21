@@ -1,0 +1,139 @@
+{
+  "schema": "edge.evidence_qualification.v1.1",
+  "generated_at": "2026-10-21T15:00:00+00:00",
+  "baseline": "AI-002C unchanged append-only ledger",
+  "qualification": {
+    "mirrors": [
+      {
+        "sha256": "94706ce7bdb07d18cbe6c5319d935d6c7513bc32469f4c14a6d1e814ce18b184",
+        "evidence_ids": [
+          "ev_4a6dc9b700fccba6",
+          "ev_54242478d6e7c2d1"
+        ],
+        "urls": [
+          "https://r2.angelcam.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts",
+          "https://dr2.studiocalico.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts"
+        ]
+      }
+    ],
+    "changed_pages": [],
+    "contradictions": [],
+    "scope_reviews": [
+      {
+        "type": "assertion",
+        "topic_id": "availability",
+        "assertion_key": "first_sc_release",
+        "evidence_ids": [
+          "ev_9e1b55e0b425ab9c",
+          "ev_4a6dc9b700fccba6"
+        ],
+        "positions": [
+          "2022",
+          "1999"
+        ],
+        "verdict": "ambiguous_scope",
+        "scope_fields": [
+          "territory",
+          "language",
+          "product_line",
+          "edition",
+          "definition",
+          "period"
+        ]
+      },
+      {
+        "type": "assertion",
+        "topic_id": "availability",
+        "assertion_key": "first_sc_release",
+        "evidence_ids": [
+          "ev_9e1b55e0b425ab9c",
+          "ev_54242478d6e7c2d1"
+        ],
+        "positions": [
+          "2022",
+          "1999"
+        ],
+        "verdict": "ambiguous_scope",
+        "scope_fields": [
+          "territory",
+          "language",
+          "product_line",
+          "edition",
+          "definition",
+          "period"
+        ]
+      }
+    ],
+    "provenance_reviews": [
+      {
+        "evidence_id": "ev_9e1b55e0b425ab9c",
+        "collection_level": "page_directly_read",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_24d63e7dfeb309fe",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_13e3e9efceb259b7",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_3b0d0669cca3d307",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_830b62b558a4ae38",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_4a6dc9b700fccba6",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_54242478d6e7c2d1",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      },
+      {
+        "evidence_id": "ev_52b0145f52276cb1",
+        "collection_level": "search_excerpt_unconfirmed",
+        "strong_evidence": false
+      }
+    ],
+    "stale_measurements": [
+      {
+        "evidence_id": "ev_24d63e7dfeb309fe",
+        "period_end": "2022-10-28"
+      },
+      {
+        "evidence_id": "ev_52b0145f52276cb1",
+        "period_end": "2025-06-25"
+      }
+    ],
+    "insufficient_topics": [
+      "anniversaries",
+      "cn_eu_comparison",
+      "realized_prices",
+      "volumes"
+    ],
+    "insufficient_reasons": [
+      "aucune vente conclue documentee : prix realises et volumes inconnus",
+      "aucune preuve verifiee par un humain"
+    ],
+    "flagged_suspicious": []
+  },
+  "interpretation": "Divergence 1999/2022 non résolue; le texte source 1999 dit explicitement Simplified Chinese. Ne pas la convertir en différence de langue prouvée.",
+  "policy_decision": "NOT_EVALUATED",
+  "data_limitations": [
+    "6/8 observations issues d extraits de recherche",
+    "aucune vente conclue documentee",
+    "aucun volume confirme",
+    "aucune validation source officielle primaire"
+  ]
+}

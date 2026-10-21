@@ -1,0 +1,100 @@
+name: EDGE Search Lab
+# Declenchement manuel uniquement (onglet Actions > EDGE Search Lab > Run workflow).
+# Publie uniquement des resultats publics (aucun montant de capital :
+# EDGE_TREASURY n'est volontairement PAS fourni ici, le financement reste local).
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "Recherche (ex. LEGO Pokemon)"
+        required: true
+        type: string
+      mode:
+        description: "discovery ou investigation"
+        required: true
+        default: discovery
+        type: choice
+        options: [discovery, investigation]
+      horizon:
+        description: "Horizon (vide = deduit de la recherche)"
+        required: false
+        default: ""
+        type: choice
+        options: ["", FLIP, FUTURE_CLASSIC]
+      publish:
+        description: "Committer les resultats dans le depot (sinon artefact seulement)"
+        required: true
+        default: false
+        type: boolean
+
+# Lecture seule par defaut ; l'ecriture n'est accordee qu'au job "publish",
+# qui ne s'execute que si publish=true.
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-data-writes
+  cancel-in-progress: false
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests
+      - name: Run Search Lab
+        env:
+          SCAVIO_API_KEY: ${{ secrets.SCAVIO_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          EDGE_QUERY: ${{ inputs.query }}
+          EDGE_MODE: ${{ inputs.mode }}
+          EDGE_HORIZON: ${{ inputs.horizon }}
+        # L'entree utilisateur passe par variable d'environnement (pas
+        # d'interpolation directe dans le shell : evite l'injection).
+        run: |
+          ARGS=(--mode "$EDGE_MODE")
+          if [ -n "$EDGE_HORIZON" ]; then ARGS+=(--horizon "$EDGE_HORIZON"); fi
+          python -m searchlab "$EDGE_QUERY" "${ARGS[@]}"
+      - name: Controle public/prive (bloquant)
+        run: python -m tools.check_public_files data/searchlab data/discovery/store
+      - name: Resultats en artefact (aucune publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-searchlab-${{ github.run_id }}
+          # Toujours le dossier data/ entier : la racine de l'artefact
+          # correspond alors a data/, quel que soit le nombre de sous-dossiers.
+          path: data
+          retention-days: 14
+          if-no-files-found: warn
+
+  publish:
+    needs: search
+    if: ${{ inputs.publish }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: edge-searchlab-${{ github.run_id }}
+          path: data_artifact
+      - name: Recopie stricte des chemins autorises
+        run: |
+          mkdir -p data && cp -r data_artifact/. data/ && rm -rf data_artifact
+          python -m tools.check_public_files data/searchlab data/discovery/store
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/searchlab data/discovery/store
+          git diff --cached --quiet || git commit -m "EDGE searchlab: resultats [skip ci]"
+          git pull --rebase && git push

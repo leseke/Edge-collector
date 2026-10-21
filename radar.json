@@ -1,9 +1,12 @@
 {
+  "schema_version": 4,
+  "migrated_from": {
+    "schema": "v3",
+    "generated_at": "2026-10-12T13:01:31.319927+00:00",
+    "previous_decision": "CASH"
+  },
   "generated_at": "2026-10-12T13:01:31.319927+00:00",
-  "config": {
-    "capital_monthly": 300,
-    "capital_max_available": 600,
-    "capital_engaged": 0,
+  "policy": {
     "max_position_pct": 40,
     "allocation_buy_pct": [
       15,
@@ -26,15 +29,22 @@
     }
   },
   "summary": {
+    "schema_version": 4,
     "n_buy": 0,
+    "n_strong_buy": 0,
     "n_wait": 0,
     "n_watch": 0,
     "n_nodata": 5,
+    "n_error": 5,
     "total": 5,
-    "capital_available": 600,
-    "capital_engaged": 0,
-    "capital_monthly": 300,
-    "decision": "CASH"
+    "coverage": 0.0,
+    "min_coverage_for_cash": 1.0,
+    "data_status": "FAILED",
+    "posture": "NO_CONCLUSION",
+    "decision": "FAILED",
+    "n_opportunity_alert": 0,
+    "config_valid": true,
+    "sources_failed": []
   },
   "products": [
     {
@@ -48,16 +58,14 @@
       "target_buy": 60,
       "target_strong_buy": 50,
       "ecart_pct": null,
-      "allocation_eur": [
-        0,
-        0
-      ],
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
       "thesis": "Licence Fortnite extremement populaire aupres du public jeune adulte, set LEGO dont le retrait est souvent annonce peu de temps a l'avance.",
       "counter_thesis": "Aucun catalyseur date confirme. La production LEGO peut etre prolongee si les ventes restent fortes.",
-      "invalidation": "Si LEGO prolonge au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre est fermee."
+      "invalidation": "Si LEGO prolonge au-dela de 2027, la these est morte. Si le prix median depasse 100 EUR, la fenetre est fermee.",
+      "opportunity_alert": false,
+      "failure_reason": "inconnue (radar V3 migre)"
     },
     {
       "id": "lego_75639",
@@ -70,16 +78,14 @@
       "target_buy": 90,
       "target_strong_buy": 80,
       "ecart_pct": null,
-      "allocation_eur": [
-        0,
-        0
-      ],
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FUTURE_CLASSIC",
       "thesis": "Premier set LEGO base sur One Piece, licence culte au Japon et en forte croissance en Europe.",
       "counter_thesis": "Le prix actuel du marche est deja eleve. La production pourrait durer plusieurs annees.",
-      "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique."
+      "invalidation": "Si LEGO sort une reedition amelioree du Going Merry, l'original perd sa valeur historique.",
+      "opportunity_alert": false,
+      "failure_reason": "inconnue (radar V3 migre)"
     },
     {
       "id": "lego_21371",
@@ -92,16 +98,14 @@
       "target_buy": 85,
       "target_strong_buy": 70,
       "ecart_pct": null,
-      "allocation_eur": [
-        0,
-        0
-      ],
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FUTURE_CLASSIC",
       "thesis": "Licence culte depuis les annees quatre-vingt-dix, public adulte nostalgique, format LEGO Ideas a tirage initial limite.",
       "counter_thesis": "Le marche europeen peut etre moins demande que le marche americain pour cette licence.",
-      "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre."
+      "invalidation": "Si LEGO prolonge la production au-dela de 2027, la these de rarete s'effondre.",
+      "opportunity_alert": false,
+      "failure_reason": "inconnue (radar V3 migre)"
     },
     {
       "id": "lorcana_hyperia_box",
@@ -114,16 +118,14 @@
       "target_buy": 100,
       "target_strong_buy": 85,
       "ecart_pct": null,
-      "allocation_eur": [
-        0,
-        0
-      ],
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
       "thesis": "Sortie officielle en octobre 2026, Disney et Pixar se croisent dans un set Lorcana.",
       "counter_thesis": "La sortie est trop recente pour avoir un historique de ventes secondaires fiables.",
-      "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte."
+      "invalidation": "Si Disney annonce une reimpression massive dans les six mois, la these de rarete est morte.",
+      "opportunity_alert": false,
+      "failure_reason": "inconnue (radar V3 migre)"
     },
     {
       "id": "riftbound_radiance_box",
@@ -136,16 +138,14 @@
       "target_buy": 110,
       "target_strong_buy": 100,
       "ecart_pct": null,
-      "allocation_eur": [
-        0,
-        0
-      ],
       "cycle_num": 0,
       "cycle_label": "Inconnu",
       "categorie": "FLIP",
       "thesis": "Sortie en octobre 2026, nouveau jeu de Riot Games qui capitalise sur l'univers de League of Legends.",
       "counter_thesis": "Riot a un historique de reimpressions agressives quand un produit marche.",
-      "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte."
+      "invalidation": "Si Riot annonce une seconde impression dans les six mois, la these de rarete est morte.",
+      "opportunity_alert": false,
+      "failure_reason": "inconnue (radar V3 migre)"
     }
   ],
   "trends": [],

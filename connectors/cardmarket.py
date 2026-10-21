@@ -1,7 +1,15 @@
 import os, json, requests
 from datetime import datetime
 
-APIFY = os.environ["APIFY_TOKEN"]
+
+
+def _apify_token():
+    """Lecture differee : l'import ne plante plus sans token.
+    L'absence de token devient une erreur explicite au moment de l'appel."""
+    token = os.environ.get("APIFY_TOKEN")
+    if not token:
+        raise RuntimeError("APIFY_TOKEN absent")
+    return token
 ACTOR = "unfenced-group~cardmarket-scraper"
 
 
@@ -14,14 +22,16 @@ def fetch_cardmarket(game, search_query, product_type="sealed",
     must_any = [m.lower() for m in (must_any or [])]
     must_not = [m.lower() for m in (must_not or [])]
 
-    url = (f"https://api.apify.com/v2/acts/{ACTOR}"
-           f"/run-sync-get-dataset-items?token={APIFY}")
+    # Token en en-tete (et non dans l'URL) : une erreur HTTP ne l'expose
+    # plus dans les logs.
+    url = f"https://api.apify.com/v2/acts/{ACTOR}/run-sync-get-dataset-items"
+    headers = {"Authorization": f"Bearer {_apify_token()}"}
     payload = {
         "game": game,
         "searchQuery": search_query,
         "productType": product_type,
     }
-    r = requests.post(url, json=payload, timeout=300)
+    r = requests.post(url, json=payload, headers=headers, timeout=300)
     r.raise_for_status()
     items = r.json()
     if not items:

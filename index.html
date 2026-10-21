@@ -530,6 +530,15 @@
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
   }
+  .lab-form { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .lab-form input, .lab-form select { background: rgba(148,163,184,0.08); border: 1px solid rgba(148,163,184,0.25); color: inherit; border-radius: 10px; padding: 10px 12px; font-size: 15px; }
+  .lab-row { display: flex; gap: 8px; }
+  .lab-row select { flex: 1; }
+  .lab-btn { background: #4ade80; color: #052e16; border: 0; border-radius: 10px; padding: 11px; font-weight: 600; font-size: 15px; }
+  .lab-out { font-size: 13px; color: #94a3b8; line-height: 1.5; margin-top: 8px; }
+  .lab-out code { display: block; background: rgba(148,163,184,0.1); padding: 8px; border-radius: 8px; margin: 6px 0; word-break: break-all; white-space: pre-wrap; }
+  .sim-tag { font-size: 10px; color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); border-radius: 6px; padding: 1px 5px; margin-left: 6px; }
+  .badge.insufficient_data { background: rgba(100,116,139,0.15); color: #64748b; }
 </style>
 </head>
 <body>
@@ -542,6 +551,12 @@
 <div id="app">
   <div class="empty">Chargement…</div>
 </div>
+
+<!-- Discovery + Search Lab (lecture seule : aucun secret dans le navigateur) -->
+<div id="lab"></div>
+
+<!-- EDGE Intelligence Reports v1 (lecture seule, AI-001) -->
+<div id="intel"></div>
 
 <footer>
   <div id="footer-stamp"></div>
@@ -576,10 +591,24 @@ const LABELS = {
   WAIT: "Attendre",
   WATCH: "Watch",
   NO_DATA: "Pas de données",
-  ERROR: "Erreur"
+  ERROR: "Erreur",
+  INSUFFICIENT_DATA: "Preuves insuffisantes",
+  NO_DATA_DISCOVERY: "Pas de données"
 };
 
 let RADAR = null;
+
+// Echappement HTML : les titres de produits viennent de sources externes.
+function esc(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+// radar.json V4 ne publie plus le capital : RADAR.config n'existe que
+// dans les anciens radars (affichage historique conserve).
+function isLegacy() { return !!(RADAR && RADAR.config); }
+
 let SIM_CAPITAL = null;
 
 function loadSimCapital() {
@@ -595,11 +624,13 @@ function saveSimCapital(v) {
 
 function getEffectiveCapital() {
   if (!RADAR) return 0;
+  if (!isLegacy()) return null;
   return SIM_CAPITAL != null ? SIM_CAPITAL : RADAR.config.capital_monthly;
 }
 
 function getAvailableCapital() {
   if (!RADAR) return 0;
+  if (!isLegacy()) return null;
   return getEffectiveCapital() - (RADAR.config.capital_engaged || 0);
 }
 
@@ -633,6 +664,10 @@ function cycleHTML(num, total) {
 }
 
 function computeAllocRange(product) {
+  // V4 : les montants d'allocation sont calcules par le moteur et restent
+  // prives. L'interface n'invente aucune allocation.
+  if (!isLegacy()) return [0, 0];
+  if (product.decision === "NO_DATA" || product.decision === "ERROR") return [0, 0];
   const cap = getAvailableCapital();
   if (product.decision === "BUY" || product.decision === "STRONG_BUY") {
     const lo = RADAR.config.allocation_buy_pct[0];
@@ -655,16 +690,53 @@ function render(data) {
   const available = capital - engaged;
 
   const nBuy = data.products.filter(p => p.decision === "BUY" || p.decision === "STRONG_BUY").length;
-  const decisionTxt = nBuy === 0
-    ? "CASH — Aucun signal actif"
-    : `${nBuy} signal${nBuy > 1 ? "x" : ""} d'achat détecté${nBuy > 1 ? "s" : ""}`;
-  const decisionSub = nBuy === 0
-    ? "Aucun produit n'est sous sa cible d'achat aujourd'hui."
-    : "Ouvre un produit pour voir la thèse et l'allocation.";
+  // V4 : la posture vient du moteur (summary.posture), jamais deduite ici.
+  // Ancien radar sans posture : prudence, un echec de collecte n'est pas un CASH.
+  const nFail = data.products.filter(p => p.decision === "NO_DATA" || p.decision === "ERROR").length;
+  if (!s.data_status) {
+    s.data_status = data.products.length === 0 ? "NO_DATA" : (nFail === data.products.length ? "FAILED" : (nFail ? "PARTIAL" : "OK"));
+    s.coverage = data.products.length ? (data.products.length - nFail) / data.products.length : 0;
+  }
+  const posture = s.posture || (nBuy > 0 ? "SIGNALS" : (nFail > 0 || data.products.length === 0 ? "NO_CONCLUSION" : "CASH"));
+  let decisionTxt, decisionSub;
+  if (nBuy > 0) {
+    decisionTxt = `${nBuy} signal${nBuy > 1 ? "x" : ""} d'achat détecté${nBuy > 1 ? "s" : ""}`;
+    decisionSub = s.data_status === "PARTIAL"
+      ? "Données partielles : certains produits n'ont pas pu être évalués."
+      : "Ouvre un produit pour voir la thèse.";
+  } else if (posture === "CASH") {
+    decisionTxt = "CASH — Aucun signal actif";
+    decisionSub = "Tous les produits ont été évalués ; aucun n'est sous sa cible.";
+  } else {
+    decisionTxt = `Aucune conclusion — données ${esc(s.data_status || "insuffisantes")}`;
+    decisionSub = `Couverture ${Math.round((s.coverage || 0) * 100)} % : impossible de conclure CASH.`;
+  }
 
   let html = '';
 
   // Command Center
+  if (!isLegacy()) {
+    html += `
+    <div class="command">
+      <div class="command-top">
+        <div>
+          <div class="capital-label">Capital</div>
+          <div class="capital-value" style="font-size:20px;">Privé<span class="unit">non publié</span></div>
+        </div>
+      </div>
+      <div class="capital-detail">
+        <div class="item"><div class="lbl">Statut données</div><div class="val ${s.data_status === "OK" ? "ok" : "warn"}">${esc(s.data_status)}</div></div>
+        <div class="item"><div class="lbl">Couverture</div><div class="val">${Math.round((s.coverage || 0) * 100)} %</div></div>
+      </div>
+      <div class="decision">
+        <div class="dot ${nBuy === 0 ? 'cash' : 'buy'}"></div>
+        <div class="decision-text">
+          <div class="title">${decisionTxt}</div>
+          <div class="sub">${decisionSub} Le financement est évalué dans le rapport privé.</div>
+        </div>
+      </div>
+    </div>`;
+  } else
   html += `
     <div class="command">
       <div class="command-top">
@@ -703,7 +775,7 @@ function render(data) {
         <div class="featured" onclick="openSheet('${p.id}')">
           <div class="img-box">${thumbHTML(p, 64)}</div>
           <div class="body">
-            <div class="name">${p.name}</div>
+            <div class="name">${esc(p.name)}</div>
             <div class="price-row">
               <div class="price">${p.price_eur != null ? Math.round(p.price_eur) + " €" : "—"}</div>
               <div class="ecart">${p.ecart_pct != null ? (p.ecart_pct > 0 ? "+" : "") + p.ecart_pct.toFixed(0) + "%" : ""}</div>
@@ -727,7 +799,7 @@ function render(data) {
       <div class="item" onclick="openSheet('${p.id}')">
         <div class="thumb">${thumbHTML(p, 24)}</div>
         <div class="info">
-          <div class="name">${p.name}</div>
+          <div class="name">${esc(p.name)}</div>
           <div class="meta">
             ${p.price_eur != null
               ? `<span class="price">${Math.round(p.price_eur)} €</span> · cible ${p.target_buy} €`
@@ -756,8 +828,8 @@ function openSheet(id) {
   let html = `
     <div class="sheet-img">${thumbHTML(p, 80)}</div>
     <div class="sheet-body">
-      <div class="sheet-title">${p.name}</div>
-      <div class="sheet-cat">${p.categorie === "FUTURE_CLASSIC" ? "Future Classic" : "Flip"} · ${p.source}</div>
+      <div class="sheet-title">${esc(p.name)}</div>
+      <div class="sheet-cat">${p.categorie === "FUTURE_CLASSIC" ? "Future Classic" : "Flip"} · ${esc(p.source)}${p.price_basis ? " · base : " + esc(p.price_basis === "SOLD_MEDIAN" ? "médiane des ventes conclues" : p.price_basis === "MARKET_TREND" ? "tendance marché (pas une vente)" : p.price_basis) : ""}</div>
 
       <div class="sheet-price-block">
         <div class="sheet-price-main">
@@ -778,6 +850,9 @@ function openSheet(id) {
         </div>
       </div>
 
+      ${p.failure_reason ? `<div class="sheet-block"><div class="lbl">Cause</div><div class="txt warn">${esc(p.failure_reason)}</div></div>` : ""}
+      ${p.verified_offer ? `<div class="sheet-block"><div class="lbl">Offre achetable vérifiée</div><div class="txt">${Math.round(p.verified_offer.price_eur)} € · ${esc(p.verified_offer.seller || "")}</div></div>` : ""}
+
       <div class="sheet-block">
         <div class="lbl">Stade du cycle — ${p.cycle_num}/7 · ${p.cycle_label}</div>
         ${cycleHTML(p.cycle_num)}
@@ -797,7 +872,7 @@ function openSheet(id) {
     html += `
       <div class="sheet-block">
         <div class="lbl">Thèse</div>
-        <div class="txt">${p.thesis}</div>
+        <div class="txt">${esc(p.thesis)}</div>
       </div>
     `;
   }
@@ -805,7 +880,7 @@ function openSheet(id) {
     html += `
       <div class="sheet-block">
         <div class="lbl">Contre-thèse</div>
-        <div class="txt warn">${p.counter_thesis}</div>
+        <div class="txt warn">${esc(p.counter_thesis)}</div>
       </div>
     `;
   }
@@ -813,7 +888,7 @@ function openSheet(id) {
     html += `
       <div class="sheet-block">
         <div class="lbl">Invalidation</div>
-        <div class="txt danger">${p.invalidation}</div>
+        <div class="txt danger">${esc(p.invalidation)}</div>
       </div>
     `;
   }
@@ -831,6 +906,10 @@ function closeSheet() {
 
 function openCapital() {
   const input = document.getElementById("capital-input");
+  if (!isLegacy()) {
+    alert("Le capital est désormais privé : il se règle dans config.private.json (non publié), pas dans le navigateur.");
+    return;
+  }
   input.value = getEffectiveCapital();
   document.getElementById("capital-modal").classList.add("open");
   document.getElementById("overlay").classList.add("open");
@@ -863,8 +942,272 @@ function reload() {
     });
 }
 
+// ---------------- Discovery & Search Lab ----------------
+const LAB = { discovery: null, searches: null, files: {} };
+
+function repoInfo() {
+  // https://<owner>.github.io/<repo>/  ->  owner/repo
+  const h = location.hostname, seg = location.pathname.split("/").filter(Boolean);
+  if (h.endsWith(".github.io") && seg.length) return { owner: h.split(".")[0], repo: seg[0] };
+  return { owner: "leseke", repo: "Edge-collector" };
+}
+
+function getJSON(path) {
+  return fetch(path + "?t=" + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
+}
+
+function invBadge(inv) {
+  if (!inv) return `<span class="badge watch">À surveiller</span>`;
+  const d = inv.decision;
+  return `<span class="badge ${esc(d.toLowerCase())}">${esc(LABELS[d] || d)}</span>`;
+}
+
+function productsHTML(list, source) {
+  if (!list || !list.length) return `<div class="empty" style="padding:16px;">Aucun candidat.</div>`;
+  return list.map((p, i) => `
+    <div class="item" onclick="openCandidate('${source}', ${i})">
+      <div class="thumb">🔎</div>
+      <div class="info">
+        <div class="name">${esc((p.names || [p.product_key])[0])}${p.simulated ? '<span class="sim-tag">SIMULÉ</span>' : ''}</div>
+        <div class="meta">${p.n_sold} vente(s) conclue(s) · ${p.n_buyable} offre(s)${p.in_watchlist ? " · watchlist" : " · hors watchlist"}</div>
+      </div>
+      <div class="right">${invBadge(p.investigation)}</div>
+    </div>`).join("");
+}
+
+function postureTxt(o) {
+  if (!o) return "";
+  const m = { SIGNALS: "Signal(aux) à investiguer", NO_OPPORTUNITY_FOUND: "Aucune opportunité convaincante",
+              NO_CONCLUSION: "Aucune conclusion : collecte incomplète ou en échec" };
+  return esc(m[o.posture] || o.posture);
+}
+
+function renderLab() {
+  const d = LAB.discovery, s = LAB.searches;
+  const ri = repoInfo();
+  let html = `<div class="section"><div class="section-title">Search Lab</div>
+    <div class="lab-form">
+      <input id="lab-q" maxlength="200" placeholder="ex. Produits liés aux 30 ans de Pokémon">
+      <div class="lab-row">
+        <select id="lab-mode"><option value="discovery">Découverte</option><option value="investigation">Investigation</option></select>
+        <select id="lab-h"><option value="">Horizon auto</option><option value="FLIP">Court (flip)</option><option value="FUTURE_CLASSIC">Long terme</option></select>
+      </div>
+      <button class="lab-btn" onclick="launchSearch()">Préparer la recherche</button>
+      <div class="lab-out" id="lab-out">La recherche s'exécute dans GitHub Actions (les clés API n'y sont jamais exposées au navigateur).</div>
+    </div></div>`;
+  if (d) {
+    html += `<div class="section"><div class="section-title">Discovery — ${postureTxt(d)}${d.simulated ? '<span class="sim-tag">SIMULÉ</span>' : ''}</div>
+      <div class="lab-out">${fmtDate(d.generated_at)} · campagnes : ${(d.summary.campaign_status || []).map(esc).join(", ")}</div>
+      ${productsHTML(d.products, "discovery")}</div>`;
+  }
+  if (s && s.searches && s.searches.length) {
+    html += `<div class="section"><div class="section-title">Historique Search Lab</div>` +
+      s.searches.slice(0, 20).map(x => `
+      <div class="item" onclick="openSearch('${esc(x.file)}')">
+        <div class="thumb">🧪</div>
+        <div class="info"><div class="name">${esc(x.query)}${x.simulated ? '<span class="sim-tag">SIMULÉ</span>' : ''}</div>
+          <div class="meta">${fmtDate(x.at)} · ${esc(x.mode)} · ${esc(x.status)} · ${x.n_products} produit(s)</div></div>
+        <div class="right">${x.n_opportunity_alert ? `<span class="badge buy">${x.n_opportunity_alert} signal</span>` : `<span class="badge watch">${esc(x.posture || "")}</span>`}</div>
+      </div>`).join("") + `</div>`;
+  }
+  document.getElementById("lab").innerHTML = html;
+}
+
+function launchSearch() {
+  const q = document.getElementById("lab-q").value.trim();
+  const mode = document.getElementById("lab-mode").value;
+  const h = document.getElementById("lab-h").value;
+  const out = document.getElementById("lab-out");
+  if (!q || q.length > 200) { out.textContent = "Saisis une recherche (200 caractères max)."; return; }
+  const ri = repoInfo();
+  const url = `https://github.com/${ri.owner}/${ri.repo}/actions/workflows/searchlab.yml`;
+  const cli = `python -m searchlab "${q.replace(/"/g, "'")}" --mode ${mode}${h ? " --horizon " + h : ""}`;
+  out.innerHTML = `1. Ouvre <a href="${url}" target="_blank" rel="noopener" style="color:#4ade80;">EDGE Search Lab sur GitHub</a> → « Run workflow ».<br>
+    2. Renseigne : query = <b>${esc(q)}</b> · mode = <b>${esc(mode)}</b>${h ? " · horizon = <b>" + esc(h) + "</b>" : ""}.<br>
+    3. Recharge cette page à la fin du run (quelques minutes).<br>En local :<code>${esc(cli)}</code>`;
+}
+
+function openSearch(file) {
+  if (!/^[a-z0-9\-]+\.json$/.test(file)) return;
+  getJSON("data/searchlab/" + file).then(d => {
+    if (!d) return;
+    LAB.files.current = d;
+    if (!d.products) { alert("Recherche en échec : " + (d.error || "inconnue")); return; }
+    let html = `<div class="sheet-body"><div class="sheet-title">${esc((d.campaigns[0] || {}).campaign_id || "")}</div>
+      <div class="sheet-cat">${postureTxt(d)}</div>
+      <div class="sheet-block"><div class="lbl">Appels</div><div class="txt">${(d.campaigns[0].calls || []).map(c => esc(c.query + " · " + c.source + " : " + c.status)).join("<br>")}</div></div>
+      <div class="sheet-block"><div class="lbl">Produits</div>${productsHTML(d.products, "current")}</div></div>`;
+    document.getElementById("sheet-content").innerHTML = html;
+    document.getElementById("overlay").classList.add("open");
+    document.getElementById("sheet").classList.add("open");
+  });
+}
+
+function openCandidate(source, i) {
+  const data = source === "discovery" ? LAB.discovery : LAB.files.current;
+  const p = data && data.products[i];
+  if (!p) return;
+  const inv = p.investigation;
+  const sec = inv && inv.report ? inv.report.sections : null;
+  let html = `<div class="sheet-body"><div class="sheet-title">${esc((p.names || [p.product_key])[0])}</div>
+    <div class="sheet-cat">${esc(p.product_key)} · découvert le ${fmtDate(p.first_seen)} · campagne ${esc(p.origin_campaign)}${p.simulated ? '<span class="sim-tag">SIMULÉ</span>' : ''}</div>`;
+  html += `<div class="sheet-block"><div class="lbl">Indices</div><div class="txt">${(p.reasons || []).map(r => esc(r.detail)).join("<br>") || "Aucun indice d'asymétrie."}</div></div>`;
+  html += `<div class="sheet-block"><div class="lbl">Risques</div><div class="txt warn">${(p.risks || []).map(esc).join("<br>") || "—"}</div></div>`;
+  if (inv) {
+    html += `<div class="sheet-block"><div class="lbl">Décision économique</div><div class="txt">${invBadge(inv)} ${esc(inv.rationale)}<br>Confiance : ${esc(inv.confidence)}</div></div>`;
+    if (sec && typeof sec["15_scenarios"] === "object") {
+      html += `<div class="sheet-block"><div class="lbl">Scénarios (conditionnels, nets de frais)</div><div class="txt">` +
+        Object.entries(sec["15_scenarios"]).map(([k, x]) => `${esc(k)} : revente ${x.sale_price_eur} € → ROI net ${x.net_roi_pct} % <span style="color:#64748b">(${esc(x.basis)})</span>`).join("<br>") + `</div></div>`;
+    }
+    if (sec) {
+      html += `<div class="sheet-block"><div class="lbl">Contre-thèse</div><div class="txt warn">${sec["13_contre_these"].map(esc).join("<br>")}</div></div>`;
+      html += `<div class="sheet-block"><div class="lbl">Invalidation</div><div class="txt danger">${sec["14_invalidation"].map(esc).join("<br>")}</div></div>`;
+    }
+    html += `<div class="sheet-block"><div class="lbl">Financement</div><div class="txt">Évalué uniquement dans le rapport privé local.</div></div>`;
+  }
+  html += `</div>`;
+  document.getElementById("sheet-content").innerHTML = html;
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("sheet").classList.add("open");
+}
+
+function reloadLab() {
+  Promise.all([getJSON("data/discovery/latest.json"), getJSON("data/searchlab/index.json")])
+    .then(([d, s]) => { LAB.discovery = d; LAB.searches = s; renderLab(); });
+}
+
+// ---------------- EDGE Intelligence Reports v1 (lecture seule) ----------------
+// Le niveau de verification vient de l'index (calcule par le validateur a la
+// publication). L'avis IA n'est jamais affiche comme une decision. Les
+// graphiques n'utilisent que les points du rapport : aucun chiffre ajoute.
+const INTEL = { index: null, current: null };
+const KIND_LABEL = { fact: "Faits (citations exactes)", interpretation: "Interprétations de l'IA (non vérifiées)",
+                     hypothesis: "Hypothèses (IA ou humain)", uncertainty: "Incertitudes",
+                     limitation: "Limites méthodologiques", invalidated: "Conclusions infirmées" };
+
+// Actualite evaluee A LA CONSULTATION (pas a la publication). Sans politique
+// declaree : 30 j par defaut (prudence). Index ancien sans data_as_of : inconnue.
+function intelTimeliness(dataAsOf, maxDays) {
+  const max = Number.isInteger(maxDays) ? maxDays : 30;
+  const t = Date.parse(dataAsOf || "");
+  if (isNaN(t)) return { status: "unknown", max, age: null };
+  const age = (Date.now() - t) / 86400000;
+  if (age < 0) return { status: "unknown", max, age };
+  return { status: age <= max ? "current" : "stale", max, age };
+}
+
+function intelBadge(level) {
+  const cls = level === "fully_verified" ? "buy" : (level === "partially_verified" ? "wait" : "watch");
+  return `<span class="badge ${cls}">${esc(level)}</span>`;
+}
+
+function renderIntel() {
+  const idx = INTEL.index;
+  if (!idx || !idx.reports || !idx.reports.length) { document.getElementById("intel").innerHTML = ""; return; }
+  const latest = {};
+  idx.reports.forEach(e => { if (!latest[e.report_id] || e.report_version > latest[e.report_id].report_version) latest[e.report_id] = e; });
+  const rows = Object.values(latest).map(e => `
+    <div class="item" onclick="openIntel('${esc(e.report_id)}', ${Number(e.report_version)})">
+      <div class="thumb">📑</div>
+      <div class="info"><div class="name">${esc(e.title)}${e.simulated ? '<span class="sim-tag">SIMULÉ</span>' : ''}</div>
+        <div class="meta">${esc(e.region)} · v${Number(e.report_version)} · ${esc(e.production_status)} · ${fmtDate(e.created_at)}</div></div>
+      <div class="right">${intelBadge(e.verification_level)}${intelTimeliness(e.data_as_of, e.max_data_age_days).status !== "current" ? ' <span class="badge no_data">' + (intelTimeliness(e.data_as_of, e.max_data_age_days).status === "stale" ? "périmé" : "actualité ?") + '</span>' : ""}</div>
+    </div>`).join("");
+  document.getElementById("intel").innerHTML =
+    `<div class="section"><div class="section-title">Rapports d'analyse</div>${rows}</div>`;
+}
+
+function intelChart(r, ch) {
+  const ds = ch.dataset_ids.map(id => r.datasets.find(d => d.dataset_id === id)).filter(Boolean);
+  const pts = ds.flatMap(d => d.points.filter(p => p.value !== null));
+  if (!pts.length) return `<div class="lab-out">Aucune donnée.</div>`;
+  const times = [...new Set(ds.flatMap(d => d.points.map(p => p.t)))].sort();
+  const vals = pts.map(p => p.value), lo = Math.min(...vals), hi = Math.max(...vals);
+  const W = 320, H = 140, pad = 24;
+  const x = t => pad + (times.indexOf(t) / Math.max(1, times.length - 1)) * (W - 2 * pad);
+  const y = v => H - pad - ((v - lo) / ((hi - lo) || 1)) * (H - 2 * pad);
+  const colors = ["#4ade80", "#60a5fa", "#fbbf24", "#f472b6"];
+  let svg = "";
+  ds.forEach((d, i) => {
+    const c = colors[i % colors.length];
+    if (ch.type === "bar") {
+      const bw = Math.max(2, (W - 2 * pad) / times.length / ds.length - 2);
+      d.points.forEach(p => { if (p.value !== null) svg += `<rect x="${x(p.t) - bw / 2 + i * bw}" y="${y(p.value)}" width="${bw}" height="${H - pad - y(p.value)}" fill="${c}" opacity="${p.status === "measured" ? 1 : 0.5}"/>`; });
+    } else {
+      let seg = [];
+      const flush = () => { if (seg.length > 1) svg += `<polyline fill="none" stroke="${c}" stroke-width="2" ${seg.dashed ? 'stroke-dasharray="4 3"' : ""} points="${seg.join(" ")}"/>`; seg = []; };
+      d.points.forEach(p => {
+        if (p.value === null) { flush(); return; }   // donnée manquante : trou, jamais interpolée
+        seg.push(`${x(p.t)},${y(p.value)}`); if (p.status !== "measured") seg.dashed = true;
+        svg += `<circle cx="${x(p.t)}" cy="${y(p.value)}" r="2.5" fill="${c}"/>`;
+      });
+      flush();
+    }
+  });
+  const sim = ds.some(d => d.simulated);
+  const unit = ds[0].unit === "currency" ? ds[0].currency : ds[0].unit;
+  const legend = ds.map((d, i) => `<span style="color:${colors[i % colors.length]}">■</span> ${esc(d.title)} (${d.points.filter(p => p.value === null).length} manquant(s))`).join("<br>");
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(ch.title)}">
+      ${sim ? `<text x="${W / 2}" y="${H / 2}" text-anchor="middle" font-size="18" fill="#fbbf24" opacity="0.35">DONNÉES SIMULÉES</text>` : ""}
+      ${svg}<text x="${pad}" y="12" font-size="10" fill="#94a3b8">${esc(unit)} · max ${hi} · min ${lo}</text></svg>
+    <div class="lab-out">${legend}</div>`;
+}
+
+function openIntel(id, version) {
+  if (!/^eir_[a-z0-9][a-z0-9_.-]{1,63}$/.test(id) || !Number.isInteger(version)) return;
+  const e = (INTEL.index.reports || []).find(x => x.report_id === id && x.report_version === version);
+  if (!e || !/^reports\/[a-z0-9_.-]+\/v\d{4}\.json$/.test(e.path)) return;
+  getJSON("data/intelligence/" + e.path).then(r => {
+    if (!r) return;
+    INTEL.current = r;
+    const src = {}; r.sources.forEach(s => src[s.source_id] = s);
+    const cite = ids => ids.length ? ids.map(i => src[i] ? esc(src[i].publisher) + (src[i].simulated ? " (fictive)" : "") : esc(i)).join(", ") : "aucune source";
+    let html = `<div class="sheet-body"><div class="sheet-title">${esc(r.subject.title)}</div>
+      <div class="sheet-cat">${esc(r.subject.market)} · ${esc(r.subject.region)} · v${r.report_version} · données au ${fmtDate(r.data_as_of)}</div>
+      <div class="sheet-block"><div class="lbl">Fiabilité (à la rédaction)</div><div class="txt ${e.verification_level === "fully_verified" ? "" : "warn"}">${esc(e.label)}</div></div>`;
+    const tl = intelTimeliness(r.data_as_of, (r.freshness || {}).max_data_age_days);
+    html += `<div class="sheet-block"><div class="lbl">Actualité (à la consultation)</div><div class="txt ${tl.status === "current" ? "" : "danger"}">` +
+      (tl.status === "current" ? `Données du ${fmtDate(r.data_as_of)} : à jour (limite ${tl.max} j)` :
+       tl.status === "stale" ? `DONNÉES PÉRIMÉES : ${Math.floor(tl.age)} j > ${tl.max} j${(r.freshness || {}).max_data_age_days ? "" : " (politique par défaut)"} — ne pas considérer comme actuel` :
+       "Actualité inconnue") + `</div></div>`;
+    r.charts.forEach(ch => { html += `<div class="sheet-block"><div class="lbl">${esc(ch.title)}</div>${intelChart(r, ch)}</div>`; });
+    Object.keys(KIND_LABEL).forEach(k => {
+      const cs = r.claims.filter(c => c.kind === k);
+      if (!cs.length) return;
+      html += `<div class="sheet-block"><div class="lbl">${KIND_LABEL[k]}</div><div class="txt">` + cs.map(c =>
+        `${esc(c.statement)}${c.source_claim_type && c.source_claim_type !== "fact" ? ' <span class="sim-tag">' + esc({opinion: "opinion de la source", commercial_claim: "affirmation commerciale", estimate: "estimation de la source"}[c.source_claim_type] || c.source_claim_type) + '</span>' : ""} <span style="color:#64748b">[${esc(c.verification)} · ${esc(c.author)} · ${cite(c.source_ids)}]</span>`).join("<br>") + `</div></div>`;
+    });
+    if ((r.computations || []).length) {
+      const meth = { pct_change: "variation en %", difference: "différence", mean: "moyenne", min: "minimum", max: "maximum" };
+      html += `<div class="sheet-block"><div class="lbl">Calculs déterministes EDGE (recalculés à chaque validation)</div><div class="txt">` +
+        r.computations.map(c => `${esc(meth[c.method] || c.method)} de ${esc(c.dataset_id)} du ${esc(c.t_from)} au ${esc(c.t_to)} : ` +
+          `<b>${Number(c.result).toFixed(2)}</b> ${c.unit === "percent" ? "%" : esc(c.currency || c.unit)} <span style="color:#64748b">(${c.inputs.length} points d'entrée)</span>`).join("<br>") + `</div></div>`;
+    }
+    const op = r.decisions.agent_opinion, ed = r.decisions.edge_decision;
+    if (op) html += `<div class="sheet-block"><div class="lbl">Avis analytique de l'agent (pas une décision)</div><div class="txt">${esc(op.stance)} — ${esc(op.rationale)}</div></div>`;
+    html += `<div class="sheet-block"><div class="lbl">Décision EDGE (moteur)</div><div class="txt">${esc(ed.decision)}${ed.decided_by === "none" ? " — non évaluée par le moteur" : ""}</div></div>`;
+    const ec = r.economics;
+    html += `<div class="sheet-block"><div class="lbl">Économie</div><div class="txt">Achetabilité vérifiée : ${ec.availability.buyable_verified ? "oui" : "non"} · frais vérifiés : ${ec.fees.verified ? "oui" : "non"}<br>` +
+      ec.roi_hypotheses.map(h => `Hypothèse ${esc(h.scenario)} : ROI net ${Number(h.net_roi_pct)} %`).join("<br>") + `</div></div>`;
+    const h = r.history;
+    if (h.corrections.length || h.conclusion_changes.length) html += `<div class="sheet-block"><div class="lbl">Historique</div><div class="txt warn">` +
+      h.corrections.map(c => `${esc(c.description)} (${esc(c.reason)})`).concat(h.conclusion_changes.map(c => `${esc(c.from)} → ${esc(c.to)} : ${esc(c.reason)}`)).join("<br>") + `</div></div>`;
+    html += `<div class="sheet-block"><div class="lbl">Sources</div><div class="txt">` + r.sources.map(s =>
+      `${esc(s.publisher)} — ${esc(s.title)} [${esc(s.tier)}${s.simulated ? ", fictive" : ""}] consulté le ${esc(s.accessed_at)}`).join("<br>") + `</div></div></div>`;
+    document.getElementById("sheet-content").innerHTML = html;
+    document.getElementById("overlay").classList.add("open");
+    document.getElementById("sheet").classList.add("open");
+  });
+}
+
+function reloadIntel() {
+  getJSON("data/intelligence/index.json").then(idx => { INTEL.index = idx; renderIntel(); });
+}
+
 SIM_CAPITAL = loadSimCapital();
 reload();
+reloadLab();
+reloadIntel();
 </script>
 
 </body>
