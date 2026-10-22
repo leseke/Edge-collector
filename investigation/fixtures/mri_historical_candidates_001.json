@@ -1,0 +1,93 @@
+{
+  "schema": "edge.mri.historical_candidates.v1",
+  "created_at": "2026-10-22T00:00:00Z",
+  "status": "RESEARCH_ONLY_NOT_BACKTESTED",
+  "temporal_policy": "published_at is not observed_at. Do not pass these records to blind_replay.snapshot as historical observations unless contemporaneous capture evidence confirms availability/collection.",
+  "cases": [
+    {
+      "case_id": "pokemon-cn-2022",
+      "subject": "Simplified Chinese Pokemon TCG official mainland launch",
+      "candidate_cutoff": "2022-09-21T23:59:59+08:00",
+      "sources": [
+        {
+          "id": "pk-20220921",
+          "url": "https://www.pokemon.cn/tcg/product/16380.html",
+          "published_date": "2022-09-21",
+          "claim": "Announcement of Sep 28 online press launch",
+          "category": "contemporaneous_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        },
+        {
+          "id": "pk-20220928",
+          "url": "https://www.pokemon.cn/tcg/other/17201.html",
+          "published_date": "2022-09-28",
+          "claim": "Release scheduled Oct 28, Sun & Moon series",
+          "category": "later_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        },
+        {
+          "id": "pk-20221027",
+          "url": "https://www.pokemon.cn/tcg/event/16369.html",
+          "published_date": "2022-10-27",
+          "claim": "Retail / official local events, competitions anticipated",
+          "category": "later_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        },
+        {
+          "id": "pk-20250314",
+          "url": "https://corporate.pokemon.co.jp/en/topics/detail/t-33/",
+          "published_date": "2025-03-14",
+          "claim": "National Championships expanded into four Tier-1 cities",
+          "category": "outcome_context",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        }
+      ],
+      "early_hypothesis": "Localization plus organized play can seed durable local participation.",
+      "rival": "Localization might primarily attract collectors or short-lived hype without durable community.",
+      "falsifier": "Lack of repeat organized play, sustained participation, or sell-through.",
+      "outcome_limit": "Later company publication indicates championships but not resale ROI, unit sales, or causal attribution."
+    },
+    {
+      "case_id": "lego-10365-2025",
+      "subject": "LEGO 10365 Captain Jack Sparrow Pirate Ship",
+      "candidate_cutoff": "2025-08-26T23:59:59+02:00",
+      "sources": [
+        {
+          "id": "lego-20250826",
+          "url": "https://www.lego.com/en-us/aboutus/news/2025/august/lego-icons-captain-jack-sparrow-s-pirate-ship",
+          "published_date": "2025-08-26",
+          "claim": "Set 10365 announced, Sep 12 early access, Sep 15 general sale, €349.99 RRP",
+          "category": "contemporaneous_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        },
+        {
+          "id": "lego-brickfanatics-20250826",
+          "url": "https://www.brickfanatics.com/lego-10365-jack-sparrow-pirate-ship-revealed",
+          "published_date": "2025-08-26",
+          "claim": "Comparison to 2011 set 4184 and quoted asking valuations; not concluded sales",
+          "category": "contemporaneous_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        },
+        {
+          "id": "lego-brickset-20250912",
+          "url": "https://brickset.com/article/124805/the-black-pearl-available-now",
+          "published_date": "2025-09-12",
+          "claim": "Product available via Insider program and gift with purchase",
+          "category": "later_publication",
+          "captured_at": "2026-10-22",
+          "historically_collected": false
+        }
+      ],
+      "early_hypothesis": "Licensed nostalgia plus a new high-fidelity set can redistribute demand between old and new sealed editions.",
+      "rival": "New supply can cannibalize older set value or attract builders with little aftermarket follow-through.",
+      "falsifier": "No demonstrated increase in completed resale transactions or liquidity for any relevant set.",
+      "outcome_limit": "No historical completed-sales dataset available; no financial return claim."
+    }
+  ]
+}
