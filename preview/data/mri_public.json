@@ -1,0 +1,29 @@
+{
+  "schema": "edge.mri.public.v1",
+  "cases": [
+    {
+      "case_id": "pk-cn-2022",
+      "label": "Pokémon Chine — 2022",
+      "as_of": "2022-09-21T23:59:59+08:00",
+      "state": "RESEARCH_ONLY",
+      "thesis": "Une localisation officielle peut favoriser la constitution durable d'une communauté de joueurs.",
+      "rival": "L'attention peut rester concentrée dans une courte phase médiatique ou de collection.",
+      "limitations": "Page historiquement datée, mais pas de capture contemporaine qualifiée ni de ventes vérifiées.",
+      "source_urls": [
+        "https://www.pokemon.cn/tcg/product/16380.html"
+      ]
+    },
+    {
+      "case_id": "lego-black-pearl-2025",
+      "label": "LEGO Black Pearl — 2025",
+      "as_of": "2025-08-26T23:59:59+02:00",
+      "state": "RESEARCH_ONLY",
+      "thesis": "Une réédition emblématique peut relancer l'intérêt pour une licence et déplacer la demande entre éditions.",
+      "rival": "La nouvelle offre officielle peut diminuer la rareté perçue des anciens sets.",
+      "limitations": "Pas de capture indépendante à T0, ni historique fiable des ventes conclues. Prix affichés ≠ ventes.",
+      "source_urls": [
+        "https://www.lego.com/en-us/aboutus/news/2025/august/lego-icons-captain-jack-sparrow-s-pirate-ship"
+      ]
+    }
+  ]
+}
