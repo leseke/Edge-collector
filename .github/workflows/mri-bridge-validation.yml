@@ -4,9 +4,12 @@ on:
     paths:
       - "intelligence/public_mri_export.py"
       - "intelligence/mri_public_adapter.py"
+      - "investigation/fixtures/mri_003_historical_evidence_cases.json"
+      - "tools/build_mri_preview.py"
       - "tests/test_public_mri_export.py"
       - "tests/test_mri_public_adapter.py"
       - "tests/test_public_mri_preview.py"
+      - "tests/test_build_mri_preview.py"
       - "preview/**"
       - ".github/workflows/mri-bridge-validation.yml"
   workflow_dispatch:
@@ -32,11 +35,23 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONNOUSERSITE: "1"
         run: |
-          python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter -v
+          python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview -v
+      - name: Generate reviewed MRI data in temporary directory
+        run: |
+          python - <<'PY'
+          import json
+          import tempfile
+          from pathlib import Path
+          from tools.build_mri_preview import generate
+          with tempfile.TemporaryDirectory() as d:
+              target=Path(d)/"mri_public.json"
+              generate(output_path=target)
+              payload=json.loads(target.read_text(encoding="utf-8"))
+              assert payload["schema"]=="edge.mri.public.v1"
+              assert all(c["state"]=="RESEARCH_ONLY" for c in payload["cases"])
+              print("Generated public research cases:", len(payload["cases"]))
+          PY
       - name: Complete offline test suite (local simulation)
-        # Remove the CI marker solely within this test process and its child
-        # fixtures: the production SpendGuard still refuses monthly caps in CI.
-        # Offline runner explicitly rejects network connections.
         env:
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONNOUSERSITE: "1"
