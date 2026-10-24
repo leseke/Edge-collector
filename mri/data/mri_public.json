@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "as_of": "2022-09-21T23:59:59+08:00",
+      "case_id": "pokemon-cn-2022",
+      "label": "Pokémon Chine — 2022",
+      "limitations": "Document historique retrouvé ultérieurement : aucune capture contemporaine qualifiée, aucune performance de revente démontrée.",
+      "rival": "Short-lived attention may not develop into durable participation or profitable resale.",
+      "source_urls": [
+        "https://www.pokemon.cn/tcg/product/16380.html"
+      ],
+      "state": "RESEARCH_ONLY",
+      "thesis": "The simplified Chinese TCG launch could build persistent local play and collector demand."
+    },
+    {
+      "as_of": "2025-08-26T23:59:59+02:00",
+      "case_id": "lego-10365-2025",
+      "label": "LEGO Black Pearl — 2025",
+      "limitations": "Document historique retrouvé ultérieurement : aucune capture contemporaine qualifiée, aucune performance de revente démontrée.",
+      "rival": "The new set could cannibalize the older edition, without increasing completed resale volume.",
+      "source_urls": [
+        "https://www.lego.com/en-us/aboutus/news/2025/august/lego-icons-captain-jack-sparrow-s-pirate-ship",
+        "https://www.brickfanatics.com/lego-10365-jack-sparrow-pirate-ship-revealed"
+      ],
+      "state": "RESEARCH_ONLY",
+      "thesis": "Nostalgia for a renewed licensed LEGO theme could affect demand for both new and older Black Pearl sets."
+    }
+  ],
+  "schema": "edge.mri.public.v1"
+}
