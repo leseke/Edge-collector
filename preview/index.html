@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>EDGE MRI — Prévisualisation</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif}
+body{background:#0a0a0f;color:#e8e8ee;margin:0;padding:20px;max-width:900px;margin-inline:auto}
+h1{margin:0 0 8px} p{line-height:1.6}
+small,.muted{color:#a1a1aa}.status{border:1px solid #854d0e;background:#2d220c;color:#fbbf24;padding:8px 12px;border-radius:8px;display:inline-block;margin:15px 0}
+article{border:1px solid #32323d;background:#14141c;border-radius:16px;padding:20px;margin:16px 0}
+h2{font-size:1.2rem;margin:0 0 10px}.k{color:#a1a1aa;font-weight:bold;font-size:.8rem;letter-spacing:.05em}
+section{padding:9px 0}a{color:#7dd3fc;overflow-wrap:anywhere}#status{color:#fbbf24}
+</style></head>
+<body>
+<header><h1>EDGE / Market Reaction Intelligence</h1><p class="muted">Prévisualisation isolée : aucune prédiction réelle, aucun conseil d'achat, aucune donnée financière exposée.</p><span class="status">RECHERCHE UNIQUEMENT</span></header>
+<main><p id="status" role="status">Chargement des observations publiques…</p><div id="cases"></div></main>
+<script>
+"use strict";
+const allowedStates=new Set(["RESEARCH_ONLY","PENDING","NO_DATA","SUPPORTED","NOT_SUPPORTED"]);
+function el(tag,value,cls){const x=document.createElement(tag);if(value!==undefined)x.textContent=String(value);if(cls)x.className=cls;return x}
+function section(parent,label,value){const s=el("section");s.append(el("div",label,"k"),el("p",value));parent.append(s)}
+async function run(){
+const status=document.getElementById("status"), target=document.getElementById("cases");
+try{
+ const response=await fetch("./data/mri_public.json",{cache:"no-store"});
+ if(!response.ok)throw Error("HTTP "+response.status);
+ const payload=await response.json();
+ if(payload.schema!=="edge.mri.public.v1"||!Array.isArray(payload.cases))throw Error("Schéma non conforme");
+ target.replaceChildren();
+ for(const c of payload.cases){
+  if(!allowedStates.has(c.state)||!c.case_id||!c.label||typeof c.thesis!=="string"||typeof c.rival!=="string"||typeof c.limitations!=="string"||!Array.isArray(c.source_urls))throw Error("Cas incomplet");
+  const card=el("article");card.append(el("h2",c.label),el("small",c.state+" — date d'analyse : "+c.as_of));
+  section(card,"THÈSE À TESTER",c.thesis);section(card,"HYPOTHÈSE RIVALE",c.rival);section(card,"LIMITES",c.limitations);
+  const sources=el("section");sources.append(el("div","SOURCES PUBLIQUES","k"));
+  for(const raw of c.source_urls){const u=new URL(raw);if(u.protocol!=="https:")throw Error("URL non sécurisée");const link=el("a",u.hostname);link.href=u.href;link.rel="noopener noreferrer";link.target="_blank";sources.append(link,el("span","  "))}
+  card.append(sources);target.append(card)
+ }
+ status.textContent=payload.cases.length+" dossiers de recherche affichés — pas de signal d'investissement.";
+}catch(err){status.textContent="Aucune donnée publiée : "+err.message}
+}
+run();
+</script></body></html>

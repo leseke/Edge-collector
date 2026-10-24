@@ -1,0 +1,40 @@
+name: EDGE MRI Bridge validation
+on:
+  pull_request:
+    paths:
+      - "intelligence/public_mri_export.py"
+      - "tests/test_public_mri_export.py"
+      - "tests/test_public_mri_preview.py"
+      - "preview/**"
+      - ".github/workflows/mri-bridge-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: MRI bridge tests
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONNOUSERSITE: "1"
+        run: |
+          python -m unittest tests.test_public_mri_export tests.test_public_mri_preview -v
+      - name: Complete offline test suite
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONNOUSERSITE: "1"
+        run: |
+          python -m tools.run_tests_offline
+      - name: Publication safety inspection
+        run: |
+          python -m tools.check_public_files --tracked
