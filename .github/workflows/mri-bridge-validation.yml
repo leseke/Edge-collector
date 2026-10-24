@@ -33,15 +33,15 @@ jobs:
           PYTHONNOUSERSITE: "1"
         run: |
           python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter -v
-      - name: Complete offline test suite (isolated simulated ledger)
-        # Explicitly emulate a LOCAL test run only for this process. The production
-        # SpendGuard GITHUB_ACTIONS fail-closed check is NOT changed.
+      - name: Complete offline test suite (local simulation)
+        # Remove the CI marker solely within this test process and its child
+        # fixtures: the production SpendGuard still refuses monthly caps in CI.
+        # Offline runner explicitly rejects network connections.
         env:
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONNOUSERSITE: "1"
-          GITHUB_ACTIONS: "false"
         run: |
-          python -m tools.run_tests_offline
+          env -u GITHUB_ACTIONS python -m tools.run_tests_offline
       - name: Publication safety inspection
         run: |
           python -m tools.check_public_files --tracked
