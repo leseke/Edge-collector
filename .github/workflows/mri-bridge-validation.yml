@@ -6,6 +6,7 @@ on:
       - "intelligence/mri_public_adapter.py"
       - "investigation/fixtures/mri_003_historical_evidence_cases.json"
       - "tools/build_mri_preview.py"
+      - "tools/check_mri_preview_browser.py"
       - "tests/test_public_mri_export.py"
       - "tests/test_mri_public_adapter.py"
       - "tests/test_public_mri_preview.py"
@@ -20,7 +21,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,35 +29,41 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install test-only dependency
-        run: python -m pip install requests
-      - name: MRI bridge tests
-        env:
-          PYTHONDONTWRITEBYTECODE: "1"
-          PYTHONNOUSERSITE: "1"
+      - name: Install test-only dependencies
+        run: python -m pip install requests playwright
+      - name: MRI bridge unit tests
+        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview -v
+      - name: Generate static preview bundle from MRI evidence
         run: |
-          python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview -v
-      - name: Generate reviewed MRI data in temporary directory
-        run: |
+          mkdir -p preview-dist/data
+          cp preview/index.html preview-dist/index.html
           python - <<'PY'
           import json
-          import tempfile
           from pathlib import Path
           from tools.build_mri_preview import generate
-          with tempfile.TemporaryDirectory() as d:
-              target=Path(d)/"mri_public.json"
-              generate(output_path=target)
-              payload=json.loads(target.read_text(encoding="utf-8"))
-              assert payload["schema"]=="edge.mri.public.v1"
-              assert all(c["state"]=="RESEARCH_ONLY" for c in payload["cases"])
-              print("Generated public research cases:", len(payload["cases"]))
+          output=Path("preview-dist/data/mri_public.json")
+          generate(output_path=output)
+          doc=json.loads(output.read_text(encoding="utf-8"))
+          assert doc["schema"]=="edge.mri.public.v1"
+          assert len(doc["cases"])==2
+          assert all(c["state"]=="RESEARCH_ONLY" for c in doc["cases"])
+          print("Generated preview cases:",len(doc["cases"]))
           PY
+      - name: Install headless Chromium for browser verification
+        run: python -m playwright install --with-deps chromium
+      - name: Test generated preview in Chromium
+        run: python -m tools.check_mri_preview_browser
       - name: Complete offline test suite (local simulation)
         env:
           PYTHONDONTWRITEBYTECODE: "1"
           PYTHONNOUSERSITE: "1"
-        run: |
-          env -u GITHUB_ACTIONS python -m tools.run_tests_offline
+        run: env -u GITHUB_ACTIONS python -m tools.run_tests_offline
       - name: Publication safety inspection
-        run: |
-          python -m tools.check_public_files --tracked
+        run: python -m tools.check_public_files --tracked
+      - name: Upload isolated generated preview (no GitHub Pages deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-mri-preview
+          path: preview-dist/
+          if-no-files-found: error
+          retention-days: 7
