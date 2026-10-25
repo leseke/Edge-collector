@@ -23,7 +23,7 @@ class FeedTests(unittest.TestCase):
   with tempfile.TemporaryDirectory() as d:
    result=collect_official_learning(Path(d)/"review.json",fetcher=lambda _:modified,observed_at=DATE)
    self.assertEqual(result["source_count"],0)
-   self.assertEqual(result["collection_status"],"PARTIAL") if result["source_count"] else self.assertEqual(result["collection_status"],"FAILED")
+   self.assertEqual(result["collection_status"],"FAILED")
  def test_xml_entities_blocked(self):
   with self.assertRaises(ValueError):parse_feed(b'<!DOCTYPE x [<!ENTITY secret SYSTEM "file:///etc/passwd">]><rss/>',observed_at=DATE)
  def test_feed_size_is_hard_limit(self):
