@@ -24,6 +24,8 @@ on:
       - "intelligence/learning_commitment_ledger.py"
       - "intelligence/external_witness.py"
       - "intelligence/github_witness_check.py"
+      - "intelligence/sale_outcome_evidence_gate.py"
+      - "tests/test_sale_outcome_evidence_gate.py"
       - "tests/test_github_witness_check.py"
       - "tests/test_external_witness.py"
       - "tests/test_learning_commitment_ledger.py"
@@ -71,7 +73,7 @@ jobs:
       - name: Install test-only dependencies
         run: python -m pip install requests playwright
       - name: MRI bridge unit tests
-        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison tests.test_opportunity_v1 tests.test_market_evidence tests.test_prediction_journal tests.test_learning_intelligence tests.test_learning_library tests.test_learning_acquisition tests.test_stage_learning_sources tests.test_collect_learning_feeds tests.test_private_learning_evaluation tests.test_learning_prediction_bridge tests.test_learning_commitment_ledger tests.test_external_witness tests.test_github_witness_check -v
+        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison tests.test_opportunity_v1 tests.test_market_evidence tests.test_prediction_journal tests.test_learning_intelligence tests.test_learning_library tests.test_learning_acquisition tests.test_stage_learning_sources tests.test_collect_learning_feeds tests.test_private_learning_evaluation tests.test_learning_prediction_bridge tests.test_learning_commitment_ledger tests.test_external_witness tests.test_github_witness_check tests.test_sale_outcome_evidence_gate -v
       - name: Generate static preview bundle from MRI evidence
         run: |
           mkdir -p preview-dist/data
