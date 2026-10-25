@@ -27,7 +27,7 @@ def register_lesson(path,lesson,*,revision_of=None):
     if _time(lesson["source_published_at"])>_time(lesson["observed_at"]):
         raise ValueError("future evidence")
     fields={k:v for k,v in lesson.items() if k!="id"}
-    expected=hashlib.sha256(_canonical(fields).encode()).hexdigest()[:24]
+    expected=hashlib.sha256(json.dumps(fields,sort_keys=True,ensure_ascii=False).encode()).hexdigest()[:24]
     if lesson["id"]!=expected:raise ValueError("lesson signature mismatch")
     existing=_read(path)
     previous={x["lesson"]["id"] for x in existing}
