@@ -12,6 +12,9 @@ on:
       - "intelligence/mri_evidence_segments.py"
       - "intelligence/mri_evidence_events.py"
       - "intelligence/mri_source_comparison.py"
+      - "intelligence/opportunity_identity.py"
+      - "intelligence/opportunity_economics.py"
+      - "tests/test_opportunity_v1.py"
       - "tests/test_mri_source_comparison.py"
       - "tests/test_mri_evidence_events.py"
       - "tests/test_mri_evidence_segments.py"
@@ -44,7 +47,7 @@ jobs:
       - name: Install test-only dependencies
         run: python -m pip install requests playwright
       - name: MRI bridge unit tests
-        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison -v
+        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison tests.test_opportunity_v1 -v
       - name: Generate static preview bundle from MRI evidence
         run: |
           mkdir -p preview-dist/data
