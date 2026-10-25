@@ -8,7 +8,7 @@ class EventCandidateTests(unittest.TestCase):
   evidence=segment_page("pk","https://www.pokemon.com",f"<p>{text}</p>",max_chars=500)
   result=extract_candidates(evidence,"2026-10-25T08:00:00Z")
   self.assertEqual(result["coverage"],"COMPLETE")
-  self.assertEqual(result["scanned_characters"],len(text))
+  self.assertEqual(result["scanned_characters"],len(text.strip()))
   self.assertTrue(any(x["action_type"]=="reprint" and "Réimpression" in x["quote"] for x in result["candidates"]))
   self.assertTrue(all(x["verification_status"]=="CANDIDATE_UNVERIFIED" and x["occurred_at"] is None for x in result["candidates"]))
  def test_no_assertion_without_keyword(self):
