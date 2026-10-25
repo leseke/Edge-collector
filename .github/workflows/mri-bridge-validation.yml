@@ -6,6 +6,8 @@ on:
       - "intelligence/mri_public_adapter.py"
       - "investigation/fixtures/mri_003_historical_evidence_cases.json"
       - "tools/build_mri_preview.py"
+      - "tools/prepare_mri_public_release.py"
+      - "tests/test_prepare_mri_public_release.py"
       - "tools/check_mri_preview_browser.py"
       - "tests/test_public_mri_export.py"
       - "tests/test_mri_public_adapter.py"
@@ -32,7 +34,7 @@ jobs:
       - name: Install test-only dependencies
         run: python -m pip install requests playwright
       - name: MRI bridge unit tests
-        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview -v
+        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release -v
       - name: Generate static preview bundle from MRI evidence
         run: |
           mkdir -p preview-dist/data
@@ -53,6 +55,19 @@ jobs:
         run: python -m playwright install --with-deps chromium
       - name: Test generated preview in Chromium
         run: python -m tools.check_mri_preview_browser
+      - name: Prepare release proposal (no write to production)
+        run: |
+          python -m tools.prepare_mri_public_release --output preview-release
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          doc=json.loads(Path("preview-release/release_review.json").read_text())
+          assert doc["schema"] == "edge.mri.public.release_review.v1"
+          assert doc["publication_performed"] is False
+          assert doc["purchase_authorized"] is False
+          assert doc["public_cases"] >= 1
+          print("MRI release proposal:",doc["status"])
+          PY
       - name: Complete offline test suite (local simulation)
         env:
           PYTHONDONTWRITEBYTECODE: "1"
@@ -60,6 +75,13 @@ jobs:
         run: env -u GITHUB_ACTIONS python -m tools.run_tests_offline
       - name: Publication safety inspection
         run: python -m tools.check_public_files --tracked
+      - name: Upload release review proposal (no automatic push)
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-mri-release-review
+          path: preview-release/
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload isolated generated preview (no GitHub Pages deployment)
         uses: actions/upload-artifact@v4
         with:
