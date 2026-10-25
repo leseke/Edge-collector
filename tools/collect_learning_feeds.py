@@ -61,7 +61,7 @@ def collect_official_learning(output,*,fetcher=None,observed_at=None):
     batch.write_text(json.dumps({"schema":"edge.learning.source_batch.v1","documents":docs},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     review=stage_sources(batch,output)
     review["feed_failures"]=failure
-    review["collection_status"]="OK" if docs and not failure else ("PARTIAL" if docs else "FAILED")
+    review["collection_status"]="OK" if review["source_count"] and not failure and not review["failures"] else ("PARTIAL" if review["source_count"] else "FAILED")
     output.write_text(json.dumps(review,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
     return review
 if __name__=="__main__":
