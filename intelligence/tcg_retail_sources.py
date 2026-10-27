@@ -4,6 +4,7 @@ Storefront domain does not establish the seller of a marketplace offer.
 No scraping, buying, pricing claim or automated provider authentication.
 """
 from urllib.parse import urlsplit
+from intelligence.retail_radar import normalize_offer
 
 SOURCES={
  "ludisphere":{"domain":"ludisphere.fr","category":"SPECIALIST","verticals":["POKEMON","TCG"],"seller_mode":"DIRECT_TO_VERIFY"},
@@ -32,10 +33,14 @@ def classify_retail_offer(*,source_id,listing_url,actual_seller,product_key,offe
         raise ValueError("exact product key required")
     if offer_state not in ("IN_STOCK","OUT_OF_STOCK","PREORDER","UNKNOWN"):
         raise ValueError("invalid offer state")
+    common=normalize_offer(source_id=source_id,source_domain=domain,listing_url=listing_url,
+       actual_seller=actual_seller,product_key=product_key,vertical="TCG",
+       offer_state=offer_state,observed_at=observed_at)
     return {"schema":"edge.tcg.retail_offer.v1","source_id":source_id,
         "source_category":source["category"],"source_url":listing_url,
         "actual_seller":actual_seller.strip(),"product_key":product_key,
         "offer_state":offer_state,"observed_at":observed_at,
         "seller_verified":False,"stock_independently_verified":False,
         "sale_count_inferred":False,"completed_sale_evidence":False,
-        "retail_research_only":True,"purchase_authorized":False}
+        "retail_research_only":True,"purchase_authorized":False,
+            "common_radar":common}
