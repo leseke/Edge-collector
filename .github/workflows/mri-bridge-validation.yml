@@ -30,6 +30,8 @@ on:
       - "intelligence/completed_sale_export.py"
       - "intelligence/bricklink_sold_aggregate.py"
       - "intelligence/bricklink_oauth_client.py"
+      - "intelligence/tcg_retail_sources.py"
+      - "tests/test_tcg_retail_sources.py"
       - "intelligence/bricklink_observation_journal.py"
       - "tests/test_bricklink_observation_journal.py"
       - "tests/test_bricklink_oauth_client.py"
