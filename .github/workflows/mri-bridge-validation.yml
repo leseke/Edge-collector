@@ -33,6 +33,8 @@ on:
       - "intelligence/tcg_retail_sources.py"
       - "intelligence/retail_radar.py"
       - "intelligence/retail_transition_engine.py"
+      - "intelligence/retail_signal_confirmation.py"
+      - "tests/test_retail_signal_confirmation.py"
       - "tests/test_retail_transition_engine.py"
       - "tests/test_retail_radar.py"
       - "tests/test_tcg_retail_sources.py"
