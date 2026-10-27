@@ -32,6 +32,8 @@ on:
       - "intelligence/bricklink_oauth_client.py"
       - "intelligence/tcg_retail_sources.py"
       - "intelligence/retail_radar.py"
+      - "intelligence/retail_transition_engine.py"
+      - "tests/test_retail_transition_engine.py"
       - "tests/test_retail_radar.py"
       - "tests/test_tcg_retail_sources.py"
       - "intelligence/bricklink_observation_journal.py"
