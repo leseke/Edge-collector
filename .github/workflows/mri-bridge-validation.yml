@@ -39,6 +39,8 @@ on:
       - "intelligence/retail_capture_import.py"
       - "intelligence/retail_freshness_audit.py"
       - "intelligence/retail_capture_batch.py"
+      - "tools/import_retail_captures.py"
+      - "tests/test_import_retail_captures_cli.py"
       - "tests/test_retail_capture_batch.py"
       - "tests/test_retail_freshness_audit.py"
       - "tests/test_retail_capture_import.py"
@@ -107,7 +109,7 @@ jobs:
       - name: Install test-only dependencies
         run: python -m pip install requests playwright
       - name: MRI bridge unit tests
-        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison tests.test_opportunity_v1 tests.test_market_evidence tests.test_prediction_journal tests.test_learning_intelligence tests.test_learning_library tests.test_learning_acquisition tests.test_stage_learning_sources tests.test_collect_learning_feeds tests.test_private_learning_evaluation tests.test_learning_prediction_bridge tests.test_learning_commitment_ledger tests.test_external_witness tests.test_github_witness_check tests.test_sale_outcome_evidence_gate tests.test_prospective_learning_gate tests.test_sales_source_typing tests.test_market_snapshot_intake tests.test_completed_sale_export tests.test_bricklink_sold_aggregate tests.test_bricklink_oauth_client tests.test_bricklink_observation_journal tests.test_bricklink_collect_record tests.test_tcg_retail_sources tests.test_retail_radar tests.test_retail_transition_engine tests.test_retail_signal_confirmation tests.test_retail_observation_history tests.test_retail_offline_pilot tests.test_retail_capture_import tests.test_retail_freshness_audit tests.test_retail_capture_batch -v
+        run: python -m unittest tests.test_public_mri_export tests.test_public_mri_preview tests.test_mri_public_adapter tests.test_build_mri_preview tests.test_prepare_mri_public_release tests.test_mri_observation_ingest tests.test_mri_official_collector tests.test_mri_evidence_segments tests.test_mri_evidence_events tests.test_mri_source_comparison tests.test_opportunity_v1 tests.test_market_evidence tests.test_prediction_journal tests.test_learning_intelligence tests.test_learning_library tests.test_learning_acquisition tests.test_stage_learning_sources tests.test_collect_learning_feeds tests.test_private_learning_evaluation tests.test_learning_prediction_bridge tests.test_learning_commitment_ledger tests.test_external_witness tests.test_github_witness_check tests.test_sale_outcome_evidence_gate tests.test_prospective_learning_gate tests.test_sales_source_typing tests.test_market_snapshot_intake tests.test_completed_sale_export tests.test_bricklink_sold_aggregate tests.test_bricklink_oauth_client tests.test_bricklink_observation_journal tests.test_bricklink_collect_record tests.test_tcg_retail_sources tests.test_retail_radar tests.test_retail_transition_engine tests.test_retail_signal_confirmation tests.test_retail_observation_history tests.test_retail_offline_pilot tests.test_retail_capture_import tests.test_retail_freshness_audit tests.test_retail_capture_batch tests.test_import_retail_captures_cli -v
       - name: Generate static preview bundle from MRI evidence
         run: |
           mkdir -p preview-dist/data
