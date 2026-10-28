@@ -15,7 +15,7 @@ class CaptureImportTests(unittest.TestCase):
   with tempfile.TemporaryDirectory() as d:
    p=Path(d)/"capture.jsonl"
    first=import_reviewed_capture(journal_path=p,capture=BASE,as_of="2026-10-28T12:00:00Z",snapshot_bytes=SNAPSHOT)
-   second=import_reviewed_capture(journal_path=p,capture=BASE,as_of="2026-10-28T12:00:00Z")
+   second=import_reviewed_capture(journal_path=p,capture=BASE,as_of="2026-10-28T12:00:00Z",snapshot_bytes=SNAPSHOT)
    self.assertTrue(first["appended"])
    self.assertFalse(second["appended"])
    self.assertFalse(first["source_stock_verified"])
@@ -27,7 +27,7 @@ class CaptureImportTests(unittest.TestCase):
  def test_invalid_hash_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    with self.assertRaises(ValueError):
-    import_reviewed_capture(journal_path=Path(d)/"capture.jsonl",capture={**BASE,"source_snapshot_sha256":"bad"},as_of="2026-10-28T12:00:00Z")
+    import_reviewed_capture(journal_path=Path(d)/"capture.jsonl",capture={**BASE,"source_snapshot_sha256":"bad"},as_of="2026-10-28T12:00:00Z",snapshot_bytes=SNAPSHOT)
  def test_tampered_snapshot_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    with self.assertRaises(ValueError):
@@ -35,5 +35,5 @@ class CaptureImportTests(unittest.TestCase):
  def test_domain_spoof_rejected(self):
   with tempfile.TemporaryDirectory() as d:
    with self.assertRaises(ValueError):
-    import_reviewed_capture(journal_path=Path(d)/"capture.jsonl",capture={**BASE,"listing_url":"https://example.org.malicious.net/item"},as_of="2026-10-28T12:00:00Z")
+    import_reviewed_capture(journal_path=Path(d)/"capture.jsonl",capture={**BASE,"listing_url":"https://example.org.malicious.net/item"},as_of="2026-10-28T12:00:00Z",snapshot_bytes=SNAPSHOT)
 if __name__=="__main__":unittest.main()
