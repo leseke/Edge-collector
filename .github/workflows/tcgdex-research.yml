@@ -98,10 +98,12 @@ jobs:
                            missing_set_ids=sorted(prior_set.keys()-current_set.keys()),
                            renamed_set_ids=sorted(k for k in prior_set.keys()&current_set.keys() if prior_set[k]!=current_set[k]),
                            missing_proves_discontinued=False)
-          Path("tcgdex-research/delta.json").write_text(json.dumps(delta,sort_keys=True),encoding="utf-8")
+          (root / f"{__import__('os').environ['GITHUB_RUN_ID']}-{__import__('os').environ['GITHUB_RUN_ATTEMPT']}" / "delta.json").write_text(json.dumps(delta,sort_keys=True),encoding="utf-8")
           Path("snapshots").mkdir(exist_ok=True)
           PY
-          cp tcgdex-research/delta.json "$folder/delta.json"
+          mkdir -p tcgdex-research
+          cp /tmp/edge-tcgdex-capture/* tcgdex-research/
+          cp "$folder/delta.json" tcgdex-research/delta.json
           git add "$folder"
           git commit -m "data(tcgdex): verified catalogue snapshot ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin HEAD:refs/heads/edge/tcgdex-history
