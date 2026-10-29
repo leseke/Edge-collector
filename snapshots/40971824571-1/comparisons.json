@@ -1,0 +1,61 @@
+{
+  "schema": "edge.commercial.comparisons.v1",
+  "observations": [
+    {
+      "id": "lego_fr_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "lagranderecre_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "tcgdex_base1-4",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-29T23:00:28.145504+00:00",
+      "previous_observed_at": "2026-10-29T23:00:29.091027+00:00",
+      "current_observed_at": "2026-10-29T23:15:11.411234+00:00",
+      "before_price": "99.99",
+      "after_price": "99.99",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "0e28345c89e0a41b5fd870306cbf285b6b8e321819188b2fd592c5b69164a773",
+      "current_evidence_sha256": "99b0aff8094bc53c9d340041cd9351df4ca3ac4149b0a7b8ad2c7be5187af477",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "tcgdex_swsh3-136",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-29T23:00:28.145504+00:00",
+      "previous_observed_at": "2026-10-29T23:00:29.314321+00:00",
+      "current_observed_at": "2026-10-29T23:15:11.514362+00:00",
+      "before_price": "0.02",
+      "after_price": "0.02",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "c3f955d95cbba2eee5331fb97cf1bd8443c8dd141cf8d7196a5d04f111efaf60",
+      "current_evidence_sha256": "c120bfcc79be31062e3d25fef3ebdd89b441fb64e4e58cfb0693ae1b47eba239",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "joueclub_10365",
+      "current_status": "OK",
+      "comparison_available": false,
+      "reason": "BASELINE_ONLY"
+    },
+    {
+      "id": "ldlc_75639",
+      "current_status": "OK",
+      "comparison_available": false,
+      "reason": "BASELINE_ONLY"
+    }
+  ]
+}
