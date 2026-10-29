@@ -91,7 +91,7 @@ jobs:
               if not report_path.exists():continue
               report=json.loads(report_path.read_text(encoding="utf-8"))
               stamp=report.get("observed_at")
-              if isinstance(stamp,str) and (previous is None or stamp>previous[0]):
+              if isinstance(stamp,str) and stamp < json.loads(Path("/tmp/edge-tcgdex-capture/report.json").read_text(encoding="utf-8"))["observed_at"] and (previous is None or stamp>previous[0]):
                   previous=(stamp,path)
           delta={"schema":"edge.tcg.snapshot_diff.v1","comparison_available":previous is not None,
                  "market_offer_evidence":False,"completed_sale_verified":False}
