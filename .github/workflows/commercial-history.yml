@@ -1,0 +1,70 @@
+name: EDGE commercial offer history
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/commercial_history.py'
+      - 'tests/test_commercial_history.py'
+      - 'commercial_targets.json'
+      - '.github/workflows/commercial-history.yml'
+  schedule:
+    - cron: '37 */6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: edge-commercial-history-writer
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test observation and event rules
+        run: python -m unittest discover -s tests -p test_commercial_history.py -v
+      - name: Load persistent market history
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code origin refs/heads/edge/commercial-history >/dev/null 2>&1; then
+            git fetch origin edge/commercial-history
+            git worktree add /tmp/edge-commercial-history FETCH_HEAD
+          else
+            git worktree add --detach /tmp/edge-commercial-history HEAD
+            git -C /tmp/edge-commercial-history checkout --orphan edge/commercial-history
+            git -C /tmp/edge-commercial-history rm -rf --quiet .
+          fi
+      - name: Capture asking prices and explicit stock states
+        run: python scripts/commercial_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
+      - name: Append evidence to isolated data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="/tmp/edge-commercial-history/snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          test ! -e "$folder"
+          mkdir -p "$folder"
+          cp /tmp/commercial-capture/* "$folder/"
+          git -C /tmp/edge-commercial-history config user.name 'github-actions[bot]'
+          git -C /tmp/edge-commercial-history config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C /tmp/edge-commercial-history add "snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git -C /tmp/edge-commercial-history commit -m "data(mri): commercial observations ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git push origin "$(git -C /tmp/edge-commercial-history rev-parse HEAD):refs/heads/edge/commercial-history"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: commercial-evidence
+          path: /tmp/commercial-capture/
+          retention-days: 30
+          if-no-files-found: ignore
+      - name: Surface collection failure after archiving evidence
+        run: |
+          python - <<'PY'
+          import json
+          report=json.load(open('/tmp/commercial-capture/report.json'))
+          print('Market observation status:', report['status'])
+          if report['status']=='FAILED': raise SystemExit(1)
+          PY
