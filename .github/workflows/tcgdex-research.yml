@@ -73,6 +73,35 @@ jobs:
           test ! -e "$folder"
           mkdir -p "$folder"
           cp /tmp/edge-tcgdex-capture/* "$folder/"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("snapshots")
+          current=Path("/tmp/edge-tcgdex-capture/catalogue.json")
+          current_set={x["id"]:x["name"] for x in json.loads(current.read_text(encoding="utf-8"))}
+          prior=sorted(p for p in root.glob("*/catalogue.json") if p.parent.name!=f"{__import__('os').environ['GITHUB_RUN_ID']}-{__import__('os').environ['GITHUB_RUN_ATTEMPT']}")
+          # Snapshot directories are based on GitHub run identifiers; select by recorded UTC date.
+          previous=None
+          for path in prior:
+              report_path=path.with_name("report.json")
+              if not report_path.exists():continue
+              report=json.loads(report_path.read_text(encoding="utf-8"))
+              stamp=report.get("observed_at")
+              if isinstance(stamp,str) and (previous is None or stamp>previous[0]):
+                  previous=(stamp,path)
+          delta={"schema":"edge.tcg.snapshot_diff.v1","comparison_available":previous is not None,
+                 "market_offer_evidence":False,"completed_sale_verified":False}
+          if previous is not None:
+              prior_set={x["id"]:x["name"] for x in json.loads(previous[1].read_text(encoding="utf-8"))}
+              delta.update(previous_observed_at=previous[0],
+                           added_set_ids=sorted(current_set.keys()-prior_set.keys()),
+                           missing_set_ids=sorted(prior_set.keys()-current_set.keys()),
+                           renamed_set_ids=sorted(k for k in prior_set.keys()&current_set.keys() if prior_set[k]!=current_set[k]),
+                           missing_proves_discontinued=False)
+          Path("tcgdex-research/delta.json").write_text(json.dumps(delta,sort_keys=True),encoding="utf-8")
+          Path("snapshots").mkdir(exist_ok=True)
+          PY
+          cp tcgdex-research/delta.json "$folder/delta.json"
           git add "$folder"
           git commit -m "data(tcgdex): verified catalogue snapshot ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin HEAD:refs/heads/edge/tcgdex-history
