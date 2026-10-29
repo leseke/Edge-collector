@@ -156,6 +156,39 @@ jobs:
         run: env -u GITHUB_ACTIONS python -m tools.run_tests_offline
       - name: Publication safety inspection
         run: python -m tools.check_public_files --tracked
+      - name: Probe official TCGdex FR catalogue (non-blocking research)
+        run: |
+          mkdir -p catalogue-research
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          from tools.review_tcgdex_catalogue import main
+          folder=Path("catalogue-research")
+          observed=datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00","Z")
+          report={"schema":"edge.tcg.research_probe.v1","observed_at":observed,"status":"UNAVAILABLE","products_priced":0,"sales_verified":0}
+          try:
+              req=Request("https://api.tcgdex.net/v2/fr/sets",headers={"User-Agent":"EDGE-Research/1.0","Accept":"application/json"})
+              with urlopen(req, timeout=12) as response:
+                  if response.status!=200:raise ValueError("HTTP non-200")
+                  body=response.read(1000001)
+              if len(body)>1000000:raise ValueError("response too large")
+              source=folder/"tcgdex-fr-sets.json"
+              source.write_bytes(body)
+              reviewed=main(["--input",str(source),"--observed-at",observed])
+              report.update(status="VALIDATED",set_count=reviewed["set_count"],sha256=reviewed["source_snapshot_sha256"])
+          except Exception as exc:
+              report["error_type"]=type(exc).__name__
+          (folder/"probe.json").write_text(json.dumps(report,sort_keys=True),encoding="utf-8")
+          print("TCGdex catalogue probe status:",report["status"])
+          PY
+      - name: Upload TCGdex research probe (no production write)
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-tcgdex-research
+          path: catalogue-research/
+          retention-days: 7
       - name: Upload release review proposal (no automatic push)
         uses: actions/upload-artifact@v4
         with:
