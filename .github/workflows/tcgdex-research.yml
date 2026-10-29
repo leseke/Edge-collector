@@ -7,6 +7,9 @@ permissions:
   contents: write
 jobs:
   capture:
+    concurrency:
+      group: edge-tcgdex-research-history
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -31,6 +34,31 @@ jobs:
           (root/'report.json').write_text(json.dumps(result,ensure_ascii=False,sort_keys=True),encoding='utf-8')
           print('Validated catalogue extensions:',result['set_count'])
           PY
+      - name: Append immutable snapshot to dedicated history branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          mkdir -p /tmp/edge-history-capture
+          cp catalogue-snapshot/catalogue.json /tmp/edge-history-capture/catalogue.json
+          cp catalogue-snapshot/report.json /tmp/edge-history-capture/report.json
+          if git ls-remote --exit-code origin refs/heads/edge/tcgdex-history >/dev/null 2>&1; then
+            git fetch origin edge/tcgdex-history
+            git checkout -B edge/tcgdex-history FETCH_HEAD
+          else
+            git checkout --orphan edge/tcgdex-history
+            git rm -rf --quiet . || true
+          fi
+          id="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          folder="snapshots/${id}"
+          test ! -e "$folder"
+          mkdir -p "$folder"
+          cp /tmp/edge-history-capture/* "$folder/"
+          git add "$folder"
+          git commit -m "data(tcgdex): immutable French catalogue snapshot ${id}"
+          git push origin HEAD:refs/heads/edge/tcgdex-history
       - name: Upload temporary evidence independently from the application
         uses: actions/upload-artifact@v4
         with:
