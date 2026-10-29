@@ -1,0 +1,44 @@
+name: EDGE MRI official source watch
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 8 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run bounded official-source collector
+        run: |
+          python -m intelligence.mri_official_collector --output mri-watch/official-observations.json
+      - name: Audit research-only output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("mri-watch/official-observations.json")
+          data=json.loads(p.read_text(encoding="utf-8"))
+          assert data["schema"]=="edge.mri.observations.review.v1"
+          assert data["status"]=="RESEARCH_ONLY"
+          assert data["decision"]=="NOT_EVALUATED"
+          assert data["review_required"] is True
+          assert data["count"] <= 2
+          assert p.stat().st_size < 10000
+          print("Audited",data["count"],"official-source research snapshots")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mri-official-observations
+          path: mri-watch/official-observations.json
+          retention-days: 7
+          if-no-files-found: error
