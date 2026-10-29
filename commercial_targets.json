@@ -13,6 +13,24 @@
       "sku": "10365",
       "seller": "La Grande Recre",
       "url": "https://www.lagranderecre.fr/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html"
+    },
+    {
+      "id": "tcgdex_base1-4",
+      "product_id": "pokemon_card_base1-4",
+      "sku": "base1-4",
+      "card_id": "base1-4",
+      "adapter": "tcgdex",
+      "seller": "Cardmarket indication via TCGdex",
+      "url": "https://api.tcgdex.net/v2/fr/cards/base1-4"
+    },
+    {
+      "id": "tcgdex_swsh3-136",
+      "product_id": "pokemon_card_swsh3-136",
+      "sku": "swsh3-136",
+      "card_id": "swsh3-136",
+      "adapter": "tcgdex",
+      "seller": "Cardmarket indication via TCGdex",
+      "url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136"
     }
   ]
 }

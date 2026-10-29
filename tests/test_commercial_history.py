@@ -50,6 +50,15 @@ class CommercialTests(unittest.TestCase):
         self.assertEqual(events[0]['kind'], 'PRICE_CHANGE')
         self.assertFalse(events[0]['buy_signal'])
 
+    def test_indicative_price_event(self):
+        events = self.events(self.row(price_kind='AGGREGATED_INDICATIVE_LOW'),
+                             self.row(price='99.99', price_kind='AGGREGATED_INDICATIVE_LOW'))
+        self.assertEqual(events[0]['kind'], 'INDICATIVE_PRICE_CHANGE')
+
+    def test_metric_scope(self):
+        self.assertEqual(self.events(self.row(price_kind='ASKING_PRICE'),
+                                    self.row(price='99.99', price_kind='AGGREGATED_INDICATIVE_LOW')), [])
+
     def test_restock(self):
         self.assertEqual(self.events(self.row(availability='OUT_OF_STOCK'), self.row())[0]['kind'], 'RESTOCK_OBSERVED')
 

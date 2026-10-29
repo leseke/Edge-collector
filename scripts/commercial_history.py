@@ -99,7 +99,7 @@ def fetch(target, out):
            'price_kind': 'ASKING_PRICE', 'shipping_eur': None, 'completed_sale': False,
            'availability': 'UNKNOWN', 'purchase_authorized': False}
     try:
-        request = Request(target['url'], headers={'User-Agent': 'EDGE-MarketResearch/1.0', 'Accept': 'text/html'})
+        request = Request(target['url'], headers={'User-Agent': 'EDGE-MarketResearch/1.0', 'Accept': 'application/json' if target.get('adapter') == 'tcgdex' else 'text/html'})
         with urlopen(request, timeout=25) as response:
             row['http_status'] = response.status
             row['final_url'] = response.url
@@ -109,9 +109,21 @@ def fetch(target, out):
         if not raw or len(raw) > 3000000:
             raise ValueError('Invalid response size')
         row['body_sha256'] = digest(raw)
-        row['raw_file'] = target['id'] + '.html'
+        row['raw_file'] = target['id'] + ('.json' if target.get('adapter') == 'tcgdex' else '.html')
         (out / row['raw_file']).write_bytes(raw)
-        row.update(parse_offer(raw, target), status='OK')
+        if target.get('adapter') == 'tcgdex':
+            doc = json.loads(raw)
+            if doc.get('id') != target['card_id']:
+                raise ValueError('Card identity mismatch')
+            pricing = doc.get('pricing', doc.get('prices', {})).get('cardmarket', {})
+            price = Decimal(str(pricing.get('low')))
+            if not price.is_finite() or price <= 0 or pricing.get('unit') != 'EUR':
+                raise ValueError('Invalid indicative EUR low')
+            row.update(price=str(price), currency='EUR', price_kind='AGGREGATED_INDICATIVE_LOW',
+                       source_updated_at=pricing.get('updated'), sealed_product=False,
+                       market_language_verified=False, evidence=pricing, status='OK')
+        else:
+            row.update(parse_offer(raw, target), status='OK')
     except Exception as exc:
         row['error_type'] = type(exc).__name__
         row['error'] = str(exc)[:200]
@@ -128,13 +140,14 @@ def compare(current, history):
                  if report['observed_at'] < current['observed_at']
                  for old in report['observations']
                  if old['id'] == row['id'] and old['status'] == 'OK'
-                 and old['url'] == row['url'] and old['product_id'] == row['product_id']]
+                 and old['url'] == row['url'] and old['product_id'] == row['product_id']
+                 and old.get('price_kind') == row.get('price_kind')]
         if not prior:
             continue
         stamp, old = max(prior, key=lambda pair: pair[0])
         changes = []
         if old['currency'] == row['currency'] and Decimal(old['price']) != Decimal(row['price']):
-            changes.append(('PRICE_CHANGE', 'price', old['price'], row['price']))
+            changes.append(('INDICATIVE_PRICE_CHANGE' if row.get('price_kind') == 'AGGREGATED_INDICATIVE_LOW' else 'PRICE_CHANGE', 'price', old['price'], row['price']))
         if 'UNKNOWN' not in (old['availability'], row['availability']) and old['availability'] != row['availability']:
             kind = 'RESTOCK_OBSERVED' if old['availability'] == 'OUT_OF_STOCK' and row['availability'] == 'IN_STOCK' else 'AVAILABILITY_CHANGE'
             changes.append((kind, 'availability', old['availability'], row['availability']))

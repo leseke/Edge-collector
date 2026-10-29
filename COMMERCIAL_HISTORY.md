@@ -24,3 +24,13 @@ not an exact event timestamp, a proven cause, a confirmed promotion or a buy sig
 Remaining MRI work: announcement/reprint/withdrawal sources, cross-seller coverage,
 completed-sale evidence and event-centred reaction windows. This pilot cannot yet
 measure resale liquidity or demonstrate a predictive advantage before consensus.
+
+## Live validation
+The first retail run (40969904702) archived FAILED evidence: LEGO HTTP 403,
+La Grande Recre redirected to a verification page. Neither yielded an offer.
+Two TCGdex card endpoints are therefore added as an explicitly separate price
+series: Cardmarket indicative low, not executable offers, not sealed products,
+not verified French-language transactions. Availability remains UNKNOWN. The
+upstream update timestamp and entire pricing payload are retained. Changes emit
+INDICATIVE_PRICE_CHANGE, distinct from retail PRICE_CHANGE. Retail targets remain
+visible as failures; they are not silently replaced or counted as successful.
