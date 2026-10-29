@@ -1,0 +1,39 @@
+name: EDGE TCGdex research collector
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Capture validated French catalogue
+        run: |
+          python - <<'PY'
+          import hashlib,json,urllib.request,datetime,pathlib
+          from intelligence.tcgdex_catalogue_review import inspect_tcgdex_sets
+          observed=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+          request=urllib.request.Request('https://api.tcgdex.net/v2/fr/sets',headers={'Accept':'application/json','User-Agent':'EDGE-Catalogue-Research/1.0'})
+          with urllib.request.urlopen(request,timeout=12) as response:
+              if response.status!=200: raise ValueError('HTTP error')
+              raw=response.read(1000001)
+          result=inspect_tcgdex_sets(raw,observed_at=observed)
+          root=pathlib.Path('catalogue-snapshot')
+          root.mkdir(exist_ok=True)
+          (root/'catalogue.json').write_bytes(raw)
+          (root/'report.json').write_text(json.dumps(result,ensure_ascii=False,sort_keys=True),encoding='utf-8')
+          print('Validated catalogue extensions:',result['set_count'])
+          PY
+      - name: Upload temporary evidence independently from the application
+        uses: actions/upload-artifact@v4
+        with:
+          name: tcgdex-fr-snapshot
+          path: catalogue-snapshot/
+          retention-days: 30
