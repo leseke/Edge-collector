@@ -1,0 +1,41 @@
+{
+  "schema": "edge.commercial.snapshot.v1",
+  "observed_at": "2026-10-29T22:59:18.385673+00:00",
+  "observations": [
+    {
+      "id": "lego_fr_10365",
+      "product_id": "lego_10365",
+      "seller": "LEGO France",
+      "url": "https://www.lego.com/fr-fr/product/captain-jack-sparrows-pirate-ship-10365",
+      "observed_at": "2026-10-29T22:59:18.385685+00:00",
+      "status": "FAILED",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "lagranderecre_10365",
+      "product_id": "lego_10365",
+      "seller": "La Grande Recre",
+      "url": "https://www.lagranderecre.fr/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+      "observed_at": "2026-10-29T22:59:18.468216+00:00",
+      "status": "FAILED",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "http_status": 200,
+      "final_url": "https://www.lagranderecre.fr/verification?return=%2Fjeux-de-construction%2Fjeux-de-construction-en-briques%2Fsuper-heros-cinema-et-jeux-video%2Fle-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+      "body_sha256": "9bed1877af17acea0abd763037b429065bfb6b130e923c6f704173e2b97ef8bd",
+      "raw_file": "lagranderecre_10365.html",
+      "error_type": "ValueError",
+      "error": "Expected exactly one identified EUR Offer; found 0"
+    }
+  ],
+  "status": "FAILED"
+}
