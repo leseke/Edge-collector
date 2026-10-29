@@ -73,6 +73,10 @@ def parse_offer(raw, target):
         for offer in data:
             if not isinstance(offer, dict) or offer.get('@type') not in ('Offer', 'https://schema.org/Offer'):
                 continue
+            if target.get('expected_offer_seller'):
+                seller = offer.get('seller', {})
+                if not isinstance(seller, dict) or seller.get('name') != target['expected_offer_seller']:
+                    continue
             try:
                 price = Decimal(str(offer['price']))
             except (KeyError, InvalidOperation):
@@ -98,6 +102,7 @@ def fetch(target, out):
            'url': target['url'], 'observed_at': now(), 'status': 'FAILED',
            'price_kind': 'ASKING_PRICE', 'shipping_eur': None, 'completed_sale': False,
            'availability': 'UNKNOWN', 'purchase_authorized': False}
+    row['source_qualification'] = target.get('source_qualification', 'NOT_ASSESSED')
     try:
         request = Request(target['url'], headers={'User-Agent': 'EDGE-MarketResearch/1.0', 'Accept': 'application/json' if target.get('adapter') == 'tcgdex' else 'text/html'})
         with urlopen(request, timeout=25) as response:
@@ -130,18 +135,46 @@ def fetch(target, out):
     return row
 
 
+def prior_observations(row, current, history):
+    return [(report['observed_at'], old) for report in history
+            if report['observed_at'] < current['observed_at']
+            for old in report['observations']
+            if old['id'] == row['id'] and old['status'] == 'OK'
+            and old['url'] == row['url'] and old['product_id'] == row['product_id']
+            and old.get('price_kind') == row.get('price_kind')
+            and old.get('seller') == row.get('seller')]
+
+
+def comparison_report(current, history):
+    rows = []
+    for row in current['observations']:
+        prior = prior_observations(row, current, history)
+        item = {'id': row['id'], 'current_status': row['status'],
+                'comparison_available': row['status'] == 'OK' and bool(prior)}
+        if item['comparison_available']:
+            stamp, old = max(prior, key=lambda pair: pair[0])
+            item.update(previous_snapshot_at=stamp, previous_observed_at=old['observed_at'],
+                        current_observed_at=row['observed_at'],
+                        before_price=old['price'], after_price=row['price'],
+                        before_availability=old['availability'], after_availability=row['availability'],
+                        previous_evidence_sha256=old['body_sha256'],
+                        current_evidence_sha256=row['body_sha256'],
+                        price_kind=row.get('price_kind'))
+            if old['currency'] == row['currency']:
+                item['price_change_pct'] = str((Decimal(row['price']) / Decimal(old['price']) - 1) * 100)
+        else:
+            item['reason'] = 'CURRENT_COLLECTION_FAILED' if row['status'] != 'OK' else 'BASELINE_ONLY'
+        rows.append(item)
+    return {'schema': 'edge.commercial.comparisons.v1', 'observations': rows}
+
+
 def compare(current, history):
     events = []
     for row in current['observations']:
         if row['status'] != 'OK':
             continue
         # Use last successful observation, preserving gaps and its actual timestamp.
-        prior = [(report['observed_at'], old) for report in history
-                 if report['observed_at'] < current['observed_at']
-                 for old in report['observations']
-                 if old['id'] == row['id'] and old['status'] == 'OK'
-                 and old['url'] == row['url'] and old['product_id'] == row['product_id']
-                 and old.get('price_kind') == row.get('price_kind')]
+        prior = prior_observations(row, current, history)
         if not prior:
             continue
         stamp, old = max(prior, key=lambda pair: pair[0])
@@ -157,6 +190,7 @@ def compare(current, history):
                      'window_start': old['observed_at'], 'window_end': row['observed_at'],
                      'previous_snapshot_at': stamp, 'source_url': row['url'],
                      'evidence_sha256': row['body_sha256'], 'fact_type': 'OBSERVED_TRANSITION',
+                     'previous_evidence_sha256': old['body_sha256'],
                      'causality_proven': False, 'buy_signal': False}
             event['id'] = digest(json.dumps(event, sort_keys=True).encode())
             events.append(event)
@@ -187,8 +221,17 @@ def main():
         if old.get('schema') == report['schema']:
             history.append(old)
     events = compare(report, history)
+    comparisons = comparison_report(report, history)
+    report['coverage'] = {
+        'retail_offers_ok': sum(r['status'] == 'OK' and r['price_kind'] == 'ASKING_PRICE' for r in report['observations']),
+        'indicative_prices_ok': sum(r['status'] == 'OK' and r['price_kind'] == 'AGGREGATED_INDICATIVE_LOW' for r in report['observations']),
+        'failed_sources': len(targets) - count,
+        'comparable_observations': sum(r['comparison_available'] for r in comparisons['observations']),
+        'announcements_connected': False,
+        'completed_sales_connected': False}
     (out / 'report.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
     (out / 'events.json').write_text(json.dumps({'schema': 'edge.commercial.events.v1', 'events': events}, indent=2))
+    (out / 'comparisons.json').write_text(json.dumps(comparisons, indent=2))
     manifest = {p.name: digest(p.read_bytes()) for p in out.iterdir() if p.is_file()}
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True))
     print(json.dumps({'status': report['status'], 'successful_offers': count, 'events': len(events)}))

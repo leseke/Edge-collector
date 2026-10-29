@@ -34,3 +34,19 @@ not verified French-language transactions. Availability remains UNKNOWN. The
 upstream update timestamp and entire pricing payload are retained. Changes emit
 INDICATIVE_PRICE_CHANGE, distinct from retail PRICE_CHANGE. Retail targets remain
 visible as failures; they are not silently replaced or counted as successful.
+
+## Retail extension
+JoueClub LEGO 10365 and LDLC LEGO 75639 yielded identified EUR offers with
+explicit availability in local network tests. They are now collected alongside
+the original sources. LDLC's embedded seller must match LDLC; other sellers fail
+closed. Shipping is unknown and France delivery is not asserted by the collector.
+
+`comparisons.json` distinguishes baseline, failure and an actual comparison with
+zero price change. Reports expose retail and indicative coverage separately.
+Comparisons require the same product, URL, seller and metric. Events retain the
+previous evidence hash as well as the current one.
+
+Rejected source: Brickworld.be was technically readable but its published French
+legal notice contains a placeholder company number (123.456.789) and an incomplete
+VAT number. It is not included as a reference source. That finding alone does not
+prove fraud. No purchasing recommendation is made from source accessibility.

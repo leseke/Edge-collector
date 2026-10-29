@@ -41,6 +41,40 @@ class CommercialTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             m.parse_offer(self.html(priceCurrency='USD'), {'sku': '10365'})
 
+    def test_wrong_seller(self):
+        with self.assertRaises(ValueError):
+            m.parse_offer(self.html(seller={'name': 'Marketplace seller'}),
+                          {'sku': '10365', 'expected_offer_seller': 'LDLC'})
+
+    def test_right_seller(self):
+        row = m.parse_offer(self.html(seller={'name': 'LDLC'}),
+                            {'sku': '10365', 'expected_offer_seller': 'LDLC'})
+        self.assertEqual(row['price'], '349.99')
+
+    def test_seller_change_is_new_scope(self):
+        self.assertEqual(self.events(self.row(), self.row(price='299.99', seller='Other')), [])
+
+    def test_comparison_unchanged_is_available(self):
+        row = self.row()
+        report = m.comparison_report({'observed_at': '2026-10-29T12:00:00+00:00', 'observations': [row]},
+                                     [{'observed_at': '2026-10-29T10:00:00+00:00', 'observations': [row]}])
+        self.assertTrue(report['observations'][0]['comparison_available'])
+        self.assertEqual(report['observations'][0]['price_change_pct'], '0')
+
+    def test_failed_comparison(self):
+        report = m.comparison_report({'observed_at': '2026-10-29', 'observations': [self.row(status='FAILED')]}, [])
+        self.assertEqual(report['observations'][0]['reason'], 'CURRENT_COLLECTION_FAILED')
+
+    def test_comparison_baseline(self):
+        report = m.comparison_report({'observed_at': '2026-10-29', 'observations': [self.row()]}, [])
+        self.assertEqual(report['observations'][0]['reason'], 'BASELINE_ONLY')
+
+    def test_failure_gap_uses_previous_success(self):
+        history = [{'observed_at': '2026-10-29T10:00:00+00:00', 'observations': [self.row()]},
+                   {'observed_at': '2026-10-29T11:00:00+00:00', 'observations': [self.row(status='FAILED')]}]
+        events = m.compare({'observed_at': '2026-10-29T12:00:00+00:00', 'observations': [self.row(price='299.99')]}, history)
+        self.assertEqual(events[0]['previous_snapshot_at'], '2026-10-29T10:00:00+00:00')
+
     def test_ambiguous_offers(self):
         with self.assertRaises(ValueError):
             m.parse_offer(self.html() + self.html(), {'sku': '10365'})

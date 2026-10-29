@@ -31,6 +31,23 @@
       "adapter": "tcgdex",
       "seller": "Cardmarket indication via TCGdex",
       "url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136"
+    },
+    {
+      "id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "sku": "10365",
+      "seller": "JoueClub",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+    },
+    {
+      "id": "ldlc_75639",
+      "product_id": "lego_75639",
+      "sku": "75639",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00701668.html"
     }
   ]
 }
