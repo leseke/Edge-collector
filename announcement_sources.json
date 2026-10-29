@@ -1,0 +1,7 @@
+{
+  "sources": [
+    {"id": "lego_newsroom", "adapter": "lego_newsroom", "role": "MANUFACTURER", "article_host": "lego.com", "url": "https://www.lego.com/en-us/aboutus/newsroom/press-releases"},
+    {"id": "brickset", "adapter": "rss", "role": "SPECIALIST_MEDIA", "article_host": "brickset.com", "url": "https://brickset.com/feed"},
+    {"id": "toysnbricks", "adapter": "rss", "role": "SPECIALIST_MEDIA", "article_host": "toysnbricks.com", "url": "https://www.toysnbricks.com/feed/"}
+  ]
+}
