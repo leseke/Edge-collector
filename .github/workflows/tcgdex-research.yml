@@ -1,0 +1,86 @@
+name: EDGE TCGdex scheduled catalogue history
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: edge-tcgdex-history-writer
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve and validate official French set identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p tcgdex-research
+          python - <<'PY'
+          import datetime,hashlib,json,pathlib,urllib.request
+          URL='https://api.tcgdex.net/v2/fr/sets'
+          request=urllib.request.Request(URL,headers={'Accept':'application/json','User-Agent':'EDGE-Research/1.0'})
+          with urllib.request.urlopen(request,timeout=15) as response:
+              if response.status != 200: raise ValueError('Non-200 response')
+              if 'json' not in response.headers.get('Content-Type','').lower(): raise ValueError('Non-JSON response')
+              raw=response.read(1000001)
+          if not 2 <= len(raw) <= 1000000: raise ValueError('Invalid response size')
+          data=json.loads(raw)
+          if not isinstance(data,list) or not 1 <= len(data) <= 2000: raise ValueError('Invalid catalogue')
+          seen=set()
+          for row in data:
+              if not isinstance(row,dict):raise ValueError('Invalid row')
+              sid,name=row.get('id'),row.get('name')
+              if not isinstance(sid,str) or not 1 <= len(sid) <= 80 or sid != sid.strip():raise ValueError('Invalid ID')
+              if not isinstance(name,str) or not 1 <= len(name) <= 200 or name != name.strip():raise ValueError('Invalid name')
+              if sid in seen:raise ValueError('Duplicate ID')
+              seen.add(sid)
+          root=pathlib.Path('tcgdex-research')
+          observed=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+          report={'schema':'edge.tcg.scheduled_snapshot.v1','source_url':URL,'observed_at':observed,
+                  'set_count':len(data),'sha256':hashlib.sha256(raw).hexdigest(),
+                  'coverage':'SNAPSHOT_ONLY','market_offer_evidence':False,
+                  'completed_sale_verified':False,'purchase_authorized':False}
+          (root/'catalogue.json').write_bytes(raw)
+          (root/'report.json').write_text(json.dumps(report,ensure_ascii=False,sort_keys=True),encoding='utf-8')
+          assert hashlib.sha256((root/'catalogue.json').read_bytes()).hexdigest()==report['sha256']
+          print('TCGdex validated:',len(data),'sets',report['sha256'])
+          PY
+      - name: Append verified snapshot to isolated history branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p /tmp/edge-tcgdex-capture
+          cp tcgdex-research/catalogue.json tcgdex-research/report.json /tmp/edge-tcgdex-capture/
+          if git ls-remote --exit-code origin refs/heads/edge/tcgdex-history >/dev/null 2>&1; then
+            git fetch origin edge/tcgdex-history
+            git checkout -B edge/tcgdex-history FETCH_HEAD
+          else
+            git checkout --orphan edge/tcgdex-history
+            git rm -rf --quiet . || true
+          fi
+          folder="snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          test ! -e "$folder"
+          mkdir -p "$folder"
+          cp /tmp/edge-tcgdex-capture/* "$folder/"
+          git add "$folder"
+          git commit -m "data(tcgdex): verified catalogue snapshot ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git push origin HEAD:refs/heads/edge/tcgdex-history
+      - name: Upload research evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tcgdex-fr-research
+          path: tcgdex-research/
+          if-no-files-found: ignore
+          retention-days: 30
