@@ -1,5 +1,9 @@
 name: EDGE TCGdex scheduled catalogue history
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tcgdex-research.yml'
   workflow_dispatch:
   schedule:
     - cron: '17 6 * * *'
