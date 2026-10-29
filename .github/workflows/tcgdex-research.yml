@@ -58,6 +58,40 @@ jobs:
           assert hashlib.sha256((root/'catalogue.json').read_bytes()).hexdigest()==report['sha256']
           print('TCGdex validated:',len(data),'sets',report['sha256'])
           PY
+      - name: Research public card price indications (not sold transactions)
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime,json,pathlib,urllib.request
+          root=pathlib.Path('tcgdex-research')
+          rows=[]
+          for card_id in ('base1-4','swsh3-136'):
+              row={'card_id':card_id,'status':'UNAVAILABLE','is_completed_sale':False,
+                   'sealed_product':False,'buy_signal':False}
+              try:
+                  url='https://api.tcgdex.net/v2/fr/cards/'+card_id
+                  request=urllib.request.Request(url,headers={'Accept':'application/json','User-Agent':'EDGE-Research/1.0'})
+                  with urllib.request.urlopen(request,timeout=12) as response:
+                      if response.status!=200:raise ValueError('HTTP error')
+                      raw=response.read(200001)
+                  if len(raw)>200000:raise ValueError('oversized response')
+                  doc=json.loads(raw)
+                  if not isinstance(doc,dict) or doc.get('id')!=card_id:raise ValueError('identity mismatch')
+                  prices=doc.get('pricing',doc.get('prices'))
+                  if isinstance(prices,dict):
+                      row.update(status='PRICE_FIELDS_PRESENT',source_payload=prices)
+                  else:
+                      row['status']='NO_PRICING'
+                  row['card_name']=doc.get('name')
+              except Exception as exc:
+                  row['error_type']=type(exc).__name__
+              rows.append(row)
+          report={'schema':'edge.tcg.public_pricing_research.v1',
+                  'observed_at':datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z'),
+                  'market_prices_not_sales':True,'results':rows,'buy_authorized':False}
+          (root/'pricing-research.json').write_text(json.dumps(report,ensure_ascii=False,sort_keys=True),encoding='utf-8')
+          print('TCGdex card pricing statuses:',[(x['card_id'],x['status']) for x in rows])
+          PY
       - name: Append verified snapshot to isolated history branch
         shell: bash
         run: |
@@ -65,7 +99,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           mkdir -p /tmp/edge-tcgdex-capture
-          cp tcgdex-research/catalogue.json tcgdex-research/report.json /tmp/edge-tcgdex-capture/
+          cp tcgdex-research/catalogue.json tcgdex-research/report.json tcgdex-research/pricing-research.json /tmp/edge-tcgdex-capture/
           if git ls-remote --exit-code origin refs/heads/edge/tcgdex-history >/dev/null 2>&1; then
             git fetch origin edge/tcgdex-history
             git checkout -B edge/tcgdex-history FETCH_HEAD
