@@ -13,6 +13,12 @@ class TCGdexCatalogueTests(unittest.TestCase):
   data=json.dumps([{"id":"x","name":"A"},{"id":"x","name":"B"}]).encode()
   with self.assertRaises(ValueError):
    inspect_tcgdex_sets(data,observed_at="2026-10-29T01:00:00Z")
+ def test_empty_catalogue_rejected(self):
+  with self.assertRaises(ValueError):
+   inspect_tcgdex_sets(b"[]",observed_at="2026-10-29T01:00:00Z")
+ def test_blank_identity_rejected(self):
+  with self.assertRaises(ValueError):
+   inspect_tcgdex_sets(json.dumps([{"id":" x ","name":"Set"}]).encode(),observed_at="2026-10-29T01:00:00Z")
  def test_non_list_rejected(self):
   with self.assertRaises(ValueError):
    inspect_tcgdex_sets(b'{"id":"x"}',observed_at="2026-10-29T01:00:00Z")
