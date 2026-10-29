@@ -1,0 +1,71 @@
+{
+  "schema": "edge.commercial.comparisons.v1",
+  "observations": [
+    {
+      "id": "lego_fr_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "lagranderecre_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "tcgdex_base1-4",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-29T23:15:49.889827+00:00",
+      "previous_observed_at": "2026-10-29T23:15:50.633114+00:00",
+      "current_observed_at": "2026-10-29T23:20:17.556231+00:00",
+      "before_price": "99.99",
+      "after_price": "99.99",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "228b2253040f3b64bf9a6da09d8958cb72d5fa9108c2fa3dd761148cce73d27d",
+      "current_evidence_sha256": "228b2253040f3b64bf9a6da09d8958cb72d5fa9108c2fa3dd761148cce73d27d",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "tcgdex_swsh3-136",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-29T23:15:49.889827+00:00",
+      "previous_observed_at": "2026-10-29T23:15:50.976195+00:00",
+      "current_observed_at": "2026-10-29T23:20:17.695485+00:00",
+      "before_price": "0.02",
+      "after_price": "0.02",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "ca6c573e4fb00cf3f74eb5d83b178c5b6dfe62680daf465df100af8a4a9eefbe",
+      "current_evidence_sha256": "466268b43ba5dc5cd5201b9d7aad5289f946cd66df26702ec2641185c396aa19",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "joueclub_10365",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-29T23:15:49.889827+00:00",
+      "previous_observed_at": "2026-10-29T23:15:51.202234+00:00",
+      "current_observed_at": "2026-10-29T23:20:17.781724+00:00",
+      "before_price": "349.99",
+      "after_price": "349.99",
+      "before_availability": "IN_STOCK",
+      "after_availability": "IN_STOCK",
+      "previous_evidence_sha256": "06fae0a19e0350a61fcc484a331565e4d1e3f46c37aecf4c24c8baec83e01920",
+      "current_evidence_sha256": "6d1bea8a3b1d2946beec376daa370b0d10d718a9817149b6fb056a3495281a55",
+      "price_kind": "ASKING_PRICE",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "ldlc_75639",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    }
+  ]
+}
