@@ -183,12 +183,33 @@ jobs:
           (folder/"probe.json").write_text(json.dumps(report,sort_keys=True),encoding="utf-8")
           print("TCGdex catalogue probe status:",report["status"])
           PY
+      - name: Verify TCGdex research artifact integrity
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          folder=Path("catalogue-research")
+          report=json.loads((folder/"probe.json").read_text(encoding="utf-8"))
+          assert report["schema"]=="edge.tcg.research_probe.v1"
+          assert report["products_priced"]==0 and report["sales_verified"]==0
+          snapshot=folder/"tcgdex-fr-sets.json"
+          if report["status"]=="VALIDATED":
+              assert snapshot.is_file()
+              assert hashlib.sha256(snapshot.read_bytes()).hexdigest()==report["sha256"]
+              assert report["set_count"]>0
+          else:
+              assert report["status"]=="UNAVAILABLE"
+              if snapshot.exists():snapshot.unlink()
+          print("TCGdex artifact integrity:",report["status"])
+          PY
       - name: Upload TCGdex research probe (no production write)
         uses: actions/upload-artifact@v4
         with:
           name: edge-tcgdex-research
           path: catalogue-research/
-          retention-days: 7
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload release review proposal (no automatic push)
         uses: actions/upload-artifact@v4
         with:
