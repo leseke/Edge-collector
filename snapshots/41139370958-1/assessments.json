@@ -1,0 +1,2324 @@
+{
+  "schema": "edge.mri.research_assessments.v1",
+  "observed_at": "2026-10-30T22:38:02.438974+00:00",
+  "assessment_method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+  "assessments": [
+    {
+      "id": "assessment_lego_40898",
+      "candidate_id": "lego_40898",
+      "sku": "40898",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "PRIMARY_ANNOUNCED_CONDITIONAL_GIFT",
+      "research_priority": "HIGH",
+      "research_action": "VERIFY_REGIONAL_GIFT_TERMS",
+      "reasoning": [
+        "Le communiqué officiel lie le 40898 à l'achat du 11388 du 1er au 8 novembre, dans la limite des stocks.",
+        "Le lien d'achat est documenté, mais les conditions françaises complètes et le cumul avec le 40889 restent non confirmés.",
+        "La fenêtre proche et l'accès conditionnel justifient une priorité de vérification, sans conclure à une pénurie ni à une rentabilité."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_CONDITIONAL_GIFT",
+            "required_purchase_sku": "11388",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Un acheteur voulant seulement le taxi pourrait préférer le marché secondaire à l'achat du grand set ; cette séparation des besoins pourrait créer un marché distinct pour le cadeau.",
+        "counter_hypothesis": "Les acheteurs du 11388 pourraient simultanément proposer beaucoup de taxis ; sans demande mesurée, la contrainte d'accès ne prouve pas une hausse future.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "SEPARATE_GIFT_DEMAND",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Une demande pour le taxi seul pourrait rencontrer les reventes des acheteurs du grand set.",
+          "test": "Confirmer les conditions locales puis observer l'offre et la demande secondaires du taxi, sans attribuer sa valeur affichée à une recette certaine.",
+          "invalidation": "Une offre secondaire abondante, une vente séparée durable ou une prolongation de distribution affaiblirait la thèse de contrainte."
+        }
+      ],
+      "next_check": "Confirmer les conditions françaises lors de leur publication et l'éligibilité effective ; suivre séparément l'offre secondaire du taxi et la demande, sans acheter le 11388 pour le cadeau seul.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "CAUSALITY_UNPROVEN",
+        "FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED",
+        "GIFT_STACKING_UNCONFIRMED",
+        "LIQUIDITY_UNKNOWN",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "PROMOTION_TERMS_AND_REGION_NOT_VERIFIED",
+        "REALIZED_SALES_NOT_CONNECTED",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "SECONDARY_ACQUISITION_COST_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-10-30T22:38:01.215733+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "bundle_economics": {
+        "model": "MAIN_SET_AND_GIFT_NOT_INDEPENDENT_PROFITS",
+        "main_set_catalogue_price_eur": "499.99",
+        "gift_net_resale_proceeds_eur": null,
+        "alternative_delivered_main_set_price_eur": null,
+        "net_advantage_eur": null,
+        "price_basis": "MANUFACTURER_ANNOUNCED_PRICE_NOT_EXECUTABLE_QUOTE",
+        "gift_stacking_verified": false,
+        "nominal_gift_values_used_as_revenue": false
+      },
+      "event_phase": "UPCOMING",
+      "semantic_sha256": "f93e84b5cddcbaa2f2146547ab725b247c62c50a4d298657c4363ae46fc93ea4",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_11383",
+      "candidate_id": "lego_11383",
+      "sku": "11383",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "MONITOR_OBSERVATIONS",
+      "reasoning": [
+        "Au moins un prix affiché récent permet de démarrer le suivi prospectif."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_11383",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "price": "104.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-10-30T22:37:59.298737+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "19e6ad1ea8f91766233f07152f52c254df47925ff53c2ff9e0575c2a98cb90ba",
+          "current_capture_status": "OK",
+          "completed_sale": false
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        },
+        {
+          "actor": "VENDEUR",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Vendre son stock en préservant sa marge pourrait guider son prix ; aucun motif individuel n'est établi.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "627aee6ced9dd8103b7c219c4fd85dbb7c393bab808332cf480c20a22995b50f",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_11388",
+      "candidate_id": "lego_11388",
+      "sku": "11388",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "PRIMARY_CHECKED_LAUNCH_WITH_LINKED_GIFT",
+      "research_priority": "MEDIUM",
+      "research_action": "COMPARE_BUNDLE_AND_STANDALONE",
+      "reasoning": [
+        "Le communiqué officiel confirme un tarif annoncé de 499,99 € et le calendrier ; la fiche française est contrôlée séparément.",
+        "Le 11388 et son cadeau 40898 forment un même mécanisme commercial, pas deux profits indépendants.",
+        "La priorité passe à la comparaison du panier complet avec une acquisition du set seul : aucun avantage net n'est chiffré."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "source_published_at": "2026-10-15T13:27:14+00:00",
+          "title": "Ciao, Venice: The LEGO Group floats new Icons set",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "4c9b603ae1afc459d6d4af8d2855318c1f7234a5366b773efc151f46eab5a8a0",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135699",
+          "source_published_at": "2026-10-26T15:00:00+00:00",
+          "title": "11388 Venetian Neighbourhood minifigures",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "d411da50ff593fcccd7e0e45750de8ceac51a443a9f4da608b8b4da933669fc8",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "PUBLISHED_RECOMMENDED_PRICE_EUR",
+            "value": "499.99",
+            "currency": "EUR",
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_EARLY_ACCESS",
+            "date": "2026-11-01",
+            "membership_required": "LEGO Insiders"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_GENERAL_RELEASE",
+            "date": "2026-11-04"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_LINKED_GIFT",
+            "gift_sku": "40898",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "La revente éventuelle du cadeau pourrait réduire le coût net du 11388, si les recettes nettes dépassent la remise perdue sur le set principal et les frais supplémentaires.",
+        "counter_hypothesis": "Une remise ultérieure sur le 11388, des frais ou une offre abondante de cadeaux pourraient rendre le panier de lancement moins intéressant.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "BUNDLE_ECONOMICS",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Le panier de lancement pourrait être compétitif si les recettes nettes réellement réalisables sur les cadeaux dépassent les remises alternatives et les frais.",
+          "test": "Comparer 499,99 € moins recettes nettes vérifiées des cadeaux au prix livré alternatif du set seul ; compter chaque cadeau une seule fois.",
+          "invalidation": "Une meilleure remise sur le set seul, un cadeau absent du panier ou une faible valeur nette des cadeaux invaliderait cet avantage."
+        }
+      ],
+      "next_check": "Comparer le coût du panier à 499,99 € avec le meilleur prix livré du set seul ; obtenir des prix de cession crédibles du cadeau et confirmer les conditions françaises.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "BUNDLE_NET_ECONOMICS_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "GIFT_STACKING_UNCONFIRMED",
+        "LIQUIDITY_UNKNOWN",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "PROMOTION_TERMS_AND_REGION_NOT_VERIFIED",
+        "REALIZED_SALES_NOT_CONNECTED",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "SOME_PRIMARY_CLAIMS_NOT_RECHECKED",
+        "FRENCH_CATALOGUE_PRICE_NOT_RECHECKED"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_PARTIALLY_RECHECKED",
+        "observed_at": "2026-10-30T22:38:01.215733+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "bundle_economics": {
+        "model": "MAIN_SET_AND_GIFT_NOT_INDEPENDENT_PROFITS",
+        "main_set_catalogue_price_eur": "499.99",
+        "gift_net_resale_proceeds_eur": null,
+        "alternative_delivered_main_set_price_eur": null,
+        "net_advantage_eur": null,
+        "price_basis": "MANUFACTURER_ANNOUNCED_PRICE_NOT_EXECUTABLE_QUOTE",
+        "gift_stacking_verified": false,
+        "nominal_gift_values_used_as_revenue": false
+      },
+      "event_phase": "UPCOMING",
+      "semantic_sha256": "1f9088166eb8037d2137551eb0a6b859c9d5833a2a63e091d895cef7f34af953",
+      "revision": 3,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40744",
+      "candidate_id": "lego_40744",
+      "sku": "40744",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "MONITOR_OBSERVATIONS",
+      "reasoning": [
+        "Au moins un prix affiché récent permet de démarrer le suivi prospectif."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_40744",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+          "price": "12.95",
+          "currency": "EUR",
+          "availability": "OUT_OF_STOCK",
+          "observed_at": "2026-10-30T22:37:51.698791+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+          "current_capture_status": "OK",
+          "completed_sale": false
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        },
+        {
+          "actor": "VENDEUR",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Vendre son stock en préservant sa marge pourrait guider son prix ; aucun motif individuel n'est établi.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "17eb1ac2707525230d7897621708821e20225bacb7a1af0c80c34870b1461144",
+      "revision": 3,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40889",
+      "candidate_id": "lego_40889",
+      "sku": "40889",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "PRIMARY_CHECKED_FRENCH_GIFT_TERMS",
+      "research_priority": "MEDIUM",
+      "research_action": "COMPARE_SECONDARY_ACQUISITION",
+      "reasoning": [
+        "Les conditions françaises confirment un cadeau dès 130 € d'achats éligibles, du 28 octobre au 8 novembre, sous réserve de stock et limité à un par foyer.",
+        "19,99 € est une valeur promotionnelle approximative, pas un prix de revente validé.",
+        "Le seuil porte sur des marchandises LEGO et n'établit pas une rareté quantitative ; la recherche porte désormais sur le coût d'acquisition secondaire et l'offre réelle."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db217c59d7480c1fa9438b10519b3c3cba2a6d2ea05285e1fd08dad80bbf3c79",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135605",
+          "source_published_at": "2026-10-24T13:30:00+00:00",
+          "title": "Review: 40889 Build, Paint and Play!",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "01e3616768494fc3dc533a85b0e2b8d48ee27e795e6becb514e61027d12ea7c9",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "54369a8e82d599f55c44d750d71b747e7aee9c6809c77b1e980b1a211b8cd802",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135604",
+          "source_published_at": "2026-10-23T07:00:00+00:00",
+          "title": "LEGO Ideas 40889 Build, Paint and Play revealed!",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "446afb4eb11bc27ca0fe46093d7a4e5909713321578147353bd375c55fc9c649",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_ELIGIBILITY",
+            "region": "FR",
+            "start_date": "2026-10-28",
+            "end_date": "2026-11-08",
+            "minimum_spend_eur": "130.00",
+            "eligible_goods": "LEGO merchandise",
+            "limit_per_household": 1,
+            "while_stocks_last": true,
+            "standalone_purchase_allowed_under_promotion": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "63b76e1585557b5dd641e36d657609559ce31afd3f671453b4846b2f80991a25",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "APPROXIMATE_PROMOTIONAL_VALUE",
+            "value": "19.99",
+            "currency": "EUR",
+            "resale_value_verified": false,
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "63b76e1585557b5dd641e36d657609559ce31afd3f671453b4846b2f80991a25",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_RETURN_REQUIRED_WITH_ELIGIBLE_RETURN",
+            "value": true
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "63b76e1585557b5dd641e36d657609559ce31afd3f671453b4846b2f80991a25",
+          "observed_at": "2026-10-30T22:38:01.215733+00:00"
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Des acheteurs de paniers déjà prévus pourraient céder leur cadeau rapidement et créer des écarts temporaires de prix sur le marché secondaire.",
+        "counter_hypothesis": "Une distribution large pourrait maintenir beaucoup d'offres après la promotion ; une date de fin et une limite par foyer ne prouvent pas un faible tirage.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "EARLY_SECONDARY_SUPPLY",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Des reventes de cadeaux pourraient créer une offre secondaire temporairement abondante.",
+          "test": "Suivre les prix affichés, disponibilités et ventes conclues avant et après le 8 novembre ; ne pas confondre fin de promotion et fin d'offre secondaire.",
+          "invalidation": "Une distribution prolongée, une demande insuffisante ou des frais absorbant l'écart rendraient ce pari peu intéressant."
+        }
+      ],
+      "next_check": "Relever des offres secondaires et leur évolution autour du 8 novembre ; comparer le coût secondaire au surcoût réel d'un panier éligible, sans assimiler 19,99 € à une recette.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "CAUSALITY_UNPROVEN",
+        "GIFT_STACKING_UNCONFIRMED",
+        "LIQUIDITY_UNKNOWN",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_SALES_NOT_CONNECTED",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "SECONDARY_ACQUISITION_COST_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-10-30T22:38:01.215733+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": true
+      },
+      "event_phase": "SOURCE_DATE_WINDOW",
+      "semantic_sha256": "e973000b58fd2cb58116910a81ee63ca93ec7e0f75e548d2d9ff812f73c0b135",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42705",
+      "candidate_id": "lego_42705",
+      "sku": "42705",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "MONITOR_OBSERVATIONS",
+      "reasoning": [
+        "Au moins un prix affiché récent permet de démarrer le suivi prospectif."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135584",
+          "source_published_at": "2026-10-29T15:00:00+00:00",
+          "title": "Review: 42705 Cosy Autumn Forest Cabin",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "71bf362a81354153cc2f1cbe85b0bb862ea0deacd167e2af25a02c8ab31cb223",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_42705",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "price": "92.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-10-30T22:37:50.782954+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "670e72174e752ccee5ba550d88b01a4e1f24c3c45d5586401b7054bb30c6371c",
+          "current_capture_status": "OK",
+          "completed_sale": false
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        },
+        {
+          "actor": "VENDEUR",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Vendre son stock en préservant sa marge pourrait guider son prix ; aucun motif individuel n'est établi.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "129a5a5e0f75960721d6821a5872e88034f25d842175417c0327b12170b983f9",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42709",
+      "candidate_id": "lego_42709",
+      "sku": "42709",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "ANNOUNCEMENT_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "INVESTIGATE_EVENT",
+      "reasoning": [
+        "Le titre de certaines publications correspond à un contexte d'annonce ; les détails restent à vérifier."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "L'annonce pourrait attirer une demande nouvelle avant que l'offre et les prix ne s'ajustent.",
+        "counter_hypothesis": "Une offre abondante ou un intérêt déjà intégré aux prix pourrait supprimer l'asymétrie supposée.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Vérifier l'identité et le calendrier sur la source primaire, élargir les offres puis suivre la réaction.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "426a54d0b384cb532ba69eec8feab39e223abc4d8ce2c8dc5028db2feea8485f",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42718",
+      "candidate_id": "lego_42718",
+      "sku": "42718",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "ANNOUNCEMENT_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "INVESTIGATE_EVENT",
+      "reasoning": [
+        "Le titre de certaines publications correspond à un contexte d'annonce ; les détails restent à vérifier."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 2,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "L'annonce pourrait attirer une demande nouvelle avant que l'offre et les prix ne s'ajustent.",
+        "counter_hypothesis": "Une offre abondante ou un intérêt déjà intégré aux prix pourrait supprimer l'asymétrie supposée.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Vérifier l'identité et le calendrier sur la source primaire, élargir les offres puis suivre la réaction.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42719",
+      "candidate_id": "lego_42719",
+      "sku": "42719",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "ANNOUNCEMENT_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "INVESTIGATE_EVENT",
+      "reasoning": [
+        "Le titre de certaines publications correspond à un contexte d'annonce ; les détails restent à vérifier."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 2,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "L'annonce pourrait attirer une demande nouvelle avant que l'offre et les prix ne s'ajustent.",
+        "counter_hypothesis": "Une offre abondante ou un intérêt déjà intégré aux prix pourrait supprimer l'asymétrie supposée.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Vérifier l'identité et le calendrier sur la source primaire, élargir les offres puis suivre la réaction.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67005",
+      "candidate_id": "lego_67005",
+      "sku": "67005",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "ANNOUNCEMENT_CONTEXT",
+      "research_priority": "MEDIUM",
+      "research_action": "INVESTIGATE_EVENT",
+      "reasoning": [
+        "Le titre de certaines publications correspond à un contexte d'annonce ; les détails restent à vérifier."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5716f9ad76b36b0884604763fb48310f654a088ac0af26e69278fb09c1980bd3",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135732",
+          "source_published_at": "2026-10-28T15:00:00+00:00",
+          "title": "LEGO Marvel What If...? Sanctum Sanctorum revealed!",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "94ffe5d2e3a76ef7222cf89219da563839d64bc0bf273aa5eb2102c87dc07a2e",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0c542f5d287ad6dc57a05348ec1da666caf0d44b1f981e77c57b45635c5e90c5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-67005-marvel-what-if-doctor-strange-supreme-january-2027-set-revealed-us-canada-prices-release-dates-minifigures",
+          "source_published_at": "2026-10-28T23:19:55+00:00",
+          "title": "LEGO 67005 Marvel What if…? Doctor Strange Supreme January 2027 Set Revealed: US/Canada Prices, Release Dates & Minifigures",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "c9d69c5ceccb6413a6dffcc344ce7c195d20765573a5546db1d7b6144ec1d8a4",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 2,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "L'annonce pourrait attirer une demande nouvelle avant que l'offre et les prix ne s'ajustent.",
+        "counter_hypothesis": "Une offre abondante ou un intérêt déjà intégré aux prix pourrait supprimer l'asymétrie supposée.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Vérifier l'identité et le calendrier sur la source primaire, élargir les offres puis suivre la réaction.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "2139a62c6ccd7007e7e477aeb6441893e51410e7b33297512b56dc42fb2746c6",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_10228",
+      "candidate_id": "lego_10228",
+      "sku": "10228",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_21359",
+      "candidate_id": "lego_21359",
+      "sku": "21359",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "d4be83c8050740539dfdc5ec9111c160d38d06219be5ff67cb370b95059df435",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_30762",
+      "candidate_id": "lego_30762",
+      "sku": "30762",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b5dd982cc286affa5c47ba181c573f89bd7444cfe20ecedd3435c5936603a06b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135188",
+          "source_published_at": "2026-10-22T13:00:00+00:00",
+          "title": "Review: 30762 Retro Video Game Batman",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "20cedd9c60db9df899f33cf4caa999f6877032ef73792f1af602b6427d9db274",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "580a26e2f43aca0016d5d1c74af4ecbc9b90b010d39554002a94a09626d40db2",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_31167",
+      "candidate_id": "lego_31167",
+      "sku": "31167",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_40862",
+      "candidate_id": "lego_40862",
+      "sku": "40862",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "379332214791c9492d7b6d2c0231787b89e87bdba8ac11c4565f7eb3aed375d5",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40866",
+      "candidate_id": "lego_40866",
+      "sku": "40866",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db759db0c55e673b727414d4116c9f4b29add0e2f62bc9aee7cf570bf7b1d3c7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135272",
+          "source_published_at": "2026-10-20T14:00:00+00:00",
+          "title": "Review: 40866 Santa's Holiday Sleigh Adventure",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "d62de42f43dcad5fc1ac8ac024bdec3d8089634bf8b05ff8263c05ac03c61c00",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "2e061fcac460d2cd382501a8e6157a8f9b5a3f37a559eff1c37226d4e7c53400",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40913",
+      "candidate_id": "lego_40913",
+      "sku": "40913",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b1dcf45e765438b37d8bed1fce54c5e9f50e889921d4478ffa8be368ccf20142",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135481",
+          "source_published_at": "2026-10-20T04:00:00+00:00",
+          "title": "[US] Brickset member offer: Free Vintage Parade Car at LEGO.com",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "87d109bf4895a3c6b8ec4c3d01fe6a0ad492b29daa27705b99cc03049e2c7ce1",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "d282c0c2df24047bfd6304d83547db74de6fcd60e810f0c6d42fea05e413d392",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_41392",
+      "candidate_id": "lego_41392",
+      "sku": "41392",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42682",
+      "candidate_id": "lego_42682",
+      "sku": "42682",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42690",
+      "candidate_id": "lego_42690",
+      "sku": "42690",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "ef2686f31bcf66ec09eab95d94137ff92ea359a3f6b0212c1c0ed94eb253712d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135416",
+          "source_published_at": "2026-10-21T14:00:00+00:00",
+          "title": "Quick look: 42690 Forest Tea Party",
+          "mention_scope": "TITLE_REFERENCE",
+          "content_sha256": "5a378ac010e9d984f8e2564ea8f9e9970a7473ea45e299524de313f411bff06f",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "37fe1865356501d011c241c7de43beca4e333f6375dfb524d37d1184eb09d8f1",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67006",
+      "candidate_id": "lego_67006",
+      "sku": "67006",
+      "assessed_at": "2026-10-30T22:38:02.438974+00:00",
+      "method": "DETERMINISTIC_EVIDENCE_RULES_V1",
+      "context": "REVIEW_OR_MENTION_CONTEXT",
+      "research_priority": "LOW",
+      "research_action": "VERIFY_PRODUCT_CONTEXT",
+      "reasoning": [
+        "Les preuves disponibles justifient une vérification de contexte, sans catalyseur établi."
+      ],
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "edd54f06c0b8787429fb927826d27257abc78765c40762b9e30f5659bdddb175",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135798",
+          "source_published_at": "2026-10-30T09:20:00+00:00",
+          "title": "Blocks magazine issue 145 press release",
+          "mention_scope": "SUMMARY_REFERENCE",
+          "content_sha256": "ddbc46107c6e3369b908717585fa8030aea74b38cf52ad27acdcb54a79c98082",
+          "meaning": "Cette publication mentionne la référence ; son existence ne prouve ni demande ni rareté."
+        }
+      ],
+      "weak_signals": [
+        {
+          "signal": "MEDIA_COVERAGE",
+          "distinct_media_sources": 1,
+          "demand_measurement": false,
+          "independence_verified": false
+        }
+      ],
+      "actor_hypotheses": [
+        {
+          "actor": "FABRICANT",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Créer de l'intérêt et convertir cet intérêt en achats pourrait être un objectif commercial.",
+          "motive_verified": false
+        },
+        {
+          "actor": "MEDIAS_SPECIALISES",
+          "status": "INCENTIVE_HYPOTHESIS",
+          "hypothesis": "Informer et attirer une audience pourrait expliquer la couverture ; plusieurs articles ne prouvent pas plusieurs demandes indépendantes.",
+          "motive_verified": false
+        }
+      ],
+      "early_hypothesis": {
+        "status": "UNTESTED_HYPOTHESIS",
+        "statement": "Une publication pourrait susciter un regain d'attention pour une référence déjà commercialisée.",
+        "counter_hypothesis": "La publication peut ne produire aucune demande supplémentaire ; le prix affiché peut rester inchangé.",
+        "probability": null
+      },
+      "scenarios": [
+        {
+          "id": "ATTENTION_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si l'attention se traduit en demande et que l'offre ne suit pas, une tension pourrait apparaître.",
+          "test": "Comparer chronologiquement prix, stocks et ventes conclues quand ces dernières seront accessibles.",
+          "invalidation": "Une offre durablement abondante et l'absence de réaction mesurée affaibliraient cette hypothèse."
+        },
+        {
+          "id": "NO_TRANSMISSION",
+          "type": "CONDITIONAL_SCENARIO",
+          "condition": "Si la couverture ne crée pas de demande additionnelle, la publication peut rester sans effet commercial.",
+          "test": "Observer les fenêtres J+1/J+3/J+7 sans transformer une donnée manquante en absence de réaction.",
+          "invalidation": "Une réaction documentée et répétée justifierait de réexaminer ce scénario, sans prouver la causalité."
+        }
+      ],
+      "next_check": "Suivre les prix et disponibilités ; rechercher un catalyseur distinct et des indices de demande.",
+      "measured_reaction_windows": [],
+      "missing_data": [
+        "REALIZED_SALES_NOT_CONNECTED",
+        "LIQUIDITY_UNKNOWN",
+        "SUPPLY_AND_REPRINTS_UNKNOWN",
+        "RESALE_COSTS_AND_NET_MARGIN_UNKNOWN",
+        "CAUSALITY_UNPROVEN",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "investment_edge": "UNPROVEN",
+      "financial_decision": "UNASSESSED",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "102a21c3e0d26c2a24bc4797038ac593ce228cfc553c3ff8eb594f085454b829",
+      "revision": 1,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    }
+  ],
+  "transitions": [
+    {
+      "assessment_id": "assessment_lego_40898",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "f93e84b5cddcbaa2f2146547ab725b247c62c50a4d298657c4363ae46fc93ea4",
+      "current_sha256": "f93e84b5cddcbaa2f2146547ab725b247c62c50a4d298657c4363ae46fc93ea4"
+    },
+    {
+      "assessment_id": "assessment_lego_11383",
+      "revision": 1,
+      "type": "INITIAL_ASSESSMENT",
+      "previous_sha256": null,
+      "current_sha256": "627aee6ced9dd8103b7c219c4fd85dbb7c393bab808332cf480c20a22995b50f"
+    },
+    {
+      "assessment_id": "assessment_lego_11388",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "1f9088166eb8037d2137551eb0a6b859c9d5833a2a63e091d895cef7f34af953",
+      "current_sha256": "1f9088166eb8037d2137551eb0a6b859c9d5833a2a63e091d895cef7f34af953"
+    },
+    {
+      "assessment_id": "assessment_lego_40744",
+      "revision": 3,
+      "type": "ASSESSMENT_CHANGED",
+      "previous_sha256": "5690493c6e05b8fc43cac1e045b4a60650c4c0cbc725321a8f695a6ec6e7bcbb",
+      "current_sha256": "17eb1ac2707525230d7897621708821e20225bacb7a1af0c80c34870b1461144"
+    },
+    {
+      "assessment_id": "assessment_lego_40889",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "e973000b58fd2cb58116910a81ee63ca93ec7e0f75e548d2d9ff812f73c0b135",
+      "current_sha256": "e973000b58fd2cb58116910a81ee63ca93ec7e0f75e548d2d9ff812f73c0b135"
+    },
+    {
+      "assessment_id": "assessment_lego_42705",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "129a5a5e0f75960721d6821a5872e88034f25d842175417c0327b12170b983f9",
+      "current_sha256": "129a5a5e0f75960721d6821a5872e88034f25d842175417c0327b12170b983f9"
+    },
+    {
+      "assessment_id": "assessment_lego_42709",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "426a54d0b384cb532ba69eec8feab39e223abc4d8ce2c8dc5028db2feea8485f",
+      "current_sha256": "426a54d0b384cb532ba69eec8feab39e223abc4d8ce2c8dc5028db2feea8485f"
+    },
+    {
+      "assessment_id": "assessment_lego_42718",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "current_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12"
+    },
+    {
+      "assessment_id": "assessment_lego_42719",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "current_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12"
+    },
+    {
+      "assessment_id": "assessment_lego_67005",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "2139a62c6ccd7007e7e477aeb6441893e51410e7b33297512b56dc42fb2746c6",
+      "current_sha256": "2139a62c6ccd7007e7e477aeb6441893e51410e7b33297512b56dc42fb2746c6"
+    },
+    {
+      "assessment_id": "assessment_lego_10228",
+      "revision": 1,
+      "type": "INITIAL_ASSESSMENT",
+      "previous_sha256": null,
+      "current_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d"
+    },
+    {
+      "assessment_id": "assessment_lego_21359",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "d4be83c8050740539dfdc5ec9111c160d38d06219be5ff67cb370b95059df435",
+      "current_sha256": "d4be83c8050740539dfdc5ec9111c160d38d06219be5ff67cb370b95059df435"
+    },
+    {
+      "assessment_id": "assessment_lego_30762",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "580a26e2f43aca0016d5d1c74af4ecbc9b90b010d39554002a94a09626d40db2",
+      "current_sha256": "580a26e2f43aca0016d5d1c74af4ecbc9b90b010d39554002a94a09626d40db2"
+    },
+    {
+      "assessment_id": "assessment_lego_31167",
+      "revision": 1,
+      "type": "INITIAL_ASSESSMENT",
+      "previous_sha256": null,
+      "current_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d"
+    },
+    {
+      "assessment_id": "assessment_lego_40862",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "379332214791c9492d7b6d2c0231787b89e87bdba8ac11c4565f7eb3aed375d5",
+      "current_sha256": "379332214791c9492d7b6d2c0231787b89e87bdba8ac11c4565f7eb3aed375d5"
+    },
+    {
+      "assessment_id": "assessment_lego_40866",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "2e061fcac460d2cd382501a8e6157a8f9b5a3f37a559eff1c37226d4e7c53400",
+      "current_sha256": "2e061fcac460d2cd382501a8e6157a8f9b5a3f37a559eff1c37226d4e7c53400"
+    },
+    {
+      "assessment_id": "assessment_lego_40913",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "d282c0c2df24047bfd6304d83547db74de6fcd60e810f0c6d42fea05e413d392",
+      "current_sha256": "d282c0c2df24047bfd6304d83547db74de6fcd60e810f0c6d42fea05e413d392"
+    },
+    {
+      "assessment_id": "assessment_lego_41392",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "current_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76"
+    },
+    {
+      "assessment_id": "assessment_lego_42682",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "current_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76"
+    },
+    {
+      "assessment_id": "assessment_lego_42690",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "37fe1865356501d011c241c7de43beca4e333f6375dfb524d37d1184eb09d8f1",
+      "current_sha256": "37fe1865356501d011c241c7de43beca4e333f6375dfb524d37d1184eb09d8f1"
+    },
+    {
+      "assessment_id": "assessment_lego_67006",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "102a21c3e0d26c2a24bc4797038ac593ce228cfc553c3ff8eb594f085454b829",
+      "current_sha256": "102a21c3e0d26c2a24bc4797038ac593ce228cfc553c3ff8eb594f085454b829"
+    }
+  ],
+  "status": "OK",
+  "financial_decisions_made": 0,
+  "purchase_authorized": false
+}
