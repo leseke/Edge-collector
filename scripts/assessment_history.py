@@ -9,7 +9,7 @@ from announcement_history import timestamp
 from commercial_history import digest, now
 
 
-def assess(candidate, market, history, reaction_report, publications, assessed_at):
+def assess(candidate, market, history, reaction_report, publications, assessed_at, primary=None):
     cid, sku = candidate['id'], candidate['sku']
     at = timestamp(assessed_at)
     facts = []
@@ -122,13 +122,75 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
         'next_check': next_check, 'measured_reaction_windows': measured, 'missing_data': gaps,
         'investment_edge': 'UNPROVEN', 'financial_decision': 'UNASSESSED',
         'buy_signal': False, 'purchase_authorized': False}
+    apply_primary_review(case, primary)
     # Repeated timestamps alone must not look like a thesis revision.
-    material = {'context': kind, 'priority': priority, 'action': action, 'gaps': gaps,
+    material = {'context': case['context'], 'priority': case['research_priority'], 'action': case['research_action'], 'gaps': case['missing_data'],
         'publications': sorted((f['publication_id'], f['content_sha256']) for f in facts if f['type'] == 'PUBLICATION_REFERENCE'),
         'quotes': sorted((f['observation_id'], f['source_url'], f['seller'], f['price'], f['currency'], f['availability'], f['fresh_within_24h'])
                          for f in facts if f['type'] == 'RETAIL_OBSERVATION'), 'measured_windows': measured}
+    if 'primary_verification' in case:
+        material.update(primary_claims=[f['claim'] for f in facts if f['type'] == 'VERIFIED_PRIMARY_CLAIM'],
+                        primary_status=case['primary_verification']['status'], event_phase=case.get('event_phase'),
+                        early_hypothesis=case['early_hypothesis'], scenarios=case['scenarios'])
     case['semantic_sha256'] = digest(json.dumps(material, sort_keys=True).encode())
     return case
+
+
+def apply_primary_review(case, report):
+    if not report:
+        return
+    review = next((r for r in report['reviews'] if r['candidate_id'] == case['candidate_id']), None)
+    if not review:
+        return
+    if not review['current_recheck_verified']:
+        case['primary_verification'] = {'status': 'RECHECK_FAILED_OR_CHANGED', 'observed_at': report['observed_at']}
+        case['missing_data'].append('PRIMARY_CLAIMS_NOT_RECHECKED')
+        return
+    source_states = {s['id']: s for s in report['sources']}
+    case['primary_verification'] = {'status': 'REVIEWED_CLAIMS_RECHECKED', 'observed_at': report['observed_at'],
+                                  'reviewed_at': report['reviewed_at'], 'full_local_terms_verified': case['candidate_id'] == 'lego_40889'}
+    for claim in review['claims']:
+        source = source_states[claim['source_id']]
+        case['facts'].append({'type': 'VERIFIED_PRIMARY_CLAIM', 'claim': claim, 'source_url': source['source_url'],
+            'scope': source['scope'], 'evidence_sha256': source['body_sha256'], 'observed_at': report['observed_at']})
+    for field in ('context', 'research_priority', 'research_action', 'reasoning', 'next_check'):
+        case[field] = review[field]
+    case['early_hypothesis']['statement'] = review['thesis']
+    case['early_hypothesis']['counter_hypothesis'] = review['counter']
+    case['missing_data'] = sorted(set(case['missing_data']) - set(review['remove_gaps']) | set(review['add_gaps']))
+    if review.get('linked_opportunity_group'):
+        case['linked_opportunity_group'] = review['linked_opportunity_group']
+        case['bundle_economics'] = {'model': 'MAIN_SET_AND_GIFT_NOT_INDEPENDENT_PROFITS',
+            'main_set_catalogue_price_eur': '499.99', 'gift_net_resale_proceeds_eur': None,
+            'alternative_delivered_main_set_price_eur': None, 'net_advantage_eur': None,
+            'gift_stacking_verified': False, 'nominal_gift_values_used_as_revenue': False}
+    dated = [claim for claim in review['claims'] if 'start_date' in claim and 'end_date' in claim]
+    if dated:
+        start, end = min(c['start_date'] for c in dated), max(c['end_date'] for c in dated)
+        date = timestamp(case['assessed_at']).date().isoformat()
+        case['event_phase'] = 'UPCOMING' if date < start else 'PAST_WINDOW' if date > end else 'SOURCE_DATE_WINDOW'
+        if date > end:
+            case['research_priority'] = 'MEDIUM'
+            case['research_action'] = 'CHECK_POST_EVENT_MARKET'
+            case['next_check'] = "La fenêtre annoncée est passée : vérifier une éventuelle prolongation et l'offre secondaire actuelle avant toute conclusion."
+    if case['candidate_id'] == 'lego_11388':
+        case['scenarios'] = [
+            {'id': 'BUNDLE_ECONOMICS', 'type': 'CONDITIONAL_SCENARIO',
+             'condition': "Le panier de lancement pourrait être compétitif si les recettes nettes réellement réalisables sur les cadeaux dépassent les remises alternatives et les frais.",
+             'test': 'Comparer 499,99 € moins recettes nettes vérifiées des cadeaux au prix livré alternatif du set seul ; compter chaque cadeau une seule fois.',
+             'invalidation': "Une meilleure remise sur le set seul, un cadeau absent du panier ou une faible valeur nette des cadeaux invaliderait cet avantage."}]
+    elif case['candidate_id'] == 'lego_40889':
+        case['scenarios'] = [
+            {'id': 'EARLY_SECONDARY_SUPPLY', 'type': 'CONDITIONAL_SCENARIO',
+             'condition': 'Des reventes de cadeaux pourraient créer une offre secondaire temporairement abondante.',
+             'test': "Suivre les prix affichés, disponibilités et ventes conclues avant et après le 8 novembre ; ne pas confondre fin de promotion et fin d'offre secondaire.",
+             'invalidation': "Une distribution prolongée, une demande insuffisante ou des frais absorbant l'écart rendraient ce pari peu intéressant."}]
+    else:
+        case['scenarios'] = [
+            {'id': 'SEPARATE_GIFT_DEMAND', 'type': 'CONDITIONAL_SCENARIO',
+             'condition': 'Une demande pour le taxi seul pourrait rencontrer les reventes des acheteurs du grand set.',
+             'test': "Confirmer les conditions locales puis observer l'offre et la demande secondaires du taxi, sans attribuer sa valeur affichée à une recette certaine.",
+             'invalidation': 'Une offre secondaire abondante, une vente séparée durable ou une prolongation de distribution affaiblirait la thèse de contrainte.'}]
 
 
 def assign_revisions(cases, previous, observed):
@@ -149,14 +211,23 @@ def assign_revisions(cases, previous, observed):
 def render(report):
     priorities = {'HIGH': 'Haute', 'MEDIUM': 'Moyenne', 'LOW': 'Faible'}
     actions = {'INVESTIGATE_EVENT': "Approfondir l'événement", 'MONITOR_OBSERVATIONS': 'Suivre les observations',
-               'VERIFY_PRODUCT_CONTEXT': 'Vérifier le contexte du produit'}
+               'VERIFY_PRODUCT_CONTEXT': 'Vérifier le contexte du produit',
+               'COMPARE_BUNDLE_AND_STANDALONE': 'Comparer panier avec cadeau et set seul',
+               'COMPARE_SECONDARY_ACQUISITION': "Comparer l'acquisition secondaire",
+               'VERIFY_REGIONAL_GIFT_TERMS': 'Confirmer les conditions françaises du cadeau'}
+    actions['CHECK_POST_EVENT_MARKET'] = "Vérifier le marché après l'événement"
     gaps = {'REALIZED_SALES_NOT_CONNECTED': 'ventes conclues non connectées', 'LIQUIDITY_UNKNOWN': 'liquidité inconnue',
         'SUPPLY_AND_REPRINTS_UNKNOWN': 'offre globale et réimpressions inconnues',
         'RESALE_COSTS_AND_NET_MARGIN_UNKNOWN': 'coûts de revente et marge nette inconnus',
         'CAUSALITY_UNPROVEN': 'lien de causalité non établi', 'NO_RECENT_RETAIL_QUOTE': 'aucune offre récente collectée',
         'NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE': 'aucune publication du fabricant liée à la référence dans les preuves collectées',
         'NO_MEASURED_EVENT_REACTION': "aucune réaction mesurée autour de l'événement", 'DELIVERED_PRICE_UNKNOWN': 'prix livré inconnu',
-        'PROMOTION_TERMS_AND_REGION_NOT_VERIFIED': 'conditions et pays de la promotion non vérifiés'}
+        'PROMOTION_TERMS_AND_REGION_NOT_VERIFIED': 'conditions et pays de la promotion non vérifiés',
+        'BUNDLE_NET_ECONOMICS_UNKNOWN': 'rentabilité nette du panier inconnue',
+        'GIFT_STACKING_UNCONFIRMED': 'cumul des cadeaux non confirmé',
+        'SECONDARY_ACQUISITION_COST_UNKNOWN': "coût d'acquisition secondaire inconnu",
+        'FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED': 'conditions françaises complètes du cadeau non confirmées',
+        'PRIMARY_CLAIMS_NOT_RECHECKED': 'vérification actuelle des conditions échouée ou texte modifié'}
     lines = ['# EDGE — Dossiers de recherche des candidats', '',
         'Évaluation par règles explicites. Les priorités orientent la recherche ; elles ne prédisent pas le rendement.', '',
         '| Référence | Priorité de recherche | Action | Révision |', '|---|---|---|---|']
@@ -172,9 +243,11 @@ def render(report):
                 title = fact['title'].replace('[', '(').replace(']', ')')
                 role = 'fabricant' if fact['source_role'] == 'MANUFACTURER' else 'média spécialisé'
                 lines.append('- [' + title + '](' + fact['source_url'] + ') — ' + role)
-            else:
+            elif fact['type'] == 'RETAIL_OBSERVATION':
                 stock = {'IN_STOCK': 'en stock', 'OUT_OF_STOCK': 'en rupture', 'UNKNOWN': 'inconnu'}.get(fact['availability'], fact['availability'])
                 lines.append('- Dernier prix observé : ' + fact['price'] + ' ' + fact['currency'] + ' ; stock déclaré : ' + stock + ' ; relevé : ' + fact['observed_at'])
+            elif fact['type'] == 'VERIFIED_PRIMARY_CLAIM':
+                lines.append('- [Condition officielle vérifiée](' + fact['source_url'] + ') : ' + claim_text(fact['claim']))
         lines += ['', '**Acteurs : motivations possibles, non vérifiées**', '']
         lines += ['- ' + actor['hypothesis'] for actor in case['actor_hypotheses']]
         lines += ['', '**Scénarios à tester**', '']
@@ -183,6 +256,23 @@ def render(report):
         lines += ['', '**Manques** : ' + ', '.join(gaps[g] for g in case['missing_data']), '',
                   'Avantage économique : non démontré. Décision financière : non évaluée.']
     return '\n'.join(lines) + '\n'
+
+
+def claim_text(claim):
+    kind = claim['kind']
+    if kind == 'PUBLISHED_CATALOGUE_PRICE':
+        return 'prix catalogue de ' + claim['value'] + ' ' + claim['currency'] + ', sans preuve de commande exécutable.'
+    if kind == 'ANNOUNCED_EARLY_ACCESS':
+        return 'accès anticipé annoncé le ' + claim['date'] + ' pour les membres ' + claim['membership_required'] + '.'
+    if kind == 'ANNOUNCED_GENERAL_RELEASE':
+        return 'sortie générale annoncée le ' + claim['date'] + '.'
+    if kind in ('ANNOUNCED_LINKED_GIFT', 'ANNOUNCED_CONDITIONAL_GIFT'):
+        return 'cadeau 40898 annoncé avec le 11388 du ' + claim['start_date'] + ' au ' + claim['end_date'] + ', sous réserve de stock ; conditions françaises complètes à confirmer.'
+    if kind == 'GIFT_ELIGIBILITY':
+        return 'cadeau en France dès ' + claim['minimum_spend_eur'] + ' € de marchandises LEGO, du ' + claim['start_date'] + ' au ' + claim['end_date'] + ', un par foyer, sous réserve de stock.'
+    if kind == 'APPROXIMATE_PROMOTIONAL_VALUE':
+        return 'valeur promotionnelle approximative de ' + claim['value'] + ' ' + claim['currency'] + ', sans valeur de revente démontrée.'
+    return 'le cadeau doit être retourné avec les achats éligibles remboursés.'
 
 
 def main():
@@ -202,8 +292,10 @@ def main():
     discovery = json.loads((out / 'discovery.json').read_text())
     market = json.loads((out / 'report.json').read_text())
     reaction = json.loads((out / 'reactions.json').read_text())
+    primary_path = out / 'primary_verifications.json'
+    primary = json.loads(primary_path.read_text()) if primary_path.exists() else None
     observed = now()
-    cases = [assess(c, market, markets, reaction, publications, observed) for c in discovery['candidates']]
+    cases = [assess(c, market, markets, reaction, publications, observed, primary) for c in discovery['candidates']]
     order = {'HIGH': 0, 'MEDIUM': 1, 'LOW': 2}
     cases.sort(key=lambda c: (order[c['research_priority']], c['candidate_id']))
     transitions = assign_revisions(cases, previous, observed)
@@ -213,6 +305,13 @@ def main():
               'financial_decisions_made': 0, 'purchase_authorized': False}
     market['coverage']['candidate_assessments'] = len(cases)
     market['coverage']['assessment_status'] = report['status']
+    market['coverage']['primary_review_matches'] = sum(c.get('primary_verification', {}).get('status') == 'REVIEWED_CLAIMS_RECHECKED' for c in cases)
+    if primary:
+        verified_count = sum(s['status'] == 'VERIFIED_MATCH' for s in primary['sources'])
+        status = 'OK' if verified_count == len(primary['sources']) else 'PARTIAL' if verified_count else 'FAILED'
+        market['coverage']['primary_source_recheck_status'] = status
+        if status != 'OK' and market['status'] == 'OK':
+            market['status'] = 'PARTIAL'
     (out / 'report.json').write_text(json.dumps(market, indent=2, ensure_ascii=False))
     (out / 'assessments.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
     (out / 'assessment_report.md').write_text(render(report))
