@@ -147,9 +147,10 @@ def apply_primary_review(case, report):
         case['missing_data'].append('PRIMARY_CLAIMS_NOT_RECHECKED')
         return
     source_states = {s['id']: s for s in report['sources']}
-    case['primary_verification'] = {'status': 'REVIEWED_CLAIMS_RECHECKED', 'observed_at': report['observed_at'],
+    unsupported = review.get('unsupported_claims', [])
+    case['primary_verification'] = {'status': 'REVIEWED_CLAIMS_PARTIALLY_RECHECKED' if unsupported else 'REVIEWED_CLAIMS_RECHECKED', 'observed_at': report['observed_at'],
                                   'reviewed_at': report['reviewed_at'], 'full_local_terms_verified': case['candidate_id'] == 'lego_40889'}
-    for claim in review['claims']:
+    for claim in review.get('supported_claims', review['claims']):
         source = source_states[claim['source_id']]
         case['facts'].append({'type': 'VERIFIED_PRIMARY_CLAIM', 'claim': claim, 'source_url': source['source_url'],
             'scope': source['scope'], 'evidence_sha256': source['body_sha256'], 'observed_at': report['observed_at']})
@@ -158,11 +159,16 @@ def apply_primary_review(case, report):
     case['early_hypothesis']['statement'] = review['thesis']
     case['early_hypothesis']['counter_hypothesis'] = review['counter']
     case['missing_data'] = sorted(set(case['missing_data']) - set(review['remove_gaps']) | set(review['add_gaps']))
+    if unsupported:
+        case['missing_data'].append('SOME_PRIMARY_CLAIMS_NOT_RECHECKED')
+        if any(c['kind'] == 'PUBLISHED_CATALOGUE_PRICE' for c in unsupported):
+            case['missing_data'].append('FRENCH_CATALOGUE_PRICE_NOT_RECHECKED')
     if review.get('linked_opportunity_group'):
         case['linked_opportunity_group'] = review['linked_opportunity_group']
         case['bundle_economics'] = {'model': 'MAIN_SET_AND_GIFT_NOT_INDEPENDENT_PROFITS',
             'main_set_catalogue_price_eur': '499.99', 'gift_net_resale_proceeds_eur': None,
             'alternative_delivered_main_set_price_eur': None, 'net_advantage_eur': None,
+            'price_basis': 'MANUFACTURER_ANNOUNCED_PRICE_NOT_EXECUTABLE_QUOTE',
             'gift_stacking_verified': False, 'nominal_gift_values_used_as_revenue': False}
     dated = [claim for claim in review['claims'] if 'start_date' in claim and 'end_date' in claim]
     if dated:
@@ -227,13 +233,16 @@ def render(report):
         'GIFT_STACKING_UNCONFIRMED': 'cumul des cadeaux non confirmé',
         'SECONDARY_ACQUISITION_COST_UNKNOWN': "coût d'acquisition secondaire inconnu",
         'FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED': 'conditions françaises complètes du cadeau non confirmées',
-        'PRIMARY_CLAIMS_NOT_RECHECKED': 'vérification actuelle des conditions échouée ou texte modifié'}
+        'PRIMARY_CLAIMS_NOT_RECHECKED': 'vérification actuelle des conditions échouée ou texte modifié',
+        'SOME_PRIMARY_CLAIMS_NOT_RECHECKED': 'certaines données primaires ne sont pas revérifiées actuellement',
+        'FRENCH_CATALOGUE_PRICE_NOT_RECHECKED': 'prix de la fiche française non revérifié automatiquement'}
     lines = ['# EDGE — Dossiers de recherche des candidats', '',
         'Évaluation par règles explicites. Les priorités orientent la recherche ; elles ne prédisent pas le rendement.', '',
         '| Référence | Priorité de recherche | Action | Révision |', '|---|---|---|---|']
     for case in report['assessments']:
         lines.append(f"| {case['sku']} | {priorities[case['research_priority']]} | {actions[case['research_action']]} | {case['revision']} |")
-    for case in report['assessments'][:3]:
+    expanded = [c for c in report['assessments'] if c.get('primary_verification')]
+    for case in (expanded or report['assessments'][:3]):
         lines += ['', '## Référence ' + case['sku'], '', '**Pourquoi poursuivre la recherche**', ''] + ['- ' + reason for reason in case['reasoning']]
         lines += ['', '**Hypothèse précoce, non validée**', '', case['early_hypothesis']['statement'], '',
                   '**Contre-hypothèse**', '', case['early_hypothesis']['counter_hypothesis'], '',
@@ -262,6 +271,8 @@ def claim_text(claim):
     kind = claim['kind']
     if kind == 'PUBLISHED_CATALOGUE_PRICE':
         return 'prix catalogue de ' + claim['value'] + ' ' + claim['currency'] + ', sans preuve de commande exécutable.'
+    if kind == 'PUBLISHED_RECOMMENDED_PRICE_EUR':
+        return 'prix annoncé de ' + claim['value'] + ' ' + claim['currency'] + ' dans le communiqué du fabricant, sans preuve de commande exécutable.'
     if kind == 'ANNOUNCED_EARLY_ACCESS':
         return 'accès anticipé annoncé le ' + claim['date'] + ' pour les membres ' + claim['membership_required'] + '.'
     if kind == 'ANNOUNCED_GENERAL_RELEASE':
@@ -306,6 +317,7 @@ def main():
     market['coverage']['candidate_assessments'] = len(cases)
     market['coverage']['assessment_status'] = report['status']
     market['coverage']['primary_review_matches'] = sum(c.get('primary_verification', {}).get('status') == 'REVIEWED_CLAIMS_RECHECKED' for c in cases)
+    market['coverage']['primary_review_partial_matches'] = sum(c.get('primary_verification', {}).get('status') == 'REVIEWED_CLAIMS_PARTIALLY_RECHECKED' for c in cases)
     if primary:
         verified_count = sum(s['status'] == 'VERIFIED_MATCH' for s in primary['sources'])
         status = 'OK' if verified_count == len(primary['sources']) else 'PARTIAL' if verified_count else 'FAILED'

@@ -85,6 +85,19 @@ class PrimaryVerificationTests(unittest.TestCase):
             a.apply_primary_review(case, self.review(cid))
             self.assertEqual(case['event_phase'], phase)
 
+    def test_blocked_local_page_preserves_scoped_manufacturer_claims(self):
+        case = self.case('lego_11388')
+        report = self.review('lego_11388')
+        review = report['reviews'][0]
+        review['supported_claims'] = [c for c in review['claims'] if c['source_id'] == 'lego_venice_press']
+        review['unsupported_claims'] = [c for c in review['claims'] if c['source_id'] != 'lego_venice_press']
+        a.apply_primary_review(case, report)
+        self.assertEqual(case['primary_verification']['status'], 'REVIEWED_CLAIMS_PARTIALLY_RECHECKED')
+        kinds = [f['claim']['kind'] for f in case['facts']]
+        self.assertIn('PUBLISHED_RECOMMENDED_PRICE_EUR', kinds)
+        self.assertNotIn('PUBLISHED_CATALOGUE_PRICE', kinds)
+        self.assertIn('FRENCH_CATALOGUE_PRICE_NOT_RECHECKED', case['missing_data'])
+
 
 if __name__ == '__main__':
     unittest.main()

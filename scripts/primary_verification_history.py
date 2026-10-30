@@ -89,8 +89,14 @@ def main():
             state.update(error_type=type(exc).__name__, error=str(exc)[:200])
         report['sources'].append(state)
     states = {source['id']: source for source in report['sources']}
-    report['reviews'] = [dict(review, current_recheck_verified=all(states[s]['status'] == 'VERIFIED_MATCH' for s in review['required_sources']))
-                         for review in plan['reviews']]
+    report['reviews'] = []
+    for review in plan['reviews']:
+        required_ok = all(states[s]['status'] == 'VERIFIED_MATCH' for s in review['required_sources'])
+        supported = [claim for claim in review['claims'] if states[claim['source_id']]['status'] == 'VERIFIED_MATCH']
+        unsupported = [claim for claim in review['claims'] if states[claim['source_id']]['status'] != 'VERIFIED_MATCH']
+        report['reviews'].append(dict(review, current_recheck_verified=required_ok,
+            supported_claims=supported, unsupported_claims=unsupported,
+            recheck_scope='FULL_REVIEWED_CLAIMS' if not unsupported else 'PARTIAL_REVIEWED_CLAIMS'))
     report['unresolved'] = plan['unresolved']
     (out / 'primary_verifications.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
     print(json.dumps({'primary_sources': [(s['id'], s['status']) for s in report['sources']],

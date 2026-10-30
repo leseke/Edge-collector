@@ -10,8 +10,10 @@ dates and thresholds. The product extractor requires the matching main product
 heading. Rechecks are bounded text assertions, not a general legal interpretation.
 Passing them confirms the reviewed details remain visible; it does not establish
 all conditions, checkout eligibility, fulfilment, availability or resale value.
-Changed, missing or blocked text leaves the corresponding review unapplied and
-visible as unverified. Evidence hashes and raw captures remain in each snapshot.
+Changed, missing or blocked text leaves its individual claims unverified. A
+review is not applied if a required source fails. If an optional local page is
+blocked but the manufacturer announcement passes, only its supported claims are
+retained, with an explicit partial scope and the local-price gap. Evidence hashes and raw captures remain in each snapshot.
 
 Verified scope:
 - 11388: French catalogue price EUR 499.99; general release 4 November 2026.
@@ -39,3 +41,9 @@ gift profit is recorded. Nominal gift values are never subtracted as guaranteed
 proceeds. No capital filter, purchase, notification or financial watchlist change
 is introduced. After the announced date window passes, research shifts to
 post-event conditions rather than continuing to label it an upcoming event.
+
+The first GitHub recheck confirmed the press release and French 40889 terms,
+but the French 11388 product page returned HTTP 403. The dossier therefore uses
+the EUR recommended price and release dates in the verified manufacturer press
+release; it does not label the French live catalogue price as automatically
+rechecked. The readable report expands all three reviewed dossiers.
