@@ -7,10 +7,12 @@ on:
       - 'scripts/commercial_history.py'
       - 'scripts/announcement_history.py'
       - 'scripts/discovery_history.py'
+      - 'scripts/assessment_history.py'
       - 'announcement_sources.json'
       - 'tests/test_commercial_history.py'
       - 'tests/test_announcement_history.py'
       - 'tests/test_discovery_history.py'
+      - 'tests/test_assessment_history.py'
       - 'commercial_targets.json'
       - '.github/workflows/commercial-history.yml'
   schedule:
@@ -49,6 +51,8 @@ jobs:
         run: python scripts/announcement_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Discover product candidates and verify bounded retail offers
         run: python scripts/discovery_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
+      - name: Evaluate candidate evidence and persist research dossiers
+        run: python scripts/assessment_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Append evidence to isolated data branch
         shell: bash
         run: |
