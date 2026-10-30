@@ -1,0 +1,286 @@
+{
+  "schema": "edge.mri.reactions.v1",
+  "measurements": [
+    {
+      "publication_id": "dd62cccc4d623e6dd87612d786699fd32fce5d7707aeed0912b9753d047d5efd",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "e2226af6c71c60a85b2949c80bd71356049108032b49d97c600fa8dc6b32201a",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "032ebeb62c0d5eb621b4b0b739d1857405335f4b5a838a57d952f848daa3131e",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "e9654e4b067f76bf83f6b412b5b3aafa60c28325ebe146301a8c2419d3a7b359",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "aecaef0076d203c1b45c28952e502b9911c73ce4d41025c68210921fc3be7325",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "20f1acdcd464c4889e71aabca3fc6718b4c3a736788a3b735bcab078b74807db",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "b0c6d003e24bb3adaeef610964c90970094c69a7d516dd29d2afc6ac1b3d642b",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "61941e61d7f5c263c4f27c965f00c7f8399ab0688324d83aceceb8fcae5f7a4e",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+      "observation_id": "ldlc_discovered_42705",
+      "anchor": "2026-10-29T15:00:00+00:00",
+      "anchor_kind": "SOURCE_PUBLICATION_TIME",
+      "causality_proven": false,
+      "buy_signal": false,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "horizon_hours": 72,
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "horizon_hours": 168,
+          "status": "NO_PRE_EVENT_BASELINE"
+        }
+      ],
+      "status": "NO_PRE_EVENT_BASELINE"
+    },
+    {
+      "publication_id": "79f0d43a3431b01e4128b903dc618c28d078a28c05e4be140397ebd4ce1f9fba",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "f2fa37b416b6970a2f3a32945ed23e7aee6a0f1bcca03bf133b751059c3e7ec9",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "5716f9ad76b36b0884604763fb48310f654a088ac0af26e69278fb09c1980bd3",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "60960de5461ea5bd0c18ab0a922d0e33c20b7d71fef2d5cf9f01f210459e6e63",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "97f66c9005e3078e07a8477a5fc7fd9483f2288d2665e885f1684c4af3414956",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "fce9bfafb0b1cc13a18222f4ee9a836778e7c15bd9c3c7d2cea03cfdc01418a3",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "c6a7e62c5ba1e1bd90aae7ba3354ea0fcf6b2d7aebe2d0fa1e934ae0a646e1d7",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "8156b7582ff74f2c9c1bb2326a0f13cd566815e0f6ca182788b0f2108fa3c2fc",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "83bb4e0cd7a72f8f891447937b2eae80b1509a06dd3c189030a66e44c15cda7c",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0155a568790ef6de3fd039634567bd58a1da247f4dced238c38c2a50613c880f",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "1c82e0df004c4f60474e6403ce5a930aa5fa5fd052d4e791f11152fd511129cd",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "c8cb75c3cec18ef5bf7c952254f4c688c9511835f2c38aa5ca37da3873c03902",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0100c97e6582f22874e246d65cab22716ef35514c5efb82056479cfaa449a735",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "a807ace15be9ee105c72c9a788c877fc94ae90bc8dadf88f3c392a27a5e7d4b7",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "1512fa220a31ad89ec270d3dc81068fd06d4806a392b827e419fc5a46bbf971b",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "db217c59d7480c1fa9438b10519b3c3cba2a6d2ea05285e1fd08dad80bbf3c79",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "a2855b021dd27e560863793456ee9fc1828f4e4e3a1d00b23283cf480596ddbd",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0453a97aca31afc6ea10009e133ea46402fc1c6a46a0471a97f2435763f41c27",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "54369a8e82d599f55c44d750d71b747e7aee9c6809c77b1e980b1a211b8cd802",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "6973498e748152dda168b9142ac1d2c22ff099c5d96c446a22e794c9a5fa8e6d",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "cc1e6469cc7c6523a8f46d03822e5e2c8f02642d1e9fbba2a99ebcbfd59c7448",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "a082a80ba8dd9f19c0e86e38905b1821f78e79320eaee6b57bc57a861ec0934d",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "b5dd982cc286affa5c47ba181c573f89bd7444cfe20ecedd3435c5936603a06b",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "2098089041ad4e3894b74ff877697323db9716968abc9ee747851a40fbdf530b",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "ec6c34f92addabf1a602a963b07e352786396eb4aacadb1663afef334d289086",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "ef2686f31bcf66ec09eab95d94137ff92ea359a3f6b0212c1c0ed94eb253712d",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "1ea508b36de89e1f45cb98db2a4574ec29409dee2faa74e655efeda6ef54cd3a",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "86b5cabb1f02d57845dfcbd0c1744cc38f7ffe12d3f42c7ae2ecdb96cd013ab5",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "db759db0c55e673b727414d4116c9f4b29add0e2f62bc9aee7cf570bf7b1d3c7",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "b1dcf45e765438b37d8bed1fce54c5e9f50e889921d4478ffa8be368ccf20142",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "c749d0c8e7de7ffb792a607527c18c81db1f39911911ae4139529facb06fae56",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "1c871ffa76c0473036481f1296f4ce77657ec0f7dc554364f1c21cbc1fbe1220",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "458dbfc66499688167910b4178376bc48eeec94fa2cfd1b0101e3d4310e4b5ac",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "8bd69e1b9deb3c864f9aba2c95038e029e37d8e39ec83f9df3a3e5206dce689e",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "566cd260857829dae05ec262352bbb9f0d01dcef2838903f89ca6810cb370bbb",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "a9e0f3ae827be7bdf689ebec9ce7c4b2d206d28f3c6e5c88b8307d7d5a69acb8",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0c542f5d287ad6dc57a05348ec1da666caf0d44b1f981e77c57b45635c5e90c5",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    },
+    {
+      "publication_id": "6c13a0ae9c597a4f48d413977e1c9092ba41cad3d6aef74d296ee3a864d5407e",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "922130309452299687bdebecd160056f6d5b9d14887aa2a2b72db0a644c53cc1",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0c139e24fa2de9a6cb883cb1589ca142606d0ba4b962af655bea4b1197797ef5",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "e2e8c17e4ca5ed2e2b972d31cecc3d62f316935885e36622943de937f2cf6dc7",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "c74fd7ee8b498c09c76d486733f00e62a41b9feb4455d0c98abf1b05d2c8e54a",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "8e71e662b90d68a1213692c1aa694cbe2e09e0c180ca72655a729dd382d1650d",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "05ef01866e169708bfa6a01b264e6edd6c27af317167fb8c1100c6891cc58fa3",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "2a5086e1e2a194b3c685004a278441cd1f5636bf9dc24453869e51ce3c50ca0f",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "51c8ab7f19bc59c377fa5a49e03bb5a9f73715be20e9dbad74608c9bf8140d83",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "0bf62819ce2c8993f02ccb3fbfa7215a7cd55d740d593ea7f96945536e209e7a",
+      "status": "NO_TRACKED_PRODUCT"
+    },
+    {
+      "publication_id": "edd54f06c0b8787429fb927826d27257abc78765c40762b9e30f5659bdddb175",
+      "status": "NO_RETAIL_OBSERVATIONS"
+    }
+  ],
+  "metrics": "ASKING_PRICES_AND_DECLARED_STOCK_ONLY",
+  "causality_proven": false
+}

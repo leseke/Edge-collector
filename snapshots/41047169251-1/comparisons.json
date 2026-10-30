@@ -1,0 +1,97 @@
+{
+  "schema": "edge.commercial.comparisons.v1",
+  "observations": [
+    {
+      "id": "lego_fr_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "lagranderecre_10365",
+      "current_status": "FAILED",
+      "comparison_available": false,
+      "reason": "CURRENT_COLLECTION_FAILED"
+    },
+    {
+      "id": "tcgdex_base1-4",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-30T10:37:50.127062+00:00",
+      "previous_observed_at": "2026-10-30T10:37:50.678300+00:00",
+      "current_observed_at": "2026-10-30T11:18:53.928714+00:00",
+      "before_price": "99",
+      "after_price": "99",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "4a563b85c2b3fbe9cf96db33532db7069c74c02cd4750ebb57634d983109ed64",
+      "current_evidence_sha256": "4a563b85c2b3fbe9cf96db33532db7069c74c02cd4750ebb57634d983109ed64",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "tcgdex_swsh3-136",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-30T10:37:50.127062+00:00",
+      "previous_observed_at": "2026-10-30T10:37:50.788333+00:00",
+      "current_observed_at": "2026-10-30T11:18:54.397134+00:00",
+      "before_price": "0.02",
+      "after_price": "0.02",
+      "before_availability": "UNKNOWN",
+      "after_availability": "UNKNOWN",
+      "previous_evidence_sha256": "d2b431cbc9be305d975a4d82e9caf54cde8aaa960cd350ca1da931059c1997bb",
+      "current_evidence_sha256": "83fa15a75ff331263c27ea51459c194becafcc71467c7115568f8c01a8a18fbe",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "joueclub_10365",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-30T10:37:50.127062+00:00",
+      "previous_observed_at": "2026-10-30T10:37:50.863897+00:00",
+      "current_observed_at": "2026-10-30T11:18:54.718129+00:00",
+      "before_price": "349.99",
+      "after_price": "349.99",
+      "before_availability": "IN_STOCK",
+      "after_availability": "IN_STOCK",
+      "previous_evidence_sha256": "99beb07ff181d970defb539de27c7811b7382a871e2f613dfbb8842aa5e5267b",
+      "current_evidence_sha256": "ab8928f95d5919f3d7ddab5aeea21c2c0efbead7a0772d332c5281911b186fdb",
+      "price_kind": "ASKING_PRICE",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "ldlc_75639",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-30T10:37:50.127062+00:00",
+      "previous_observed_at": "2026-10-30T10:37:51.687313+00:00",
+      "current_observed_at": "2026-10-30T11:18:56.032793+00:00",
+      "before_price": "129.95",
+      "after_price": "129.95",
+      "before_availability": "IN_STOCK",
+      "after_availability": "IN_STOCK",
+      "previous_evidence_sha256": "d761d9406d5cb7570aa184fbd3e095825088d74ed38e4659879b1fec2bd79567",
+      "current_evidence_sha256": "d761d9406d5cb7570aa184fbd3e095825088d74ed38e4659879b1fec2bd79567",
+      "price_kind": "ASKING_PRICE",
+      "price_change_pct": "0"
+    },
+    {
+      "id": "ldlc_discovered_42705",
+      "current_status": "OK",
+      "comparison_available": true,
+      "previous_snapshot_at": "2026-10-30T10:37:50.127062+00:00",
+      "previous_observed_at": "2026-10-30T10:37:52.585607+00:00",
+      "current_observed_at": "2026-10-30T11:18:59.030106+00:00",
+      "before_price": "92.95",
+      "after_price": "92.95",
+      "before_availability": "IN_STOCK",
+      "after_availability": "IN_STOCK",
+      "previous_evidence_sha256": "2e7113e435ff76aee0918142615c5b93d662388325ff9d61faf87f490a58950a",
+      "current_evidence_sha256": "2e7113e435ff76aee0918142615c5b93d662388325ff9d61faf87f490a58950a",
+      "price_kind": "ASKING_PRICE",
+      "price_change_pct": "0"
+    }
+  ]
+}
