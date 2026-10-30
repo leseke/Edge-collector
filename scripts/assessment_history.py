@@ -147,11 +147,21 @@ def assign_revisions(cases, previous, observed):
 
 
 def render(report):
+    priorities = {'HIGH': 'Haute', 'MEDIUM': 'Moyenne', 'LOW': 'Faible'}
+    actions = {'INVESTIGATE_EVENT': "Approfondir l'événement", 'MONITOR_OBSERVATIONS': 'Suivre les observations',
+               'VERIFY_PRODUCT_CONTEXT': 'Vérifier le contexte du produit'}
+    gaps = {'REALIZED_SALES_NOT_CONNECTED': 'ventes conclues non connectées', 'LIQUIDITY_UNKNOWN': 'liquidité inconnue',
+        'SUPPLY_AND_REPRINTS_UNKNOWN': 'offre globale et réimpressions inconnues',
+        'RESALE_COSTS_AND_NET_MARGIN_UNKNOWN': 'coûts de revente et marge nette inconnus',
+        'CAUSALITY_UNPROVEN': 'lien de causalité non établi', 'NO_RECENT_RETAIL_QUOTE': 'aucune offre récente collectée',
+        'NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE': 'aucune publication du fabricant liée à la référence dans les preuves collectées',
+        'NO_MEASURED_EVENT_REACTION': "aucune réaction mesurée autour de l'événement", 'DELIVERED_PRICE_UNKNOWN': 'prix livré inconnu',
+        'PROMOTION_TERMS_AND_REGION_NOT_VERIFIED': 'conditions et pays de la promotion non vérifiés'}
     lines = ['# EDGE — Dossiers de recherche des candidats', '',
         'Évaluation par règles explicites. Les priorités orientent la recherche ; elles ne prédisent pas le rendement.', '',
         '| Référence | Priorité de recherche | Action | Révision |', '|---|---|---|---|']
     for case in report['assessments']:
-        lines.append(f"| {case['sku']} | {case['research_priority']} | {case['research_action']} | {case['revision']} |")
+        lines.append(f"| {case['sku']} | {priorities[case['research_priority']]} | {actions[case['research_action']]} | {case['revision']} |")
     for case in report['assessments'][:3]:
         lines += ['', '## Référence ' + case['sku'], '', '**Pourquoi poursuivre la recherche**', ''] + ['- ' + reason for reason in case['reasoning']]
         lines += ['', '**Hypothèse précoce, non validée**', '', case['early_hypothesis']['statement'], '',
@@ -160,10 +170,17 @@ def render(report):
         for fact in case['facts']:
             if fact['type'] == 'PUBLICATION_REFERENCE':
                 title = fact['title'].replace('[', '(').replace(']', ')')
-                lines.append('- [' + title + '](' + fact['source_url'] + ') — ' + fact['source_role'])
+                role = 'fabricant' if fact['source_role'] == 'MANUFACTURER' else 'média spécialisé'
+                lines.append('- [' + title + '](' + fact['source_url'] + ') — ' + role)
             else:
-                lines.append('- Prix affiché : ' + fact['price'] + ' ' + fact['currency'] + ' ; stock déclaré : ' + fact['availability'] + ' ; relevé : ' + fact['observed_at'])
-        lines += ['', '**Manques** : ' + ', '.join(case['missing_data']), '',
+                stock = {'IN_STOCK': 'en stock', 'OUT_OF_STOCK': 'en rupture', 'UNKNOWN': 'inconnu'}.get(fact['availability'], fact['availability'])
+                lines.append('- Dernier prix observé : ' + fact['price'] + ' ' + fact['currency'] + ' ; stock déclaré : ' + stock + ' ; relevé : ' + fact['observed_at'])
+        lines += ['', '**Acteurs : motivations possibles, non vérifiées**', '']
+        lines += ['- ' + actor['hypothesis'] for actor in case['actor_hypotheses']]
+        lines += ['', '**Scénarios à tester**', '']
+        for scenario in case['scenarios']:
+            lines += ['- ' + scenario['condition'] + ' Vérification : ' + scenario['test'] + ' Invalidation : ' + scenario['invalidation']]
+        lines += ['', '**Manques** : ' + ', '.join(gaps[g] for g in case['missing_data']), '',
                   'Avantage économique : non démontré. Décision financière : non évaluée.']
     return '\n'.join(lines) + '\n'
 
