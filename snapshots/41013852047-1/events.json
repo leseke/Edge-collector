@@ -1,0 +1,24 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "INDICATIVE_PRICE_CHANGE",
+      "observation_id": "tcgdex_base1-4",
+      "product_id": "pokemon_card_base1-4",
+      "seller": "Cardmarket indication via TCGdex",
+      "field": "price",
+      "before": "99.99",
+      "after": "99",
+      "window_start": "2026-10-29T23:21:11.890037+00:00",
+      "window_end": "2026-10-30T06:24:09.716386+00:00",
+      "previous_snapshot_at": "2026-10-29T23:21:11.345088+00:00",
+      "source_url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+      "evidence_sha256": "b3df2180e1e36501a221cff8c2b2d72c0db31d472e325ad71646e26cc60d1984",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "228b2253040f3b64bf9a6da09d8958cb72d5fa9108c2fa3dd761148cce73d27d",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "864bf65f3d5aa92ed0cf702a1442e02bc898e9a8abe82238cd0c7f02136d986b"
+    }
+  ]
+}

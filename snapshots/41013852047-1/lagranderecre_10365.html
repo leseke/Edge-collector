@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Vérification de votre navigateur - La Grande Récré</title>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <style>
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #333; background: #fff; }
+        .verification { max-width: 420px; margin: 0 auto; padding: 48px 16px; text-align: center; }
+        .verification img { max-width: 200px; height: auto; margin-bottom: 32px; }
+        .verification h1 { font-size: 26px; line-height: 1.3; margin: 0 0 16px; }
+        .verification .dots span { animation: verification-dot 1.4s infinite both; }
+        .verification .dots span:nth-child(2) { animation-delay: .2s; }
+        .verification .dots span:nth-child(3) { animation-delay: .4s; }
+        @keyframes verification-dot { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .verification .dots span { animation: none; } }
+        .verification .details { margin: 40px 0 0; line-height: 1.5; }
+        .verification .cf-turnstile { display: inline-block; min-height: 65px; }
+        .verification .error { color: #c00; margin: 16px 0; }
+        .verification button { padding: 10px 24px; font-size: 16px; cursor: pointer; }
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+<main class="verification">
+    <img src="/Assets/275076/Theme/Project/Lgr/img/logo-lgr.png" alt="La Grande Récré">
+    <h1>Vérification de votre navigateur en cours<span class="dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span></h1>
+    <noscript><p class="error">Merci d'activer JavaScript dans votre navigateur pour accéder à cette page.</p></noscript>
+    <p class="error" id="verification-failed" hidden>La vérification a échoué, merci de réessayer.</p>
+    <form method="post" action="/verification" id="verification-form">
+        <input type="hidden" name="return" value="/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html">
+        <div class="cf-turnstile"
+             data-sitekey="0x4AAAAAAFU62jxviewExGZz"
+             data-action="interstitial"
+             data-language="fr"
+             data-appearance="interaction-only"
+             data-callback="onVerificationSuccess"
+             data-expired-callback="onVerificationExpired"
+             data-error-callback="onVerificationError"></div>
+    </form>
+    <div id="verification-error" hidden>
+        <p class="error">Une erreur est survenue pendant la vérification.</p>
+        <button type="button" onclick="onVerificationRetry()">Réessayer</button>
+    </div>
+    <p class="details">
+        <strong>Client IP&nbsp;:</strong> 172.190.109.35<br>
+    </p>
+</main>
+<script>
+    function onVerificationSuccess() {
+        document.getElementById('verification-form').submit();
+    }
+
+    function onVerificationExpired() {
+        turnstile.reset();
+    }
+
+    function onVerificationError() {
+        document.getElementById('verification-error').hidden = false;
+        // Returning true tells Turnstile the error is handled and must not be thrown.
+        return true;
+    }
+
+    function onVerificationRetry() {
+        document.getElementById('verification-error').hidden = true;
+        document.getElementById('verification-failed').hidden = true;
+        turnstile.reset();
+    }
+</script>
+</body>
+</html>
