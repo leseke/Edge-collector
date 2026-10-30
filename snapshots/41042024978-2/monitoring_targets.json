@@ -1,0 +1,15 @@
+{
+  "observed_at": "2026-10-30T10:37:55.046053+00:00",
+  "targets": [
+    {
+      "id": "ldlc_discovered_42705",
+      "sku": "42705",
+      "product_id": "lego_42705",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00743956.html"
+    }
+  ],
+  "scope": "RESEARCH_ONLY_NOT_FINANCIAL_WATCHLIST"
+}
