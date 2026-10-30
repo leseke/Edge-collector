@@ -204,6 +204,14 @@ def main():
     cli.add_argument('--history', default='history/snapshots')
     args = cli.parse_args()
     targets = json.loads(Path(args.config).read_text())['targets']
+    monitoring = []
+    for path in Path(args.history).glob('*/monitoring_targets.json'):
+        monitoring.append(json.loads(path.read_text()))
+    if monitoring:
+        dynamic = max(monitoring, key=lambda r: r['observed_at'])['targets']
+        if len(dynamic) > 4:
+            raise ValueError('Research monitoring limit exceeded')
+        targets += [t for t in dynamic if t['id'] not in {r['id'] for r in targets}]
     if not 1 <= len(targets) <= 10 or len({x['id'] for x in targets}) != len(targets):
         raise ValueError('Invalid targets')
     for target in targets:

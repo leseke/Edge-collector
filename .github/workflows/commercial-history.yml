@@ -6,9 +6,11 @@ on:
     paths:
       - 'scripts/commercial_history.py'
       - 'scripts/announcement_history.py'
+      - 'scripts/discovery_history.py'
       - 'announcement_sources.json'
       - 'tests/test_commercial_history.py'
       - 'tests/test_announcement_history.py'
+      - 'tests/test_discovery_history.py'
       - 'commercial_targets.json'
       - '.github/workflows/commercial-history.yml'
   schedule:
@@ -21,7 +23,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -45,6 +47,8 @@ jobs:
         run: python scripts/commercial_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Capture announcements and descriptive reaction windows
         run: python scripts/announcement_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
+      - name: Discover product candidates and verify bounded retail offers
+        run: python scripts/discovery_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Append evidence to isolated data branch
         shell: bash
         run: |
