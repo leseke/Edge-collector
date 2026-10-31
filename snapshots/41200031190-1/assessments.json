@@ -1,0 +1,1575 @@
+{
+  "schema": "edge.mri.observed_dossiers.v2",
+  "observed_at": "2026-10-31T12:12:29.520587+00:00",
+  "data_policy": "OBSERVED_INPUTS_WITH_SEPARATE_LABELLED_ESTIMATES_V1",
+  "assessments": [
+    {
+      "id": "assessment_lego_10228",
+      "candidate_id": "lego_10228",
+      "sku": "10228",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_11383",
+      "candidate_id": "lego_11383",
+      "sku": "11383",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_11383",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "price": "104.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-10-31T12:12:15.823380+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "163a1d3e0af2e6a47a0a83d6dc4d412da5a5f92a6672d650e26de1093d0788b0",
+          "completed_sale": false,
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "6bdf50f160ee4c4e8c2d846dc02cffc8490a7cba0ef744ce4aae24357a8d61ec",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_11388",
+      "candidate_id": "lego_11388",
+      "sku": "11388",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "source_published_at": "2026-10-15T13:27:14+00:00",
+          "title": "Ciao, Venice: The LEGO Group floats new Icons set",
+          "content_sha256": "4c9b603ae1afc459d6d4af8d2855318c1f7234a5366b773efc151f46eab5a8a0"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135699",
+          "source_published_at": "2026-10-26T15:00:00+00:00",
+          "title": "11388 Venetian Neighbourhood minifigures",
+          "content_sha256": "d411da50ff593fcccd7e0e45750de8ceac51a443a9f4da608b8b4da933669fc8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "PUBLISHED_RECOMMENDED_PRICE_EUR",
+            "value": "499.99",
+            "currency": "EUR",
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_EARLY_ACCESS",
+            "date": "2026-11-01",
+            "membership_required": "LEGO Insiders"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_GENERAL_RELEASE",
+            "date": "2026-11-04"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_LINKED_GIFT",
+            "gift_sku": "40898",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        }
+      ],
+      "missing_data": [
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "SOME_PRIMARY_CLAIMS_NOT_RECHECKED",
+        "FRENCH_CATALOGUE_PRICE_NOT_RECHECKED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_PARTIALLY_RECHECKED",
+        "observed_at": "2026-10-31T12:12:26.867654+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "event_phase": "UPCOMING",
+      "secondary_market_evidence": {
+        "observed_at": "2026-10-31T12:12:28.964016+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [],
+        "one_time_baseline": [
+          {
+            "sku": "11388",
+            "observed_at": "2026-10-31T11:58:06.762814+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+11388",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_168794982887",
+                "listing_id": "168794982887",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO Icons Venetian Neighborhood (11388)",
+                "url": "https://www.ebay.ie/itm/168794982887",
+                "asking_price_eur": "434.37",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "denheartstring2012 98.6% positive (1K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "28.71",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_257823646231",
+                "listing_id": "257823646231",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO Icons #11388 Venetian Neighbourhood PRE-ORDER will post 01/11",
+                "url": "https://www.ebay.ie/itm/257823646231",
+                "asking_price_eur": "539.96",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided starlibrarian77 100% positive (495)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "50.00",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_198717225513",
+                "listing_id": "198717225513",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO #11388 Icons Venetian Neighborhood: Brand New in Box: PREORDER SHIPS 11/4",
+                "url": "https://www.ebay.ie/itm/198717225513",
+                "asking_price_eur": "564.47",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "maxwell-007 100% positive (3.8K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "81.30",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_237142793559",
+                "listing_id": "237142793559",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO ICONS 11388 QUARTIERE VENEZIANO",
+                "url": "https://www.ebay.ie/itm/237142793559",
+                "asking_price_eur": "593.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "cdpumi 99% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "40.00",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              }
+            ],
+            "source_body_sha256": "34f42d28edc002a580de3dd1616de906eedde8e6412a840ec0c201ad5bcebd3d",
+            "observed_matches": 35,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 31,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "9f98b1650640bdaf0eab90c6c965030963ffa19b834d8bf389a852a9ffec6ad9",
+      "revision": 6,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_21359",
+      "candidate_id": "lego_21359",
+      "sku": "21359",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "fb779a402eaf837136851ed163f1c554e531896a3b96be30ee015ad40c38e446",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_30762",
+      "candidate_id": "lego_30762",
+      "sku": "30762",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b5dd982cc286affa5c47ba181c573f89bd7444cfe20ecedd3435c5936603a06b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135188",
+          "source_published_at": "2026-10-22T13:00:00+00:00",
+          "title": "Review: 30762 Retro Video Game Batman",
+          "content_sha256": "20cedd9c60db9df899f33cf4caa999f6877032ef73792f1af602b6427d9db274"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "d1ef3a94cbe9170bde4bfb89a5b4f4803cbc4ae269bb6e0ea24503dce6443ea1",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_31167",
+      "candidate_id": "lego_31167",
+      "sku": "31167",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_40744",
+      "candidate_id": "lego_40744",
+      "sku": "40744",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_40744",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+          "price": "12.95",
+          "currency": "EUR",
+          "availability": "OUT_OF_STOCK",
+          "observed_at": "2026-10-31T12:12:14.710525+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "b3a40ec5970995649771823442719a1f1b62a8d5a6ad8bb0e0c1457c00eafac1",
+          "completed_sale": false,
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "239a8b7a3d532ba1d657eecb0d01f8557ee8aee777ef7c0056e8522d35c45ad5",
+      "revision": 4,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40862",
+      "candidate_id": "lego_40862",
+      "sku": "40862",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "ca436db114f4dceb648c7e4af625288e8e999d34675e56334115dcc14a6780d0",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40866",
+      "candidate_id": "lego_40866",
+      "sku": "40866",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db759db0c55e673b727414d4116c9f4b29add0e2f62bc9aee7cf570bf7b1d3c7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135272",
+          "source_published_at": "2026-10-20T14:00:00+00:00",
+          "title": "Review: 40866 Santa's Holiday Sleigh Adventure",
+          "content_sha256": "d62de42f43dcad5fc1ac8ac024bdec3d8089634bf8b05ff8263c05ac03c61c00"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "c1980c37413efcf1ad8131767904e8c4528bf829e0baa4ec2fe12e4520a64d0e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40889",
+      "candidate_id": "lego_40889",
+      "sku": "40889",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db217c59d7480c1fa9438b10519b3c3cba2a6d2ea05285e1fd08dad80bbf3c79",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135605",
+          "source_published_at": "2026-10-24T13:30:00+00:00",
+          "title": "Review: 40889 Build, Paint and Play!",
+          "content_sha256": "01e3616768494fc3dc533a85b0e2b8d48ee27e795e6becb514e61027d12ea7c9"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "54369a8e82d599f55c44d750d71b747e7aee9c6809c77b1e980b1a211b8cd802",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135604",
+          "source_published_at": "2026-10-23T07:00:00+00:00",
+          "title": "LEGO Ideas 40889 Build, Paint and Play revealed!",
+          "content_sha256": "446afb4eb11bc27ca0fe46093d7a4e5909713321578147353bd375c55fc9c649"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_ELIGIBILITY",
+            "region": "FR",
+            "start_date": "2026-10-28",
+            "end_date": "2026-11-08",
+            "minimum_spend_eur": "130.00",
+            "eligible_goods": "LEGO merchandise",
+            "limit_per_household": 1,
+            "while_stocks_last": true,
+            "standalone_purchase_allowed_under_promotion": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "bdf4fdddefe615627503eaea8ec3236f5617e2f1e20d7d46d539bea6780a664d",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "APPROXIMATE_PROMOTIONAL_VALUE",
+            "value": "19.99",
+            "currency": "EUR",
+            "resale_value_verified": false,
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "bdf4fdddefe615627503eaea8ec3236f5617e2f1e20d7d46d539bea6780a664d",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_RETURN_REQUIRED_WITH_ELIGIBLE_RETURN",
+            "value": true
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "bdf4fdddefe615627503eaea8ec3236f5617e2f1e20d7d46d539bea6780a664d",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        }
+      ],
+      "missing_data": [
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-10-31T12:12:26.867654+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": true
+      },
+      "event_phase": "SOURCE_DATE_WINDOW",
+      "secondary_market_evidence": {
+        "observed_at": "2026-10-31T12:12:28.964016+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [
+          {
+            "id": "ebay_198752609812_review_20261031",
+            "sku": "40889",
+            "url": "https://www.ebay.es/itm/198752609812",
+            "label": "Annonce 40889 du vendeur tuttolego3",
+            "asking_price_eur": "39.50",
+            "displayed_shipping_eur": "12.00",
+            "shipping_destination_context": "28001 Spain",
+            "france_delivery_verified": false,
+            "delivered_price_fr_eur": null,
+            "seller_declared_metrics": "100% positive, 1529 feedback entries displayed",
+            "seller_reliability_verified": false,
+            "completed_sale_verified": false,
+            "interpretation": "39,50 € demandés. Les 12 € de port affichés concernent le contexte espagnol de la page ; aucun total livré en France n'est établi. Les métriques du vendeur sont déclaratives et ne prouvent pas l'authenticité du lot."
+          },
+          {
+            "id": "ebay_287685264496_review_20261031",
+            "sku": "40889",
+            "url": "https://www.ebay.es/itm/287685264496",
+            "label": "Annonce 40889 marquée vendue, titre de prévente",
+            "displayed_price_eur": "44.90",
+            "sold_marker_observed": true,
+            "evidence_class": "SOLD_LISTING_MARKER_WITH_DISPLAYED_PRICE",
+            "settled_transaction_verified": false,
+            "realized_transaction_price_verified": false,
+            "presale_claim": true,
+            "france_delivery_verified": false,
+            "interpretation": "La page indique une annonce vendue le 29 octobre et affiche 44,90 €. Cela constitue un signal de vente déclarée par la plateforme, pas une preuve du prix encaissé, du paiement, de la livraison ou de l'absence d'annulation. Ce point ne sert pas de médiane ni de recette de revente."
+          }
+        ],
+        "one_time_baseline": [
+          {
+            "sku": "40889",
+            "observed_at": "2026-10-31T11:58:06.764081+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40889",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_940052539843",
+                "listing_id": "940052539843",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO Build Paint and Play Set 40889 - Brand New",
+                "url": "https://www.ebay.ie/itm/940052539843",
+                "asking_price_eur": "23.43",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "eddiemcdoodle 100% positive (560)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "16.28",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_206664677110",
+                "listing_id": "206664677110",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO 40889 Ideas Build, Paint and Play! Promotional GWP SEALED",
+                "url": "https://www.ebay.ie/itm/206664677110",
+                "asking_price_eur": "31.51",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "bhowarth0201 100% positive (2.2K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "31.82",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_198759348541",
+                "listing_id": "198759348541",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO IDEAS 40889 - Build Paint and Play! - NEW",
+                "url": "https://www.ebay.ie/itm/198759348541",
+                "asking_price_eur": "33.79",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "Customs services and international tracking provided skunkarella 100% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "18.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_900051837302",
+                "listing_id": "900051837302",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing 🌟✅️PRE ORDER Lego 40889 GWP Ideas Build Paint And Play - New/sealed",
+                "url": "https://www.ebay.ie/itm/900051837302",
+                "asking_price_eur": "33.80",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided timelesskicksco 100% positive (119)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "18.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_860100156423",
+                "listing_id": "860100156423",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO IDEAS (40889 ) Build Paint and Play Spaceman GWP - PRESALE",
+                "url": "https://www.ebay.ie/itm/860100156423",
+                "asking_price_eur": "34.80",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided athp2014_7 99.9% positive (1.5K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "19.03",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_366772587289",
+                "listing_id": "366772587289",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing Lego 40889 Ideas Build Paint and Play - Brand New Sealed",
+                "url": "https://www.ebay.ie/itm/366772587289",
+                "asking_price_eur": "36.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "Customs services and international tracking provided heba-701 99.9% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "19.08",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              }
+            ],
+            "source_body_sha256": "e8d56f4669250f57d2091a9611c7a5321cc1082a2b1f14bb7cb521f64a31a13b",
+            "observed_matches": 60,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 4,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "82e11404cbf5dcfa5b71c80b736a17910a301fc8ef4453989fc02e5e40430808",
+      "revision": 5,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40898",
+      "candidate_id": "lego_40898",
+      "sku": "40898",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_CONDITIONAL_GIFT",
+            "required_purchase_sku": "11388",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+          "observed_at": "2026-10-31T12:12:26.867654+00:00"
+        }
+      ],
+      "missing_data": [
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-10-31T12:12:26.867654+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "event_phase": "UPCOMING",
+      "secondary_market_evidence": {
+        "observed_at": "2026-10-31T12:12:28.964016+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [],
+        "one_time_baseline": [
+          {
+            "sku": "40898",
+            "observed_at": "2026-10-31T11:58:06.764713+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40898",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_168794961824",
+                "listing_id": "168794961824",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "New listing LEGO Icons Venice - Venetian Water Taxi (40898)",
+                "url": "https://www.ebay.ie/itm/168794961824",
+                "asking_price_eur": "107.74",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "denheartstring2012 98.6% positive (1K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "15.38",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_407325094789",
+                "listing_id": "407325094789",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO 40898 Icons Venetian Water Taxi Gwp",
+                "url": "https://www.ebay.ie/itm/407325094789",
+                "asking_price_eur": "109.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "dh2010australien 99.4% positive (1.7K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "12.82",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_920064330765",
+                "listing_id": "920064330765",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO VENETIAN WATER TAXI (40898) VERY DETAILED SET - NISB [will ship Nov 1]",
+                "url": "https://www.ebay.ie/itm/920064330765",
+                "asking_price_eur": "154.45",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "lego-a-holic 100% positive (465)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "30.63",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_920042769255",
+                "listing_id": "920042769255",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO Icons Venetian Water Taxi 40898 NEW GWP SEALED EXCLUSIVE PRESALE",
+                "url": "https://www.ebay.ie/itm/920042769255",
+                "asking_price_eur": "156.81",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "golfballgirl22 98.6% positive (1.4K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "37.03",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_407316455325",
+                "listing_id": "407316455325",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "HOT !LEGO Icons 40898 Venetian Water Taxi",
+                "url": "https://www.ebay.ie/itm/407316455325",
+                "asking_price_eur": "167.98",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "yosiciljj 100% positive (1.4K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "5.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_820209429944",
+                "listing_id": "820209429944",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO Icons Venetian Neighbourhood Venetian Water Taxi 40898 SEALED EXCLUSIVE GWP",
+                "url": "https://www.ebay.ie/itm/820209429944",
+                "asking_price_eur": "172.25",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "strayfloatstore 100% positive (139)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "35.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              }
+            ],
+            "source_body_sha256": "1f32891e89c726ec09120f725f31c78884d55522941116b10a2968503d024657",
+            "observed_matches": 6,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 0,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "fa5be19d32c5618b4dac08ecded193fc5de8ca15c4599182d123985fcf33b4f6",
+      "revision": 5,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40913",
+      "candidate_id": "lego_40913",
+      "sku": "40913",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b1dcf45e765438b37d8bed1fce54c5e9f50e889921d4478ffa8be368ccf20142",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135481",
+          "source_published_at": "2026-10-20T04:00:00+00:00",
+          "title": "[US] Brickset member offer: Free Vintage Parade Car at LEGO.com",
+          "content_sha256": "87d109bf4895a3c6b8ec4c3d01fe6a0ad492b29daa27705b99cc03049e2c7ce1"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "87eb668abe7f8d51f1f2aecbf8478129475234fb462e34d81895ca9a71ddac57",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_41392",
+      "candidate_id": "lego_41392",
+      "sku": "41392",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42682",
+      "candidate_id": "lego_42682",
+      "sku": "42682",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42690",
+      "candidate_id": "lego_42690",
+      "sku": "42690",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "ef2686f31bcf66ec09eab95d94137ff92ea359a3f6b0212c1c0ed94eb253712d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135416",
+          "source_published_at": "2026-10-21T14:00:00+00:00",
+          "title": "Quick look: 42690 Forest Tea Party",
+          "content_sha256": "5a378ac010e9d984f8e2564ea8f9e9970a7473ea45e299524de313f411bff06f"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "5b6130c7c082704955e45aee1681ab65149f05c7c608d6eb8a12ffeb6f3830b4",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42705",
+      "candidate_id": "lego_42705",
+      "sku": "42705",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135584",
+          "source_published_at": "2026-10-29T15:00:00+00:00",
+          "title": "Review: 42705 Cosy Autumn Forest Cabin",
+          "content_sha256": "71bf362a81354153cc2f1cbe85b0bb862ea0deacd167e2af25a02c8ab31cb223"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_42705",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "price": "92.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-10-31T12:12:13.564364+00:00",
+          "age_hours": 0.0,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "870b8ea1a4544c3cc3dc1699ce2bf6e89b2e12fcbd150d774e3d833bf6ff228d",
+          "completed_sale": false,
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "c8274b2a6c5c9315db51bef0173ccea02ab0dcc77fd3276ad0fedd35a47c8407",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42709",
+      "candidate_id": "lego_42709",
+      "sku": "42709",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "b0d5fe730f7599e75ac80198ded61193dc30fe037d45541362ed015f36def4c2",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42718",
+      "candidate_id": "lego_42718",
+      "sku": "42718",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42719",
+      "candidate_id": "lego_42719",
+      "sku": "42719",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67005",
+      "candidate_id": "lego_67005",
+      "sku": "67005",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5716f9ad76b36b0884604763fb48310f654a088ac0af26e69278fb09c1980bd3",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135732",
+          "source_published_at": "2026-10-28T15:00:00+00:00",
+          "title": "LEGO Marvel What If...? Sanctum Sanctorum revealed!",
+          "content_sha256": "94ffe5d2e3a76ef7222cf89219da563839d64bc0bf273aa5eb2102c87dc07a2e"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0c542f5d287ad6dc57a05348ec1da666caf0d44b1f981e77c57b45635c5e90c5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-67005-marvel-what-if-doctor-strange-supreme-january-2027-set-revealed-us-canada-prices-release-dates-minifigures",
+          "source_published_at": "2026-10-28T23:19:55+00:00",
+          "title": "LEGO 67005 Marvel What if…? Doctor Strange Supreme January 2027 Set Revealed: US/Canada Prices, Release Dates & Minifigures",
+          "content_sha256": "c9d69c5ceccb6413a6dffcc344ce7c195d20765573a5546db1d7b6144ec1d8a4"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "6ac0cba839c021f3be10cfa68ae4e48a4a18e2af4a3bff2f230789007be6a22d",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67006",
+      "candidate_id": "lego_67006",
+      "sku": "67006",
+      "assessed_at": "2026-10-31T12:12:29.520587+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "edd54f06c0b8787429fb927826d27257abc78765c40762b9e30f5659bdddb175",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135798",
+          "source_published_at": "2026-10-30T09:20:00+00:00",
+          "title": "Blocks magazine issue 145 press release",
+          "content_sha256": "ddbc46107c6e3369b908717585fa8030aea74b38cf52ad27acdcb54a79c98082"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "semantic_sha256": "e9bda0fe4861d314c9065bf22b9c22abf047be349657f8515e86ca204af47bc2",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    }
+  ],
+  "transitions": [
+    {
+      "assessment_id": "assessment_lego_10228",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d",
+      "current_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e"
+    },
+    {
+      "assessment_id": "assessment_lego_11383",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "627aee6ced9dd8103b7c219c4fd85dbb7c393bab808332cf480c20a22995b50f",
+      "current_sha256": "6bdf50f160ee4c4e8c2d846dc02cffc8490a7cba0ef744ce4aae24357a8d61ec"
+    },
+    {
+      "assessment_id": "assessment_lego_11388",
+      "revision": 6,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "5f9050e6538aebe53974531e192c29d7304b2183a517e28a37751b8923c4d5e5",
+      "current_sha256": "9f98b1650640bdaf0eab90c6c965030963ffa19b834d8bf389a852a9ffec6ad9"
+    },
+    {
+      "assessment_id": "assessment_lego_21359",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "d4be83c8050740539dfdc5ec9111c160d38d06219be5ff67cb370b95059df435",
+      "current_sha256": "fb779a402eaf837136851ed163f1c554e531896a3b96be30ee015ad40c38e446"
+    },
+    {
+      "assessment_id": "assessment_lego_30762",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "580a26e2f43aca0016d5d1c74af4ecbc9b90b010d39554002a94a09626d40db2",
+      "current_sha256": "d1ef3a94cbe9170bde4bfb89a5b4f4803cbc4ae269bb6e0ea24503dce6443ea1"
+    },
+    {
+      "assessment_id": "assessment_lego_31167",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "83dbdf25ccf6f9d10e74c7cfab615ab9216243206f52585c5a7156069eda750d",
+      "current_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e"
+    },
+    {
+      "assessment_id": "assessment_lego_40744",
+      "revision": 4,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "17eb1ac2707525230d7897621708821e20225bacb7a1af0c80c34870b1461144",
+      "current_sha256": "239a8b7a3d532ba1d657eecb0d01f8557ee8aee777ef7c0056e8522d35c45ad5"
+    },
+    {
+      "assessment_id": "assessment_lego_40862",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "379332214791c9492d7b6d2c0231787b89e87bdba8ac11c4565f7eb3aed375d5",
+      "current_sha256": "ca436db114f4dceb648c7e4af625288e8e999d34675e56334115dcc14a6780d0"
+    },
+    {
+      "assessment_id": "assessment_lego_40866",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "2e061fcac460d2cd382501a8e6157a8f9b5a3f37a559eff1c37226d4e7c53400",
+      "current_sha256": "c1980c37413efcf1ad8131767904e8c4528bf829e0baa4ec2fe12e4520a64d0e"
+    },
+    {
+      "assessment_id": "assessment_lego_40889",
+      "revision": 5,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "503694761cce23ce9c0cb25f63c97e55dbe716436f46d64c079b4101b46d506a",
+      "current_sha256": "82e11404cbf5dcfa5b71c80b736a17910a301fc8ef4453989fc02e5e40430808"
+    },
+    {
+      "assessment_id": "assessment_lego_40898",
+      "revision": 5,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "7f4912a047912ed35bc789e212d3b7f17e00deae2c22fadf14bee31a24107192",
+      "current_sha256": "fa5be19d32c5618b4dac08ecded193fc5de8ca15c4599182d123985fcf33b4f6"
+    },
+    {
+      "assessment_id": "assessment_lego_40913",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "d282c0c2df24047bfd6304d83547db74de6fcd60e810f0c6d42fea05e413d392",
+      "current_sha256": "87eb668abe7f8d51f1f2aecbf8478129475234fb462e34d81895ca9a71ddac57"
+    },
+    {
+      "assessment_id": "assessment_lego_41392",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "current_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561"
+    },
+    {
+      "assessment_id": "assessment_lego_42682",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "d036e8c49c542b2ecc96d7d7593a1bda3834a64cf241198dd5ec7a814e8d3f76",
+      "current_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561"
+    },
+    {
+      "assessment_id": "assessment_lego_42690",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "37fe1865356501d011c241c7de43beca4e333f6375dfb524d37d1184eb09d8f1",
+      "current_sha256": "5b6130c7c082704955e45aee1681ab65149f05c7c608d6eb8a12ffeb6f3830b4"
+    },
+    {
+      "assessment_id": "assessment_lego_42705",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "129a5a5e0f75960721d6821a5872e88034f25d842175417c0327b12170b983f9",
+      "current_sha256": "c8274b2a6c5c9315db51bef0173ccea02ab0dcc77fd3276ad0fedd35a47c8407"
+    },
+    {
+      "assessment_id": "assessment_lego_42709",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "426a54d0b384cb532ba69eec8feab39e223abc4d8ce2c8dc5028db2feea8485f",
+      "current_sha256": "b0d5fe730f7599e75ac80198ded61193dc30fe037d45541362ed015f36def4c2"
+    },
+    {
+      "assessment_id": "assessment_lego_42718",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "current_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b"
+    },
+    {
+      "assessment_id": "assessment_lego_42719",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "6001b8750b85c3310d8d46c4d032bb871cf2a4257d2f5ceadbfd04f65bd4ab12",
+      "current_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b"
+    },
+    {
+      "assessment_id": "assessment_lego_67005",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "2139a62c6ccd7007e7e477aeb6441893e51410e7b33297512b56dc42fb2746c6",
+      "current_sha256": "6ac0cba839c021f3be10cfa68ae4e48a4a18e2af4a3bff2f230789007be6a22d"
+    },
+    {
+      "assessment_id": "assessment_lego_67006",
+      "revision": 2,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "102a21c3e0d26c2a24bc4797038ac593ce228cfc553c3ff8eb594f085454b829",
+      "current_sha256": "e9bda0fe4861d314c9065bf22b9c22abf047be349657f8515e86ca204af47bc2"
+    }
+  ],
+  "status": "OK",
+  "policy_migration": "PREVIOUS_HYPOTHETICAL_REPORTS_REMAIN_HISTORICAL_ONLY",
+  "financial_decisions_made": 0,
+  "purchase_authorized": false
+}
