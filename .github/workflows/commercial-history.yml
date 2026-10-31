@@ -60,10 +60,10 @@ jobs:
             git -C /tmp/edge-commercial-history checkout --orphan edge/commercial-history
             git -C /tmp/edge-commercial-history rm -rf --quiet .
           fi
-      - name: Import checksum-pinned monthly research history
-        run: python scripts/monthly_history.py --out /tmp/commercial-capture --cache /tmp/edge-commercial-history/imports
       - name: Capture asking prices and explicit stock states
         run: python scripts/commercial_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
+      - name: Import checksum-pinned monthly research history
+        run: python scripts/monthly_history.py --out /tmp/commercial-capture --cache /tmp/edge-commercial-history/imports
       - name: Capture announcements and descriptive reaction windows
         run: python scripts/announcement_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Discover product candidates and verify bounded retail offers
