@@ -1,0 +1,44 @@
+{
+  "schema": "edge.bundle.conditional_economics.v1",
+  "observed_at": "2026-10-31T11:56:43.522421+00:00",
+  "opportunity_group": "venice_launch_2026_11",
+  "main_announced_price_eur": "499.99",
+  "main_price_basis": "PREVIOUSLY_REVIEWED_MANUFACTURER_ANNOUNCEMENT_NOT_EXECUTABLE_QUOTE",
+  "best_verified_france_delivered_alternative_eur": null,
+  "verified_gift_net_resale_eur": null,
+  "incremental_costs_eur": null,
+  "measured_net_advantage_eur": null,
+  "required_gift_net_actual_eur": null,
+  "gift_40889_included_in_bundle_revenue": false,
+  "gift_stacking_verified": false,
+  "conditional_scenarios": [
+    {
+      "alternative_discount_pct": 5,
+      "alternative_delivered_eur": "474.99",
+      "required_gift_net_eur": "25.00",
+      "assumed_incremental_costs_eur": "0.00",
+      "type": "HYPOTHETICAL_NOT_OBSERVED_OFFER",
+      "additional_costs_increase_threshold": true
+    },
+    {
+      "alternative_discount_pct": 10,
+      "alternative_delivered_eur": "449.99",
+      "required_gift_net_eur": "50.00",
+      "assumed_incremental_costs_eur": "0.00",
+      "type": "HYPOTHETICAL_NOT_OBSERVED_OFFER",
+      "additional_costs_increase_threshold": true
+    },
+    {
+      "alternative_discount_pct": 15,
+      "alternative_delivered_eur": "424.99",
+      "required_gift_net_eur": "75.00",
+      "assumed_incremental_costs_eur": "0.00",
+      "type": "HYPOTHETICAL_NOT_OBSERVED_OFFER",
+      "additional_costs_increase_threshold": true
+    }
+  ],
+  "evidence_status": "INSUFFICIENT_FOR_MEASURED_NET_ADVANTAGE",
+  "financial_decision": "UNASSESSED",
+  "buy_signal": false,
+  "purchase_authorized": false
+}

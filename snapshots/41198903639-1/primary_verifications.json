@@ -1,0 +1,296 @@
+{
+  "schema": "edge.primary.claim_rechecks.v1",
+  "observed_at": "2026-10-31T11:56:42.203541+00:00",
+  "reviewed_at": "2026-10-30T11:27:34Z",
+  "method": "REVIEWED_CLAIMS_WITH_SCHEDULED_SOURCE_RECHECK",
+  "sources": [
+    {
+      "id": "lego_venice_press",
+      "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+      "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+      "status": "VERIFIED_MATCH",
+      "raw_file": "primary_lego_venice_press.html",
+      "body_sha256": "b806859c9dd5366f07e16febc09719511e61fea19813c0f22c76d17b1b2c7dcc",
+      "assertion_results": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "section_sha256": "ae157c579618b1844fd32c7294b16807c5f32dbd6d1629ab878ee39e39a3e2d6"
+    },
+    {
+      "id": "lego_fr_40889_terms",
+      "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+      "scope": "FRENCH_PROMOTION_TERMS",
+      "status": "VERIFIED_MATCH",
+      "raw_file": "primary_lego_fr_40889_terms.html",
+      "body_sha256": "80fdf6be563ccde1c262fa9affde683a5ed83ed2f84dc484b9395d18e6473c85",
+      "assertion_results": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "section_sha256": "a2a729968b67d7d0096ceb263df45a401df4921c945a57efb96fb39f52766c53"
+    },
+    {
+      "id": "lego_fr_11388_page",
+      "source_url": "https://www.lego.com/fr-fr/product/venetian-neighborhood-11388",
+      "scope": "FRENCH_CATALOGUE_PAGE_NOT_CHECKOUT",
+      "status": "FAILED",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ],
+  "reviews": [
+    {
+      "candidate_id": "lego_11388",
+      "required_sources": [
+        "lego_venice_press"
+      ],
+      "research_priority": "MEDIUM",
+      "research_action": "COMPARE_BUNDLE_AND_STANDALONE",
+      "context": "PRIMARY_CHECKED_LAUNCH_WITH_LINKED_GIFT",
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "claims": [
+        {
+          "source_id": "lego_fr_11388_page",
+          "kind": "PUBLISHED_CATALOGUE_PRICE",
+          "value": "499.99",
+          "currency": "EUR",
+          "executable_offer_verified": false
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "PUBLISHED_RECOMMENDED_PRICE_EUR",
+          "value": "499.99",
+          "currency": "EUR",
+          "executable_offer_verified": false
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_EARLY_ACCESS",
+          "date": "2026-11-01",
+          "membership_required": "LEGO Insiders"
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_GENERAL_RELEASE",
+          "date": "2026-11-04"
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_LINKED_GIFT",
+          "gift_sku": "40898",
+          "start_date": "2026-11-01",
+          "end_date": "2026-11-08",
+          "while_stocks_last": true,
+          "france_complete_terms_verified": false
+        }
+      ],
+      "reasoning": [
+        "Le communiqué officiel confirme un tarif annoncé de 499,99 € et le calendrier ; la fiche française est contrôlée séparément.",
+        "Le 11388 et son cadeau 40898 forment un même mécanisme commercial, pas deux profits indépendants.",
+        "La priorité passe à la comparaison du panier complet avec une acquisition du set seul : aucun avantage net n'est chiffré."
+      ],
+      "thesis": "La revente éventuelle du cadeau pourrait réduire le coût net du 11388, si les recettes nettes dépassent la remise perdue sur le set principal et les frais supplémentaires.",
+      "counter": "Une remise ultérieure sur le 11388, des frais ou une offre abondante de cadeaux pourraient rendre le panier de lancement moins intéressant.",
+      "next_check": "Comparer le coût du panier à 499,99 € avec le meilleur prix livré du set seul ; obtenir des prix de cession crédibles du cadeau et confirmer les conditions françaises.",
+      "remove_gaps": [
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
+      ],
+      "add_gaps": [
+        "BUNDLE_NET_ECONOMICS_UNKNOWN",
+        "GIFT_STACKING_UNCONFIRMED"
+      ],
+      "optional_sources": [
+        "lego_fr_11388_page"
+      ],
+      "current_recheck_verified": true,
+      "supported_claims": [
+        {
+          "source_id": "lego_venice_press",
+          "kind": "PUBLISHED_RECOMMENDED_PRICE_EUR",
+          "value": "499.99",
+          "currency": "EUR",
+          "executable_offer_verified": false
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_EARLY_ACCESS",
+          "date": "2026-11-01",
+          "membership_required": "LEGO Insiders"
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_GENERAL_RELEASE",
+          "date": "2026-11-04"
+        },
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_LINKED_GIFT",
+          "gift_sku": "40898",
+          "start_date": "2026-11-01",
+          "end_date": "2026-11-08",
+          "while_stocks_last": true,
+          "france_complete_terms_verified": false
+        }
+      ],
+      "unsupported_claims": [
+        {
+          "source_id": "lego_fr_11388_page",
+          "kind": "PUBLISHED_CATALOGUE_PRICE",
+          "value": "499.99",
+          "currency": "EUR",
+          "executable_offer_verified": false
+        }
+      ],
+      "recheck_scope": "PARTIAL_REVIEWED_CLAIMS"
+    },
+    {
+      "candidate_id": "lego_40889",
+      "required_sources": [
+        "lego_fr_40889_terms"
+      ],
+      "research_priority": "MEDIUM",
+      "research_action": "COMPARE_SECONDARY_ACQUISITION",
+      "context": "PRIMARY_CHECKED_FRENCH_GIFT_TERMS",
+      "claims": [
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "GIFT_ELIGIBILITY",
+          "region": "FR",
+          "start_date": "2026-10-28",
+          "end_date": "2026-11-08",
+          "minimum_spend_eur": "130.00",
+          "eligible_goods": "LEGO merchandise",
+          "limit_per_household": 1,
+          "while_stocks_last": true,
+          "standalone_purchase_allowed_under_promotion": false
+        },
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "APPROXIMATE_PROMOTIONAL_VALUE",
+          "value": "19.99",
+          "currency": "EUR",
+          "resale_value_verified": false,
+          "executable_offer_verified": false
+        },
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "GIFT_RETURN_REQUIRED_WITH_ELIGIBLE_RETURN",
+          "value": true
+        }
+      ],
+      "reasoning": [
+        "Les conditions françaises confirment un cadeau dès 130 € d'achats éligibles, du 28 octobre au 8 novembre, sous réserve de stock et limité à un par foyer.",
+        "19,99 € est une valeur promotionnelle approximative, pas un prix de revente validé.",
+        "Le seuil porte sur des marchandises LEGO et n'établit pas une rareté quantitative ; la recherche porte désormais sur le coût d'acquisition secondaire et l'offre réelle."
+      ],
+      "thesis": "Des acheteurs de paniers déjà prévus pourraient céder leur cadeau rapidement et créer des écarts temporaires de prix sur le marché secondaire.",
+      "counter": "Une distribution large pourrait maintenir beaucoup d'offres après la promotion ; une date de fin et une limite par foyer ne prouvent pas un faible tirage.",
+      "next_check": "Relever des offres secondaires et leur évolution autour du 8 novembre ; comparer le coût secondaire au surcoût réel d'un panier éligible, sans assimiler 19,99 € à une recette.",
+      "remove_gaps": [
+        "PROMOTION_TERMS_AND_REGION_NOT_VERIFIED",
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
+      ],
+      "add_gaps": [
+        "SECONDARY_ACQUISITION_COST_UNKNOWN",
+        "GIFT_STACKING_UNCONFIRMED"
+      ],
+      "current_recheck_verified": true,
+      "supported_claims": [
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "GIFT_ELIGIBILITY",
+          "region": "FR",
+          "start_date": "2026-10-28",
+          "end_date": "2026-11-08",
+          "minimum_spend_eur": "130.00",
+          "eligible_goods": "LEGO merchandise",
+          "limit_per_household": 1,
+          "while_stocks_last": true,
+          "standalone_purchase_allowed_under_promotion": false
+        },
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "APPROXIMATE_PROMOTIONAL_VALUE",
+          "value": "19.99",
+          "currency": "EUR",
+          "resale_value_verified": false,
+          "executable_offer_verified": false
+        },
+        {
+          "source_id": "lego_fr_40889_terms",
+          "kind": "GIFT_RETURN_REQUIRED_WITH_ELIGIBLE_RETURN",
+          "value": true
+        }
+      ],
+      "unsupported_claims": [],
+      "recheck_scope": "FULL_REVIEWED_CLAIMS"
+    },
+    {
+      "candidate_id": "lego_40898",
+      "required_sources": [
+        "lego_venice_press"
+      ],
+      "research_priority": "HIGH",
+      "research_action": "VERIFY_REGIONAL_GIFT_TERMS",
+      "context": "PRIMARY_ANNOUNCED_CONDITIONAL_GIFT",
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "claims": [
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_CONDITIONAL_GIFT",
+          "required_purchase_sku": "11388",
+          "start_date": "2026-11-01",
+          "end_date": "2026-11-08",
+          "while_stocks_last": true,
+          "france_complete_terms_verified": false
+        }
+      ],
+      "reasoning": [
+        "Le communiqué officiel lie le 40898 à l'achat du 11388 du 1er au 8 novembre, dans la limite des stocks.",
+        "Le lien d'achat est documenté, mais les conditions françaises complètes et le cumul avec le 40889 restent non confirmés.",
+        "La fenêtre proche et l'accès conditionnel justifient une priorité de vérification, sans conclure à une pénurie ni à une rentabilité."
+      ],
+      "thesis": "Un acheteur voulant seulement le taxi pourrait préférer le marché secondaire à l'achat du grand set ; cette séparation des besoins pourrait créer un marché distinct pour le cadeau.",
+      "counter": "Les acheteurs du 11388 pourraient simultanément proposer beaucoup de taxis ; sans demande mesurée, la contrainte d'accès ne prouve pas une hausse future.",
+      "next_check": "Confirmer les conditions françaises lors de leur publication et l'éligibilité effective ; suivre séparément l'offre secondaire du taxi et la demande, sans acheter le 11388 pour le cadeau seul.",
+      "remove_gaps": [
+        "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
+      ],
+      "add_gaps": [
+        "FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED",
+        "GIFT_STACKING_UNCONFIRMED",
+        "SECONDARY_ACQUISITION_COST_UNKNOWN"
+      ],
+      "current_recheck_verified": true,
+      "supported_claims": [
+        {
+          "source_id": "lego_venice_press",
+          "kind": "ANNOUNCED_CONDITIONAL_GIFT",
+          "required_purchase_sku": "11388",
+          "start_date": "2026-11-01",
+          "end_date": "2026-11-08",
+          "while_stocks_last": true,
+          "france_complete_terms_verified": false
+        }
+      ],
+      "unsupported_claims": [],
+      "recheck_scope": "FULL_REVIEWED_CLAIMS"
+    }
+  ],
+  "unresolved": [
+    "Le cumul 40889 + 40898 sur un même panier n'est pas confirmé.",
+    "Les prix affichés sur des fiches cadeaux et leurs boutons génériques ne démontrent pas une vente séparée exécutable ; aucune commande n'a été testée.",
+    "Les quantités produites, les réimpressions et les prix nets de revente restent inconnus."
+  ]
+}

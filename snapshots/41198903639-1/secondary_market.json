@@ -1,0 +1,77 @@
+{
+  "schema": "edge.secondary.listing_observations.v1",
+  "observed_at": "2026-10-31T11:56:43.522421+00:00",
+  "sources": [
+    {
+      "sku": "11388",
+      "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+11388",
+      "status": "FAILED",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "sku": "40889",
+      "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40889",
+      "status": "FAILED",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "sku": "40898",
+      "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40898",
+      "status": "FAILED",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ],
+  "listings": [],
+  "reviewed_historical_evidence": {
+    "reviewed_on": "2026-10-31",
+    "method": "PUBLIC_PAGE_MANUAL_REVIEW_NOT_TRANSACTION_API",
+    "observations": [
+      {
+        "id": "ebay_198752609812_review_20261031",
+        "sku": "40889",
+        "url": "https://www.ebay.es/itm/198752609812",
+        "label": "Annonce 40889 du vendeur tuttolego3",
+        "asking_price_eur": "39.50",
+        "displayed_shipping_eur": "12.00",
+        "shipping_destination_context": "28001 Spain",
+        "france_delivery_verified": false,
+        "delivered_price_fr_eur": null,
+        "seller_declared_metrics": "100% positive, 1529 feedback entries displayed",
+        "seller_reliability_verified": false,
+        "completed_sale_verified": false,
+        "interpretation": "39,50 € demandés. Les 12 € de port affichés concernent le contexte espagnol de la page ; aucun total livré en France n'est établi. Les métriques du vendeur sont déclaratives et ne prouvent pas l'authenticité du lot."
+      },
+      {
+        "id": "ebay_287685264496_review_20261031",
+        "sku": "40889",
+        "url": "https://www.ebay.es/itm/287685264496",
+        "label": "Annonce 40889 marquée vendue, titre de prévente",
+        "displayed_price_eur": "44.90",
+        "sold_marker_observed": true,
+        "evidence_class": "SOLD_LISTING_MARKER_WITH_DISPLAYED_PRICE",
+        "settled_transaction_verified": false,
+        "realized_transaction_price_verified": false,
+        "presale_claim": true,
+        "france_delivery_verified": false,
+        "interpretation": "La page indique une annonce vendue le 29 octobre et affiche 44,90 €. Cela constitue un signal de vente déclarée par la plateforme, pas une preuve du prix encaissé, du paiement, de la livraison ou de l'absence d'annulation. Ce point ne sert pas de médiane ni de recette de revente."
+      }
+    ],
+    "rejected_as_executable_offers": [
+      {
+        "type": "GIFT_NOMINAL_VALUE",
+        "sku": "40889",
+        "amount_eur": "19.99",
+        "reason": "La valeur promotionnelle et les reprises de comparateurs ne démontrent pas une vente séparée exécutable."
+      },
+      {
+        "type": "SEARCH_SNIPPET_WITHOUT_VERIFIED_INDIVIDUAL_LISTING",
+        "sku": "40898",
+        "reason": "Les montants de résultats de recherche non validés sur une annonce individuelle ne deviennent pas une cote ni une recette nette."
+      }
+    ]
+  },
+  "status": "FAILED"
+}
