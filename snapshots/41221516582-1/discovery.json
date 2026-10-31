@@ -1,0 +1,880 @@
+{
+  "schema": "edge.discovery.publication_candidates.v1",
+  "observed_at": "2026-10-31T16:49:44.708149+00:00",
+  "candidates": [
+    {
+      "id": "lego_11388",
+      "sku": "11388",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "source_id": "lego_newsroom",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "published_at": "2026-10-15T13:27:14+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Ciao, Venice: The LEGO Group floats new Icons set",
+          "content_sha256": "4c9b603ae1afc459d6d4af8d2855318c1f7234a5366b773efc151f46eab5a8a0"
+        },
+        {
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "published_at": "2026-10-27T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        },
+        {
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135699",
+          "published_at": "2026-10-26T15:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "11388 Venetian Neighbourhood minifigures",
+          "content_sha256": "d411da50ff593fcccd7e0e45750de8ceac51a443a9f4da608b8b4da933669fc8"
+        },
+        {
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "published_at": "2026-10-25T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:26:44.534646+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-27T14:00:00+00:00",
+      "priority_score": 59,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_40889",
+      "sku": "40889",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "db217c59d7480c1fa9438b10519b3c3cba2a6d2ea05285e1fd08dad80bbf3c79",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135605",
+          "published_at": "2026-10-24T13:30:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 40889 Build, Paint and Play!",
+          "content_sha256": "01e3616768494fc3dc533a85b0e2b8d48ee27e795e6becb514e61027d12ea7c9"
+        },
+        {
+          "publication_id": "54369a8e82d599f55c44d750d71b747e7aee9c6809c77b1e980b1a211b8cd802",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135604",
+          "published_at": "2026-10-23T07:00:00+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "LEGO Ideas 40889 Build, Paint and Play revealed!",
+          "content_sha256": "446afb4eb11bc27ca0fe46093d7a4e5909713321578147353bd375c55fc9c649"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:26:44.534646+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-24T13:30:00+00:00",
+      "priority_score": 37,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42718",
+      "sku": "42718",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "published_at": "2026-10-28T16:00:00+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_id": "toysnbricks",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "published_at": "2026-10-29T04:58:45+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "last_probe_at": "2026-10-31T06:14:27.353012+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-29T04:58:45+00:00",
+      "priority_score": 34,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42719",
+      "sku": "42719",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "published_at": "2026-10-28T16:00:00+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_id": "toysnbricks",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "published_at": "2026-10-29T04:58:45+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "last_probe_at": "2026-10-31T11:56:32.517052+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-29T04:58:45+00:00",
+      "priority_score": 34,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_67005",
+      "sku": "67005",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "5716f9ad76b36b0884604763fb48310f654a088ac0af26e69278fb09c1980bd3",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135732",
+          "published_at": "2026-10-28T15:00:00+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "LEGO Marvel What If...? Sanctum Sanctorum revealed!",
+          "content_sha256": "94ffe5d2e3a76ef7222cf89219da563839d64bc0bf273aa5eb2102c87dc07a2e"
+        },
+        {
+          "publication_id": "0c542f5d287ad6dc57a05348ec1da666caf0d44b1f981e77c57b45635c5e90c5",
+          "source_id": "toysnbricks",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-67005-marvel-what-if-doctor-strange-supreme-january-2027-set-revealed-us-canada-prices-release-dates-minifigures",
+          "published_at": "2026-10-28T23:19:55+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "LEGO 67005 Marvel What if…? Doctor Strange Supreme January 2027 Set Revealed: US/Canada Prices, Release Dates & Minifigures",
+          "content_sha256": "c9d69c5ceccb6413a6dffcc344ce7c195d20765573a5546db1d7b6144ec1d8a4"
+        }
+      ],
+      "last_probe_at": "2026-10-31T11:56:32.517052+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-28T23:19:55+00:00",
+      "priority_score": 34,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42709",
+      "sku": "42709",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_id": "toysnbricks",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "published_at": "2026-10-29T04:58:45+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:00:56.221548+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-29T04:58:45+00:00",
+      "priority_score": 32,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_21359",
+      "sku": "21359",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "published_at": "2026-10-25T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:23:02.435177+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-25T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "FAILED"
+    },
+    {
+      "id": "lego_30762",
+      "sku": "30762",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "b5dd982cc286affa5c47ba181c573f89bd7444cfe20ecedd3435c5936603a06b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135188",
+          "published_at": "2026-10-22T13:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 30762 Retro Video Game Batman",
+          "content_sha256": "20cedd9c60db9df899f33cf4caa999f6877032ef73792f1af602b6427d9db274"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:00:56.221548+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-22T13:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_40744",
+      "sku": "40744",
+      "status": "RETAIL_IDENTITY_VERIFIED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "published_at": "2026-10-23T13:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:49:44.708149+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-23T13:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER",
+      "research_monitoring": true
+    },
+    {
+      "id": "lego_40862",
+      "sku": "40862",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "published_at": "2026-10-23T13:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:00:56.221548+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-23T13:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_40866",
+      "sku": "40866",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "db759db0c55e673b727414d4116c9f4b29add0e2f62bc9aee7cf570bf7b1d3c7",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135272",
+          "published_at": "2026-10-20T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 40866 Santa's Holiday Sleigh Adventure",
+          "content_sha256": "d62de42f43dcad5fc1ac8ac024bdec3d8089634bf8b05ff8263c05ac03c61c00"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:12:19.436236+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-30T22:37:52.864711+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-20T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_40898",
+      "sku": "40898",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "published_at": "2026-10-27T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        }
+      ],
+      "last_probe_at": "2026-10-31T13:00:56.953587+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-27T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_41392",
+      "sku": "41392",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "published_at": "2026-10-19T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:12:19.436236+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-29T23:21:15.205305+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-19T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42682",
+      "sku": "42682",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "published_at": "2026-10-19T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:26:44.534646+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-29T23:21:15.205305+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-19T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42690",
+      "sku": "42690",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "ef2686f31bcf66ec09eab95d94137ff92ea359a3f6b0212c1c0ed94eb253712d",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135416",
+          "published_at": "2026-10-21T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 42690 Forest Tea Party",
+          "content_sha256": "5a378ac010e9d984f8e2564ea8f9e9970a7473ea45e299524de313f411bff06f"
+        }
+      ],
+      "last_probe_at": "2026-10-31T12:12:19.436236+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-21T14:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_42705",
+      "sku": "42705",
+      "status": "RETAIL_IDENTITY_VERIFIED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135584",
+          "published_at": "2026-10-29T15:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 42705 Cosy Autumn Forest Cabin",
+          "content_sha256": "71bf362a81354153cc2f1cbe85b0bb862ea0deacd167e2af25a02c8ab31cb223"
+        }
+      ],
+      "last_probe_at": "2026-10-31T13:00:56.953587+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-29T15:00:00+00:00",
+      "priority_score": 7,
+      "last_probe_status": "OFFER_VERIFIED",
+      "research_monitoring": true
+    },
+    {
+      "id": "lego_10228",
+      "sku": "10228",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T22:37:55.146351+00:00",
+      "evidence": [
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "published_at": "2026-10-30T14:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:49:44.708149+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-30T14:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_11383",
+      "sku": "11383",
+      "status": "RETAIL_IDENTITY_VERIFIED",
+      "first_observed_at": "2026-10-30T22:37:55.146351+00:00",
+      "evidence": [
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "published_at": "2026-10-30T14:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "last_probe_at": "2026-10-30T22:37:55.146351+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-30T14:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "OFFER_VERIFIED",
+      "research_monitoring": true
+    },
+    {
+      "id": "lego_31167",
+      "sku": "31167",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T22:37:55.146351+00:00",
+      "evidence": [
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "published_at": "2026-10-30T14:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "last_probe_at": "2026-10-31T06:14:27.353012+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-30T14:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_40913",
+      "sku": "40913",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "b1dcf45e765438b37d8bed1fce54c5e9f50e889921d4478ffa8be368ccf20142",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135481",
+          "published_at": "2026-10-20T04:00:00+00:00",
+          "signal_context": "PROMOTION",
+          "title": "[US] Brickset member offer: Free Vintage Parade Car at LEGO.com",
+          "content_sha256": "87d109bf4895a3c6b8ec4c3d01fe6a0ad492b29daa27705b99cc03049e2c7ce1"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:49:44.708149+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-30T13:29:54.739073+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-20T04:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_67006",
+      "sku": "67006",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "evidence": [
+        {
+          "publication_id": "edd54f06c0b8787429fb927826d27257abc78765c40762b9e30f5659bdddb175",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135798",
+          "published_at": "2026-10-30T09:20:00+00:00",
+          "signal_context": "MENTION",
+          "title": "Blocks magazine issue 145 press release",
+          "content_sha256": "ddbc46107c6e3369b908717585fa8030aea74b38cf52ad27acdcb54a79c98082"
+        }
+      ],
+      "last_probe_at": "2026-10-31T13:00:56.953587+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-30T09:20:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "NO_VERIFIED_OFFER"
+    },
+    {
+      "id": "lego_67012",
+      "sku": "67012",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-31T16:23:02.435177+00:00",
+      "evidence": [
+        {
+          "publication_id": "2e59abfbf6280d8d20d207aecd3173fd43f7f1fbb2a496b688bda3df0c5b4167",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135830",
+          "published_at": "2026-10-31T15:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "My LEGO 'Fear'",
+          "content_sha256": "bc24f1cbb3d4123d1f8bd57e48821e96123c02c558c670ba19d035628f9ff990"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:23:02.435177+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-31T15:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "FAILED"
+    },
+    {
+      "id": "lego_76387",
+      "sku": "76387",
+      "status": "DISCOVERED",
+      "first_observed_at": "2026-10-31T16:23:02.435177+00:00",
+      "evidence": [
+        {
+          "publication_id": "2e59abfbf6280d8d20d207aecd3173fd43f7f1fbb2a496b688bda3df0c5b4167",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135830",
+          "published_at": "2026-10-31T15:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "My LEGO 'Fear'",
+          "content_sha256": "bc24f1cbb3d4123d1f8bd57e48821e96123c02c558c670ba19d035628f9ff990"
+        }
+      ],
+      "last_probe_at": "2026-10-31T16:23:02.435177+00:00",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "last_seen_at": "2026-10-31T16:49:42.106447+00:00",
+      "identity_status": "EXPLICIT_REFERENCE_NOT_YET_CATALOGUE_VERIFIED",
+      "latest_publication_at": "2026-10-31T15:00:00+00:00",
+      "priority_score": 2,
+      "last_probe_status": "FAILED"
+    }
+  ],
+  "probes": [
+    {
+      "candidate_id": "lego_40913",
+      "observed_at": "2026-10-31T16:49:44.710192+00:00",
+      "search_url": "https://www.ldlc.com/recherche/40913/",
+      "status": "NO_VERIFIED_OFFER",
+      "coverage": "BOUNDED_SEARCH_NOT_EXHAUSTIVE",
+      "attempts": [
+        {
+          "id": "ldlc_discovered_40913_probe_0",
+          "product_id": "lego_40913",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00350513.html",
+          "observed_at": "2026-10-31T16:49:46.839771+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:45.686914+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:46.839771+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00350513.html",
+          "body_sha256": "90d3ec160c57b1a203c198ca521725267d0ac563944c93e0862493581d284ea0",
+          "raw_file": "ldlc_discovered_40913_probe_0.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        },
+        {
+          "id": "ldlc_discovered_40913_probe_1",
+          "product_id": "lego_40913",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00732626.html",
+          "observed_at": "2026-10-31T16:49:47.768280+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:46.847773+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:47.768280+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00732626.html",
+          "body_sha256": "9ce104fcb15b9f6228ac29c94a39e187ca1395c99ebc7a15793e8b215c42e930",
+          "raw_file": "ldlc_discovered_40913_probe_1.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        }
+      ],
+      "search_sha256": "83fd3286a66efab6159033b513aaa5dbfebffb1a3c8f6dfa696de9ad56778e62"
+    },
+    {
+      "candidate_id": "lego_10228",
+      "observed_at": "2026-10-31T16:49:47.774937+00:00",
+      "search_url": "https://www.ldlc.com/recherche/10228/",
+      "status": "NO_VERIFIED_OFFER",
+      "coverage": "BOUNDED_SEARCH_NOT_EXHAUSTIVE",
+      "attempts": [
+        {
+          "id": "ldlc_discovered_10228_probe_0",
+          "product_id": "lego_10228",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00552661.html",
+          "observed_at": "2026-10-31T16:49:49.942151+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:49.017422+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:49.942151+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00552661.html",
+          "body_sha256": "8b88df3e8d3cc453a84357e717c0bdd803153a89287bacdaf68571dac477c5eb",
+          "raw_file": "ldlc_discovered_10228_probe_0.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        },
+        {
+          "id": "ldlc_discovered_10228_probe_1",
+          "product_id": "lego_10228",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00616701.html",
+          "observed_at": "2026-10-31T16:49:50.872062+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:49.949347+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:50.872062+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00616701.html",
+          "body_sha256": "df2179dd6b272b92786315db6858dfd59291f3037f58ff8961abd4efbb7920f3",
+          "raw_file": "ldlc_discovered_10228_probe_1.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        }
+      ],
+      "search_sha256": "8ddca60f59d96dea20af8f4a7edfb399e24f568f0829a53089994e3a9e865e1a"
+    },
+    {
+      "candidate_id": "lego_40744",
+      "observed_at": "2026-10-31T16:49:50.879945+00:00",
+      "search_url": "https://www.ldlc.com/recherche/40744/",
+      "status": "NO_VERIFIED_OFFER",
+      "coverage": "BOUNDED_SEARCH_NOT_EXHAUSTIVE",
+      "attempts": [
+        {
+          "id": "ldlc_discovered_40744_probe_0",
+          "product_id": "lego_40744",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00188338.html",
+          "observed_at": "2026-10-31T16:49:53.186113+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:52.118742+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:53.186113+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00188338.html",
+          "body_sha256": "1665fff29cb338650d621938f8048d6c8a260278d91564ed0e5ee535a0cc3c66",
+          "raw_file": "ldlc_discovered_40744_probe_0.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        },
+        {
+          "id": "ldlc_discovered_40744_probe_1",
+          "product_id": "lego_40744",
+          "seller": "LDLC",
+          "url": "https://www.ldlc.com/fiche/PB00656266.html",
+          "observed_at": "2026-10-31T16:49:54.352534+00:00",
+          "status": "FAILED",
+          "price_kind": "ASKING_PRICE",
+          "shipping_eur": null,
+          "completed_sale": false,
+          "availability": "UNKNOWN",
+          "purchase_authorized": false,
+          "source_qualification": "ESTABLISHED_RETAILER",
+          "request_attempts": [
+            {
+              "started_at": "2026-10-31T16:49:53.193179+00:00",
+              "timeout_seconds": 25,
+              "finished_at": "2026-10-31T16:49:54.352534+00:00",
+              "status": "OK"
+            }
+          ],
+          "http_status": 200,
+          "final_url": "https://www.ldlc.com/fiche/PB00656266.html",
+          "body_sha256": "e2783cf8d47416e53d515bf5f58e462132a68f49d6d69970fbd502a686b48506",
+          "raw_file": "ldlc_discovered_40744_probe_1.html",
+          "error_type": "ValueError",
+          "error": "Expected exactly one identified EUR Offer; found 0"
+        }
+      ],
+      "search_sha256": "509589641e5662f1ce62e676ec4561d478764e5a1b486d6b8b6013b1f917dde3"
+    }
+  ],
+  "status": "OK",
+  "manual_financial_promotion_required": true,
+  "purchase_authorized": false
+}

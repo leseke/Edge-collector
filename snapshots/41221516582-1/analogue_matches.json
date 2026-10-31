@@ -1,0 +1,123 @@
+{
+  "schema": "edge.mri.retail_analogues.v1",
+  "generated_at": "2026-10-31T16:49:56.666263+00:00",
+  "method": "RETAIL_EVENT_ANALOGUES_V1",
+  "similarity_threshold": 0.75,
+  "maximum_analogues": 20,
+  "policy": "FEATURES_AND_PRECEDENT_OUTCOMES_KNOWN_AT_QUERY_DETECTION_TIME",
+  "feature_weights": "EQUAL; PRICE_RATIO, CIRCULAR_MONTH, SAME_SELLER, PRIOR_PRICE_CHANGE",
+  "threshold_and_weights_validated": false,
+  "independence_verified": false,
+  "calibrated_for_future_prediction": false,
+  "out_of_sample_performance": null,
+  "probability_target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE",
+  "not_a_probability_of": [
+    "profit",
+    "sale",
+    "optimal_entry_or_exit"
+  ],
+  "verified_episode_count": 1,
+  "queries": [
+    {
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "configuration": {
+        "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "product_id": "lego_40744",
+        "as_of": "2026-10-30T22:37:51.698791+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "LDLC",
+        "price": 12.95,
+        "month": 10,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-10-30T11:20:43.294492+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-10-30T11:20:43.294492+00:00",
+            "body_sha256": "fe58894264fac73ac2cacc31de6ce0c57513f53d2b114aedae015e8f3400440a",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:33:04.818197+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:35:36.318095+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T13:29:53.789734+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T22:37:51.698791+00:00",
+            "body_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "edge.mri.imported_monthly_history.v1",
+  "status": "IMPORTED_NATIVE_SCOPE",
+  "dataset_id": "lego_predict_2018_2023_monthly_v1",
+  "generated_at": "2026-10-31T16:49:41.035747+00:00",
+  "source_url": "https://raw.githubusercontent.com/BartekPodgorski/Lego_Predict/2b0f769c2076ab89f1ece8a1c096c3422adb497f/lego_data_price_history.xlsx",
+  "article_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10828600/",
+  "source_revision": "2b0f769c2076ab89f1ece8a1c096c3422adb497f",
+  "source_git_blob_sha1": "782f61e0f7d4e20d9cf0ace2ba8c2e404cd98e00",
+  "source_sha256": "3fb7471eb63154eb3c6ec2bee1e369f03b6622f127be187b9962f07cdf9f0861",
+  "attribution": "W. Oczkos, B. Podgorski, W. Szczepanska, T. Boinski; Data in Brief 52 (2024), 110056; dataset DOI 10.34808/s25h-sx91",
+  "market": "PL",
+  "currency": "PLN",
+  "aggregation": "MONTHLY_MAXIMUM_PER_SOURCE_METHOD_AND_CODE",
+  "granularity": "MONTH",
+  "source_period_start": "2018-06",
+  "source_period_end": "2023-06",
+  "coverage": {
+    "source_rows": 185996,
+    "positive_prices": 151061,
+    "zero_coded_missing_prices": 11155,
+    "duplicate_rows": 23780,
+    "raw_zero_coded_rows": 11701,
+    "series_count": 7406,
+    "unique_series_months": 162216,
+    "complete_four_consecutive_month_windows": 79147
+  },
+  "source_identity": "SOURCE_URL; NO_OFFICIAL_VARIANT_JOIN_VERIFIED",
+  "point_in_time_availability_verified": false,
+  "completed_sales_verified": false,
+  "linked_to_daily_stock_estimator": false,
+  "predictive_performance": null,
+  "buy_signal": false,
+  "limitations": [
+    "Maxima mensuels ; prix moyens et offres actuellement exécutables non établis.",
+    "Zéros source conservés comme prix manquants ; aucune variation depuis un prix nul ni rupture datée déduite.",
+    "Délai de publication et révisions historiques inconnus ; validation en conditions historiques réelles non établie.",
+    "Pays, devise et agrégation conservés : Pologne, PLN, maximum mensuel.",
+    "Fenêtres superposées et séries dépendantes ; leur nombre ne représente pas des essais indépendants."
+  ],
+  "example_series": {
+    "id": "ac46bfc9789df54e7091bf7516aed466792d847a1d0d561582050e35938cd6e1",
+    "source_url": "https://promoklocki.pl/lego-icons-10312-klub-jazzowy-h22044",
+    "points": [
+      {
+        "month": "2023-01",
+        "price_pln": "1399",
+        "source_price_text": "1399",
+        "source_row": 2,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      },
+      {
+        "month": "2023-02",
+        "price_pln": "1259.99",
+        "source_price_text": "1259.99",
+        "source_row": 3,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      },
+      {
+        "month": "2023-03",
+        "price_pln": "1239",
+        "source_price_text": "1239",
+        "source_row": 4,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      },
+      {
+        "month": "2023-04",
+        "price_pln": "1099.99",
+        "source_price_text": "1099.99",
+        "source_row": 5,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      },
+      {
+        "month": "2023-05",
+        "price_pln": "1079",
+        "source_price_text": "1079",
+        "source_row": 6,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      },
+      {
+        "month": "2023-06",
+        "price_pln": "1099.99",
+        "source_price_text": "1099.99",
+        "source_row": 7,
+        "status": "OBSERVED_MONTHLY_MAXIMUM"
+      }
+    ]
+  },
+  "normalized_sha256": "b1b9e9d0e616231ccf96929bba738b8f84a39c651e9886158a7fb96855fede2f"
+}
