@@ -129,6 +129,9 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
         case['secondary_market_evidence'] = {'observed_at': secondary['observed_at'], 'listings': listings,
             'reviewed_historical_evidence': reviewed, 'france_delivered_offers_verified': 0,
             'realized_transaction_prices_verified': 0, 'status': secondary['status']}
+        baseline = secondary.get('one_time_research_baseline', {})
+        case['secondary_market_evidence']['one_time_baseline'] = [s for s in baseline.get('sources', []) if s['sku'] == sku]
+        case['secondary_market_evidence']['one_time_baseline_refreshed_by_workflow'] = False
         if economics and case.get('linked_opportunity_group') == economics['opportunity_group']:
             case['conditional_bundle_economics'] = economics
     # Repeated timestamps alone must not look like a thesis revision.
@@ -145,6 +148,7 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
                                             for r in case['secondary_market_evidence']['listings'])
         material['secondary_status'] = case['secondary_market_evidence']['status']
         material['reviewed_secondary_evidence'] = case['secondary_market_evidence']['reviewed_historical_evidence']
+        material['one_time_secondary_baseline'] = case['secondary_market_evidence']['one_time_baseline']
     case['semantic_sha256'] = digest(json.dumps(material, sort_keys=True).encode())
     return case
 

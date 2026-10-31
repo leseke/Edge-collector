@@ -11,6 +11,7 @@ on:
       - 'scripts/primary_verification_history.py'
       - 'scripts/secondary_history.py'
       - 'research/secondary_observations_2026-10-31.json'
+      - 'research/secondary_seed_2026-10-31.json'
       - 'research/primary_reviews.json'
       - 'announcement_sources.json'
       - 'tests/test_commercial_history.py'

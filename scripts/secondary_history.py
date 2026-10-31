@@ -88,8 +88,12 @@ def parse_cards(raw, sku):
         if other_refs or re.search(r'\bbundle\b|\blot of\b|\bcollection\b', title, re.I):
             exclusions.append('BUNDLE_OR_MULTIPLE_REFERENCES')
         if re.search(r'parts only|box only|instructions only|light kit|\bLED\b|without (?:box|minifig)|'
-                     r'\bteca\b|\bvetrina\b|plexiglass|acrilico|acrylic|showcase|display case|\bMOC\b|compatible', title, re.I):
+                     r'\bteca\b|\bvetrina\b|\bvitrine\b|plexiglass|acrilico|acrylic|showcase|display case|\bMOC\b|compatible|\blighting\b', title, re.I):
             exclusions.append('INCOMPLETE_OR_ACCESSORY')
+        if re.search(r'\bminifig(?:ure)?s?\b', title, re.I) and not re.search(r'complete set|full set|with\s+\d+\s+minifig|\b5682\b', title, re.I):
+            exclusions.append('MINIFIGURE_COMPONENT_NOT_COMPLETE_SET')
+        if re.search(r'\belements?\b', title, re.I) and not re.search(r'complete set|full set|\b5682\b', title, re.I):
+            exclusions.append('INDIVIDUAL_ELEMENT_NOT_COMPLETE_SET')
         presale = bool(re.search(r'pre[ -]?(?:sale|order)|presale|preventa|vorbestellung', title, re.I))
         shipping = re.search(r'\+EUR\s*([\d,]+\.\d{2})\s+(?:postage|shipping)', text, re.I)
         results[listing_id] = {'id': 'ebay_' + listing_id, 'listing_id': listing_id, 'product_id': 'lego_' + sku,
@@ -160,6 +164,9 @@ def main():
         report['sources'].append(state)
     reviewed = json.loads(Path('research/secondary_observations_2026-10-31.json').read_text())
     report['reviewed_historical_evidence'] = reviewed
+    baseline_path = Path('research/secondary_seed_2026-10-31.json')
+    if baseline_path.exists():
+        report['one_time_research_baseline'] = json.loads(baseline_path.read_text())
     good = sum(s['status'] != 'FAILED' for s in report['sources'])
     report['status'] = 'OK' if good == 3 else 'PARTIAL' if good else 'FAILED'
     economics = {'schema': 'edge.bundle.conditional_economics.v1', 'observed_at': report['observed_at'],
@@ -186,12 +193,22 @@ def main():
 
 def render(report, economics):
     lines = ['# EDGE — Offres secondaires et comparaison conditionnelle', '',
+        'État de la collecte automatique : ' + report['status'] + '.', '',
         'Les cartes eBay ci-dessous indiquent des prix demandés. La vente individuelle, la livraison en France et le prix encaissé ne sont pas validés.', '',
         '| Référence | Annonce | Prix demandé EUR | Livraison FR vérifiée |', '|---|---|---:|---|']
     for row in report['listings']:
         title = row['title'].replace('|', '/').replace('[', '(').replace(']', ')')
         scope = ' — exclue de comparaison' if row['exclusions'] else ' — prévente annoncée' if row['fulfilment'] == 'PRESALE_CLAIM' else ''
         lines.append(f"| {row['sku']} | [{title}]({row['url']}){scope} | {row['asking_price_eur']} | Non |")
+    baseline = report.get('one_time_research_baseline')
+    if baseline:
+        lines += ['', '## Relevé ponctuel distinct du suivi GitHub', '',
+                  'Capture datée : ' + baseline['captured_at'] + '. Ce relevé provient de l’environnement de recherche ; il ne prouve pas que la collecte GitHub fonctionne et ne sera pas antidaté comme un relevé courant.', '',
+                  '| Référence | Annonce indicative | Prix demandé EUR |', '|---|---|---:|']
+        for source in baseline['sources']:
+            for row in source['listings']:
+                title = row['title'].replace('|', '/').replace('[', '(').replace(']', ')')
+                lines.append(f"| {row['sku']} | [{title}]({row['url']}) | {row['asking_price_eur']} |")
     lines += ['', '## Observations manuelles datées du 31 octobre 2026', '']
     for row in report['reviewed_historical_evidence']['observations']:
         lines.append('- [' + row['label'] + '](' + row['url'] + ') : ' + row['interpretation'])

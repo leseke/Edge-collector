@@ -43,6 +43,14 @@ class SecondaryTests(unittest.TestCase):
         row = m.parse_cards(card('TECA IN PLEXIGLASS ACRILICO SHOWCASE PER SET LEGO 11388'), '11388')[0]
         self.assertIn('INCOMPLETE_OR_ACCESSORY', row['exclusions'])
 
+    def test_minifigure_is_not_complete_parent_set(self):
+        row = m.parse_cards(card('LEGO Icons Venetian Glassblower Minifigure Set 11388 PREORDER'), '11388')[0]
+        self.assertIn('MINIFIGURE_COMPONENT_NOT_COMPLETE_SET', row['exclusions'])
+
+    def test_piano_element_is_not_complete_parent_set(self):
+        row = m.parse_cards(card('LEGO New 3D Printed Piano Element Set 11388'), '11388')[0]
+        self.assertIn('INDIVIDUAL_ELEMENT_NOT_COMPLETE_SET', row['exclusions'])
+
     def test_presale_not_stock(self):
         row = m.parse_cards(card('LEGO 40889 PRESALE'), '40889')[0]
         self.assertEqual(row['fulfilment'], 'PRESALE_CLAIM')
