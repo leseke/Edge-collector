@@ -11,6 +11,7 @@ on:
       - 'scripts/probability_history.py'
       - 'scripts/commercial_reaction_history.py'
       - 'scripts/analogue_history.py'
+      - 'scripts/monthly_history.py'
       - 'scripts/primary_verification_history.py'
       - 'scripts/secondary_history.py'
       - 'research/secondary_observations_2026-10-31.json'
@@ -24,6 +25,7 @@ on:
       - 'tests/test_probability_history.py'
       - 'tests/test_commercial_reaction_history.py'
       - 'tests/test_analogue_history.py'
+      - 'tests/test_monthly_history.py'
       - 'tests/test_primary_verification_history.py'
       - 'tests/test_secondary_history.py'
       - 'commercial_targets.json'
@@ -58,6 +60,8 @@ jobs:
             git -C /tmp/edge-commercial-history checkout --orphan edge/commercial-history
             git -C /tmp/edge-commercial-history rm -rf --quiet .
           fi
+      - name: Import checksum-pinned monthly research history
+        run: python scripts/monthly_history.py --out /tmp/commercial-capture --cache /tmp/edge-commercial-history/imports
       - name: Capture asking prices and explicit stock states
         run: python scripts/commercial_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Capture announcements and descriptive reaction windows
@@ -87,6 +91,9 @@ jobs:
           git -C /tmp/edge-commercial-history config user.name 'github-actions[bot]'
           git -C /tmp/edge-commercial-history config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git -C /tmp/edge-commercial-history add "snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          if test -f /tmp/edge-commercial-history/imports/lego_predict_2018_2023_monthly_v1/source.xlsx; then
+            git -C /tmp/edge-commercial-history add imports
+          fi
           git -C /tmp/edge-commercial-history commit -m "data(mri): commercial observations ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin "$(git -C /tmp/edge-commercial-history rev-parse HEAD):refs/heads/edge/commercial-history"
       - uses: actions/upload-artifact@v4

@@ -8,6 +8,7 @@ from decimal import Decimal, InvalidOperation
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.request import Request, urlopen
+from urllib.error import URLError
 from urllib.parse import urlsplit
 
 
@@ -97,6 +98,28 @@ def parse_offer(raw, target):
     return offers[0]
 
 
+def read_response(request, row):
+    """One bounded retry for a transport timeout; HTTP/parse failures stay explicit."""
+    row['request_attempts'] = []
+    for timeout in (25, 15):
+        attempt = {'started_at': now(), 'timeout_seconds': timeout}
+        row['request_attempts'].append(attempt)
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                row['http_status'] = response.status
+                row['final_url'] = response.url
+                if response.status != 200 or urlsplit(response.url).hostname != urlsplit(request.full_url).hostname:
+                    raise ValueError('Unexpected status or redirect host')
+                raw = response.read(3000001)
+            attempt.update(finished_at=now(), status='OK')
+            row['observed_at'] = attempt['finished_at']
+            return raw
+        except Exception as exc:
+            attempt.update(finished_at=now(), status='FAILED', error_type=type(exc).__name__)
+            timed_out = isinstance(exc, TimeoutError) or (isinstance(exc, URLError) and isinstance(exc.reason, TimeoutError))
+            if timeout == 15 or not timed_out: raise
+
+
 def fetch(target, out):
     row = {'id': target['id'], 'product_id': target['product_id'], 'seller': target['seller'],
            'url': target['url'], 'observed_at': now(), 'status': 'FAILED',
@@ -105,12 +128,7 @@ def fetch(target, out):
     row['source_qualification'] = target.get('source_qualification', 'NOT_ASSESSED')
     try:
         request = Request(target['url'], headers={'User-Agent': 'EDGE-MarketResearch/1.0', 'Accept': 'application/json' if target.get('adapter') == 'tcgdex' else 'text/html'})
-        with urlopen(request, timeout=25) as response:
-            row['http_status'] = response.status
-            row['final_url'] = response.url
-            if response.status != 200 or urlsplit(response.url).hostname != urlsplit(target['url']).hostname:
-                raise ValueError('Unexpected status or redirect host')
-            raw = response.read(3000001)
+        raw = read_response(request, row)
         if not raw or len(raw) > 3000000:
             raise ValueError('Invalid response size')
         row['body_sha256'] = digest(raw)

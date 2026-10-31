@@ -112,5 +112,33 @@ class CommercialTests(unittest.TestCase):
         self.assertEqual(self.events(self.row(), self.row(url='https://other.example')), [])
 
 
+
+class TransportTests(unittest.TestCase):
+    def test_transport_timeout_gets_one_bounded_retry(self):
+        from unittest.mock import patch, MagicMock
+        response=MagicMock();response.status=200;response.url='https://example.com/p'
+        response.read.return_value=b'real body'
+        response.__enter__.return_value=response
+        row={}
+        with patch.object(m,'urlopen',side_effect=[TimeoutError('timed out'),response]) as opened:
+            self.assertEqual(m.read_response(m.Request(response.url),row),b'real body')
+        self.assertEqual([c.kwargs['timeout'] for c in opened.call_args_list],[25,15])
+        self.assertEqual([a['status'] for a in row['request_attempts']],['FAILED','OK'])
+        self.assertEqual(row['observed_at'],row['request_attempts'][1]['finished_at'])
+
+    def test_http_403_is_not_retried(self):
+        from unittest.mock import patch
+        from urllib.error import HTTPError
+        with patch.object(m,'urlopen',side_effect=HTTPError('https://example.com',403,'Forbidden',None,None)) as opened:
+            with self.assertRaises(HTTPError):m.read_response(m.Request('https://example.com'),{})
+        self.assertEqual(opened.call_count,1)
+
+    def test_retry_stops_after_second_timeout(self):
+        from unittest.mock import patch
+        with patch.object(m,'urlopen',side_effect=TimeoutError('timed out')) as opened:
+            with self.assertRaises(TimeoutError):m.read_response(m.Request('https://example.com'),{})
+        self.assertEqual(opened.call_count,2)
+
+
 if __name__ == '__main__':
     unittest.main()

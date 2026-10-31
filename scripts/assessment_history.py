@@ -138,7 +138,8 @@ def render(report):
         '[Consulter les annonces secondaires et leur statut de collecte](economics_report.md).', '',
         '[Consulter séparément les estimations calculées et leur échantillon](probability_report.md).', '',
         '[Consulter les transitions de stock et leurs relevés après détection](commercial_reaction_report.md).', '',
-        '[Consulter les précédents comparables et leurs exclusions chronologiques](analogue_report.md).']
+        '[Consulter les précédents comparables et leurs exclusions chronologiques](analogue_report.md).', '',
+        '[Consulter la couverture historique mensuelle importée](monthly_history_report.md).']
     return '\n'.join(lines) + '\n'
 
 
@@ -196,6 +197,12 @@ def main():
     (out / 'report.json').write_text(json.dumps(market, indent=2, ensure_ascii=False))
     (out / 'assessments.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
     (out / 'assessment_report.md').write_text(render(report))
+    monthly_path = out / 'monthly_history.json'
+    if monthly_path.exists():
+        monthly = json.loads(monthly_path.read_text())
+        market['coverage']['monthly_history_status'] = monthly['status']
+        market['coverage']['monthly_history_series'] = monthly.get('coverage', {}).get('series_count', 0)
+        (out / 'report.json').write_text(json.dumps(market, indent=2, ensure_ascii=False))
     manifest = {p.name: digest(p.read_bytes()) for p in out.iterdir() if p.is_file() and p.name != 'manifest.json'}
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True))
     print(json.dumps({'observed_dossiers': len(cases), 'data_policy': report['data_policy']}))

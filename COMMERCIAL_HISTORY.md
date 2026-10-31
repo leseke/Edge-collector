@@ -50,3 +50,7 @@ Rejected source: Brickworld.be was technically readable but its published French
 legal notice contains a placeholder company number (123.456.789) and an incomplete
 VAT number. It is not included as a reference source. That finding alone does not
 prove fraud. No purchasing recommendation is made from source accessibility.
+
+## Transport timeout recovery
+
+Each offer request records its actual attempt times. A transport timeout receives at most one additional attempt (25 seconds then 15 seconds), without host/identity/parser relaxation. HTTP 403, invalid redirects and parsing failures are not retried. Successful observed_at is the response completion time; failures remain UNKNOWN and never reuse old quotes as fresh data.
