@@ -1,8 +1,7 @@
-"""Bounded public listing asks and conditional bundle arithmetic, never sale-price estimates."""
+"""Bounded public listing observations. No hypothetical costs or resale proceeds."""
 import argparse
 import json
 import re
-from decimal import Decimal, ROUND_HALF_UP
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
@@ -110,32 +109,6 @@ def parse_cards(raw, sku):
     return list(results.values())
 
 
-def euro(value):
-    amount = Decimal(str(value))
-    if not amount.is_finite() or amount < 0:
-        raise ValueError('Invalid money input')
-    return amount.quantize(Decimal('.01'), rounding=ROUND_HALF_UP)
-
-
-def required_net_gift(main_total, alternative_delivered, extra_costs):
-    # Costs are explicit inputs. Unknown costs are never silently replaced by zero.
-    if any(v is None for v in (main_total, alternative_delivered, extra_costs)):
-        return None
-    return str(max(Decimal('0'), euro(main_total) + euro(extra_costs) - euro(alternative_delivered)))
-
-
-def scenarios():
-    base = euro('499.99')
-    rows = []
-    for pct in (5, 10, 15):
-        alternative = euro(base * (1 - Decimal(pct) / 100))
-        rows.append({'alternative_discount_pct': pct, 'alternative_delivered_eur': str(alternative),
-                     'required_gift_net_eur': required_net_gift(base, alternative, '0'),
-                     'assumed_incremental_costs_eur': '0.00', 'type': 'HYPOTHETICAL_NOT_OBSERVED_OFFER',
-                     'additional_costs_increase_threshold': True})
-    return rows
-
-
 def main():
     cli = argparse.ArgumentParser()
     cli.add_argument('--out', required=True)
@@ -169,15 +142,12 @@ def main():
         report['one_time_research_baseline'] = json.loads(baseline_path.read_text())
     good = sum(s['status'] != 'FAILED' for s in report['sources'])
     report['status'] = 'OK' if good == 3 else 'PARTIAL' if good else 'FAILED'
-    economics = {'schema': 'edge.bundle.conditional_economics.v1', 'observed_at': report['observed_at'],
-        'opportunity_group': 'venice_launch_2026_11', 'main_announced_price_eur': '499.99',
-        'main_price_basis': 'PREVIOUSLY_REVIEWED_MANUFACTURER_ANNOUNCEMENT_NOT_EXECUTABLE_QUOTE',
+    economics = {'schema': 'edge.bundle.observed_evidence.v2', 'observed_at': report['observed_at'],
+        'data_policy': 'OBSERVED_DATA_ONLY_V1', 'opportunity_group': 'venice_launch_2026_11',
         'best_verified_france_delivered_alternative_eur': None, 'verified_gift_net_resale_eur': None,
         'incremental_costs_eur': None, 'measured_net_advantage_eur': None,
-        'required_gift_net_actual_eur': required_net_gift('499.99', None, None),
-        'gift_40889_included_in_bundle_revenue': False, 'gift_stacking_verified': False,
-        'conditional_scenarios': scenarios(), 'evidence_status': 'INSUFFICIENT_FOR_MEASURED_NET_ADVANTAGE',
-        'financial_decision': 'UNASSESSED', 'buy_signal': False, 'purchase_authorized': False}
+        'gift_stacking_verified': False, 'evidence_status': 'MISSING_VERIFIED_NET_COST_INPUTS',
+        'financial_decision': 'NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA', 'purchase_authorized': False}
     market = json.loads((out / 'report.json').read_text())
     market['coverage']['secondary_market_status'] = report['status']
     market['coverage']['secondary_listing_cards'] = len(report['listings'])
@@ -212,13 +182,9 @@ def render(report, economics):
     lines += ['', '## Observations manuelles datées du 31 octobre 2026', '']
     for row in report['reviewed_historical_evidence']['observations']:
         lines.append('- [' + row['label'] + '](' + row['url'] + ') : ' + row['interpretation'])
-    lines += ['', '## Seuils conditionnels pour le panier Venise', '',
-        'Base annoncée : 499,99 €. Les alternatives ci-dessous sont hypothétiques. Elles ne constituent pas des offres trouvées. Frais additionnels supposés nuls uniquement dans ce tableau ; tout frais réel augmente le seuil.', '',
-        '| Remise hypothétique sur le set seul | Alternative livrée EUR | Recettes nettes du cadeau nécessaires EUR |', '|---|---:|---:|']
-    for row in economics['conditional_scenarios']:
-        lines.append(f"| {row['alternative_discount_pct']} % | {row['alternative_delivered_eur']} | {row['required_gift_net_eur']} |")
-    lines += ['', "Le 40889 n'est pas ajouté aux recettes du panier : le cumul des cadeaux n'est pas confirmé.", '',
-        'Avantage net observé : non calculable actuellement. Les frais, la livraison en France, une alternative exécutable et les recettes nettes du cadeau restent à établir.']
+    lines += ['', '## Données économiques établies', '',
+        'Aucun prix alternatif livré en France ni produit net de revente n’est actuellement vérifié. La marge nette reste non calculable.', '',
+        'Aucun rabais hypothétique, scénario de prix ou recette supposée ne figure dans ce rapport.']
     return '\n'.join(lines) + '\n'
 
 

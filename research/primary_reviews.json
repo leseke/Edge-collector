@@ -53,9 +53,6 @@
       "required_sources": [
         "lego_venice_press"
       ],
-      "research_priority": "MEDIUM",
-      "research_action": "COMPARE_BUNDLE_AND_STANDALONE",
-      "context": "PRIMARY_CHECKED_LAUNCH_WITH_LINKED_GIFT",
       "linked_opportunity_group": "venice_launch_2026_11",
       "claims": [
         {
@@ -93,20 +90,8 @@
           "france_complete_terms_verified": false
         }
       ],
-      "reasoning": [
-        "Le communiqué officiel confirme un tarif annoncé de 499,99 € et le calendrier ; la fiche française est contrôlée séparément.",
-        "Le 11388 et son cadeau 40898 forment un même mécanisme commercial, pas deux profits indépendants.",
-        "La priorité passe à la comparaison du panier complet avec une acquisition du set seul : aucun avantage net n'est chiffré."
-      ],
-      "thesis": "La revente éventuelle du cadeau pourrait réduire le coût net du 11388, si les recettes nettes dépassent la remise perdue sur le set principal et les frais supplémentaires.",
-      "counter": "Une remise ultérieure sur le 11388, des frais ou une offre abondante de cadeaux pourraient rendre le panier de lancement moins intéressant.",
-      "next_check": "Comparer le coût du panier à 499,99 € avec le meilleur prix livré du set seul ; obtenir des prix de cession crédibles du cadeau et confirmer les conditions françaises.",
       "remove_gaps": [
         "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
-      ],
-      "add_gaps": [
-        "BUNDLE_NET_ECONOMICS_UNKNOWN",
-        "GIFT_STACKING_UNCONFIRMED"
       ],
       "optional_sources": [
         "lego_fr_11388_page"
@@ -117,9 +102,6 @@
       "required_sources": [
         "lego_fr_40889_terms"
       ],
-      "research_priority": "MEDIUM",
-      "research_action": "COMPARE_SECONDARY_ACQUISITION",
-      "context": "PRIMARY_CHECKED_FRENCH_GIFT_TERMS",
       "claims": [
         {
           "source_id": "lego_fr_40889_terms",
@@ -147,21 +129,9 @@
           "value": true
         }
       ],
-      "reasoning": [
-        "Les conditions françaises confirment un cadeau dès 130 € d'achats éligibles, du 28 octobre au 8 novembre, sous réserve de stock et limité à un par foyer.",
-        "19,99 € est une valeur promotionnelle approximative, pas un prix de revente validé.",
-        "Le seuil porte sur des marchandises LEGO et n'établit pas une rareté quantitative ; la recherche porte désormais sur le coût d'acquisition secondaire et l'offre réelle."
-      ],
-      "thesis": "Des acheteurs de paniers déjà prévus pourraient céder leur cadeau rapidement et créer des écarts temporaires de prix sur le marché secondaire.",
-      "counter": "Une distribution large pourrait maintenir beaucoup d'offres après la promotion ; une date de fin et une limite par foyer ne prouvent pas un faible tirage.",
-      "next_check": "Relever des offres secondaires et leur évolution autour du 8 novembre ; comparer le coût secondaire au surcoût réel d'un panier éligible, sans assimiler 19,99 € à une recette.",
       "remove_gaps": [
         "PROMOTION_TERMS_AND_REGION_NOT_VERIFIED",
         "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
-      ],
-      "add_gaps": [
-        "SECONDARY_ACQUISITION_COST_UNKNOWN",
-        "GIFT_STACKING_UNCONFIRMED"
       ]
     },
     {
@@ -169,9 +139,6 @@
       "required_sources": [
         "lego_venice_press"
       ],
-      "research_priority": "HIGH",
-      "research_action": "VERIFY_REGIONAL_GIFT_TERMS",
-      "context": "PRIMARY_ANNOUNCED_CONDITIONAL_GIFT",
       "linked_opportunity_group": "venice_launch_2026_11",
       "claims": [
         {
@@ -184,21 +151,8 @@
           "france_complete_terms_verified": false
         }
       ],
-      "reasoning": [
-        "Le communiqué officiel lie le 40898 à l'achat du 11388 du 1er au 8 novembre, dans la limite des stocks.",
-        "Le lien d'achat est documenté, mais les conditions françaises complètes et le cumul avec le 40889 restent non confirmés.",
-        "La fenêtre proche et l'accès conditionnel justifient une priorité de vérification, sans conclure à une pénurie ni à une rentabilité."
-      ],
-      "thesis": "Un acheteur voulant seulement le taxi pourrait préférer le marché secondaire à l'achat du grand set ; cette séparation des besoins pourrait créer un marché distinct pour le cadeau.",
-      "counter": "Les acheteurs du 11388 pourraient simultanément proposer beaucoup de taxis ; sans demande mesurée, la contrainte d'accès ne prouve pas une hausse future.",
-      "next_check": "Confirmer les conditions françaises lors de leur publication et l'éligibilité effective ; suivre séparément l'offre secondaire du taxi et la demande, sans acheter le 11388 pour le cadeau seul.",
       "remove_gaps": [
         "NO_PRODUCT_SPECIFIC_MANUFACTURER_PUBLICATION_IN_COLLECTED_EVIDENCE"
-      ],
-      "add_gaps": [
-        "FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED",
-        "GIFT_STACKING_UNCONFIRMED",
-        "SECONDARY_ACQUISITION_COST_UNKNOWN"
       ]
     }
   ],

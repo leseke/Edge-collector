@@ -8,6 +8,7 @@ on:
       - 'scripts/announcement_history.py'
       - 'scripts/discovery_history.py'
       - 'scripts/assessment_history.py'
+      - 'scripts/probability_history.py'
       - 'scripts/primary_verification_history.py'
       - 'scripts/secondary_history.py'
       - 'research/secondary_observations_2026-10-31.json'
@@ -18,6 +19,7 @@ on:
       - 'tests/test_announcement_history.py'
       - 'tests/test_discovery_history.py'
       - 'tests/test_assessment_history.py'
+      - 'tests/test_probability_history.py'
       - 'tests/test_primary_verification_history.py'
       - 'tests/test_secondary_history.py'
       - 'commercial_targets.json'
@@ -60,9 +62,11 @@ jobs:
         run: python scripts/discovery_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Recheck scoped primary source conditions
         run: python scripts/primary_verification_history.py --out /tmp/commercial-capture
-      - name: Capture secondary asks and conditional bundle thresholds
+      - name: Capture secondary asks and observed cost evidence
         run: python scripts/secondary_history.py --out /tmp/commercial-capture
-      - name: Evaluate candidate evidence and persist research dossiers
+      - name: Compute labelled estimates only from measured reaction windows
+        run: python scripts/probability_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
+      - name: Persist source-linked observation dossiers
         run: python scripts/assessment_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Append evidence to isolated data branch
         shell: bash

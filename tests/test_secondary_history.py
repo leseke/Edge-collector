@@ -65,17 +65,6 @@ class SecondaryTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             m.parse_cards(b'<html>captcha</html>', '40889')
 
-    def test_unknown_cost_not_zero(self):
-        self.assertIsNone(m.required_net_gift('499.99', '449.99', None))
-        self.assertIsNone(m.required_net_gift('499.99', None, '0'))
-
-    def test_break_even_includes_incremental_cost(self):
-        self.assertEqual(m.required_net_gift('499.99', '449.99', '7.00'), '57.00')
-
-    def test_hypothetical_thresholds(self):
-        rows = m.scenarios()
-        self.assertEqual([r['required_gift_net_eur'] for r in rows], ['25.00', '50.00', '75.00'])
-        self.assertTrue(all(r['type'] == 'HYPOTHETICAL_NOT_OBSERVED_OFFER' for r in rows))
 
 
 if __name__ == '__main__':
