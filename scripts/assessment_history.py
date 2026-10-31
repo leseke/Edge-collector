@@ -139,7 +139,8 @@ def render(report):
         '[Consulter séparément les estimations calculées et leur échantillon](probability_report.md).', '',
         '[Consulter les transitions de stock et leurs relevés après détection](commercial_reaction_report.md).', '',
         '[Consulter les précédents comparables et leurs exclusions chronologiques](analogue_report.md).', '',
-        '[Consulter la couverture historique mensuelle importée](monthly_history_report.md).']
+        '[Consulter la couverture historique mensuelle importée](monthly_history_report.md).', '',
+        '[Consulter le test rétrospectif des trajectoires et ses erreurs](trajectory_report.md).']
     return '\n'.join(lines) + '\n'
 
 
@@ -202,6 +203,13 @@ def main():
         monthly = json.loads(monthly_path.read_text())
         market['coverage']['monthly_history_status'] = monthly['status']
         market['coverage']['monthly_history_series'] = monthly.get('coverage', {}).get('series_count', 0)
+        (out / 'report.json').write_text(json.dumps(market, indent=2, ensure_ascii=False))
+    trajectory_path = out / 'trajectory_summary.json'
+    if trajectory_path.exists():
+        trajectory = json.loads(trajectory_path.read_text())
+        market['coverage']['monthly_trajectory_status'] = trajectory['status']
+        market['coverage']['monthly_trajectory_queries'] = trajectory.get('evaluation_query_count', 0)
+        if trajectory['status'] == 'FAILED' and market['status'] == 'OK': market['status'] = 'PARTIAL'
         (out / 'report.json').write_text(json.dumps(market, indent=2, ensure_ascii=False))
     manifest = {p.name: digest(p.read_bytes()) for p in out.iterdir() if p.is_file() and p.name != 'manifest.json'}
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2, sort_keys=True))
