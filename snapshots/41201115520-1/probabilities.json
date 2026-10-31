@@ -1,0 +1,52 @@
+{
+  "schema": "edge.mri.probability_estimates.v1",
+  "generated_at": "2026-10-31T12:26:52.499592+00:00",
+  "data_kind": "COMPUTED_ESTIMATE_NOT_OBSERVED_FACT",
+  "method": "DEDUPLICATED_EMPIRICAL_FREQUENCY_WITH_WILSON_BINOMIAL_REFERENCE_INTERVAL_V1",
+  "target": "POSITIVE_MEDIAN_ASKING_PRICE_CHANGE_AFTER_TRACKED_PUBLICATION",
+  "trial_unit": "PRODUCT_AND_PUBLICATION_UTC_DAY_AND_HORIZON",
+  "interval_limitations": "Binomial reference assumes independent trials; dependence is not verified and limits interpretation.",
+  "not_a_probability_of": [
+    "profit",
+    "completed sale",
+    "causal impact"
+  ],
+  "estimates": [
+    {
+      "horizon_hours": 24,
+      "sample_count": 0,
+      "positive_change_count": 0,
+      "minimum_samples": 5,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE",
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "sample_units": [],
+      "calibrated_for_future_prediction": false,
+      "independence_verified": false
+    },
+    {
+      "horizon_hours": 72,
+      "sample_count": 0,
+      "positive_change_count": 0,
+      "minimum_samples": 5,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE",
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "sample_units": [],
+      "calibrated_for_future_prediction": false,
+      "independence_verified": false
+    },
+    {
+      "horizon_hours": 168,
+      "sample_count": 0,
+      "positive_change_count": 0,
+      "minimum_samples": 5,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE",
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "sample_units": [],
+      "calibrated_for_future_prediction": false,
+      "independence_verified": false
+    }
+  ]
+}

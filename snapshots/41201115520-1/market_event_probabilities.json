@@ -1,0 +1,46 @@
+{
+  "schema": "edge.mri.stock_event_estimates.v1",
+  "observed_at": "2026-10-31T12:26:52.436806+00:00",
+  "data_kind": "COMPUTED_ESTIMATE_NOT_OBSERVED_FACT",
+  "target": "IN_STOCK_AT_FIRST_CAPTURE_WITHIN_SIX_HOURS_AFTER_HORIZON_FROM_STOCKOUT_DETECTION",
+  "not_a_probability_of": [
+    "restock at any moment during the interval",
+    "sale",
+    "profit",
+    "causal impact"
+  ],
+  "calibrated_for_future_prediction": false,
+  "independence_verified": false,
+  "estimates": [
+    {
+      "horizon_hours": 24,
+      "sample_count": 0,
+      "in_stock_count": 0,
+      "minimum_samples": 5,
+      "event_ids": [],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    },
+    {
+      "horizon_hours": 72,
+      "sample_count": 0,
+      "in_stock_count": 0,
+      "minimum_samples": 5,
+      "event_ids": [],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    },
+    {
+      "horizon_hours": 168,
+      "sample_count": 0,
+      "in_stock_count": 0,
+      "minimum_samples": 5,
+      "event_ids": [],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    }
+  ]
+}
