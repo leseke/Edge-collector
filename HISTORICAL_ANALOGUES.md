@@ -1,0 +1,17 @@
+# EDGE — Historical configuration retrieval
+
+`analogue_history.py` runs after the verified retail event follower and before the dossier manifest. Outputs: `analogue_matches.json`, `analogue_report.md`. Inputs are actual EDGE asking-price/availability snapshots and evidence-verified retail transitions. No invented market records or outcomes are seeded. Unit-test fixtures are isolated from production inputs.
+
+Each query is frozen at its event detection time, not at report generation. Features use only successful, same-scope observations in the preceding 72 hours: detected price, circular calendar month, seller, and price change from the earliest preceding observation at least six hours before detection. Baseline timestamp and source evidence are retained; the baseline span can vary and is not a standardized 72-hour return. Missing prior price change excludes a match rather than filling a value.
+
+Precedents must have the same event family and currency. Their target capture must already be measured and known at the query time. Future events/outcomes, the query itself, all other events for its product and repeated products in the retrieved sample are excluded. Exclusion reasons are stored separately for 24/72/168-hour horizons. At most 20 precedents are retained, sorted deterministically by similarity then event ID.
+
+Equal-weight heuristic similarity: price ratio min/max; 1 minus circular month distance/6; same seller indicator; 1/(1+absolute prior percentage-point difference/10). Minimum score 0.75. These initial research choices are explicit, not optimized or validated. The score is NOT a probability. Licence, distribution, supply quantities, transactions and margins remain unavailable; apparent similarity does not establish economic comparability.
+
+Five distinct products with measured known availability are required before displaying a conditional historical in-stock frequency and Wilson reference interval. This minimum is only a display guard, not statistical validation. Dependence and future calibration are unverified. No out-of-sample performance, optimal timing, profit probability or buy instruction is emitted.
+
+## External historical source reviewed, not imported
+
+Oczkos et al., Data in Brief 52 (2024), 110056, DOI 10.1016/j.dib.2024.110056; dataset DOI 10.34808/s25h-sx91. Article: https://pmc.ncbi.nlm.nih.gov/articles/PMC10828600/
+
+The paper describes Poland/PLN monthly series June 2018–June 2023. Its abstract calls prices monthly averages, but methods explicitly say monthly maxima and 0.00 when unavailable. Current attributes/status are not reliably timestamped as of each historical month. No raw dataset was imported. These monthly aggregates cannot be silently treated as France/EUR daily quotes, transactions or point-in-time stock histories. A future separate monthly importer must verify the original file, preserve provenance and aggregation, treat availability zeros as missing prices, and exclude later-known status/popularity/retirement attributes from earlier signal features.

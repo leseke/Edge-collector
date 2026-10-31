@@ -137,7 +137,8 @@ def render(report):
         'Prix réellement encaissés, volumes de transactions, liquidité et marges nettes : non établis par les données actuellement vérifiées.', '',
         '[Consulter les annonces secondaires et leur statut de collecte](economics_report.md).', '',
         '[Consulter séparément les estimations calculées et leur échantillon](probability_report.md).', '',
-        '[Consulter les transitions de stock et leurs relevés après détection](commercial_reaction_report.md).']
+        '[Consulter les transitions de stock et leurs relevés après détection](commercial_reaction_report.md).', '',
+        '[Consulter les précédents comparables et leurs exclusions chronologiques](analogue_report.md).']
     return '\n'.join(lines) + '\n'
 
 
