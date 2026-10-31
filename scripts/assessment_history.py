@@ -9,7 +9,7 @@ from announcement_history import timestamp
 from commercial_history import digest, now
 
 
-def assess(candidate, market, history, reaction_report, publications, assessed_at, primary=None):
+def assess(candidate, market, history, reaction_report, publications, assessed_at, primary=None, secondary=None, economics=None):
     cid, sku = candidate['id'], candidate['sku']
     at = timestamp(assessed_at)
     facts = []
@@ -123,6 +123,14 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
         'investment_edge': 'UNPROVEN', 'financial_decision': 'UNASSESSED',
         'buy_signal': False, 'purchase_authorized': False}
     apply_primary_review(case, primary)
+    if secondary and cid in ('lego_11388', 'lego_40889', 'lego_40898'):
+        listings = [row for row in secondary['listings'] if row['product_id'] == cid]
+        reviewed = [row for row in secondary['reviewed_historical_evidence']['observations'] if row['sku'] == sku]
+        case['secondary_market_evidence'] = {'observed_at': secondary['observed_at'], 'listings': listings,
+            'reviewed_historical_evidence': reviewed, 'france_delivered_offers_verified': 0,
+            'realized_transaction_prices_verified': 0, 'status': secondary['status']}
+        if economics and case.get('linked_opportunity_group') == economics['opportunity_group']:
+            case['conditional_bundle_economics'] = economics
     # Repeated timestamps alone must not look like a thesis revision.
     material = {'context': case['context'], 'priority': case['research_priority'], 'action': case['research_action'], 'gaps': case['missing_data'],
         'publications': sorted((f['publication_id'], f['content_sha256']) for f in facts if f['type'] == 'PUBLICATION_REFERENCE'),
@@ -132,6 +140,11 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
         material.update(primary_claims=[f['claim'] for f in facts if f['type'] == 'VERIFIED_PRIMARY_CLAIM'],
                         primary_status=case['primary_verification']['status'], event_phase=case.get('event_phase'),
                         early_hypothesis=case['early_hypothesis'], scenarios=case['scenarios'])
+    if 'secondary_market_evidence' in case:
+        material['secondary_cards'] = sorted((r['id'], r['asking_price_eur'], r['fulfilment'], tuple(r['exclusions']))
+                                            for r in case['secondary_market_evidence']['listings'])
+        material['secondary_status'] = case['secondary_market_evidence']['status']
+        material['reviewed_secondary_evidence'] = case['secondary_market_evidence']['reviewed_historical_evidence']
     case['semantic_sha256'] = digest(json.dumps(material, sort_keys=True).encode())
     return case
 
@@ -258,6 +271,9 @@ def render(report):
             elif fact['type'] == 'VERIFIED_PRIMARY_CLAIM':
                 lines.append('- [Condition officielle vérifiée](' + fact['source_url'] + ') : ' + claim_text(fact['claim']))
         lines += ['', '**Acteurs : motivations possibles, non vérifiées**', '']
+        if case.get('secondary_market_evidence'):
+            rows = case['secondary_market_evidence']['listings']
+            lines += ["- Offres secondaires : " + str(len(rows)) + " cartes d'annonces capturées ; aucune livraison en France ni recette nette vérifiée. [Voir le relevé et les seuils conditionnels](economics_report.md)."]
         lines += ['- ' + actor['hypothesis'] for actor in case['actor_hypotheses']]
         lines += ['', '**Scénarios à tester**', '']
         for scenario in case['scenarios']:
@@ -305,8 +321,11 @@ def main():
     reaction = json.loads((out / 'reactions.json').read_text())
     primary_path = out / 'primary_verifications.json'
     primary = json.loads(primary_path.read_text()) if primary_path.exists() else None
+    secondary_path, economics_path = out / 'secondary_market.json', out / 'bundle_economics.json'
+    secondary = json.loads(secondary_path.read_text()) if secondary_path.exists() else None
+    economics = json.loads(economics_path.read_text()) if economics_path.exists() else None
     observed = now()
-    cases = [assess(c, market, markets, reaction, publications, observed, primary) for c in discovery['candidates']]
+    cases = [assess(c, market, markets, reaction, publications, observed, primary, secondary, economics) for c in discovery['candidates']]
     order = {'HIGH': 0, 'MEDIUM': 1, 'LOW': 2}
     cases.sort(key=lambda c: (order[c['research_priority']], c['candidate_id']))
     transitions = assign_revisions(cases, previous, observed)

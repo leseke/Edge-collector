@@ -9,6 +9,8 @@ on:
       - 'scripts/discovery_history.py'
       - 'scripts/assessment_history.py'
       - 'scripts/primary_verification_history.py'
+      - 'scripts/secondary_history.py'
+      - 'research/secondary_observations_2026-10-31.json'
       - 'research/primary_reviews.json'
       - 'announcement_sources.json'
       - 'tests/test_commercial_history.py'
@@ -16,6 +18,7 @@ on:
       - 'tests/test_discovery_history.py'
       - 'tests/test_assessment_history.py'
       - 'tests/test_primary_verification_history.py'
+      - 'tests/test_secondary_history.py'
       - 'commercial_targets.json'
       - '.github/workflows/commercial-history.yml'
   schedule:
@@ -28,7 +31,7 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -56,6 +59,8 @@ jobs:
         run: python scripts/discovery_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Recheck scoped primary source conditions
         run: python scripts/primary_verification_history.py --out /tmp/commercial-capture
+      - name: Capture secondary asks and conditional bundle thresholds
+        run: python scripts/secondary_history.py --out /tmp/commercial-capture
       - name: Evaluate candidate evidence and persist research dossiers
         run: python scripts/assessment_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Append evidence to isolated data branch
