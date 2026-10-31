@@ -1,0 +1,60 @@
+{
+  "schema": "edge.mri.retail_event_followup.v1",
+  "observed_at": "2026-10-31T16:23:58.440832+00:00",
+  "events": [
+    {
+      "id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_40744",
+      "observation_id": "ldlc_discovered_40744",
+      "seller": "LDLC",
+      "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "occurrence_interval_start": "2026-10-30T13:29:53.789734+00:00",
+      "occurrence_interval_end": "2026-10-30T22:37:51.698791+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "12.95",
+      "detected_price": "12.95",
+      "currency": "EUR",
+      "previous_evidence_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+      "detected_evidence_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+      "latest_observed_at": "2026-10-31T13:00:53.116949+00:00",
+      "latest_price": "12.95",
+      "latest_availability": "OUT_OF_STOCK",
+      "latest_evidence_sha256": "b3a40ec5970995649771823442719a1f1b62a8d5a6ad8bb0e0c1457c00eafac1",
+      "elapsed_observed_hours": 14.384,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 7,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-10-31T22:37:51.698791+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-02T22:37:51.698791+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-06T22:37:51.698791+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    }
+  ],
+  "excluded_events": [
+    {
+      "id": "864bf65f3d5aa92ed0cf702a1442e02bc898e9a8abe82238cd0c7f02136d986b",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    }
+  ],
+  "scope": "SAME_SOURCE_POST_DETECTION_DISPLAYED_PRICE_AND_DECLARED_STOCK",
+  "causality_proven": false
+}

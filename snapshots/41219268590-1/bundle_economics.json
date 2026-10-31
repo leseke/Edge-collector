@@ -1,0 +1,14 @@
+{
+  "schema": "edge.bundle.observed_evidence.v2",
+  "observed_at": "2026-10-31T16:23:58.099285+00:00",
+  "data_policy": "OBSERVED_DATA_ONLY_V1",
+  "opportunity_group": "venice_launch_2026_11",
+  "best_verified_france_delivered_alternative_eur": null,
+  "verified_gift_net_resale_eur": null,
+  "incremental_costs_eur": null,
+  "measured_net_advantage_eur": null,
+  "gift_stacking_verified": false,
+  "evidence_status": "MISSING_VERIFIED_NET_COST_INPUTS",
+  "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+  "purchase_authorized": false
+}
