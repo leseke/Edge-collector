@@ -79,14 +79,18 @@ def source_context(market, at):
                 'status':row['status'],'usable_current_quote':usable,
                 'availability':row.get('availability','UNKNOWN') if usable else 'UNKNOWN',
                 'displayed_price_eur':row.get('price') if usable else None,'body_sha256':row.get('body_sha256'),
-                'shipping_eur':row.get('shipping_eur'),'error':row.get('error')})
+                'shipping_eur':row.get('shipping_eur'),'error':row.get('error'),
+                'shipping_to_france_verified':row.get('evidence',{}).get('shipping_to_france_verified'),
+                'retailer_announced_available_date':row.get('evidence',{}).get('retailer_announced_available_date')})
         valid=[s for s in sources if s['usable_current_quote']]
         available=[s for s in valid if s['availability']=='IN_STOCK']
         stockouts=[s for s in valid if s['availability']=='OUT_OF_STOCK']
+        upcoming=[s for s in valid if s['availability']=='COMING_SOON']
         state=('MIXED_AVAILABILITY_ON_OBSERVED_SOURCES' if available and stockouts else
                'OUT_OF_STOCK_ON_MULTIPLE_OBSERVED_SOURCES' if len(stockouts)>=2 else
                'SINGLE_SOURCE_STOCKOUT' if stockouts else
-               'IN_STOCK_ON_OBSERVED_SOURCES' if available else 'AVAILABILITY_NOT_ESTABLISHED')
+               'IN_STOCK_ON_OBSERVED_SOURCES' if available else
+               'COMING_SOON_ON_OBSERVED_SOURCES' if upcoming else 'AVAILABILITY_NOT_ESTABLISHED')
         result.append({'product_id':product,'sources':sources,'verified_current_seller_count':len(valid),
             'in_stock_seller_count':len(available),'out_of_stock_seller_count':len(stockouts),
             'availability_context':state,
@@ -151,7 +155,7 @@ def render(coverage, context):
         lines.append(f"| {i['product_id']} | {i['horizon_hours']} h | {labels[i['diagnosis']]} | {i['successful_capture_gap_hours']} h |")
     lines+=['','## Sources commerciales du passage','',
         '| Produit | Vendeur | Prix affiché EUR | Stock déclaré | Heure du relevé UTC |','|---|---|---:|---|---|']
-    stock={'IN_STOCK':'En stock','OUT_OF_STOCK':'Rupture','UNKNOWN':'Inconnu','PREORDER':'Précommande','BACKORDER':'Sur commande','DISCONTINUED':'Arrêté'}
+    stock={'IN_STOCK':'En stock','OUT_OF_STOCK':'Rupture','UNKNOWN':'Inconnu','PREORDER':'Précommande','BACKORDER':'Sur commande','DISCONTINUED':'Arrêté','COMING_SOON':'À venir'}
     for p in context['products']:
         for s in p['sources']:
             price=s['displayed_price_eur'] or 'Non établi'

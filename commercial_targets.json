@@ -81,6 +81,15 @@
       "seller": "JoueClub",
       "source_qualification": "ESTABLISHED_RETAILER",
       "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html"
+    },
+    {
+      "id": "brickshop_11388",
+      "product_id": "lego_11388",
+      "sku": "11388",
+      "seller": "BRICKshop",
+      "adapter": "brickshop_microdata",
+      "source_qualification": "DIRECT_RETAILER_PAGE_IDENTITY_CORROBORATED_NOT_CHECKOUT_OR_TRUST_AUDITED",
+      "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
     }
   ]
 }

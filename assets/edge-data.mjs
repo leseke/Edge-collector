@@ -29,10 +29,10 @@ export function dateText(value){return timestamp(value)===null?'Date non établi
 export function productState(product,now=Date.now()){
  const sources=product.sources.map(source=>({source,state:quoteState(source,now)}));
  const valid=sources.filter(s=>s.state.usable),available=valid.filter(s=>s.state.availability==='IN_STOCK'),out=valid.filter(s=>s.state.availability==='OUT_OF_STOCK');
- const prices=available.map(s=>s.state.price);
+ const prices=available.map(s=>s.state.price),upcoming=valid.filter(s=>s.state.availability==='COMING_SOON');
  return {sources,validCount:valid.length,inStock:available.length,outOfStock:out.length,
   floor:prices.length?Math.min(...prices):null,spread:prices.length>=2?Math.max(...prices)-Math.min(...prices):null,
-  label:available.length&&out.length?'Disponibilité mixte':out.length?'Rupture sur les sources observées':available.length?'En stock sur les sources observées':'Disponibilité non établie'};
+  label:available.length&&out.length?'Disponibilité mixte':out.length?'Rupture sur les sources observées':available.length?'En stock sur les sources observées':upcoming.length?'Commercialisation à venir':'Disponibilité non établie'};
 }
 export function captureSummary(capture,now=Date.now()){
  const states=capture.context.products.map(p=>productState(p,now));

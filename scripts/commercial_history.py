@@ -154,6 +154,9 @@ def fetch(target, out):
             row.update(price=str(price), currency='EUR', price_kind='AGGREGATED_INDICATIVE_LOW',
                        source_updated_at=pricing.get('updated'), sealed_product=False,
                        market_language_verified=False, evidence=pricing, status='OK')
+        elif target.get('adapter') == 'brickshop_microdata':
+            from brickshop_offer import parse
+            row.update(parse(raw, target), status='OK')
         else:
             row.update(parse_offer(raw, target), status='OK')
     except Exception as exc:

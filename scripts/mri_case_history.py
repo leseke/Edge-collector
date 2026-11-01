@@ -8,11 +8,17 @@ from announcement_history import timestamp
 from commercial_history import now
 
 
-def build(candidates, context, reports, reactions, at):
+def build(candidates, context, reports, reactions, at, primary=None):
     by_product={c['id']:c for c in candidates};cases=[]
     for product in context['products']:
-        if product['verified_current_seller_count']<2:continue
         cid=product['product_id'];candidate=by_product.get(cid)
+        verified={s['id']:s for s in (primary or {}).get('sources',[]) if s['status']=='VERIFIED_MATCH'}
+        releases=[c for r in (primary or {}).get('reviews',[]) if r['candidate_id']==cid and r.get('current_recheck_verified')
+                  for c in r.get('supported_claims',[]) if c['kind']=='ANNOUNCED_GENERAL_RELEASE' and c.get('source_id') in verified
+                  and re.fullmatch(r'\d{4}-\d{2}-\d{2}',c.get('date','')) and timestamp(c['date']+'T00:00:00+00:00')]
+        release=({'date':releases[0]['date'],'date_precision':'DAY','source_url':verified[releases[0]['source_id']]['source_url'],
+                  'status':'MANUFACTURER_ANNOUNCEMENT_NOT_CONFIRMED_LAUNCH_HOUR'} if len(releases)==1 else None)
+        if product['verified_current_seller_count']<1 or (product['verified_current_seller_count']<2 and not release):continue
         publications=candidate['evidence'] if candidate else []
         sources=[]
         for current in product['sources']:
@@ -39,7 +45,8 @@ def build(candidates, context, reports, reactions, at):
         for p in publications:
             linked.append(dict(p,reference_in_title=bool(re.search(r'(?<!\d)'+re.escape(candidate['sku'])+r'(?!\d)',p['title'])),
                 relationship='EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE'))
-        cases.append({'product_id':cid,'case_kind':'PUBLICATION_AND_RETAIL_OBSERVATIONS' if linked else 'RETAIL_CONTROL_WITHOUT_DISCOVERY_PUBLICATION',
+        cases.append({'product_id':cid,'case_kind':'ANNOUNCED_RELEASE_AND_RETAIL_OBSERVATIONS' if release else 'PUBLICATION_AND_RETAIL_OBSERVATIONS' if linked else 'RETAIL_CONTROL_WITHOUT_DISCOVERY_PUBLICATION',
+            'announced_release':release,
             'publication_evidence':linked,'candidate_first_observed_at':candidate.get('first_observed_at') if candidate else None,
             'retail_sources':sources,'current_availability_context':product['availability_context'],
             'publication_reaction_measurements':measurements,'measured_publication_reaction_windows':measured,
@@ -57,6 +64,8 @@ def render(report):
     lines=['# EDGE — Dossiers de publications et de marché','',
         'Les dates de publication déclarées par les sources, les dates de découverte par EDGE et les heures des relevés sont distinctes. Une mention dans un article ne démontre pas une réaction du marché.','']
     for c in report['cases']:
+        if c.get('announced_release'):
+            lines+=['Sortie grand public annoncée : '+c['announced_release']['date']+' (date seule, heure inconnue).','']
         lines+=['## '+c['product_id'],'','### Publications archivées','']
         for p in c['publication_evidence']:
             title=p['title'].replace('|','\\|').replace('\n',' ')
@@ -89,10 +98,12 @@ def main():
     discovery=json.loads((out/'discovery.json').read_text())
     context=json.loads((out/'retail_source_context.json').read_text())
     reactions=json.loads((out/'reactions.json').read_text())
-    result=build(discovery['candidates'],context,reports,reactions,now())
+    primary=json.loads((out/'primary_verifications.json').read_text())
+    result=build(discovery['candidates'],context,reports,reactions,now(),primary)
     (out/'mri_cases.json').write_text(json.dumps(result,indent=2,ensure_ascii=False))
     (out/'mri_case_report.md').write_text(render(result))
-    market['coverage']['publication_linked_multi_source_cases']=result['publication_linked_cases']
+    market['coverage']['publication_linked_multi_source_cases']=sum(bool(c['publication_evidence']) and len(c['retail_sources'])>=2 for c in result['cases'])
+    market['coverage']['announced_release_cases']=sum(bool(c.get('announced_release')) for c in result['cases'])
     (out/'report.json').write_text(json.dumps(market,indent=2,ensure_ascii=False))
     print(json.dumps({'cases':len(result['cases']),'publication_linked_cases':result['publication_linked_cases']}))
 

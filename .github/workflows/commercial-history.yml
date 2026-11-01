@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/commercial_history.py'
+      - 'scripts/brickshop_offer.py'
+      - 'tests/test_brickshop_history.py'
       - 'scripts/announcement_history.py'
       - 'scripts/discovery_history.py'
       - 'scripts/assessment_history.py'

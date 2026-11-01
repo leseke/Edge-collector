@@ -78,6 +78,23 @@ class MriCaseTests(unittest.TestCase):
         r=m.build([c],context,[market],{},AT)
         self.assertFalse(r['cases'][0]['publication_evidence'][0]['reference_in_title'])
 
+    def test_verified_upcoming_release_can_have_one_direct_retailer(self):
+        c,market,context=fixture();market['observations']=market['observations'][:1]
+        primary={'sources':[dict(id='maker',status='VERIFIED_MATCH',source_url='https://example.com/release')],
+                 'reviews':[dict(candidate_id=c['id'],current_recheck_verified=True,supported_claims=[dict(
+                     kind='ANNOUNCED_GENERAL_RELEASE',source_id='maker',date='2026-11-04')])]}
+        r=m.build([c],source_context(market,AT),[market],{},AT,primary)
+        case=r['cases'][0]
+        self.assertEqual(case['announced_release']['date'],'2026-11-04')
+        self.assertEqual(case['announced_release']['date_precision'],'DAY')
+        self.assertEqual(len(case['retail_sources']),1)
+        self.assertFalse(case['buy_signal']);self.assertFalse(case['causality_proven'])
+        primary['sources'][0]['status']='FAILED'
+        self.assertEqual(m.build([c],source_context(market,AT),[market],{},AT,primary)['cases'],[])
+        primary['sources'][0]['status']='VERIFIED_MATCH'
+        primary['reviews'][0]['supported_claims'][0]['date']='2026-99-99'
+        self.assertEqual(m.build([c],source_context(market,AT),[market],{},AT,primary)['cases'],[])
+
     def test_capacity_preserves_total_source_limit(self):
         self.assertEqual(research_capacity(8),8)
         self.assertEqual(research_capacity(10),6)

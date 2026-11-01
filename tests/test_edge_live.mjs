@@ -40,3 +40,13 @@ test('future-event preparation expires without waiting for a new capture',()=>{
  assert.equal(potentialBaseline({...s,latest_valid_evidence:{observed_at:'2026-11-02T10:00:00Z'}},AT),false);
  assert.equal(potentialBaseline({},AT),false);
 });
+
+
+test('a coming-soon price is not a buyable floor or an observed stockout',()=>{
+ const s=source({availability:'COMING_SOON',displayed_price_eur:'599.99'});
+ const p=productState({product_id:'lego_11388',sources:[s]},AT);
+ assert.equal(p.validCount,1);
+ assert.equal(p.inStock,0);assert.equal(p.outOfStock,0);
+ assert.equal(p.floor,null);assert.equal(p.spread,null);
+ assert.equal(p.label,'Commercialisation à venir');
+});
