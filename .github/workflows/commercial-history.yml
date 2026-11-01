@@ -16,6 +16,7 @@ on:
       - 'scripts/forecast_history.py'
       - 'scripts/coverage_history.py'
       - 'scripts/mri_case_history.py'
+      - 'scripts/publish_capture.py'
       - 'scripts/collection_policy.py'
       - 'scripts/primary_verification_history.py'
       - 'scripts/secondary_history.py'
@@ -35,6 +36,7 @@ on:
       - 'tests/test_forecast_history.py'
       - 'tests/test_coverage_history.py'
       - 'tests/test_mri_case_history.py'
+      - 'tests/test_publish_capture_history.py'
       - 'tests/test_primary_verification_history.py'
       - 'tests/test_secondary_history.py'
       - 'commercial_targets.json'
@@ -105,9 +107,10 @@ jobs:
           test ! -e "$folder"
           mkdir -p "$folder"
           cp /tmp/commercial-capture/* "$folder/"
+          python scripts/publish_capture.py --out /tmp/commercial-capture --snapshot "${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" --destination /tmp/edge-commercial-history/latest.json
           git -C /tmp/edge-commercial-history config user.name 'github-actions[bot]'
           git -C /tmp/edge-commercial-history config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git -C /tmp/edge-commercial-history add "snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git -C /tmp/edge-commercial-history add "snapshots/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" latest.json
           if test -f /tmp/edge-commercial-history/imports/lego_predict_2018_2023_monthly_v1/source.xlsx; then
             git -C /tmp/edge-commercial-history add imports
           fi

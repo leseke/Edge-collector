@@ -15,6 +15,7 @@ on:
       - 'images/**'
       - '_config.yml'
       - '.github/workflows/pages.yml'
+      - 'tests/test_edge_live.mjs'
 permissions:
   contents: read
 concurrency:
@@ -29,6 +30,8 @@ jobs:
       pages: read
     steps:
       - uses: actions/checkout@v4
+      - name: Test verified capture loading and unknown states
+        run: node --test tests/test_edge_live.mjs
       - name: Read Pages configuration
         uses: actions/configure-pages@v5
       - name: Record the source revision before the container build
@@ -59,7 +62,7 @@ jobs:
           import json, os
           from pathlib import Path
           root=Path('_site')
-          for name in ('index.html','mri/index.html','radar.json','mri/data/mri_public.json','deployment.json'):
+          for name in ('index.html','mri/index.html','assets/edge-live.css','assets/edge-live.mjs','assets/edge-data.mjs','deployment.json'):
               path=root/name
               if not path.is_file() or not path.stat().st_size:
                   raise SystemExit('Missing public entry point: '+name)

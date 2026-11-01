@@ -1,0 +1,15 @@
+# EDGE — Verified live capture interface
+
+The root dashboard and /mri/ read only the commercial-history feed. The old radar.json and isolated baseline mri/data/mri_public.json remain historical repository files; neither is a live interface input.
+
+Each collector run validates the selected report/context/case/coverage/forecast files against its final manifest. It writes latest.json alongside the immutable snapshot in the same data-branch commit. A failed validation prevents advertising that capture. Publication of market data does not require rebuilding Pages.
+
+The browser reads the public pointer and five immutable files, verifies SHA-256 checksums and schemas, and checks collection timestamp/status consistency before rendering. It never receives a GitHub token. A missing/inconsistent/tampered feed produces an explicit unavailable state; a failed refresh can retain only the previous verified capture with a warning and its original timestamp. There is no fallback to legacy radar data or sample data. Requests have a timeout and byte bound. A visible tab checks for updates every fifteen minutes; returning after a minute and the manual refresh button also reload the feed.
+
+Collection status and observation freshness are distinct. Snapshot delay starts after six hours and expiry after 24 hours. Current quote rendering rechecks source status and age, so an expired or failed source has unknown availability and no current price. The lower price of a stockout is not an available offer floor. A price spread is explicitly between available displayed asking prices, excluding delivery, and is not net margin. Archived incidents and abstentions remain visible. Zero scored forecasts is not zero uncertainty or a successful forecast.
+
+The root shows source-linked asking prices/stocks, current product counts, failed sources, historical missed windows and prospective validation coverage. The MRI route shows actual source publications and date/capture relationships, first/latest retailer observations, and missing pre-publication baselines. Single captures have unmeasured variation. The chronological review files link back to immutable GitHub snapshots. Untrusted titles, errors and source names are rendered as text; external links require HTTPS and cannot contain embedded credentials.
+
+Budget editing is local to the device and preserves previously saved local budget values. It is explicitly separate from discovery and collection. No default capital, committed amount, available balance, CASH conclusion, BUY recommendation or expected resale return is inferred from incomplete market data.
+
+Checks: standard-library Python tests cover pointer integrity/schema/path guards; Node's native test runner covers verified loading, corrupt/inconsistent captures, unknown/stale source states, price spread semantics, unsafe links, and the absence of legacy fallback. CI also validates generated HTML, data modules, styles and the served deployment revision. Browser verification must confirm both routes after deployment.
