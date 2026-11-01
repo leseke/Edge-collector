@@ -1,0 +1,79 @@
+name: EDGE Pages publication
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'mri/**'
+      - 'radar.json'
+      - 'portfolio.json'
+      - '*.md'
+      - '**.css'
+      - '**.js'
+      - 'assets/**'
+      - 'images/**'
+      - '_config.yml'
+      - '.github/workflows/pages.yml'
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read Pages configuration
+        uses: actions/configure-pages@v5
+      - name: Build the existing public site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Validate public entry points and record source revision
+        env:
+          PUBLISHED_SOURCE_SHA: ${{ github.sha }}
+          PUBLISHED_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          root=Path('_site')
+          for name in ('index.html','mri/index.html','radar.json','mri/data/mri_public.json'):
+              path=root/name
+              if not path.is_file() or not path.stat().st_size:
+                  raise SystemExit('Missing public entry point: '+name)
+              if name.endswith('.json'):
+                  json.loads(path.read_text())
+          (root/'deployment.json').write_text(json.dumps({
+              'source_sha':os.environ['PUBLISHED_SOURCE_SHA'],
+              'run_id':os.environ['PUBLISHED_RUN_ID'],
+              'workflow':'EDGE Pages publication'
+          },indent=2))
+          print('Public HTML/JSON entry points verified.')
+          PY
+      - name: Upload public site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publication.outputs.page_url }}
+    steps:
+      - name: Publish the verified artifact
+        id: publication
+        uses: actions/deploy-pages@v5
