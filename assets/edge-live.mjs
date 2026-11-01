@@ -59,7 +59,11 @@ function renderDashboard(){
 function makeCase(c){
  const card=el('article','card case');card.append(el('div','ref',c.product_id.replace('lego_','LEGO ')),el('h2',null,productName(c.product_id)));
  if(c.announced_release){const r=c.announced_release,release=el('div','publication');release.append(el('strong',null,'Sortie grand public annoncée : '+new Intl.DateTimeFormat('fr-FR',{dateStyle:'long',timeZone:'UTC'}).format(new Date(r.date+'T00:00:00Z'))),link('Annonce du fabricant',r.source_url),el('small',null,'La disponibilité à cette date reste à vérifier auprès des vendeurs.'));card.append(release);}
- for(const p of c.publication_evidence){const pub=el('div','publication');pub.append(link(p.title,p.source_url),el('small',null,'Date déclarée : '+dateText(p.published_at)+' · '+(p.source_role==='MANUFACTURER'?'Fabricant':'Média spécialisé')));card.append(pub);}
+ const articles=c.announced_release?c.publication_evidence.filter(p=>p.source_url!==c.announced_release.source_url):c.publication_evidence;
+ const articleBox=articles.length>2?el('details','publication'):card;
+ if(articleBox!==card)articleBox.append(el('summary',null,'Articles associés ('+articles.length+')'));
+ for(const p of articles){const pub=el('div','publication');pub.append(link(p.title,p.source_url),el('small',null,'Date déclarée : '+dateText(p.published_at)+' · '+(p.source_role==='MANUFACTURER'?'Fabricant':'Média spécialisé')));articleBox.append(pub);}
+ if(articleBox!==card)card.append(articleBox);
  if(!c.publication_evidence.length)card.append(el('p','muted','Comparaison des offres disponibles.'));
  const sources=el('div','sources');for(const source of c.retail_sources){const wrap=el('section');wrap.append(sourceRow(source.current_quote));
  const first=source.first_observation,last=source.latest_observation,period=el('div','period');period.append(el('div',null,'Premier relevé : '+dateText(first.observed_at)+' · '+euro(Number(first.price))),el('div',null,'Dernier relevé : '+dateText(last.observed_at)));
