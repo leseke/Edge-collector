@@ -28,7 +28,7 @@ def build(candidates, context, reports, reactions, at):
                 'current_quote':current,'successful_capture_count':len(rows),
                 'first_observation':{k:first.get(k) for k in ('id','observed_at','price','currency','availability','body_sha256')},
                 'latest_observation':{k:last.get(k) for k in ('id','observed_at','price','currency','availability','body_sha256')},
-                'displayed_price_change_since_first_capture_pct':str((Decimal(last['price'])/Decimal(first['price'])-1)*100),
+                'displayed_price_change_since_first_capture_pct':str((Decimal(last['price'])/Decimal(first['price'])-1)*100) if len(rows)>=2 else None,
                 'change_is_publication_effect':False})
         publication_ids={p['publication_id'] for p in publications}
         observation_ids={s['first_observation']['id'] for s in sources}
@@ -66,7 +66,8 @@ def render(report):
             '|---|---|---:|---|---:|---|---:|']
         for s in c['retail_sources']:
             a,b=s['first_observation'],s['latest_observation']
-            lines.append(f"| [{s['seller']}]({s['source_url']}) | {a['observed_at']} | {a['price']} | {b['observed_at']} | {b['price']} | {b['availability']} | {s['displayed_price_change_since_first_capture_pct']} % |")
+            variation='Non mesuré : premier relevé' if s['displayed_price_change_since_first_capture_pct'] is None else s['displayed_price_change_since_first_capture_pct']+' %'
+            lines.append(f"| [{s['seller']}]({s['source_url']}) | {a['observed_at']} | {a['price']} | {b['observed_at']} | {b['price']} | {b['availability']} | {variation} |")
         lines+=['',f"Fenêtres de réaction mesurées autour d’une publication : {c['measured_publication_reaction_windows']}.",
             'Les variations depuis le premier relevé décrivent uniquement la période couverte. Elles ne mesurent pas l’effet de la publication.','',
             'Ventes conclues, volumes, frais livrés et marge nette : non établis. Décision d’achat : non établie.','']

@@ -30,7 +30,13 @@ class MriCaseTests(unittest.TestCase):
         self.assertEqual(case['reaction_status'],'PUBLICATION_REACTION_NOT_MEASURED')
         self.assertFalse(case['causality_proven'])
         self.assertFalse(case['buy_signal'])
-        self.assertEqual(case['retail_sources'][0]['displayed_price_change_since_first_capture_pct'],'0')
+        self.assertIsNone(case['retail_sources'][0]['displayed_price_change_since_first_capture_pct'])
+
+    def test_variation_requires_distinct_timestamps(self):
+        c,market,context=fixture();previous=copy.deepcopy(market)
+        for r in previous['observations']:r.update(price='100',observed_at='2026-10-31T09:00:00Z')
+        result=m.build([c],context,[previous,market],{},AT)
+        self.assertEqual(result['cases'][0]['retail_sources'][0]['displayed_price_change_since_first_capture_pct'],'4.9500')
 
     def test_replayed_rows_not_extra_captures(self):
         c,market,context=fixture();r=m.build([c],context,[market,market],{},AT)
