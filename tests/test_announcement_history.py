@@ -94,3 +94,32 @@ class AnnouncementTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class BaselineAuditTests(unittest.TestCase):
+    measurements = AnnouncementTests.measurements
+    def test_simultaneous_quote_is_not_prepublication(self):
+        r = self.measurements([('2026-10-29T12:00:00Z', '100'), ('2026-10-30T12:00:00Z', '120')])
+        self.assertEqual(r['status'], 'NO_PRE_EVENT_BASELINE')
+        self.assertEqual(r['baseline_audit']['status'], 'NO_PRIOR_CAPTURE')
+        self.assertEqual(r['baseline_audit']['first_capture_offset_hours'], 0)
+
+    def test_exact_24h_old_quote_has_traceable_evidence(self):
+        r = self.measurements([('2026-10-28T12:00:00Z', '100'), ('2026-10-30T12:00:00Z', '120')])
+        a = r['baseline_audit']
+        self.assertEqual(a['status'], 'AVAILABLE')
+        self.assertEqual(a['prior_age_hours'], 24)
+        self.assertEqual(a['latest_prior_observation']['body_sha256'], 'hash')
+        self.assertEqual(r['seller'], 'Retailer')
+        self.assertEqual(r['source_url'], 'https://retailer.example/1')
+
+    def test_stale_quote_retained_only_as_diagnostic(self):
+        r = self.measurements([('2026-10-28T11:59:00Z', '100'), ('2026-10-30T12:00:00Z', '120')])
+        self.assertEqual(r['baseline_audit']['status'], 'STALE_PRIOR_CAPTURE')
+        self.assertNotIn('asking_price_change_pct', r['windows'][0])
+
+    def test_bad_prices_dates_and_missing_proof_are_not_baselines(self):
+        for price in ('0', '-1', 'NaN', 'Infinity', 'invalid'):
+            r = self.measurements([('2026-10-29T11:00:00Z', price), ('2026-10-30T12:00:00Z', '120')])
+            self.assertEqual(r['baseline_audit']['status'], 'NO_PRIOR_CAPTURE')
+        self.assertFalse(m.valid_reaction_quote({'price':'100','observed_at':'invalid','body_sha256':'hash'}))
+        self.assertFalse(m.valid_reaction_quote({'price':'100','observed_at':'2026-10-29T11:00:00Z'}))

@@ -5,7 +5,7 @@ import email.utils
 import json
 import re
 import xml.etree.ElementTree as ET
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -131,6 +131,29 @@ def register(items, previous, observed_at, source_initialized, targets):
     return items
 
 
+def valid_reaction_quote(row):
+    try:
+        price = Decimal(str(row.get('price')))
+        return bool(timestamp(row.get('observed_at')) and price.is_finite() and price > 0
+                    and row.get('body_sha256'))
+    except (InvalidOperation, ValueError, TypeError):
+        return False
+
+
+def baseline_audit(rows, anchor):
+    """Keep the exact pre-event evidence; simultaneous quotes are not prior data."""
+    prior = [r for r in rows if timestamp(r['observed_at']) < anchor]
+    first = min(rows, key=lambda r: timestamp(r['observed_at']))
+    latest = max(prior, key=lambda r: timestamp(r['observed_at'])) if prior else None
+    age = (anchor - timestamp(latest['observed_at'])).total_seconds() / 3600 if latest else None
+    return {'status': 'AVAILABLE' if age is not None and age <= 24 else 'STALE_PRIOR_CAPTURE' if latest else 'NO_PRIOR_CAPTURE',
+            'maximum_age_hours': 24, 'strictly_before_publication': True,
+            'prior_age_hours': age,
+            'latest_prior_observation': {k: latest.get(k) for k in ('id', 'observed_at', 'price', 'currency', 'availability', 'body_sha256')} if latest else None,
+            'first_capture_at': first['observed_at'],
+            'first_capture_offset_hours': (timestamp(first['observed_at']) - anchor).total_seconds() / 3600}
+
+
 def reactions(publications, market_reports):
     output = []
     for event in publications:
@@ -141,14 +164,16 @@ def reactions(publications, market_reports):
         series = {}
         for report in market_reports:
             for row in report.get('observations', []):
-                if row['status'] == 'OK' and row['product_id'] in event['product_ids'] and row['price_kind'] == 'ASKING_PRICE':
+                if row['status'] == 'OK' and row['product_id'] in event['product_ids'] and row['price_kind'] == 'ASKING_PRICE' and valid_reaction_quote(row):
                     key = (row['id'], row['url'], row['seller'], row['product_id'], row['currency'])
                     series.setdefault(key, []).append(row)
         if not series:
             output.append({'publication_id': event['id'], 'status': 'NO_RETAIL_OBSERVATIONS'})
         for key, rows in series.items():
-            before = [r for r in rows if anchor - dt.timedelta(hours=24) <= timestamp(r['observed_at']) <= anchor]
+            before = [r for r in rows if anchor - dt.timedelta(hours=24) <= timestamp(r['observed_at']) < anchor]
             result = {'publication_id': event['id'], 'observation_id': key[0],
+                      'source_url': key[1], 'seller': key[2], 'product_id': key[3], 'currency': key[4],
+                      'baseline_audit': baseline_audit(rows, anchor),
                       'anchor': event['published_at'], 'anchor_kind': 'SOURCE_PUBLICATION_TIME',
                       'causality_proven': False, 'buy_signal': False, 'windows': []}
             baseline = max(before, key=lambda r: timestamp(r['observed_at'])) if before else None

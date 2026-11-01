@@ -53,6 +53,16 @@ class MriCaseTests(unittest.TestCase):
         r=m.build([c],context,[market],measurements,AT)
         self.assertEqual(r['cases'][0]['measured_publication_reaction_windows'],0)
 
+    def test_reused_observation_id_from_other_seller_cannot_enter_case(self):
+        c,market,context=fixture()
+        row=dict(publication_id='pub',observation_id='retailer0',source_url='https://other.example',
+                 seller='Other',product_id='lego_11383',currency='EUR',windows=[dict(status='MEASURED')])
+        r=m.build([c],context,[market],{'measurements':[row]},AT)
+        self.assertEqual(r['cases'][0]['measured_publication_reaction_windows'],0)
+        row.update(source_url=market['observations'][0]['url'],seller='LDLC')
+        r=m.build([c],context,[market],{'measurements':[row]},AT)
+        self.assertEqual(r['cases'][0]['measured_publication_reaction_windows'],1)
+
     def test_single_current_seller_not_a_multi_source_case(self):
         c,market,context=fixture();market['observations'][1]['status']='FAILED'
         r=m.build([c],source_context(market,AT),[market],{},AT)

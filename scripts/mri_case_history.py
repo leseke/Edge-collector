@@ -31,9 +31,9 @@ def build(candidates, context, reports, reactions, at):
                 'displayed_price_change_since_first_capture_pct':str((Decimal(last['price'])/Decimal(first['price'])-1)*100) if len(rows)>=2 else None,
                 'change_is_publication_effect':False})
         publication_ids={p['publication_id'] for p in publications}
-        observation_ids={s['first_observation']['id'] for s in sources}
+        source_keys={(s['first_observation']['id'],s['source_url'],s['seller'],cid,s['first_observation']['currency']) for s in sources}
         measurements=[r for r in reactions.get('measurements',[]) if r['publication_id'] in publication_ids
-                      and r.get('observation_id') in observation_ids]
+                      and (r.get('observation_id'),r.get('source_url'),r.get('seller'),r.get('product_id'),r.get('currency')) in source_keys]
         measured=sum(w['status']=='MEASURED' for r in measurements for w in r.get('windows',[]))
         linked=[]
         for p in publications:
@@ -71,6 +71,12 @@ def render(report):
         lines+=['',f"Fenêtres de réaction mesurées autour d’une publication : {c['measured_publication_reaction_windows']}.",
             'Les variations depuis le premier relevé décrivent uniquement la période couverte. Elles ne mesurent pas l’effet de la publication.','',
             'Ventes conclues, volumes, frais livrés et marge nette : non établis. Décision d’achat : non établie.','']
+        for measurement in c['publication_reaction_measurements']:
+            audit=measurement.get('baseline_audit')
+            if not audit:continue
+            prior=audit['latest_prior_observation']
+            detail=(prior['observed_at']+' ; preuve SHA-256 : '+prior['body_sha256']) if prior else 'aucune capture strictement antérieure'
+            lines.append('- Diagnostic avant publication — '+measurement['seller']+' : '+audit['status']+' ; '+detail+'.')
     if not report['cases']:lines.append('Aucun produit avec deux vendeurs actuellement vérifiés dans ce passage.')
     return '\n'.join(lines)+'\n'
 
