@@ -3,6 +3,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import os
 import re
 from decimal import Decimal, InvalidOperation
 from html.parser import HTMLParser
@@ -246,7 +247,9 @@ def main():
             raise ValueError('Invalid target identity or URL')
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=False)
+    from collection_guard import trigger_context
     report = {'schema': 'edge.commercial.snapshot.v1', 'observed_at': now(),
+              'collection_trigger': trigger_context(os.environ),
               'observations': [fetch(target, out) for target in targets]}
     count = sum(row['status'] == 'OK' for row in report['observations'])
     report['status'] = 'OK' if count == len(targets) else 'PARTIAL' if count else 'FAILED'

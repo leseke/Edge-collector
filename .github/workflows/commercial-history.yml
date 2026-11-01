@@ -18,6 +18,8 @@ on:
       - 'scripts/mri_case_history.py'
       - 'scripts/publish_capture.py'
       - 'scripts/collection_policy.py'
+      - 'scripts/collection_guard.py'
+      - 'tests/test_collection_guard_history.py'
       - 'scripts/primary_verification_history.py'
       - 'scripts/secondary_history.py'
       - 'research/secondary_observations_2026-10-31.json'
@@ -42,7 +44,8 @@ on:
       - 'commercial_targets.json'
       - '.github/workflows/commercial-history.yml'
   schedule:
-    - cron: '37 */3 * * *'
+    # Wake hourly; the gate keeps successful market captures about 3 h apart.
+    - cron: '17 * * * *'
 permissions:
   contents: write
 concurrency:
@@ -71,35 +74,55 @@ jobs:
             git -C /tmp/edge-commercial-history checkout --orphan edge/commercial-history
             git -C /tmp/edge-commercial-history rm -rf --quiet .
           fi
+      - name: Check whether a new market capture is due
+        id: freshness
+        env:
+          TRIGGER_EVENT: ${{ github.event_name }}
+        run: python scripts/collection_guard.py --history /tmp/edge-commercial-history --event "$TRIGGER_EVENT"
       - name: Capture asking prices and explicit stock states
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/commercial_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Import checksum-pinned monthly research history
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/monthly_history.py --out /tmp/commercial-capture --cache /tmp/edge-commercial-history/imports
       - name: Capture announcements and descriptive reaction windows
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/announcement_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Discover product candidates and verify bounded retail offers
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/discovery_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Recheck scoped primary source conditions
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/primary_verification_history.py --out /tmp/commercial-capture
       - name: Capture secondary asks and observed cost evidence
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/secondary_history.py --out /tmp/commercial-capture
       - name: Follow verified retail transitions and source stock outcomes
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/commercial_reaction_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Audit target capture gaps and observed retailer availability
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/coverage_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Build publication-linked multi-retailer observation dossiers
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/mri_case_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Compute labelled estimates only from measured reaction windows
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/probability_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Retrieve chronologically available retail analogues
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/analogue_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Freeze dated retail forecasts and evaluate prospective outcomes
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/forecast_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Evaluate ordered monthly trajectory analogues against simple baselines
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/trajectory_history.py --out /tmp/commercial-capture --cache /tmp/edge-commercial-history/imports
       - name: Persist source-linked observation dossiers
+        if: steps.freshness.outputs.collect == 'true'
         run: python scripts/assessment_history.py --out /tmp/commercial-capture --history /tmp/edge-commercial-history/snapshots
       - name: Append evidence to isolated data branch
+        if: steps.freshness.outputs.collect == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -117,13 +140,14 @@ jobs:
           git -C /tmp/edge-commercial-history commit -m "data(mri): commercial observations ${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin "$(git -C /tmp/edge-commercial-history rev-parse HEAD):refs/heads/edge/commercial-history"
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.freshness.outputs.collect == 'true'
         with:
           name: commercial-evidence
           path: /tmp/commercial-capture/
           retention-days: 30
           if-no-files-found: ignore
       - name: Surface collection failure after archiving evidence
+        if: steps.freshness.outputs.collect == 'true'
         run: |
           python - <<'PY'
           import json

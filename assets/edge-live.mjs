@@ -14,6 +14,8 @@ function showStatus(error){
  const label=error?'ACTUALISATION IMPOSSIBLE':s.age.kind==='STALE'?'CAPTURE PÉRIMÉE':s.age.kind==='DELAYED'?'COLLECTE EN RETARD':s.age.kind==='UNKNOWN'?'DATE NON VÉRIFIÉE':s.status==='OK'?'COLLECTE VÉRIFIÉE':s.status==='PARTIAL'?'COLLECTE PARTIELLE':s.status==='EMPTY'?'COLLECTE VIDE':'COLLECTE EN ÉCHEC';
  status.className='notice '+(error||s.status==='FAILED'||s.age.kind==='STALE'||s.age.kind==='UNKNOWN'?'bad':s.status==='OK'&&!stale?'good':'');
  status.append(el('span','pill '+(s.status==='OK'&&!error&&!stale?'ok':'warn'),label),el('strong',null,`${s.currentQuotes} relevés commerciaux actuellement vérifiés · ${s.sourceFailures} sources en échec`),el('p','meta','Capture du '+dateText(capture.market.observed_at)+' · heure de Paris'));
+ const origin={schedule:'Planification automatique',push:'Mise à jour du code',workflow_dispatch:'Déclenchement manuel',local:'Exécution locale'}[capture.market.collection_trigger?.event];
+ if(origin)status.append(el('small',null,'Origine de la capture : '+origin));
  if(error)status.append(el('p',null,'La dernière capture vérifiée reste affichée. '+error));
  if(stale)status.append(el('p',null,s.age.kind==='STALE'?'Les prix de plus de 24 heures sont masqués comme périmés.':'La cadence visée est de trois heures. La date des relevés reste la référence.'));
  status.append(el('small',null,'Décision d’achat : non établie. Trésorerie disponible : non calculée.'));
