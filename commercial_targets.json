@@ -57,6 +57,14 @@
       "expected_offer_seller": "King Jouet France",
       "source_qualification": "ESTABLISHED_RETAILER",
       "url": "https://www.king-jouet.com/jeu-jouet/jeux-constructions/lego-planchettes/ref-990051-75639-lego-one-piece-bateau-pirate-vogue-merry.htm"
+    },
+    {
+      "id": "joueclub_75639",
+      "product_id": "lego_75639",
+      "sku": "75639",
+      "seller": "JoueClub",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html"
     }
   ]
 }

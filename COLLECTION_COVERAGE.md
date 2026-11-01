@@ -11,3 +11,7 @@ Source context uses current-run EUR asking-price observations at most 24 hours o
 ## Initial source extension
 
 A second retailer for LEGO 75639 is configured only after a direct page verification: King Jouet France, exact manufacturer reference in Product name, one EUR Offer and explicit seller `King Jouet France`. Page: https://www.king-jouet.com/jeu-jouet/jeux-constructions/lego-planchettes/ref-990051-75639-lego-one-piece-bateau-pirate-vogue-merry.htm . The actual page declares 103.99 EUR / OutOfStock in its structured Offer during the 1 November verification. The ongoing collector rechecks this independently; search snippets are not production quotes. Smyths returned HTTP 403 and the bounded LDLC 10365 search returned no verified exact-reference offer, so neither was added as a validated offer.
+
+## Autonomous-run verification and additional retailer
+
+The first GitHub run after adding King Jouet returned HTTP 403 there. Its current price/availability are therefore UNKNOWN in the autonomous report, despite a successful direct probe in the research environment. This failure is retained explicitly. A direct JouéClub 75639 product page was then verified with the same strict parser (exact reference in Product name, EAN 5702017818023, one EUR Offer, current structured availability). It is added for a separate GitHub runner verification: https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html . A research-environment success alone is not counted as autonomous multi-retailer coverage.
