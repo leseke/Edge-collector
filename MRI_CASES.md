@@ -10,6 +10,6 @@ Two added JouéClub source plans target LEGO 11383 (EAN 5702018063644) and 42705
 
 The collector now checks LEGO identity against an explicit brand when present, or a LEGO name marker otherwise; a matching number from another brand is rejected. Research target capacity is bounded by both the nominal eight-target research cap and remaining capacity within sixteen total sources. Ten configured base sources therefore leave six research slots; this does not claim six currently monitored research sources.
 
-## Pages recovery
+## Pages publication verification
 
-Failed Pages logs repeatedly name deployment 8e44642dd3c3e03833fe159d0f403bfe613e3c3d as blocking, while its authenticated API status reports success. A targeted recovery workflow uses the documented Pages cancellation endpoint on that exact stale blocker, followed by a new deployment attempt. It does not delete/unpublish the Pages site or alter repository settings. The workflow is triggered only when its own file changes or by explicit manual dispatch. Pages success must be verified separately from collector success.
+Pages deployment run 41290451212 successfully published commit c451d8ca9a6c019a17b4c64aaee1b303c54446ff after previous runs reported a stale blocking deployment. The old deployment was already terminal; its cancellation request was rejected without changing it. The temporary recovery workflow has been retired. No permanent scheduler/service root cause is claimed; Pages publication is verified separately from collection success.
