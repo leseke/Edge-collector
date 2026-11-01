@@ -8,7 +8,6 @@ on:
       - 'mri/**'
       - 'radar.json'
       - 'portfolio.json'
-      - '*.md'
       - '**.css'
       - '**.js'
       - 'assets/**'
@@ -62,10 +61,24 @@ jobs:
           assert "'./edge-data.mjs'" in body, 'Missing capture loader import'
           module.write_text(body.replace("'./edge-data.mjs'", "'./edge-data.mjs"+version+"'"))
           PYMARKER
+      - name: Prepare user-facing publication only
+        run: |
+          python - <<'PYPUBLIC'
+          from pathlib import Path
+          import shutil
+          public=Path('_public_source')
+          public.mkdir(exist_ok=False)
+          for name in ('index.html','mri/index.html','assets/edge-live.css','assets/edge-live.mjs','assets/edge-data.mjs','deployment.json'):
+              source=Path(name)
+              assert source.is_file() and source.stat().st_size, 'Missing public resource: '+name
+              target=public/name
+              target.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(source,target)
+          PYPUBLIC
       - name: Build the existing public site
         uses: actions/jekyll-build-pages@v1
         with:
-          source: ./
+          source: ./_public_source
           destination: ./_site
       - name: Validate public entry points and record source revision
         env:
@@ -82,6 +95,9 @@ jobs:
                   raise SystemExit('Missing public entry point: '+name)
               if name.endswith('.json'):
                   json.loads(path.read_text())
+          allowed={'index.html','mri/index.html','assets/edge-live.css','assets/edge-live.mjs','assets/edge-data.mjs','deployment.json','.nojekyll'}
+          unexpected=[str(p.relative_to(root)) for p in root.rglob('*') if p.is_file() and str(p.relative_to(root)) not in allowed]
+          assert not unexpected, 'Non-user publication files: '+str(unexpected)
           revision=json.loads((root/'deployment.json').read_text())
           assert revision['source_sha']==os.environ['PUBLISHED_SOURCE_SHA']
           assert revision['run_id']==os.environ['PUBLISHED_RUN_ID']
