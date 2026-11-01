@@ -1,0 +1,42 @@
+{
+  "observed_at": "2026-11-01T08:18:46.604863+00:00",
+  "targets": [
+    {
+      "id": "ldlc_discovered_42705",
+      "sku": "42705",
+      "product_id": "lego_42705",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00743956.html"
+    },
+    {
+      "id": "ldlc_discovered_40744",
+      "sku": "40744",
+      "product_id": "lego_40744",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00707328.html"
+    },
+    {
+      "id": "ldlc_discovered_11383",
+      "sku": "11383",
+      "product_id": "lego_11383",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00759980.html"
+    },
+    {
+      "id": "ldlc_discovered_42179",
+      "sku": "42179",
+      "product_id": "lego_42179",
+      "seller": "LDLC",
+      "expected_offer_seller": "LDLC",
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "url": "https://www.ldlc.com/fiche/PB00731483.html"
+    }
+  ],
+  "scope": "RESEARCH_ONLY_NOT_FINANCIAL_WATCHLIST"
+}
