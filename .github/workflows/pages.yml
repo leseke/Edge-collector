@@ -47,6 +47,20 @@ jobs:
               'run_id':os.environ['PUBLISHED_RUN_ID'],
               'workflow':'EDGE Pages publication'
           },indent=2))
+          # Give every release a distinct URL, including the transitive module.
+          version='?v='+os.environ['PUBLISHED_SOURCE_SHA']
+          for name in ('index.html','mri/index.html'):
+              page=Path(name)
+              body=page.read_text()
+              for asset in ('edge-live.css','edge-live.mjs'):
+                  old=asset+'"'
+                  assert old in body, 'Missing public asset reference: '+asset
+                  body=body.replace(old,asset+version+'"')
+              page.write_text(body)
+          module=Path('assets/edge-live.mjs')
+          body=module.read_text()
+          assert "'./edge-data.mjs'" in body, 'Missing capture loader import'
+          module.write_text(body.replace("'./edge-data.mjs'", "'./edge-data.mjs"+version+"'"))
           PYMARKER
       - name: Build the existing public site
         uses: actions/jekyll-build-pages@v1
