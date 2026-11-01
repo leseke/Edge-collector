@@ -1,0 +1,31 @@
+{
+  "schema": "edge.public.live_capture.v1",
+  "snapshot_id": "41299500065-1",
+  "observed_at": "2026-11-01T10:54:26.083166+00:00",
+  "published_at": "2026-11-01T10:55:27.801668+00:00",
+  "status": "PARTIAL",
+  "files": {
+    "report.json": {
+      "path": "snapshots/41299500065-1/report.json",
+      "sha256": "0d87b043561035a57c30067a78875372ac3cdc1565d328060a9b00f0430f371d"
+    },
+    "retail_source_context.json": {
+      "path": "snapshots/41299500065-1/retail_source_context.json",
+      "sha256": "71038058e607ea6cf61e6cda457be244fe5273f8001148a5d19ac072a814d242"
+    },
+    "mri_cases.json": {
+      "path": "snapshots/41299500065-1/mri_cases.json",
+      "sha256": "5eef67c62655e34dd20f7292d71d025ced40d5908673250249db1424565b6fed"
+    },
+    "collection_coverage.json": {
+      "path": "snapshots/41299500065-1/collection_coverage.json",
+      "sha256": "60ba73709704138e509d5d0c75d464b1837bcbc0cd3e4dde40bade1cd43fa4f5"
+    },
+    "forecast_evaluations.json": {
+      "path": "snapshots/41299500065-1/forecast_evaluations.json",
+      "sha256": "040b46b7e4f82187923f231d24c28826ca1b4d1e4f90407100638f17adde1ae9"
+    }
+  },
+  "data_kind": "OBSERVED_MARKET_DATA_WITH_SEPARATE_LABELLED_ESTIMATES",
+  "financial_decision": "NOT_ESTABLISHED"
+}

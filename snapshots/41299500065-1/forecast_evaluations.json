@@ -1,0 +1,97 @@
+{
+  "schema": "edge.mri.prospective_followup.v1",
+  "generated_at": "2026-11-01T10:54:48.356823+00:00",
+  "evaluations": [
+    {
+      "forecast_id": "71877129cf8a830b73a3d7c9980060094b25b3eb0f460a2c24f832f035f5e166",
+      "record_sha256": "29709f805c9b38e673c5c8642f4036e6d8e17e11e1b181a6e9da8a10ce5aee0b",
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "product_id": "lego_40744",
+      "horizon_hours": 24,
+      "target_at": "2026-10-31T22:37:51.698791+00:00",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "registration_timing": "LATE_REGISTRATION",
+      "outcome_status": "MISSING_WINDOW_OBSERVATION",
+      "validation_status": "NOT_YET_SCORABLE",
+      "brier_score": null,
+      "baseline_brier_score": null
+    },
+    {
+      "forecast_id": "dac93201cfabc2e59af4c9ace829ff058667cf710d82c9d07ccc55e9aa19b328",
+      "record_sha256": "cdec83fbb5ca88d52ddad2700311e27a46030982057c1e0455a6b51555352180",
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "product_id": "lego_40744",
+      "horizon_hours": 72,
+      "target_at": "2026-11-02T22:37:51.698791+00:00",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "registration_timing": "BEFORE_TARGET",
+      "outcome_status": "PENDING_HORIZON",
+      "validation_status": "NOT_YET_SCORABLE",
+      "brier_score": null,
+      "baseline_brier_score": null
+    },
+    {
+      "forecast_id": "de30105aad7a8e2436e6e0eb68e37fe19f9f9fc1ce5951e64907b746addf7fa2",
+      "record_sha256": "e086bf7921a04d2c2adab489c6704473d4193ab198bf5a8798fc08b2441073b4",
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "product_id": "lego_40744",
+      "horizon_hours": 168,
+      "target_at": "2026-11-06T22:37:51.698791+00:00",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "registration_timing": "BEFORE_TARGET",
+      "outcome_status": "PENDING_HORIZON",
+      "validation_status": "NOT_YET_SCORABLE",
+      "brier_score": null,
+      "baseline_brier_score": null
+    }
+  ],
+  "metrics": [
+    {
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "horizon_hours": 24,
+      "records": 1,
+      "scored_count": 0,
+      "abstentions": 1,
+      "late_registrations": 1,
+      "missing_target_captures": 1,
+      "brier_score": null,
+      "paired_baseline_count": 0,
+      "paired_brier_score": null,
+      "baseline_brier_score": null,
+      "calibration_validated": false,
+      "independence_verified": false
+    },
+    {
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "horizon_hours": 72,
+      "records": 1,
+      "scored_count": 0,
+      "abstentions": 1,
+      "late_registrations": 0,
+      "missing_target_captures": 0,
+      "brier_score": null,
+      "paired_baseline_count": 0,
+      "paired_brier_score": null,
+      "baseline_brier_score": null,
+      "calibration_validated": false,
+      "independence_verified": false
+    },
+    {
+      "model_id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+      "horizon_hours": 168,
+      "records": 1,
+      "scored_count": 0,
+      "abstentions": 1,
+      "late_registrations": 0,
+      "missing_target_captures": 0,
+      "brier_score": null,
+      "paired_baseline_count": 0,
+      "paired_brier_score": null,
+      "baseline_brier_score": null,
+      "calibration_validated": false,
+      "independence_verified": false
+    }
+  ],
+  "calibrated_for_future_prediction": false,
+  "profitability_measured": false
+}
