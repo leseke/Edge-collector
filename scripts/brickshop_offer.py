@@ -90,4 +90,4 @@ def parse(raw,target):
             'evidence':{'product':{'name':name,'sku':sku,'brand':brand,'gtin13':gtin},
                         'offer':{k:one(offer,k) for k in ('price','priceCurrency','url','availability')},
                         'visible_online_status':stock,'retailer_announced_available_date':release,
-                        'shipping_to_france_verified':False,'checkout_verified':False}}
+                        'shipping_to_france_verified':False,'checkout_verified':False,'seller_reliability_reviewed':False}}

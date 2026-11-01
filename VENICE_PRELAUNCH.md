@@ -15,7 +15,7 @@ The new adapter requires one identified main product table. Its barcode, microda
 
 The visible Online status is read separately from the physical store status. COMING SOON with machine OutOfStock becomes COMING_SOON, not a reported stockout. An eventual in-stock state must be confirmed by both machine metadata and visible online text. Missing, ambiguous or contradictory fields fail closed and retain the original response as evidence.
 
-COMING_SOON contributes a verified displayed price but never an available purchase floor, in-stock count, observed stockout or computed resale margin. The user sees À venir and Livraison en France non confirmée.
+COMING_SOON contributes a verified displayed price but never an available purchase floor, in-stock count, observed stockout or computed resale margin. The user sees À venir, Fiabilité du vendeur non évaluée par EDGE and Livraison en France non confirmée. A verified page extraction is not represented as a seller-reliability assessment.
 
 ## Event dossier
 

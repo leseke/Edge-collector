@@ -30,6 +30,7 @@ class BrickshopTests(unittest.TestCase):
         self.assertEqual(r['evidence']['retailer_announced_available_date'],'2026-11-04')
         self.assertFalse(r['evidence']['shipping_to_france_verified'])
         self.assertFalse(r['evidence']['checkout_verified'])
+        self.assertFalse(r['evidence']['seller_reliability_reviewed'])
 
     def test_metadata_and_visible_price_disagreement_rejected(self):
         with self.assertRaises(ValueError):parse(HTML.replace('€ 599,99','€ 499,99').encode(),TARGET)

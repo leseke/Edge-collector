@@ -81,6 +81,7 @@ def source_context(market, at):
                 'displayed_price_eur':row.get('price') if usable else None,'body_sha256':row.get('body_sha256'),
                 'shipping_eur':row.get('shipping_eur'),'error':row.get('error'),
                 'shipping_to_france_verified':row.get('evidence',{}).get('shipping_to_france_verified'),
+                'seller_reliability_reviewed':row.get('evidence',{}).get('seller_reliability_reviewed'),
                 'retailer_announced_available_date':row.get('evidence',{}).get('retailer_announced_available_date')})
         valid=[s for s in sources if s['usable_current_quote']]
         available=[s for s in valid if s['availability']=='IN_STOCK']

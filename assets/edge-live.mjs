@@ -23,6 +23,7 @@ function sourceRow(source){
  row.append(link(source.seller,source.source_url),el('div',state.usable?'price':'unknown-price',state.usable?euro(state.price):state.age.kind==='STALE'?'Prix à actualiser':'Prix indisponible'));
  row.append(el('div','seller-state '+(state.availability==='IN_STOCK'?'stock-in':state.availability==='OUT_OF_STOCK'?'stock-out':''),stockLabels[state.availability]||'Stock non établi'));
  row.append(el('div','seller-time','Relevé : '+dateText(source.observed_at)));
+ if(source.seller_reliability_reviewed===false)row.append(el('small','seller-time','Fiabilité du vendeur non évaluée par EDGE.'));
  if(source.shipping_to_france_verified===false)row.append(el('small','seller-time','Livraison en France non confirmée.'));
  return row;
 }
