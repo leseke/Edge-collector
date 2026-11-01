@@ -26,12 +26,18 @@ export function quoteState(source,now=Date.now()){
 export function safeUrl(value){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
 export const euro=value=>Number.isFinite(value)?new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR'}).format(value):'Non établi';
 export function dateText(value){return timestamp(value)===null?'Date non établie':new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',dateStyle:'medium',timeStyle:'short'}).format(new Date(value));}
+export function sellerVerified(source,now=Date.now()){
+ const r=source.seller_reliability,reviewed=timestamp(r?.reviewed_at),expires=timestamp(r?.valid_until),url=safeUrl(source.source_url);
+ return !!(r?.schema==='edge.seller.reliability.v1'&&r.status==='VERIFIED'&&r.eligible_for_economic_use===true&&url&&r.site_origin===new URL(url).origin&&reviewed!==null&&expires!==null&&reviewed<=now&&now<=expires&&expires>reviewed&&expires-reviewed<=30*86400000);
+}
 export function productState(product,now=Date.now()){
  const sources=product.sources.map(source=>({source,state:quoteState(source,now)}));
  const valid=sources.filter(s=>s.state.usable),available=valid.filter(s=>s.state.availability==='IN_STOCK'),out=valid.filter(s=>s.state.availability==='OUT_OF_STOCK');
- const prices=available.map(s=>s.state.price),upcoming=valid.filter(s=>s.state.availability==='COMING_SOON');
+ const prices=available.map(s=>s.state.price),reviewedPrices=available.filter(s=>sellerVerified(s.source,now)).map(s=>s.state.price),upcoming=valid.filter(s=>s.state.availability==='COMING_SOON');
  return {sources,validCount:valid.length,inStock:available.length,outOfStock:out.length,
-  floor:prices.length?Math.min(...prices):null,spread:prices.length>=2?Math.max(...prices)-Math.min(...prices):null,
+  floor:reviewedPrices.length?Math.min(...reviewedPrices):null,spread:reviewedPrices.length>=2?Math.max(...reviewedPrices)-Math.min(...reviewedPrices):null,
+  observedFloor:prices.length?Math.min(...prices):null,observedSpread:prices.length>=2?Math.max(...prices)-Math.min(...prices):null,
+  sellerEligibleCount:reviewedPrices.length,
   label:available.length&&out.length?'Disponibilité mixte':out.length?'Rupture sur les sources observées':available.length?'En stock sur les sources observées':upcoming.length?'Commercialisation à venir':'Disponibilité non établie'};
 }
 export function captureSummary(capture,now=Date.now()){

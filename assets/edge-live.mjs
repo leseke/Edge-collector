@@ -1,4 +1,4 @@
-import {loadCapture,captureSummary,productState,quoteState,euro,dateText,safeUrl} from './edge-data.mjs';
+import {loadCapture,captureSummary,productState,quoteState,euro,dateText,safeUrl,sellerVerified} from './edge-data.mjs';
 const content=document.getElementById('content'),status=document.getElementById('capture-status'),refreshButton=document.getElementById('refresh');
 const isMri=document.body.dataset.view==='mri';
 let capture=null,loading=false,lastLoaded=0,search='';
@@ -23,23 +23,23 @@ function sourceRow(source){
  row.append(link(source.seller,source.source_url),el('div',state.usable?'price':'unknown-price',state.usable?euro(state.price):state.age.kind==='STALE'?'Prix à actualiser':'Prix indisponible'));
  row.append(el('div','seller-state '+(state.availability==='IN_STOCK'?'stock-in':state.availability==='OUT_OF_STOCK'?'stock-out':''),stockLabels[state.availability]||'Stock non établi'));
  row.append(el('div','seller-time','Relevé : '+dateText(source.observed_at)));
- if(source.seller_reliability_reviewed===false)row.append(el('small','seller-time','Fiabilité du vendeur non évaluée par EDGE.'));
+ if(!sellerVerified(source))row.append(el('small','seller-time','Achat non validé : fiabilité du vendeur non vérifiée.'));
  if(source.shipping_to_france_verified===false)row.append(el('small','seller-time','Livraison en France non confirmée.'));
  return row;
 }
 function makeProduct(product){
  const state=productState(product),card=el('article','card'),top=el('div','card-top'),heading=el('div');
  heading.append(el('div','ref',product.product_id.replace('lego_','LEGO ')),el('h3',null,productName(product.product_id)));
- top.append(heading,el('span','pill '+(state.inStock?'ok':state.outOfStock?'warn':''),state.validCount+' offre'+(state.validCount>1?'s':'')+' vérifiée'+(state.validCount>1?'s':'')));
+ top.append(heading,el('span','pill '+(state.inStock?'ok':state.outOfStock?'warn':''),state.validCount+' prix observé'+(state.validCount>1?'s':'')));
  card.append(top,el('p','context',state.label));
  for(const {source}of state.sources)card.append(sourceRow(source));
- if(state.spread!==null)card.append(el('p','spread','Écart entre les prix en stock : '+euro(state.spread)+' · hors livraison'));
+ if(state.observedSpread!==null)card.append(el('p','spread','Écart de prix observé : '+euro(state.observedSpread)+' · hors livraison, sans validation d’achat'));
  return card;
 }
 function sectionHeading(title,sub){const head=el('div','section-head');const copy=el('div');copy.append(el('h2',null,title));if(sub)copy.append(el('small',null,sub));head.append(copy);return head;}
 function analysisLimits(){
  const box=el('details','method');box.append(el('summary',null,'Comment interpréter ces informations ?'));
- box.append(el('p',null,'Les prix affichés et les disponibilités sont ceux annoncés par les vendeurs à la date indiquée. Une rupture chez un vendeur ne prouve pas une pénurie générale.'),el('p',null,'Les frais de livraison et les ventes réellement conclues ne sont pas confirmés. Un écart entre deux offres ne correspond pas à un bénéfice de revente.'),el('p',null,'Les données disponibles ne permettent pas encore de fournir une probabilité de gain fiable. Les prix affichés ne suffisent pas à recommander un achat.'));
+ box.append(el('p',null,'Les prix affichés et les disponibilités sont ceux annoncés par les vendeurs à la date indiquée. Une rupture chez un vendeur ne prouve pas une pénurie générale.'),el('p',null,'Les frais de livraison et les ventes réellement conclues ne sont pas confirmés. Un écart entre deux offres ne correspond pas à un bénéfice de revente.'),el('p',null,'Les données disponibles ne permettent pas encore de fournir une probabilité de gain fiable. Les prix affichés ne suffisent pas à recommander un achat. Une offre d’un vendeur dont la fiabilité n’est pas vérifiée est exclue des comparaisons économiques servant à une décision d’achat.'));
  return box;
 }
 function budget(){
@@ -50,7 +50,7 @@ function budget(){
  form.append(label,input,button,message);form.addEventListener('submit',event=>{event.preventDefault();const value=input.value;if(value!==''&&(!Number.isFinite(Number(value))||Number(value)<0)){message.textContent='Renseigne un montant positif ou nul.';return;}try{if(value===''){localStorage.removeItem('edge_research_budget');localStorage.removeItem('edge_sim_capital');}else localStorage.setItem('edge_research_budget',value);message.textContent='Enregistré uniquement sur cet appareil.';}catch{message.textContent='L’enregistrement local est indisponible.';}});box.append(form);return box;
 }
 function renderDashboard(){
- const s=captureSummary(capture);content.append(stats([[s.currentQuotes,'Offres vérifiées'],[s.observedProducts,'Produits suivis'],[s.multiSourceProducts,'Comparaisons entre vendeurs'],[s.linkedCases,'Produits avec une actualité']]));
+ const s=captureSummary(capture);content.append(stats([[s.currentQuotes,'Prix observés'],[s.observedProducts,'Produits suivis'],[s.multiSourceProducts,'Comparaisons entre vendeurs'],[s.linkedCases,'Produits avec une actualité']]));
  const heading=sectionHeading('Prix et disponibilités','Offres observées · frais de livraison non vérifiés'),input=el('input','search');input.type='search';input.placeholder='Référence, produit ou vendeur';input.setAttribute('aria-label','Filtrer les produits ou vendeurs');input.value=search;heading.append(input);content.append(heading);
  const list=el('section','cards');list.setAttribute('aria-label','Produits observés');content.append(list);
  const draw=()=>{list.replaceChildren();const needle=search.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();const products=[...capture.context.products].sort((a,b)=>productState(b).validCount-productState(a).validCount||a.product_id.localeCompare(b.product_id));

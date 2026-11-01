@@ -53,6 +53,7 @@ def build(candidates, context, reports, reactions, at, primary=None):
             'reaction_status':'DESCRIPTIVE_WINDOWS_MEASURED_NOT_CAUSAL' if measured else 'PUBLICATION_REACTION_NOT_MEASURED',
             'missing_data':['VERIFIED_REALIZED_SALES','TRANSACTION_VOLUME','FRANCE_DELIVERED_PRICES','NET_MARGIN']+
                 ([] if measured else ['MEASURED_BEFORE_AND_AFTER_PUBLICATION_REACTION']),
+            'purchase_gate':product.get('purchase_gate',{'status':'BLOCKED','buy_signal':False,'purchase_authorized':False}),
             'causality_proven':False,'buy_signal':False,'financial_decision':'NOT_ESTABLISHED'})
     return {'schema':'edge.mri.multi_source_cases.v1','generated_at':at,'cases':cases,
         'publication_linked_cases':sum(bool(c['publication_evidence']) for c in cases),

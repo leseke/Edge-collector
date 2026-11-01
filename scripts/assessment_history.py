@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from announcement_history import timestamp
 from commercial_history import digest, now
+from seller_reliability import review_seller, purchase_gate
 
 
 def apply_primary_review(case, report):
@@ -43,7 +44,7 @@ def apply_primary_review(case, report):
         case['event_phase'] = 'UPCOMING' if date < start else 'PAST_WINDOW' if date > end else 'SOURCE_DATE_WINDOW'
 
 
-def assess(candidate, market, history, reaction_report, publications, assessed_at, primary=None, secondary=None, economics=None):
+def assess(candidate, market, history, reaction_report, publications, assessed_at, primary=None, secondary=None, economics=None, seller_reviews=None):
     cid = candidate['id']
     at = timestamp(assessed_at)
     facts = [{'type': 'PUBLICATION_REFERENCE', 'publication_id': e['publication_id'],
@@ -63,6 +64,7 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
             'availability': row['availability'], 'observed_at': row['observed_at'],
             'age_hours': round(age, 2), 'fresh_within_24h': age <= 24, 'shipping_eur': row.get('shipping_eur'),
             'evidence_sha256': row['body_sha256'], 'completed_sale': False,
+            'seller_reliability':review_seller(row['seller'],row['url'],seller_reviews,assessed_at),
             'current_capture_status': next((r['status'] for r in market['observations']
                 if r['id'] == row['id'] and r['url'] == row['url']), 'NOT_IN_CURRENT_CAPTURE')})
     ids = {e['publication_id'] for e in candidate['evidence']}
@@ -83,6 +85,9 @@ def assess(candidate, market, history, reaction_report, publications, assessed_a
         'financial_decision': 'NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA',
         'buy_signal': False, 'purchase_authorized': False}
     apply_primary_review(case, primary)
+    case['seller_purchase_gate']=purchase_gate([dict(f,usable_current_quote=f['fresh_within_24h'] and f['current_capture_status']=='OK') for f in fresh],assessed_at)
+    if any(not f['seller_reliability']['eligible_for_economic_use'] for f in fresh):
+        case['missing_data'].append('SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED')
     if secondary and cid in ('lego_11388', 'lego_40889', 'lego_40898'):
         case['secondary_market_evidence'] = {
             'observed_at': secondary['observed_at'], 'status': secondary['status'],
@@ -179,7 +184,8 @@ def main():
     primary = json.loads(primary_path.read_text()) if primary_path.exists() else None
     secondary = json.loads(secondary_path.read_text()) if secondary_path.exists() else None
     observed = now()
-    cases = [assess(c, market, markets, reaction, {}, observed, primary, secondary) for c in discovery['candidates']]
+    seller_reviews=json.loads(Path('seller_reviews.json').read_text())
+    cases = [assess(c, market, markets, reaction, {}, observed, primary, secondary, seller_reviews=seller_reviews) for c in discovery['candidates']]
     cases.sort(key=lambda c: c['candidate_id'])
     report = {'schema': 'edge.mri.observed_dossiers.v2', 'observed_at': observed,
         'data_policy': 'OBSERVED_INPUTS_WITH_SEPARATE_LABELLED_ESTIMATES_V1', 'assessments': cases,

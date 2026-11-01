@@ -6,6 +6,7 @@ from pathlib import Path
 from decimal import Decimal, InvalidOperation
 from announcement_history import timestamp, valid_reaction_quote
 from commercial_history import now
+from seller_reliability import review_seller, purchase_gate
 from collection_policy import EXPECTED_CADENCE_HOURS, TARGET_CAPTURE_TOLERANCE_HOURS
 
 
@@ -54,7 +55,7 @@ def audit(followup, reports, at):
         'scheduler_root_cause_proven':False,'alert_delivery':'REPORT_ONLY_NO_EXTERNAL_MESSAGES'}
 
 
-def source_context(market, at):
+def source_context(market, at, seller_reviews=None):
     current=timestamp(at); products={}
     for row in market['observations']:
         if row.get('price_kind')!='ASKING_PRICE':continue
@@ -81,7 +82,7 @@ def source_context(market, at):
                 'displayed_price_eur':row.get('price') if usable else None,'body_sha256':row.get('body_sha256'),
                 'shipping_eur':row.get('shipping_eur'),'error':row.get('error'),
                 'shipping_to_france_verified':row.get('evidence',{}).get('shipping_to_france_verified'),
-                'seller_reliability_reviewed':row.get('evidence',{}).get('seller_reliability_reviewed'),
+                'seller_reliability':review_seller(row['seller'],row['url'],seller_reviews,at),
                 'retailer_announced_available_date':row.get('evidence',{}).get('retailer_announced_available_date')})
         valid=[s for s in sources if s['usable_current_quote']]
         available=[s for s in valid if s['availability']=='IN_STOCK']
@@ -96,7 +97,9 @@ def source_context(market, at):
             'in_stock_seller_count':len(available),'out_of_stock_seller_count':len(stockouts),
             'availability_context':state,
             'lowest_observed_in_stock_asking_price_eur':str(min(Decimal(s['displayed_price_eur']) for s in available)) if available else None,
-            'market_wide_shortage_proven':False,'completed_sales_verified':False,'buy_signal':False})
+            'market_wide_shortage_proven':False,'completed_sales_verified':False,'buy_signal':False,
+            'purchase_gate':purchase_gate(sources,at),
+            'lowest_reviewed_seller_in_stock_price_eur':str(min(Decimal(s['displayed_price_eur']) for s in available if s['seller_reliability']['eligible_for_economic_use'])) if any(s['seller_reliability']['eligible_for_economic_use'] for s in available) else None})
     return {'schema':'edge.mri.retail_source_context.v1','generated_at':at,'products':result,
             'scope':'CURRENT_RUN_QUOTES_WITHIN_24_HOURS_NOT_EXHAUSTIVE_MARKET','net_margin_computed':False}
 
@@ -181,7 +184,8 @@ def main():
         r=json.loads(p.read_text());r['_snapshot']=p.parent.name;reports.append(r)
     market=json.loads((out/'report.json').read_text());reports.append(dict(market,_snapshot='CURRENT_RUN'))
     followup=json.loads((out/'commercial_reactions.json').read_text());at=now()
-    coverage=audit(followup,reports,at);context=source_context(market,at)
+    seller_reviews=json.loads(Path('seller_reviews.json').read_text())
+    coverage=audit(followup,reports,at);context=source_context(market,at,seller_reviews)
     coverage['event_preparation']=preparation(context,reports,at)
     previous_keys={(i['event_id'],i['horizon_hours'],i['window_start'],i['diagnosis'])
         for p in root.glob('*/collection_coverage.json') for i in json.loads(p.read_text()).get('missed_targets',[])}
@@ -194,6 +198,8 @@ def main():
     (out/'coverage_report.md').write_text(render(coverage,context))
     market['coverage']['missing_target_window_incidents']=len(coverage['missed_targets'])
     market['coverage']['products_with_multiple_current_retailers']=sum(p['verified_current_seller_count']>=2 for p in context['products'])
+    market['coverage']['seller_review_eligible_in_stock_offers']=sum(p['purchase_gate']['seller_eligible_offer_count'] for p in context['products'])
+    market['coverage']['unverified_seller_current_prices']=sum(s['usable_current_quote'] and not s['seller_reliability']['eligible_for_economic_use'] for p in context['products'] for s in p['sources'])
     (out/'report.json').write_text(json.dumps(market,indent=2,ensure_ascii=False))
     print(json.dumps({'missing_target_incidents':len(coverage['missed_targets']),
         'multiple_current_retailers':market['coverage']['products_with_multiple_current_retailers']}))

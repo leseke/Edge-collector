@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DATA_BASE,PUBLIC_SCHEMAS,loadCapture,sha256,freshness,quoteState,productState,captureSummary,safeUrl,potentialBaseline} from '../assets/edge-data.mjs';
+import {DATA_BASE,PUBLIC_SCHEMAS,loadCapture,sha256,freshness,quoteState,productState,captureSummary,safeUrl,potentialBaseline,sellerVerified} from '../assets/edge-data.mjs';
 const AT=Date.parse('2026-11-01T10:00:00Z');
 const source=(updates={})=>({seller:'Retrailer',source_url:'https://example.com/offer',status:'OK',usable_current_quote:true,displayed_price_eur:'129.95',availability:'IN_STOCK',observed_at:'2026-11-01T09:00:00Z',...updates});
 async function fixtures(){
@@ -23,8 +23,8 @@ test('pointer cannot redirect data requests outside the immutable snapshot',asyn
 test('a valid checksum does not excuse an inconsistent capture date',async()=>{const f=await fixtures();f.pointer.observed_at='2026-10-12T10:00:00Z';await assert.rejects(loadCapture({fetchImpl:f.fetchImpl}),/incohérente/);});
 test('freshness distinguishes delay, expired data, future and invalid dates',()=>{assert.equal(freshness('2026-11-01T09:00:00Z',AT).kind,'RECENT');assert.equal(freshness('2026-11-01T01:00:00Z',AT).kind,'DELAYED');assert.equal(freshness('2026-10-12T10:00:00Z',AT).kind,'STALE');assert.equal(freshness('2026-11-02T10:00:00Z',AT).kind,'UNKNOWN');assert.equal(freshness('bad',AT).kind,'UNKNOWN');});
 test('failed or stale source does not become a current price or stockout',()=>{for(const s of [source({status:'FAILED',error:'HTTP Error 403'}),source({observed_at:'2026-10-12T10:00:00Z'}),source({displayed_price_eur:'NaN'}),source({displayed_price_eur:null})]){const q=quoteState(s,AT);assert.equal(q.usable,false);assert.equal(q.price,null);assert.equal(q.availability,'UNKNOWN');}});
-test('cheaper stockout does not become an available purchase floor or resale margin',()=>{const p=productState({sources:[source(),source({seller:'Other',displayed_price_eur:'103.99',availability:'OUT_OF_STOCK'})]},AT);assert.equal(p.floor,129.95);assert.equal(p.spread,null);assert.equal(p.label,'Disponibilité mixte');});
-test('actual in-stock price spread is computed from available source quotes',()=>{const p=productState({sources:[source(),source({seller:'Other',displayed_price_eur:'103.99'})]},AT);assert.ok(Math.abs(p.spread-25.96)<1e-10);assert.equal(p.floor,103.99);});
+test('cheaper stockout does not become an available purchase floor or resale margin',()=>{const p=productState({sources:[source(),source({seller:'Other',displayed_price_eur:'103.99',availability:'OUT_OF_STOCK'})]},AT);assert.equal(p.floor,null);assert.equal(p.observedFloor,129.95);assert.equal(p.spread,null);assert.equal(p.label,'Disponibilité mixte');});
+test('actual in-stock price spread is computed from available source quotes',()=>{const p=productState({sources:[source(),source({seller:'Other',displayed_price_eur:'103.99'})]},AT);assert.ok(Math.abs(p.observedSpread-25.96)<1e-10);assert.equal(p.observedFloor,103.99);assert.equal(p.floor,null);assert.equal(p.spread,null);});
 test('partial capture and zero scores never become a CASH or buy decision',async()=>{const f=await fixtures(),c=await loadCapture({fetchImpl:f.fetchImpl}),s=captureSummary(c,AT);assert.equal(s.status,'PARTIAL');assert.equal(s.financialDecision,'NOT_ESTABLISHED');assert.equal(s.scoredForecasts,0);assert.equal(s.currentQuotes,1);assert.equal(s.sourceFailures,1);});
 test('unsafe external links cannot execute or disclose embedded credentials',()=>{assert.equal(safeUrl('javascript:alert(1)'),null);assert.equal(safeUrl('data:text/html,x'),null);assert.equal(safeUrl('https://user:pass@example.com'),null);assert.equal(safeUrl('https://example.com/offer'),'https://example.com/offer');});
 
@@ -49,4 +49,16 @@ test('a coming-soon price is not a buyable floor or an observed stockout',()=>{
  assert.equal(p.inStock,0);assert.equal(p.outOfStock,0);
  assert.equal(p.floor,null);assert.equal(p.spread,null);
  assert.equal(p.label,'Commercialisation à venir');
+});
+
+
+test('an unverified cheaper seller cannot set the economic comparison floor',()=>{
+ const review={schema:'edge.seller.reliability.v1',status:'VERIFIED',eligible_for_economic_use:true,site_origin:'https://example.com',reviewed_at:'2026-11-01T09:00:00Z',valid_until:'2026-11-01T11:00:00Z'};
+ const p=productState({sources:[source({seller_reliability:review}),source({seller:'Other',displayed_price_eur:'1.00',seller_reliability_reviewed:true})]},AT);
+ assert.equal(p.observedFloor,1);assert.equal(p.floor,129.95);
+ assert.equal(p.spread,null);assert.equal(p.sellerEligibleCount,1);
+ assert.equal(sellerVerified(source({seller_reliability:review}),AT),true);
+ assert.equal(sellerVerified(source({seller_reliability:review}),Date.parse('2026-11-01T11:00:01Z')),false);
+ assert.equal(sellerVerified(source({source_url:'https://other.example/offer',seller_reliability:review}),AT),false);
+ assert.equal(sellerVerified(source({seller_reliability_reviewed:true}),AT),false);
 });
