@@ -25,11 +25,11 @@ jobs:
           state=$(gh api "repos/${GITHUB_REPOSITORY}/pages/deployments/${BLOCKING_DEPLOYMENT}" --jq '.status')
           echo "Observed Pages deployment state: $state"
           case "$state" in
-            queued|pending|in_progress|deployment_in_progress|syncing_files|updating_pages|purging_cdn)
+            queued|pending|in_progress|deployment_in_progress|syncing_files|updating_pages|purging_cdn|succeed|success|succeeded)
               gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/deployments/${BLOCKING_DEPLOYMENT}/cancel"
-              echo 'Cancellation requested for the identified stale active deployment.'
+              echo 'Reset requested for the exact deployment repeatedly named as blocking subsequent deployments.'
               ;;
-            succeed|success|succeeded|errored|error|failed|canceled|cancelled)
+            errored|error|failed|canceled|cancelled)
               echo 'Deployment is terminal; no cancellation requested.'
               ;;
             *) echo 'Unrecognised state; manual diagnosis required.'; exit 1 ;;

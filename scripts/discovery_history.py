@@ -132,6 +132,8 @@ def main():
     observed = now()
     candidates = build_candidates(list(publications.values()), previous, observed)
     results = []
+    market = json.loads((out / 'report.json').read_text())
+    monitoring_capacity = market['coverage'].get('research_monitoring_capacity', MAX_RESEARCH_TARGETS)
     targets = max(monitoring, key=lambda r: r['observed_at'])['targets'] if monitoring else []
     targets = [dict(t) for t in targets]
     for candidate in select_probes(candidates):
@@ -145,7 +147,7 @@ def main():
             target = result['target']
             if any(t['id'] == target['id'] for t in targets):
                 targets = [target if t['id'] == target['id'] else t for t in targets]
-            elif len(targets) < MAX_RESEARCH_TARGETS:
+            elif len(targets) < monitoring_capacity:
                 targets.append(target)
             candidate['research_monitoring'] = any(t['id'] == target['id'] for t in targets)
     market = json.loads((out / 'report.json').read_text())

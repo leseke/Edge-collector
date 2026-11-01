@@ -30,6 +30,14 @@ class CommercialTests(unittest.TestCase):
     def test_offer(self):
         self.assertEqual(m.parse_offer(self.html(), {'sku': '10365'})['price'], '349.99')
 
+    def test_matching_numeric_reference_from_another_brand_is_rejected(self):
+        raw=self.html().replace(b'\"sku\": \"10365\"', b'\"sku\": \"10365\", \"brand\": {\"name\": \"Schleich\"}, \"name\": \"Schleich 10365\"')
+        with self.assertRaises(ValueError):m.parse_offer(raw, {'sku':'10365','product_id':'lego_10365'})
+
+    def test_lego_brand_and_reference_are_accepted(self):
+        raw=self.html().replace(b'\"sku\": \"10365\"', b'\"sku\": \"10365\", \"name\": \"LEGO Icons 10365\"')
+        self.assertEqual(m.parse_offer(raw,{'sku':'10365','product_id':'lego_10365'})['price'],'349.99')
+
     def test_identity(self):
         with self.assertRaises(ValueError):
             m.parse_offer(self.html(), {'sku': '1036'})

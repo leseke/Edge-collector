@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 from urllib.parse import urlsplit
-from collection_policy import MAX_RESEARCH_TARGETS, MAX_TOTAL_TARGETS
+from collection_policy import MAX_RESEARCH_TARGETS, MAX_TOTAL_TARGETS, research_capacity
 
 
 def now():
@@ -69,6 +69,13 @@ def parse_offer(raw, target):
         identity = ' '.join(str(product.get(k, '')) for k in ('sku', 'mpn', 'productID', 'name'))
         if not re.search(r'(?<!\d)' + re.escape(target['sku']) + r'(?!\d)', identity):
             continue
+        if target.get('product_id', '').startswith('lego_'):
+            brand = product.get('brand')
+            brand_name = brand.get('name', '') if isinstance(brand, dict) else brand if isinstance(brand, str) else ''
+            name = str(product.get('name', ''))
+            if ((brand_name and brand_name.strip().upper() != 'LEGO')
+                    or (not brand_name and not re.search(r'\bLEGO\b', name, re.I))):
+                continue
         data = product.get('offers', [])
         if isinstance(data, dict):
             data = [data]
@@ -92,7 +99,7 @@ def parse_offer(raw, target):
                             'Discontinued': 'DISCONTINUED', 'SoldOut': 'OUT_OF_STOCK'}.get(availability, 'UNKNOWN')
             offers.append({'price': str(price), 'currency': currency,
                            'availability': availability, 'product_name': product.get('name'),
-                           'evidence': {'product': {k: product[k] for k in ('name', 'sku', 'mpn', 'productID') if k in product},
+                           'evidence': {'product': {k: product[k] for k in ('name', 'sku', 'mpn', 'productID', 'brand', 'gtin13') if k in product},
                                         'offer': offer}})
     if len(offers) != 1:
         raise ValueError('Expected exactly one identified EUR Offer; found ' + str(len(offers)))
@@ -223,12 +230,13 @@ def main():
     cli.add_argument('--history', default='history/snapshots')
     args = cli.parse_args()
     targets = json.loads(Path(args.config).read_text())['targets']
+    capacity = research_capacity(len(targets))
     monitoring = []
     for path in Path(args.history).glob('*/monitoring_targets.json'):
         monitoring.append(json.loads(path.read_text()))
     if monitoring:
         dynamic = max(monitoring, key=lambda r: r['observed_at'])['targets']
-        if len(dynamic) > MAX_RESEARCH_TARGETS:
+        if len(dynamic) > capacity:
             raise ValueError('Research monitoring limit exceeded')
         targets += [t for t in dynamic if t['id'] not in {r['id'] for r in targets}]
     if not 1 <= len(targets) <= MAX_TOTAL_TARGETS or len({x['id'] for x in targets}) != len(targets):
@@ -254,6 +262,7 @@ def main():
         'indicative_prices_ok': sum(r['status'] == 'OK' and r['price_kind'] == 'AGGREGATED_INDICATIVE_LOW' for r in report['observations']),
         'failed_sources': len(targets) - count,
         'comparable_observations': sum(r['comparison_available'] for r in comparisons['observations']),
+        'research_monitoring_capacity': capacity,
         'announcements_connected': False,
         'completed_sales_connected': False}
     (out / 'report.json').write_text(json.dumps(report, indent=2, ensure_ascii=False))
