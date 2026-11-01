@@ -75,11 +75,12 @@ jobs:
               target.parent.mkdir(parents=True,exist_ok=True)
               shutil.copyfile(source,target)
           PYPUBLIC
-      - name: Build the existing public site
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./_public_source
-          destination: ./_site
+      - name: Build user-facing static site
+        run: |
+          python - <<'PYSTATIC'
+          import shutil
+          shutil.copytree('_public_source','_site')
+          PYSTATIC
       - name: Validate public entry points and record source revision
         env:
           PUBLISHED_SOURCE_SHA: ${{ github.sha }}
