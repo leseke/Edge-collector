@@ -4,7 +4,7 @@ import datetime as dt
 import json
 from pathlib import Path
 from decimal import Decimal, InvalidOperation
-from announcement_history import timestamp
+from announcement_history import timestamp, valid_reaction_quote
 from commercial_history import now
 from collection_policy import EXPECTED_CADENCE_HOURS, TARGET_CAPTURE_TOLERANCE_HOURS
 
@@ -96,6 +96,49 @@ def source_context(market, at):
             'scope':'CURRENT_RUN_QUOTES_WITHIN_24_HOURS_NOT_EXHAUSTIVE_MARKET','net_margin_computed':False}
 
 
+def preparation(context, reports, at):
+    """Describe existing evidence for a future event, never a forecast or a signal."""
+    current=timestamp(at); products=[]
+    for product in context['products']:
+        sources=[]
+        for source in product['sources']:
+            by_time={}
+            for report in reports:
+                for r in report['observations']:
+                    if (r.get('product_id')!=product['product_id'] or r.get('seller')!=source['seller']
+                        or r.get('url')!=source['source_url'] or r.get('currency')!='EUR'
+                        or r.get('status')!='OK' or r.get('price_kind')!='ASKING_PRICE'
+                        or not valid_reaction_quote(r) or timestamp(r['observed_at'])>current):continue
+                    by_time.setdefault(timestamp(r['observed_at']),[]).append(r)
+            rows=[];conflicts=0
+            for stamp, copies in sorted(by_time.items()):
+                if len({(Decimal(r['price']),r.get('availability')) for r in copies})>1:
+                    conflicts+=1;continue
+                rows.append(min(copies,key=lambda r:(r['body_sha256'],r['id'])))
+            recent=[r for r in rows if current-dt.timedelta(hours=24)<=timestamp(r['observed_at'])]
+            latest=rows[-1] if rows else None
+            gaps=[round((timestamp(b['observed_at'])-timestamp(a['observed_at'])).total_seconds()/3600,3)
+                  for a,b in zip(recent,recent[1:])]
+            status=('NO_VALID_CAPTURE' if not latest else 'STALE_HISTORY' if not recent else
+                    'COLLECTION_INTERRUPTED' if not source['usable_current_quote'] else
+                    'SINGLE_RECENT_CAPTURE' if len(recent)==1 else
+                    'GAPPED_RECENT_SERIES' if any(g>TARGET_CAPTURE_TOLERANCE_HOURS for g in gaps) else 'RECENT_SERIES')
+            evidence={k:latest.get(k) for k in ('id','observed_at','price','currency','availability','body_sha256')} if latest else None
+            sources.append({'seller':source['seller'],'source_url':source['source_url'],'status':status,
+                'successful_distinct_capture_count':len(rows),'recent_distinct_capture_count':len(recent),
+                'conflicting_timestamps_excluded':conflicts,'latest_valid_evidence':evidence,
+                'potential_baseline_expires_at':(timestamp(latest['observed_at'])+dt.timedelta(hours=24)).isoformat() if latest else None,
+                'recent_max_gap_hours':max(gaps) if gaps else None,
+                'has_recent_potential_baseline':bool(recent),'current_source_status':source['status']})
+        sellers={s['seller'] for s in sources if s['has_recent_potential_baseline']}
+        products.append({'product_id':product['product_id'],'recent_baseline_seller_count':len(sellers),'sources':sources})
+    return {'assessed_at':at,'scope':'POTENTIAL_BASELINES_FOR_FUTURE_EVENTS_NOT_RETROACTIVE_REACTIONS',
+            'maximum_baseline_age_hours':24,'products':products,
+            'products_with_recent_baseline':sum(p['recent_baseline_seller_count']>0 for p in products),
+            'products_with_multiple_baseline_sellers':sum(p['recent_baseline_seller_count']>=2 for p in products),
+            'buy_signal':False,'predictive_advantage_established':False}
+
+
 def render(coverage, context):
     labels={'NO_ARCHIVED_CAPTURE_RUN_IN_TARGET_WINDOW':'Aucun passage archivé dans la fenêtre',
         'SOURCE_REQUESTS_FAILED_IN_TARGET_WINDOW':'Échecs de source dans la fenêtre',
@@ -113,6 +156,14 @@ def render(coverage, context):
         for s in p['sources']:
             price=s['displayed_price_eur'] or 'Non établi'
             lines.append(f"| {p['product_id']} | [{s['seller']}]({s['source_url']}) | {price} | {stock.get(s['availability'],s['availability'])} | {s['observed_at']} |")
+    lines+=['','## Préparation aux prochains événements','',
+        'État à la date de capture. Un relevé récent constitue seulement un point de départ potentiel pour un événement futur. Sa validité devra être recalculée à la date de cet événement.','',
+        '| Produit | Vendeur | État du suivi | Captures distinctes sur 24 h | Dernière preuve UTC | Expiration du point de départ |',
+        '|---|---|---|---:|---|---|']
+    for p in coverage.get('event_preparation',{}).get('products',[]):
+        for s in p['sources']:
+            latest=s['latest_valid_evidence']
+            lines.append(f"| {p['product_id']} | {s['seller']} | {s['status']} | {s['recent_distinct_capture_count']} | {latest['observed_at'] if latest else 'Absente'} | {s['potential_baseline_expires_at'] or 'Non établie'} |")
     lines+=['','Une rupture chez un vendeur ne prouve pas une pénurie du marché. Les offres moins chères en rupture restent distinctes des offres disponibles. Frais de livraison, ventes conclues et marge nette ne sont pas établis par cette comparaison. Aucune donnée manquante n’est interpolée.']
     return '\n'.join(lines)+'\n'
 
@@ -126,6 +177,7 @@ def main():
     market=json.loads((out/'report.json').read_text());reports.append(dict(market,_snapshot='CURRENT_RUN'))
     followup=json.loads((out/'commercial_reactions.json').read_text());at=now()
     coverage=audit(followup,reports,at);context=source_context(market,at)
+    coverage['event_preparation']=preparation(context,reports,at)
     previous_keys={(i['event_id'],i['horizon_hours'],i['window_start'],i['diagnosis'])
         for p in root.glob('*/collection_coverage.json') for i in json.loads(p.read_text()).get('missed_targets',[])}
     coverage['new_incident_count']=sum((i['event_id'],i['horizon_hours'],i['window_start'],i['diagnosis']) not in previous_keys for i in coverage['missed_targets'])

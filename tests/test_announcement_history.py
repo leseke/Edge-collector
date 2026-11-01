@@ -92,8 +92,7 @@ class AnnouncementTests(unittest.TestCase):
         self.assertEqual(m.reactions([event], [])['measurements'][0]['status'], 'INVALID_PUBLICATION_TIME')
 
 
-if __name__ == '__main__':
-    unittest.main()
+
 
 class BaselineAuditTests(unittest.TestCase):
     measurements = AnnouncementTests.measurements
@@ -123,3 +122,5 @@ class BaselineAuditTests(unittest.TestCase):
             self.assertEqual(r['baseline_audit']['status'], 'NO_PRIOR_CAPTURE')
         self.assertFalse(m.valid_reaction_quote({'price':'100','observed_at':'invalid','body_sha256':'hash'}))
         self.assertFalse(m.valid_reaction_quote({'price':'100','observed_at':'2026-10-29T11:00:00Z'}))
+
+if __name__=='__main__':unittest.main()

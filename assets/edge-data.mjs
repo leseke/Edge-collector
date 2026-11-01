@@ -7,6 +7,10 @@ export const PUBLIC_SCHEMAS={
  'forecast_evaluations.json':'edge.mri.prospective_followup.v1'
 };
 export const timestamp=value=>typeof value==='string'&&Number.isFinite(Date.parse(value))?Date.parse(value):null;
+export function potentialBaseline(source,now=Date.now()){
+ const observed=timestamp(source.latest_valid_evidence?.observed_at),expires=timestamp(source.potential_baseline_expires_at);
+ return source.has_recent_potential_baseline===true&&observed!==null&&expires!==null&&observed<=now&&now<=expires&&expires-observed===86400000;
+}
 export function freshness(value,now=Date.now()){
  const stamp=timestamp(value);
  if(stamp===null||stamp>now+300000)return {kind:'UNKNOWN',label:'Date non vérifiée',hours:null};

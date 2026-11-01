@@ -1,4 +1,4 @@
-import {loadCapture,captureSummary,productState,quoteState,euro,dateText,safeUrl} from './edge-data.mjs';
+import {loadCapture,captureSummary,productState,quoteState,euro,dateText,safeUrl,potentialBaseline} from './edge-data.mjs';
 const content=document.getElementById('content'),status=document.getElementById('capture-status'),refreshButton=document.getElementById('refresh');
 const isMri=document.body.dataset.view==='mri';
 let capture=null,loading=false,lastLoaded=0,search='';
@@ -48,7 +48,22 @@ function quality(){
  const outcome={PENDING_HORIZON:'Échéance à venir',AWAITING_CAPTURE:'Capture attendue',MISSING_WINDOW_OBSERVATION:'Capture cible manquante',MEASURED:'Résultat observé',EVENT_EVIDENCE_UNAVAILABLE:'Preuves de l’événement indisponibles'};
  item.append(el('small',null,(outcome[f.outcome_status]||f.outcome_status)+' · '+dateText(f.target_at)));
  if(f.registration_timing==='LATE_REGISTRATION')item.append(el('small',null,'Inscription tardive, exclue des scores prospectifs.'));forecasts.append(item);}
- forecasts.append(link('Voir le registre daté',archiveLink('forecast_report.md')));wrap.append(incidents,forecasts);return wrap;
+ forecasts.append(link('Voir le registre daté',archiveLink('forecast_report.md')));wrap.append(incidents,forecasts,preparation());return wrap;
+}
+function preparation(){
+ const box=el('article','card preparation'),data=capture.coverage.event_preparation;
+ box.append(el('h3',null,'Préparation aux prochains événements'));
+ if(!data){box.append(el('p','muted','Diagnostic absent de cette ancienne capture.'));return box;}
+ const products=data.products,now=Date.now(),count=products.filter(p=>p.sources.some(s=>potentialBaseline(s,now))).length;
+ box.append(el('div','number',count),el('small',null,'produits avec un point de départ encore récent'),el('p',null,'Un relevé de moins de 24 h pourra servir de comparaison si un nouvel événement survient. Ce compteur ne mesure ni une opportunité ni une probabilité de gain.'),el('small',null,'Historique évalué : '+dateText(data.assessed_at)+'. Les expirations sont revérifiées à l’affichage.'));
+ const labels={NO_VALID_CAPTURE:'Aucune preuve exploitable',STALE_HISTORY:'Historique trop ancien',COLLECTION_INTERRUPTED:'Collecte interrompue à cette capture',SINGLE_RECENT_CAPTURE:'Un seul relevé récent',GAPPED_RECENT_SERIES:'Historique récent avec un intervalle de plus de 6 h',RECENT_SERIES:'Plusieurs relevés récents'};
+ for(const p of products){const detail=el('details'),valid=p.sources.filter(s=>potentialBaseline(s,now));detail.append(el('summary',null,p.product_id.replace('lego_','LEGO ')+' · '+new Set(valid.map(s=>s.seller)).size+' vendeur(s) avec un point de départ récent'));
+ for(const s of p.sources){const row=el('div','period');row.append(link(s.seller,s.source_url),el('div',null,labels[s.status]||'État non établi'),el('div',null,s.recent_distinct_capture_count+' capture(s) distincte(s) sur les 24 h précédant ce rapport.'));
+ if(s.latest_valid_evidence)row.append(el('small',null,'Dernière preuve : '+dateText(s.latest_valid_evidence.observed_at)),el('small',null,'Point de départ utilisable jusqu’au : '+dateText(s.potential_baseline_expires_at)));
+ if(!potentialBaseline(s,now))row.append(el('small','warning-copy','Aucun point de départ encore récent à cet affichage.'));
+ if(s.conflicting_timestamps_excluded)row.append(el('small','warning-copy',s.conflicting_timestamps_excluded+' horodatage(s) contradictoire(s) exclu(s).'));
+ detail.append(row);}box.append(detail);}
+ box.append(link('Consulter les preuves et les interruptions',archiveLink('coverage_report.md')));return box;
 }
 function method(){const box=el('details','method');box.append(el('summary',null,'Sources, périmètre et limites'));
  box.append(el('p',null,'Les prix et stocks sont ceux déclarés par les vendeurs au moment du relevé. Une rupture sur les sources suivies ne prouve pas une pénurie générale.'),el('p',null,'Prix de ventes conclues, volumes, frais livrés et marge nette : non établis. Les comparaisons de prix affichés ne sont pas des estimations de bénéfice.'));

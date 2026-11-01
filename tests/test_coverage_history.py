@@ -78,4 +78,68 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(p['availability_context'],'OUT_OF_STOCK_ON_MULTIPLE_OBSERVED_SOURCES')
         self.assertFalse(p['market_wide_shortage_proven'])
 
+
+
+class PreparationTests(unittest.TestCase):
+    def build(self,rows,current_rows=None):
+        market=report(AT,current_rows if current_rows is not None else [rows[-1]])
+        return m.preparation(m.source_context(market,AT),[report(AT,rows)],AT)['products'][0]
+
+    def test_recent_series_keeps_traceable_baseline_and_expiry(self):
+        p=self.build([row('2026-11-01T04:00:00Z'),row('2026-11-01T07:00:00Z')]);s=p['sources'][0]
+        self.assertEqual(s['status'],'RECENT_SERIES')
+        self.assertEqual(s['recent_distinct_capture_count'],2)
+        self.assertEqual(s['recent_max_gap_hours'],3)
+        self.assertEqual(s['latest_valid_evidence']['body_sha256'],'actual-source')
+        self.assertEqual(s['potential_baseline_expires_at'],'2026-11-02T07:00:00+00:00')
+        self.assertEqual(p['recent_baseline_seller_count'],1)
+
+    def test_replayed_quote_or_other_page_is_not_an_extra_capture(self):
+        r=row('2026-11-01T07:00:00Z')
+        p=self.build([r,r,dict(r,id='other-page',url='https://example.com/other')], [r])
+        self.assertEqual(p['sources'][0]['recent_distinct_capture_count'],1)
+        self.assertEqual(p['sources'][0]['status'],'SINGLE_RECENT_CAPTURE')
+
+    def test_same_seller_is_not_two_independent_baselines(self):
+        r=row('2026-11-01T07:00:00Z');other=dict(r,id='other',url='https://example.com/other')
+        self.assertEqual(self.build([r,other],[r,other])['recent_baseline_seller_count'],1)
+
+    def test_stale_capture_cannot_prepare_new_event(self):
+        p=self.build([row('2026-10-31T07:59:59Z')])
+        self.assertEqual(p['sources'][0]['status'],'STALE_HISTORY')
+        self.assertFalse(p['sources'][0]['has_recent_potential_baseline'])
+
+    def test_future_or_invalid_quote_cannot_enter_baseline(self):
+        r=row('2026-11-02T07:00:00Z')
+        self.assertEqual(self.build([r])['sources'][0]['status'],'NO_VALID_CAPTURE')
+        for updates in ({'price':'NaN'},{'body_sha256':None},{'currency':'USD'},{'status':'FAILED'}):
+            r=row('2026-11-01T07:00:00Z',**updates)
+            self.assertEqual(self.build([r])['sources'][0]['status'],'NO_VALID_CAPTURE')
+
+    def test_failure_retains_prior_evidence_but_exposes_interruption(self):
+        a=row('2026-11-01T04:00:00Z');b=row('2026-11-01T07:00:00Z',status='FAILED')
+        p=self.build([a,b],[b]);s=p['sources'][0]
+        self.assertEqual(s['status'],'COLLECTION_INTERRUPTED')
+        self.assertEqual(s['latest_valid_evidence']['observed_at'],a['observed_at'])
+        self.assertTrue(s['has_recent_potential_baseline'])
+
+    def test_large_gap_is_exposed_without_interpolation(self):
+        s=self.build([row('2026-10-31T22:00:00Z'),row('2026-11-01T07:00:00Z')])['sources'][0]
+        self.assertEqual(s['status'],'GAPPED_RECENT_SERIES')
+        self.assertEqual(s['recent_distinct_capture_count'],2)
+        self.assertEqual(s['recent_max_gap_hours'],9)
+
+    def test_conflicting_same_time_prices_excluded(self):
+        a=row('2026-11-01T07:00:00Z');b=dict(a,price='100')
+        s=self.build([a,b],[a])['sources'][0]
+        self.assertEqual(s['conflicting_timestamps_excluded'],1)
+        self.assertEqual(s['status'],'NO_VALID_CAPTURE')
+
+    def test_full_day_boundary_is_included_and_no_financial_signal(self):
+        market=report(AT,[row('2026-10-31T08:00:00Z')])
+        r=m.preparation(m.source_context(market,AT),[market],AT)
+        self.assertEqual(r['products_with_recent_baseline'],1)
+        self.assertFalse(r['buy_signal'])
+        self.assertFalse(r['predictive_advantage_established'])
+
 if __name__=='__main__':unittest.main()

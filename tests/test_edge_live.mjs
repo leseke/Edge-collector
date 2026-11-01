@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DATA_BASE,PUBLIC_SCHEMAS,loadCapture,sha256,freshness,quoteState,productState,captureSummary,safeUrl} from '../assets/edge-data.mjs';
+import {DATA_BASE,PUBLIC_SCHEMAS,loadCapture,sha256,freshness,quoteState,productState,captureSummary,safeUrl,potentialBaseline} from '../assets/edge-data.mjs';
 const AT=Date.parse('2026-11-01T10:00:00Z');
 const source=(updates={})=>({seller:'Retrailer',source_url:'https://example.com/offer',status:'OK',usable_current_quote:true,displayed_price_eur:'129.95',availability:'IN_STOCK',observed_at:'2026-11-01T09:00:00Z',...updates});
 async function fixtures(){
@@ -29,3 +29,14 @@ test('partial capture and zero scores never become a CASH or buy decision',async
 test('unsafe external links cannot execute or disclose embedded credentials',()=>{assert.equal(safeUrl('javascript:alert(1)'),null);assert.equal(safeUrl('data:text/html,x'),null);assert.equal(safeUrl('https://user:pass@example.com'),null);assert.equal(safeUrl('https://example.com/offer'),'https://example.com/offer');});
 
 test('mutable pointer is cache-busted while archive files retain immutable URLs',async()=>{const f=await fixtures();await loadCapture({fetchImpl:f.fetchImpl});assert.match(f.calls[0],/latest\.json\?v=\d+$/);assert.ok(f.calls.slice(1).every(url=>!url.includes('?')));});
+
+
+test('future-event preparation expires without waiting for a new capture',()=>{
+ const s={has_recent_potential_baseline:true,latest_valid_evidence:{observed_at:'2026-10-31T10:00:00Z'},potential_baseline_expires_at:'2026-11-01T10:00:00Z'};
+ assert.equal(potentialBaseline(s,AT),true);
+ assert.equal(potentialBaseline(s,AT+1),false);
+ assert.equal(potentialBaseline({...s,has_recent_potential_baseline:false},AT),false);
+ assert.equal(potentialBaseline({...s,potential_baseline_expires_at:'2027-11-01T10:00:00Z'},AT),false);
+ assert.equal(potentialBaseline({...s,latest_valid_evidence:{observed_at:'2026-11-02T10:00:00Z'}},AT),false);
+ assert.equal(potentialBaseline({},AT),false);
+});
