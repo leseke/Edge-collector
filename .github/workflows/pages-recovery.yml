@@ -1,0 +1,36 @@
+name: EDGE targeted Pages recovery
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/pages-recovery.yml']
+permissions:
+  contents: read
+  pages: write
+concurrency:
+  group: edge-targeted-pages-recovery
+  cancel-in-progress: false
+jobs:
+  inspect-and-recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BLOCKING_DEPLOYMENT: 8e44642dd3c3e03833fe159d0f403bfe613e3c3d
+    steps:
+      - name: Inspect the exact deployment identified by failed Pages logs
+        shell: bash
+        run: |
+          set -euo pipefail
+          state=$(gh api "repos/${GITHUB_REPOSITORY}/pages/deployments/${BLOCKING_DEPLOYMENT}" --jq '.status')
+          echo "Observed Pages deployment state: $state"
+          case "$state" in
+            queued|pending|in_progress|deployment_in_progress|syncing_files|updating_pages|purging_cdn)
+              gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/deployments/${BLOCKING_DEPLOYMENT}/cancel"
+              echo 'Cancellation requested for the identified stale active deployment.'
+              ;;
+            succeed|success|succeeded|errored|error|failed|canceled|cancelled)
+              echo 'Deployment is terminal; no cancellation requested.'
+              ;;
+            *) echo 'Unrecognised state; manual diagnosis required.'; exit 1 ;;
+          esac
