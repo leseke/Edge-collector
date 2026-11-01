@@ -53,7 +53,7 @@ test('a coming-soon price is not a buyable floor or an observed stockout',()=>{
 
 
 test('an unverified cheaper seller cannot set the economic comparison floor',()=>{
- const review={schema:'edge.seller.reliability.v1',status:'VERIFIED',eligible_for_economic_use:true,site_origin:'https://example.com',reviewed_at:'2026-11-01T09:00:00Z',valid_until:'2026-11-01T11:00:00Z'};
+ const review={schema:'edge.seller.reliability.v1',seller:'Retrailer',status:'VERIFIED',eligible_for_economic_use:true,site_origin:'https://example.com',reviewed_at:'2026-11-01T09:00:00Z',valid_until:'2026-11-01T11:00:00Z'};
  const p=productState({sources:[source({seller_reliability:review}),source({seller:'Other',displayed_price_eur:'1.00',seller_reliability_reviewed:true})]},AT);
  assert.equal(p.observedFloor,1);assert.equal(p.floor,129.95);
  assert.equal(p.spread,null);assert.equal(p.sellerEligibleCount,1);
@@ -61,4 +61,5 @@ test('an unverified cheaper seller cannot set the economic comparison floor',()=
  assert.equal(sellerVerified(source({seller_reliability:review}),Date.parse('2026-11-01T11:00:01Z')),false);
  assert.equal(sellerVerified(source({source_url:'https://other.example/offer',seller_reliability:review}),AT),false);
  assert.equal(sellerVerified(source({seller_reliability_reviewed:true}),AT),false);
+ assert.equal(sellerVerified(source({seller:'Other merchant',seller_reliability:review}),AT),false);
 });

@@ -28,7 +28,7 @@ export const euro=value=>Number.isFinite(value)?new Intl.NumberFormat('fr-FR',{s
 export function dateText(value){return timestamp(value)===null?'Date non établie':new Intl.DateTimeFormat('fr-FR',{timeZone:'Europe/Paris',dateStyle:'medium',timeStyle:'short'}).format(new Date(value));}
 export function sellerVerified(source,now=Date.now()){
  const r=source.seller_reliability,reviewed=timestamp(r?.reviewed_at),expires=timestamp(r?.valid_until),url=safeUrl(source.source_url);
- return !!(r?.schema==='edge.seller.reliability.v1'&&r.status==='VERIFIED'&&r.eligible_for_economic_use===true&&url&&r.site_origin===new URL(url).origin&&reviewed!==null&&expires!==null&&reviewed<=now&&now<=expires&&expires>reviewed&&expires-reviewed<=30*86400000);
+ return !!(r?.schema==='edge.seller.reliability.v1'&&r.status==='VERIFIED'&&r.eligible_for_economic_use===true&&r.seller===source.seller&&url&&r.site_origin===new URL(url).origin&&reviewed!==null&&expires!==null&&reviewed<=now&&now<=expires&&expires>reviewed&&expires-reviewed<=30*86400000);
 }
 export function productState(product,now=Date.now()){
  const sources=product.sources.map(source=>({source,state:quoteState(source,now)}));

@@ -44,7 +44,7 @@ def purchase_gate(sources,at):
         r=s.get('seller_reliability',{});a=timestamp(r.get('reviewed_at'));b=timestamp(r.get('valid_until'))
         return bool(r.get('schema')=='edge.seller.reliability.v1' and r.get('status')=='VERIFIED'
                     and r.get('eligible_for_economic_use') is True and a and b and current and a<=current<=b
-                    and a<b<=a+MAX_REVIEW_AGE and r.get('site_origin')==origin(s.get('source_url')))
+                    and a<b<=a+MAX_REVIEW_AGE and r.get('seller')==s.get('seller') and r.get('site_origin')==origin(s.get('source_url')))
     eligible=[s for s in sources if s.get('usable_current_quote') and s.get('availability')=='IN_STOCK' and reviewed(s)]
     blockers=[]
     if not eligible:blockers.append('NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER')
