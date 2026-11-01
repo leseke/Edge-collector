@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import URLError
 from urllib.parse import urlsplit
+from collection_policy import MAX_RESEARCH_TARGETS, MAX_TOTAL_TARGETS
 
 
 def now():
@@ -227,10 +228,10 @@ def main():
         monitoring.append(json.loads(path.read_text()))
     if monitoring:
         dynamic = max(monitoring, key=lambda r: r['observed_at'])['targets']
-        if len(dynamic) > 4:
+        if len(dynamic) > MAX_RESEARCH_TARGETS:
             raise ValueError('Research monitoring limit exceeded')
         targets += [t for t in dynamic if t['id'] not in {r['id'] for r in targets}]
-    if not 1 <= len(targets) <= 10 or len({x['id'] for x in targets}) != len(targets):
+    if not 1 <= len(targets) <= MAX_TOTAL_TARGETS or len({x['id'] for x in targets}) != len(targets):
         raise ValueError('Invalid targets')
     for target in targets:
         if not re.fullmatch(r'[a-z0-9_-]+', target['id']) or not target['url'].startswith('https://'):

@@ -1,7 +1,9 @@
 import importlib.util
 import json
 import unittest
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[1]/'scripts'))
 
 spec = importlib.util.spec_from_file_location('commercial', Path(__file__).parents[1] / 'scripts/commercial_history.py')
 m = importlib.util.module_from_spec(spec)

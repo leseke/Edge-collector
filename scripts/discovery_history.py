@@ -8,6 +8,7 @@ from urllib.request import Request, urlopen
 
 from commercial_history import compare, comparison_report, digest, fetch, now, parse_offer
 from announcement_history import reactions, timestamp
+from collection_policy import MAX_RESEARCH_TARGETS
 
 
 def references(publication):
@@ -144,7 +145,7 @@ def main():
             target = result['target']
             if any(t['id'] == target['id'] for t in targets):
                 targets = [target if t['id'] == target['id'] else t for t in targets]
-            elif len(targets) < 4:
+            elif len(targets) < MAX_RESEARCH_TARGETS:
                 targets.append(target)
             candidate['research_monitoring'] = any(t['id'] == target['id'] for t in targets)
     market = json.loads((out / 'report.json').read_text())

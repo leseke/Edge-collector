@@ -141,7 +141,8 @@ def render(report):
         '[Consulter les précédents comparables et leurs exclusions chronologiques](analogue_report.md).', '',
         '[Consulter la couverture historique mensuelle importée](monthly_history_report.md).', '',
         '[Consulter le test rétrospectif des trajectoires et ses erreurs](trajectory_report.md).', '',
-        '[Consulter les estimations datées, abstentions et résultats prospectifs](forecast_report.md).']
+        '[Consulter les estimations datées, abstentions et résultats prospectifs](forecast_report.md).', '',
+        '[Consulter les incidents de collecte et la disponibilité par vendeur](coverage_report.md).']
     return '\n'.join(lines) + '\n'
 
 
