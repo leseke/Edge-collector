@@ -1,4 +1,4 @@
-export const DATA_BASE='https://raw.githubusercontent.com/leseke/Edge-collector/refs/heads/edge/commercial-history/';
+export const DATA_BASE='https://raw.githubusercontent.com/leseke/Edge-collector/edge/commercial-history/';
 export const PUBLIC_SCHEMAS={
  'report.json':'edge.commercial.snapshot.v1',
  'retail_source_context.json':'edge.mri.retail_source_context.v1',
@@ -51,7 +51,8 @@ async function fetchBytes(url,fetchImpl,signal){
 }
 export async function sha256(bytes){return Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes))).map(n=>n.toString(16).padStart(2,'0')).join('');}
 export async function loadCapture({fetchImpl=fetch,signal}={}){
- const pointer=JSON.parse(new TextDecoder().decode(await fetchBytes(DATA_BASE+'latest.json',fetchImpl,signal)));
+ const pointerUrl=new URL('latest.json',DATA_BASE);pointerUrl.searchParams.set('v',String(Date.now()));
+ const pointer=JSON.parse(new TextDecoder().decode(await fetchBytes(pointerUrl.href,fetchImpl,signal)));
  if(pointer.schema!=='edge.public.live_capture.v1'||!/^\d+-\d+$/.test(pointer.snapshot_id)||timestamp(pointer.observed_at)===null)throw Error('Référence de capture non valide.');
  const entries=await Promise.all(Object.entries(PUBLIC_SCHEMAS).map(async([name,schema])=>{
   const file=pointer.files?.[name],path='snapshots/'+pointer.snapshot_id+'/'+name;

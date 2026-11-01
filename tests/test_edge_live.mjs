@@ -12,7 +12,7 @@ async function fixtures(){
  Object.assign(docs['forecast_evaluations.json'],{metrics:[],evaluations:[]});
  const pointer={schema:'edge.public.live_capture.v1',snapshot_id:'123-1',observed_at:docs['report.json'].observed_at,status:'PARTIAL',files:{}};
  const bytes={};for(const [name,doc]of Object.entries(docs)){bytes[name]=new TextEncoder().encode(JSON.stringify(doc));pointer.files[name]={path:'snapshots/123-1/'+name,sha256:await sha256(bytes[name])};}
- const calls=[];const fetchImpl=async url=>{calls.push(url);if(url===DATA_BASE+'latest.json')return new Response(JSON.stringify(pointer));const name=Object.keys(bytes).find(n=>url===DATA_BASE+'snapshots/123-1/'+n);return name?new Response(bytes[name]):new Response('',{status:404});};
+ const calls=[];const fetchImpl=async url=>{calls.push(url);if(url.startsWith(DATA_BASE+'latest.json?'))return new Response(JSON.stringify(pointer));const name=Object.keys(bytes).find(n=>url===DATA_BASE+'snapshots/123-1/'+n);return name?new Response(bytes[name]):new Response('',{status:404});};
  return {docs,pointer,bytes,calls,fetchImpl};
 }
 
@@ -27,3 +27,5 @@ test('cheaper stockout does not become an available purchase floor or resale mar
 test('actual in-stock price spread is computed from available source quotes',()=>{const p=productState({sources:[source(),source({seller:'Other',displayed_price_eur:'103.99'})]},AT);assert.ok(Math.abs(p.spread-25.96)<1e-10);assert.equal(p.floor,103.99);});
 test('partial capture and zero scores never become a CASH or buy decision',async()=>{const f=await fixtures(),c=await loadCapture({fetchImpl:f.fetchImpl}),s=captureSummary(c,AT);assert.equal(s.status,'PARTIAL');assert.equal(s.financialDecision,'NOT_ESTABLISHED');assert.equal(s.scoredForecasts,0);assert.equal(s.currentQuotes,1);assert.equal(s.sourceFailures,1);});
 test('unsafe external links cannot execute or disclose embedded credentials',()=>{assert.equal(safeUrl('javascript:alert(1)'),null);assert.equal(safeUrl('data:text/html,x'),null);assert.equal(safeUrl('https://user:pass@example.com'),null);assert.equal(safeUrl('https://example.com/offer'),'https://example.com/offer');});
+
+test('mutable pointer is cache-busted while archive files retain immutable URLs',async()=>{const f=await fixtures();await loadCapture({fetchImpl:f.fetchImpl});assert.match(f.calls[0],/latest\.json\?v=\d+$/);assert.ok(f.calls.slice(1).every(url=>!url.includes('?')));});
