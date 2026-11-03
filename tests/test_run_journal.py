@@ -26,7 +26,7 @@ class RunJournalTests(unittest.TestCase):
                                  "2026-11-03T01:01:00Z")
         events = storage.list_run_events("run-1")
         self.assertEqual([x["event_type"] for x in events], ["STARTED", "FINISHED"])
-        self.assertEqual(events[1]["payload"]["status"], "EMPTY")
+        self.assertEqual(events[1]["payload"]["run_status"], "EMPTY")
 
     def test_crashed_run_remains_unfinished(self):
         storage.append_run_event("crashed", "STARTED", {},
