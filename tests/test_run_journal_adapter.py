@@ -27,6 +27,15 @@ class SQLiteRunJournalAdapterTests(unittest.TestCase):
         events.assert_called_once_with("run-1")
         unfinished.assert_called_once_with()
 
+    def test_source_result_delegates_to_storage(self):
+        journal = SQLiteRunJournal()
+        payload = {"window_id": "w1", "source_id": "ebay", "outcome": "OBSERVED"}
+        with patch("intelligence.run_journal.storage.append_run_event") as append:
+            journal.source_result("run-1", payload, "2026-11-03T10:00:30+00:00")
+        append.assert_called_once_with(
+            "run-1", "SOURCE_RESULT", payload, "2026-11-03T10:00:30+00:00"
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
