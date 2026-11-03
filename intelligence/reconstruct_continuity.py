@@ -137,7 +137,7 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
             status = "MISSED"
         elif not run_key:
             status = "UNKNOWN"
-        elif missing_sources or not run_finished:
+        elif len(matching_runs) != 1 or missing_sources or not run_finished:
             status = "UNKNOWN"
         else:
             outcomes = [item["outcome"] for item in bucket.values()]
