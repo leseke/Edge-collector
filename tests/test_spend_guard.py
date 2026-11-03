@@ -3,6 +3,7 @@ import json
 import os
 import tempfile
 import unittest
+from unittest import mock
 from datetime import datetime, timezone
 
 from discovery.adapters import EbaySoldAdapter
@@ -83,7 +84,9 @@ class ExecutionLayerTests(unittest.TestCase):
             self.assertEqual(len(inner.calls), 6)
 
     def test_monthly_cap_with_ledger(self):
-        with tempfile.TemporaryDirectory() as d:
+        # Ce test vérifie le calcul du plafond local ; le refus spécifique à CI
+        # est couvert séparément par test_monthly_cap_refused_in_ci.
+        with tempfile.TemporaryDirectory() as d, mock.patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
             led = os.path.join(d, "spend.jsonl")
             clock = lambda: datetime(2026, 10, 18, tzinfo=timezone.utc)
             with open(led, "w", encoding="utf-8") as f:
