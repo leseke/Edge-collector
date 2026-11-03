@@ -83,7 +83,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.journal.record_source_result(
             self.context, [WINDOW], completed_query(1), "source-a", RESULT_AT
         )
-        with self.assertRaisesRegex(ValueError, "different"):
+        with self.assertRaisesRegex(ValueError, "différent"):
             self.journal.record_source_result(
                 self.context, [WINDOW], completed_query(0), "source-a", RESULT_AT
             )
