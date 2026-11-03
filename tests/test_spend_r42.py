@@ -188,6 +188,8 @@ class ConcurrencyTests(unittest.TestCase):
         deux processus distincts le tentent simultanement ; un seul gagne."""
         from datetime import datetime, timezone
         month = datetime.now(timezone.utc).isoformat()
+        worker_env = os.environ.copy()
+        worker_env["GITHUB_ACTIONS"] = "false"  # exercice explicite du chemin local ; le refus CI est testé à part
         for rnd in range(10):
             with tempfile.TemporaryDirectory() as d:
                 led, go = os.path.join(d, "s.jsonl"), os.path.join(d, "go")
@@ -198,7 +200,7 @@ class ConcurrencyTests(unittest.TestCase):
                 with open(script, "w", encoding="utf-8") as f:
                     f.write(WORKER.format(root=ROOT))
                 procs = [subprocess.Popen([sys.executable, script, led, go],
-                                          stdout=subprocess.PIPE, text=True) for _ in range(2)]
+                                          stdout=subprocess.PIPE, text=True, env=worker_env) for _ in range(2)]
                 open(go, "w").close()  # depart simultane
                 outs = sorted(p.communicate(timeout=30)[0].strip() for p in procs)
                 self.assertEqual(outs, ["OK", "REFUSED"], f"manche {rnd}")
@@ -208,7 +210,7 @@ class ConcurrencyTests(unittest.TestCase):
     def test_race_without_lock_would_overspend(self):
         """Preuve que le test de concurrence detecte le defaut : sans verrou
         (simule), les deux lectures precedent les deux ecritures."""
-        with tempfile.TemporaryDirectory() as d:
+        with tempfile.TemporaryDirectory() as d, mock.patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
             led = os.path.join(d, "s.jsonl")
             pol = dict(POLICY, max_usd_per_month=0.125)
             a, b = SpendGuard(pol, ledger_path=led), SpendGuard(pol, ledger_path=led)
