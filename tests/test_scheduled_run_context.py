@@ -2,7 +2,7 @@ import unittest
 
 from connectors.result import completed_query, failed_query, unknown
 from intelligence.remote_journal_simulator import make_event
-from intelligence.scheduled_run_context import resolve_scheduled_run_context
+from intelligence.scheduled_run_context import (\n    ScheduledRunContext, resolve_scheduled_run_context,\n    validate_scheduled_invocation,\n)
 
 
 SCHEDULED = "2026-11-03T01:00:00Z"
@@ -83,7 +83,44 @@ class ScheduledRunContextTests(unittest.TestCase):
             resolve_scheduled_run_context([malformed], [started("run-a")],
                                           "run-a", 1, WINDOW["window_id"])
 
-    def test_source_result_payload_is_limited_to_expected_source_and_allowlist(self):
+
+    def test_validates_injected_context_without_requiring_started_event(self):
+        context = ScheduledRunContext(
+            window_id=WINDOW["window_id"], scheduled_at=SCHEDULED,
+            run_id="run-a", attempt=2,
+            expected_sources=tuple(WINDOW["expected_sources"]),
+        )
+        self.assertIs(
+            validate_scheduled_invocation(context, [WINDOW], "run-a", 2),
+            context,
+        )
+
+    def test_injected_context_requires_exact_run_attempt_and_window(self):
+        context = ScheduledRunContext(
+            window_id=WINDOW["window_id"], scheduled_at=SCHEDULED,
+            run_id="run-a", attempt=1,
+            expected_sources=tuple(WINDOW["expected_sources"]),
+        )
+        with self.assertRaisesRegex(ValueError, "run attempt"):
+            validate_scheduled_invocation(context, [WINDOW], "run-b", 1)
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            validate_scheduled_invocation(context, [], "run-a", 1)
+        with self.assertRaisesRegex(ValueError, "scheduled_at differs"):
+            validate_scheduled_invocation(
+                context, [{**WINDOW, "scheduled_at": "2026-11-03T02:00:00Z"}],
+                "run-a", 1,
+            )
+
+    def test_injected_context_requires_exact_source_registry(self):
+        context = ScheduledRunContext(
+            window_id=WINDOW["window_id"], scheduled_at=SCHEDULED,
+            run_id="run-a", attempt=1,
+            expected_sources=tuple(WINDOW["expected_sources"]),
+        )
+        changed = {**WINDOW, "expected_sources": ["ebay:item-a"]}
+        with self.assertRaisesRegex(ValueError, "expected_sources differ"):
+            validate_scheduled_invocation(context, [changed], "run-a", 1)
+\n    def test_source_result_payload_is_limited_to_expected_source_and_allowlist(self):
         context = resolve_scheduled_run_context(
             [WINDOW], [started("run-a")], "run-a", 1, WINDOW["window_id"]
         )
