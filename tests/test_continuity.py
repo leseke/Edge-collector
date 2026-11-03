@@ -12,6 +12,7 @@ class ContinuityTests(unittest.TestCase):
             ],
             "2026-11-03T02:10:00Z",
             tolerance_minutes=5,
+            journal_status="VERIFIED",
         )
         self.assertEqual(result["continuity_status"], "CONTINUOUS")
         self.assertEqual(result["coverage_ratio"], 1.0)
@@ -21,6 +22,7 @@ class ContinuityTests(unittest.TestCase):
             ["2026-11-03T01:00:00Z"],
             [{"id": "run", "observed_at": "2026-11-03T01:00:00Z", "usable_market_observation": False}],
             "2026-11-03T01:05:00Z",
+            journal_status="VERIFIED",
         )
         self.assertEqual(result["missed_windows"], 1)
         self.assertEqual(result["continuity_status"], "GAP")
@@ -31,6 +33,7 @@ class ContinuityTests(unittest.TestCase):
             [{"id": "a", "observed_at": "2026-11-03T01:02:00Z", "usable_market_observation": True}],
             "2026-11-03T01:06:00Z",
             tolerance_minutes=5,
+            journal_status="VERIFIED",
         )
         self.assertEqual(result["observed_windows"], 1)
         self.assertEqual(result["missed_windows"], 1)
@@ -41,22 +44,35 @@ class ContinuityTests(unittest.TestCase):
             [{"id": "a", "observed_at": "2026-11-03T01:10:00Z", "usable_market_observation": True}],
             "2026-11-03T01:05:00Z",
             tolerance_minutes=10,
+            journal_status="VERIFIED",
         )
         self.assertEqual(result["observed_windows"], 0)
 
     def test_no_expected_windows_is_unknown_not_cash(self):
-        result = assess_continuity([], [], "2026-11-03T01:05:00Z")
+        result = assess_continuity([], [], "2026-11-03T01:05:00Z", journal_status="VERIFIED")
         self.assertEqual(result["continuity_status"], "UNKNOWN")
         self.assertIsNone(result["coverage_ratio"])
+
+    def test_unverified_journal_never_claims_coverage(self):
+        result = assess_continuity(
+            ["2026-11-03T01:00:00Z"],
+            [{"id": "a", "observed_at": "2026-11-03T01:00:00Z", "usable_market_observation": True}],
+            "2026-11-03T01:05:00Z",
+            journal_status="UNAVAILABLE",
+        )
+        self.assertEqual(result["continuity_status"], "UNKNOWN")
+        self.assertIsNone(result["coverage_ratio"])
+        self.assertIsNone(result["observed_windows"])
+        self.assertIsNone(result["missed_windows"])
 
     def test_duplicate_observation_id_rejected(self):
         item = {"id": "same", "observed_at": "2026-11-03T01:00:00Z", "usable_market_observation": True}
         with self.assertRaises(ValueError):
-            assess_continuity(["2026-11-03T01:00:00Z"], [item, item], "2026-11-03T01:05:00Z")
+            assess_continuity(["2026-11-03T01:00:00Z"], [item, item], "2026-11-03T01:05:00Z", journal_status="VERIFIED")
 
     def test_timezone_is_required(self):
         with self.assertRaises(ValueError):
-            assess_continuity(["2026-11-03T01:00:00"], [], "2026-11-03T01:05:00Z")
+            assess_continuity(["2026-11-03T01:00:00"], [], "2026-11-03T01:05:00Z", journal_status="VERIFIED")
 
 
 if __name__ == "__main__":
