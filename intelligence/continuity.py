@@ -19,7 +19,7 @@ def _iso(value):
     return value.isoformat().replace("+00:00", "Z")
 
 
-def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10):
+def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10, journal_status="UNKNOWN"):
     """Associe au plus une observation exploitable à chaque fenêtre attendue.
 
     expected_at : liste des horaires théoriques, fournis par le scheduler.
@@ -33,6 +33,9 @@ def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10):
         raise ValueError("expected_at et observations doivent être des listes")
     if isinstance(tolerance_minutes, bool) or not isinstance(tolerance_minutes, (int, float)) or tolerance_minutes < 0:
         raise ValueError("tolérance invalide")
+
+    if journal_status not in {"VERIFIED", "DEGRADED", "UNAVAILABLE", "UNKNOWN"}:
+        raise ValueError("journal_status invalide")
 
     cut = _instant(as_of)
     expected = sorted(_instant(x) for x in expected_at)
@@ -91,6 +94,30 @@ def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10):
     latest = max((x[0] for x in usable), default=None)
     age_minutes = round((cut - latest).total_seconds() / 60, 1) if latest else None
     total = len(expected)
+
+    # A partial or unavailable journal cannot support a coverage claim.
+    # Keep the known schedule size, but suppress observation counts and gaps.
+    if journal_status != "VERIFIED":
+        intervals = [
+            round((expected[i + 1] - expected[i]).total_seconds() / 60, 1)
+            for i in range(len(expected) - 1)
+        ]
+        nominal_interval = sorted(intervals)[len(intervals) // 2] if intervals else None
+        return {
+            "as_of": _iso(cut),
+            "continuity_status": "UNKNOWN",
+            "journal_status": journal_status,
+            "expected_windows": total,
+            "observed_windows": None,
+            "missed_windows": None,
+            "coverage_ratio": None,
+            "missed_at": None,
+            "longest_consecutive_missed_windows": None,
+            "nominal_interval_minutes": nominal_interval,
+            "last_observation_at": None,
+            "observation_age_minutes": None,
+            "heartbeat_counts_as_observation": False,
+        }
     observed_count = len(matched_slots)
     coverage = observed_count / total if total else None
 
@@ -110,6 +137,7 @@ def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10):
     return {
         "as_of": _iso(cut),
         "continuity_status": status,
+        "journal_status": "VERIFIED",
         "expected_windows": total,
         "observed_windows": observed_count,
         "missed_windows": total - observed_count,
