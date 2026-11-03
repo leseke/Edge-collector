@@ -20,9 +20,9 @@ class RunJournalTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_events_are_appended_in_order(self):
-        storage.append_run_event("run-1", "STARTED", {"sources_enabled": ["ebay"]},
+        storage.append_run_event("run-1", "STARTED", {"trigger": "manual", "scheduled_at": None},
                                  "2026-11-03T01:00:00Z")
-        storage.append_run_event("run-1", "FINISHED", {"status": "EMPTY"},
+        storage.append_run_event("run-1", "FINISHED", {"run_status": "EMPTY"},
                                  "2026-11-03T01:01:00Z")
         events = storage.list_run_events("run-1")
         self.assertEqual([x["event_type"] for x in events], ["STARTED", "FINISHED"])
@@ -53,6 +53,10 @@ class RunJournalTests(unittest.TestCase):
         storage.append_run_event("run-1", "FINISHED", {})
         with self.assertRaises(ValueError):
             storage.append_run_event("run-1", "FINISHED", {})
+
+    def test_private_fields_are_rejected_from_heartbeat(self):
+        with self.assertRaises(ValueError):
+            storage.append_run_event("private", "STARTED", {"treasury": 300})
 
     def test_invalid_event_type_rejected(self):
         with self.assertRaises(ValueError):
