@@ -125,3 +125,46 @@ def resolve_scheduled_run_context(expected_windows, run_events, run_id, attempt,
         attempt=attempt,
         expected_sources=tuple(sorted(sources)),
     )
+
+
+def validate_scheduled_invocation(context, expected_windows, run_id, attempt):
+    """Validate an injected schedule claim before the collector writes STARTED.
+
+    Unlike resolve_scheduled_run_context(), this validates caller-supplied
+    inputs before any journal event exists. It does not infer a schedule or
+    inspect process start time; the expected-window registry is mandatory.
+    """
+    if not isinstance(context, ScheduledRunContext):
+        raise ValueError("scheduled_context must be a ScheduledRunContext")
+    if not isinstance(expected_windows, list):
+        raise ValueError("expected_windows must be an explicit list")
+    if not isinstance(run_id, str) or not run_id.strip():
+        raise ValueError("run_id must be non-empty")
+    if isinstance(attempt, bool) or not isinstance(attempt, int) or attempt < 1:
+        raise ValueError("attempt must be a positive integer")
+    if context.run_id != run_id or context.attempt != attempt:
+        raise ValueError("scheduled context does not match this collector run attempt")
+
+    matches = [
+        item for item in expected_windows
+        if isinstance(item, dict) and item.get("window_id") == context.window_id
+    ]
+    if len(matches) != 1:
+        raise ValueError("window_id must identify exactly one expected window")
+    window = matches[0]
+    if set(window) != {"window_id", "scheduled_at", "expected_sources"}:
+        raise ValueError("expected window structure is invalid")
+    scheduled_at = _canonical_utc(window["scheduled_at"])
+    sources = window["expected_sources"]
+    if (
+        not isinstance(sources, list)
+        or not sources
+        or any(not isinstance(item, str) or not item.strip() for item in sources)
+        or len(set(sources)) != len(sources)
+    ):
+        raise ValueError("expected_sources is invalid")
+    if scheduled_at != context.scheduled_at:
+        raise ValueError("scheduled_at differs from the expected window")
+    if tuple(sorted(sources)) != context.expected_sources:
+        raise ValueError("expected_sources differ from the expected window")
+    return context
