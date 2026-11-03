@@ -15,6 +15,7 @@ on:
   pull_request:
     paths:
       - "collect.py"
+      - "connectors/**"
       - "storage.py"
       - "intelligence/**"
       - "tests/**"
