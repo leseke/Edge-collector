@@ -132,3 +132,15 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - Validation CI du commit `087c6bb566e7b3adfd08c1491e4541c792aade90`, run `41684991658` : **success**, 501 tests exécutés, 500 réussis, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41684991658
 - Le changement de docstring de `intelligence/scheduled_run_context.py` a ensuite été fait sur le commit `8e1096b5ff3fd59ac46767fa9b5a5820b54af633` ; la CI de ce HEAD doit être vérifiée séparément avant de considérer ce dernier commit validé.
 - Limite : le collecteur n'émet pas encore `SOURCE_RESULT` et ne reconstruit pas encore le rapport de continuité. C'est le périmètre de 004.14-C/D. Aucun scheduler, appel externe ou changement de `main`.
+
+## MRI-004.14-C — Raccordement des résultats source au collecteur
+
+- Le chemin planifié de `collect.run()` utilise désormais `SQLiteContinuityJournal` pour écrire STARTED, les résultats source et FINISHED. Le chemin manuel conserve son cycle historique et n'émet aucun `SOURCE_RESULT`.
+- Le collecteur utilise le dispatcher de statut pour chaque contrôle planifié de la watchlist principale (eBay/Cardmarket), Trends, Reddit et Scavio. Chaque résultat exécuté est rattaché à l'identifiant de contrôle attendu dans la fenêtre vérifiée.
+- Les statuts `OBSERVED`, `NO_REACTION_OBSERVED` et `SOURCE_FAILED` sont transmis au journal via la liste blanche SQLite. Les cas `UNKNOWN` ne sont pas enregistrés comme résultat ; un contrôle désactivé/non exécuté n'est pas transformé en échec et reste sans preuve.
+- Les échecs enregistrés ne conservent que le type d'exception, jamais le message fournisseur. Les snapshots historiques et la sortie radar restent inchangés.
+- Tests ajoutés : transmission du résultat planifié au journal, statut d'échec expurgé, conservation du chemin manuel. Les tests SQLite existants couvrent l'ordre STARTED/SOURCE_RESULT/FINISHED, l'idempotence, les doublons contradictoires, l'absence de réaction et les erreurs.
+- Validation CI : commit `3592dbc7900c092fcdbd18cfac96ac643b0e283c`, run `41686464879` : **success**, 504 tests exécutés, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41686464879
+- Le workflow de tests surveille maintenant aussi `connectors/**`, afin que les changements d'adaptateurs déclenchent la suite hors ligne.
+- Limites : aucun scheduler n'est activé ; les fenêtres et sources attendues doivent toujours être injectées explicitement. Le workflow de collecte actuel continue d'exécuter `diagnose_scavio.py`, pas `collect.py`. Le journal SQLite est local au runner et ne constitue pas encore une persistance durable multi-exécutions. Les tests utilisent des mocks/offline et ne valident pas la disponibilité réelle des fournisseurs.
+- Aucun appel fournisseur, dépense, notification réelle, secret supplémentaire, changement de `main`, merge ou rebase n'a été effectué.
