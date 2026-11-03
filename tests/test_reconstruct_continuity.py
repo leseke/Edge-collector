@@ -194,6 +194,20 @@ class ReconstructContinuityTests(unittest.TestCase):
             reconstruct_windows([{"window_id": "w1", "scheduled_at": T0, "expected_sources": ["source-a"]}],
                                 events, [outcome, outcome], T2)
 
+    def test_invalid_source_event_is_validated_before_payload_extraction(self):
+        events = run_events("run-a", T0)
+        malformed = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "w1", "source_id": "source-a",
+        })
+        events.insert(1, malformed)
+        with self.assertRaises(ValueError):
+            reconstruct_windows(
+                [{"window_id": "w1", "scheduled_at": T0,
+                  "expected_sources": ["source-a"]}],
+                events,
+                as_of=T2,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
