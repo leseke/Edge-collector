@@ -1,0 +1,803 @@
+{
+  "schema": "edge.commercial.snapshot.v1",
+  "observed_at": "2026-11-03T21:07:46.339793+00:00",
+  "collection_trigger": {
+    "event": "schedule",
+    "run_id": "41718887160",
+    "run_attempt": 1,
+    "schedule_is_delivery_guarantee": false
+  },
+  "observations": [
+    {
+      "id": "lego_fr_10365",
+      "product_id": "lego_10365",
+      "seller": "LEGO France",
+      "url": "https://www.lego.com/fr-fr/product/captain-jack-sparrows-pirate-ship-10365",
+      "observed_at": "2026-11-03T21:07:46.339819+00:00",
+      "status": "FAILED",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "source_qualification": "NOT_ASSESSED",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:46.340053+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:46.610190+00:00",
+          "status": "FAILED",
+          "error_type": "HTTPError"
+        }
+      ],
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "lagranderecre_10365",
+      "product_id": "lego_10365",
+      "seller": "La Grande Recre",
+      "url": "https://www.lagranderecre.fr/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+      "observed_at": "2026-11-03T21:07:47.219611+00:00",
+      "status": "FAILED",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "source_qualification": "NOT_ASSESSED",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:46.610496+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:47.219611+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.lagranderecre.fr/verification?return=%2Fjeux-de-construction%2Fjeux-de-construction-en-briques%2Fsuper-heros-cinema-et-jeux-video%2Fle-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+      "body_sha256": "f6a29533d8fb610fa96cc8e51de0ba59288089758af5490d4b59947471be6ec7",
+      "raw_file": "lagranderecre_10365.html",
+      "error_type": "ValueError",
+      "error": "Expected exactly one identified EUR Offer; found 0"
+    },
+    {
+      "id": "tcgdex_base1-4",
+      "product_id": "pokemon_card_base1-4",
+      "seller": "Cardmarket indication via TCGdex",
+      "url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+      "observed_at": "2026-11-03T21:07:47.490971+00:00",
+      "status": "OK",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "source_qualification": "NOT_ASSESSED",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:47.220604+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:47.490971+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+      "body_sha256": "8ad2a6d37a2701e7874adf23ee9d11eca3cc6b2dcf47e590f03b826bf9041d23",
+      "raw_file": "tcgdex_base1-4.json",
+      "price": "99",
+      "currency": "EUR",
+      "source_updated_at": "2026-11-02T22:54:32.710Z",
+      "sealed_product": false,
+      "market_language_verified": false,
+      "evidence": {
+        "updated": "2026-11-02T22:54:32.710Z",
+        "unit": "EUR",
+        "idProduct": 273699,
+        "avg": 458.1,
+        "low": 99,
+        "trend": 441.22,
+        "avg1": 134.5,
+        "avg7": 390.77,
+        "avg30": 457.47,
+        "avg-holo": null,
+        "low-holo": null,
+        "trend-holo": 123.63,
+        "avg1-holo": 207.4,
+        "avg7-holo": 129.55,
+        "avg30-holo": 202.71
+      }
+    },
+    {
+      "id": "tcgdex_swsh3-136",
+      "product_id": "pokemon_card_swsh3-136",
+      "seller": "Cardmarket indication via TCGdex",
+      "url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136",
+      "observed_at": "2026-11-03T21:07:47.648602+00:00",
+      "status": "OK",
+      "price_kind": "AGGREGATED_INDICATIVE_LOW",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "source_qualification": "NOT_ASSESSED",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:47.491471+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:47.648602+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136",
+      "body_sha256": "da24962077920ca7468dad59fd7cd50f24431ab8a53cb5640fe3d36afc0dd32f",
+      "raw_file": "tcgdex_swsh3-136.json",
+      "price": "0.02",
+      "currency": "EUR",
+      "source_updated_at": "2026-11-02T22:54:32.711Z",
+      "sealed_product": false,
+      "market_language_verified": false,
+      "evidence": {
+        "updated": "2026-11-02T22:54:32.711Z",
+        "unit": "EUR",
+        "idProduct": 483559,
+        "avg": 0.06,
+        "low": 0.02,
+        "trend": 0.05,
+        "avg1": 0.08,
+        "avg7": 0.07,
+        "avg30": 0.06,
+        "avg-holo": 0.22,
+        "low-holo": 0.08,
+        "trend-holo": 0.25,
+        "avg1-holo": 0.53,
+        "avg7-holo": 0.27,
+        "avg30-holo": 0.26
+      }
+    },
+    {
+      "id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "seller": "JoueClub",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "observed_at": "2026-11-03T21:07:48.629847+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:47.648995+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:48.629847+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "body_sha256": "11323beb837269d1cd87c45c56105e1b21e5af022ae6ce3ae94e0932ec7f5e32",
+      "raw_file": "joueclub_10365.html",
+      "price": "349.99",
+      "currency": "EUR",
+      "product_name": "LEGO® ICONS 10365 - LE BATEAU PIRATE DU CAPITAINE JACK SPARROW",
+      "evidence": {
+        "product": {
+          "name": "LEGO® ICONS 10365 - LE BATEAU PIRATE DU CAPITAINE JACK SPARROW",
+          "sku": "5702017829203",
+          "brand": {
+            "@type": "Brand",
+            "name": "LEGO"
+          }
+        },
+        "offer": {
+          "@type": "Offer",
+          "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+          "priceCurrency": "EUR",
+          "price": 349.99,
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "id": "ldlc_75639",
+      "product_id": "lego_75639",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00701668.html",
+      "observed_at": "2026-11-03T21:07:50.054039+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:48.656181+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:50.054039+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00701668.html",
+      "body_sha256": "8214026db50ab9dfa4a822a95550cb59dcd451e6f5b189e47b77f171a62a8ab2",
+      "raw_file": "ldlc_75639.html",
+      "price": "129.95",
+      "currency": "EUR",
+      "product_name": "LEGO One Piece 75639 Le Bateau Pirate Vogue Merry",
+      "evidence": {
+        "product": {
+          "name": "LEGO One Piece 75639 Le Bateau Pirate Vogue Merry",
+          "sku": "AR202506100029",
+          "mpn": "75639",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702017818023"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "129.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00701668.html"
+        }
+      }
+    },
+    {
+      "id": "kingjouet_75639",
+      "product_id": "lego_75639",
+      "seller": "King Jouet France",
+      "url": "https://www.king-jouet.com/jeu-jouet/jeux-constructions/lego-planchettes/ref-990051-75639-lego-one-piece-bateau-pirate-vogue-merry.htm",
+      "observed_at": "2026-11-03T21:07:50.065835+00:00",
+      "status": "FAILED",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "UNKNOWN",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:50.065889+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:50.605348+00:00",
+          "status": "FAILED",
+          "error_type": "HTTPError"
+        }
+      ],
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "id": "joueclub_75639",
+      "product_id": "lego_75639",
+      "seller": "JoueClub",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+      "observed_at": "2026-11-03T21:07:51.697019+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:50.605582+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:51.697019+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+      "body_sha256": "16ae6f3e9e73e597f6d90b496f3fa46c5a1dd2c475ec216d9cf21991f7187b98",
+      "raw_file": "joueclub_75639.html",
+      "price": "103.99",
+      "currency": "EUR",
+      "product_name": "LEGO® ONE PIECE 75639 - LE BATEAU PIRATE VOGUE MERRY",
+      "evidence": {
+        "product": {
+          "name": "LEGO® ONE PIECE 75639 - LE BATEAU PIRATE VOGUE MERRY",
+          "sku": "5702017818023",
+          "brand": {
+            "@type": "Brand",
+            "name": "LEGO"
+          }
+        },
+        "offer": {
+          "@type": "Offer",
+          "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+          "priceCurrency": "EUR",
+          "price": 103.99,
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "id": "joueclub_11383",
+      "product_id": "lego_11383",
+      "seller": "JoueClub",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+      "observed_at": "2026-11-03T21:07:52.868046+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:51.721834+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:52.868046+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+      "body_sha256": "c0bced541f51e9f51b5f237f7f2ce869020124ad0b1873c241a426f3edddcade",
+      "raw_file": "joueclub_11383.html",
+      "price": "109.99",
+      "currency": "EUR",
+      "product_name": "LEGO® ICONS 11383 - LE MANOIR DU MAIRE",
+      "evidence": {
+        "product": {
+          "name": "LEGO® ICONS 11383 - LE MANOIR DU MAIRE",
+          "sku": "5702018063644",
+          "brand": {
+            "@type": "Brand",
+            "name": "LEGO"
+          }
+        },
+        "offer": {
+          "@type": "Offer",
+          "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+          "priceCurrency": "EUR",
+          "price": 109.99,
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "id": "joueclub_42705",
+      "product_id": "lego_42705",
+      "seller": "JoueClub",
+      "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+      "observed_at": "2026-11-03T21:07:53.902345+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:52.893011+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:53.902345+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+      "body_sha256": "ca23e389c343cb9d23a9563b6af91454d15018e62552d5aed150eb9185edbfd0",
+      "raw_file": "joueclub_42705.html",
+      "price": "94.99",
+      "currency": "EUR",
+      "product_name": "LEGO® FRIENDS 42705 - LA CABANE CHALEUREUSE DANS LA FORET",
+      "evidence": {
+        "product": {
+          "name": "LEGO® FRIENDS 42705 - LA CABANE CHALEUREUSE DANS LA FORET",
+          "sku": "5702018060629",
+          "brand": {
+            "@type": "Brand",
+            "name": "LEGO"
+          }
+        },
+        "offer": {
+          "@type": "Offer",
+          "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+          "priceCurrency": "EUR",
+          "price": 94.99,
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    },
+    {
+      "id": "brickshop_11388",
+      "product_id": "lego_11388",
+      "seller": "BRICKshop",
+      "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "observed_at": "2026-11-03T21:07:56.175708+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "COMING_SOON",
+      "purchase_authorized": false,
+      "source_qualification": "DIRECT_RETAILER_PAGE_IDENTITY_CORROBORATED_NOT_CHECKOUT_OR_TRUST_AUDITED",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:53.927390+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:56.175708+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "body_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+      "raw_file": "brickshop_11388.html",
+      "price": "599.99",
+      "currency": "EUR",
+      "product_name": "LEGO 11388 Venetian Neighbourhood",
+      "evidence": {
+        "product": {
+          "name": "LEGO 11388 Venetian Neighbourhood",
+          "sku": "11388",
+          "brand": "LEGO",
+          "gtin13": "5702018069868"
+        },
+        "offer": {
+          "price": "599.99",
+          "priceCurrency": "EUR",
+          "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "availability": "https://schema.org/OutOfStock"
+        },
+        "visible_online_status": "COMING SOON",
+        "retailer_announced_available_date": "2026-11-04",
+        "shipping_to_france_verified": false,
+        "checkout_verified": false,
+        "seller_reliability_reviewed": false
+      }
+    },
+    {
+      "id": "ldlc_discovered_42705",
+      "product_id": "lego_42705",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00743956.html",
+      "observed_at": "2026-11-03T21:07:57.231811+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:56.215029+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:57.231811+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00743956.html",
+      "body_sha256": "7997af7dd00107c93620e89bd73550b97a4c01ac976b066d055d98d9971dc620",
+      "raw_file": "ldlc_discovered_42705.html",
+      "price": "92.95",
+      "currency": "EUR",
+      "product_name": "LEGO Friends 42705 La Cabane Chaleureuse dans la Forêt",
+      "evidence": {
+        "product": {
+          "name": "LEGO Friends 42705 La Cabane Chaleureuse dans la Forêt",
+          "sku": "AR202603170155",
+          "mpn": "42705",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702018060629"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "92.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00743956.html"
+        }
+      }
+    },
+    {
+      "id": "ldlc_discovered_40744",
+      "product_id": "lego_40744",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "observed_at": "2026-11-03T21:07:58.032242+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "OUT_OF_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:57.243831+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:58.032242+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "body_sha256": "e267c569c561097ef2398f61995224c4cc2cb1d3a8d97696bbc818e583369e1e",
+      "raw_file": "ldlc_discovered_40744.html",
+      "price": "12.95",
+      "currency": "EUR",
+      "product_name": "LEGO Icons 40744 Sélection de Décorations de Noël",
+      "evidence": {
+        "product": {
+          "name": "LEGO Icons 40744 Sélection de Décorations de Noël",
+          "sku": "AR202507150150",
+          "mpn": "40744",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702017598116"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/OutOfStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "12.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00707328.html"
+        }
+      }
+    },
+    {
+      "id": "ldlc_discovered_11383",
+      "product_id": "lego_11383",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00759980.html",
+      "observed_at": "2026-11-03T21:07:58.824996+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:58.043674+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:58.824996+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00759980.html",
+      "body_sha256": "636bfe005cd21248c432cb14a920748f669c3935850ff250d4c38afcd5c1d876",
+      "raw_file": "ldlc_discovered_11383.html",
+      "price": "104.95",
+      "currency": "EUR",
+      "product_name": "LEGO Icons 11383 Le Manoir du Maire",
+      "evidence": {
+        "product": {
+          "name": "LEGO Icons 11383 Le Manoir du Maire",
+          "sku": "AR202609150115",
+          "mpn": "11383",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702018063644"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "104.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00759980.html"
+        }
+      }
+    },
+    {
+      "id": "ldlc_discovered_42179",
+      "product_id": "lego_42179",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00731483.html",
+      "observed_at": "2026-11-03T21:07:59.889268+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:58.836450+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:07:59.889268+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00731483.html",
+      "body_sha256": "292e1ee084550c8aab95198e81946ec35a1b713ede4afea30813589384578ec5",
+      "raw_file": "ldlc_discovered_42179.html",
+      "price": "74.95",
+      "currency": "EUR",
+      "product_name": "LEGO Technic 42179 La Planète Terre et la Lune en Orbite",
+      "evidence": {
+        "product": {
+          "name": "LEGO Technic 42179 La Planète Terre et la Lune en Orbite",
+          "sku": "AR202603110093",
+          "mpn": "42179",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702017584133"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "74.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00731483.html"
+        }
+      }
+    },
+    {
+      "id": "ldlc_discovered_75642",
+      "product_id": "lego_75642",
+      "seller": "LDLC",
+      "url": "https://www.ldlc.com/fiche/PB00759565.html",
+      "observed_at": "2026-11-03T21:08:00.982635+00:00",
+      "status": "OK",
+      "price_kind": "ASKING_PRICE",
+      "shipping_eur": null,
+      "completed_sale": false,
+      "availability": "IN_STOCK",
+      "purchase_authorized": false,
+      "source_qualification": "ESTABLISHED_RETAILER",
+      "request_attempts": [
+        {
+          "started_at": "2026-11-03T21:07:59.900756+00:00",
+          "timeout_seconds": 25,
+          "finished_at": "2026-11-03T21:08:00.982635+00:00",
+          "status": "OK"
+        }
+      ],
+      "http_status": 200,
+      "final_url": "https://www.ldlc.com/fiche/PB00759565.html",
+      "body_sha256": "7ab558715cf09624fbf603ff1eb6d8a1277b55bc65e460e1fd7ede68cba22a3f",
+      "raw_file": "ldlc_discovered_75642.html",
+      "price": "53.95",
+      "currency": "EUR",
+      "product_name": "LEGO One Piece 75642 L'Affrontement avec le Capitaine Smoker",
+      "evidence": {
+        "product": {
+          "name": "LEGO One Piece 75642 L'Affrontement avec le Capitaine Smoker",
+          "sku": "AR202609150146",
+          "mpn": "75642",
+          "brand": {
+            "@type": "Brand",
+            "@id": "https://www.ldlc.com/lego/bint000034703/",
+            "name": "LEGO",
+            "url": "https://www.ldlc.com/lego/bint000034703/",
+            "logo": "https://media.ldlc.com/r1600/v3/marque/bo/00/06/13/71/V30006137141.jpg"
+          },
+          "gtin13": "5702018067345"
+        },
+        "offer": {
+          "@type": "Offer",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition",
+          "price": "53.95",
+          "seller": {
+            "@type": "Organization",
+            "name": "LDLC",
+            "url": "https://www.ldlc.com/"
+          },
+          "url": "https://www.ldlc.com/fiche/PB00759565.html"
+        }
+      }
+    }
+  ],
+  "status": "PARTIAL",
+  "coverage": {
+    "retail_offers_ok": 11,
+    "indicative_prices_ok": 2,
+    "failed_sources": 3,
+    "comparable_observations": 13,
+    "research_monitoring_capacity": 5,
+    "announcements_connected": true,
+    "completed_sales_connected": false,
+    "announcement_sources_ok": 3,
+    "announcement_status": "OK",
+    "discovery_candidates": 31,
+    "discovery_probes": 3,
+    "research_monitoring_targets": 5,
+    "discovery_status": "OK",
+    "secondary_market_status": "FAILED",
+    "secondary_listing_cards": 0,
+    "verified_net_bundle_advantage": false,
+    "verified_retail_events_followed": 1,
+    "measured_retail_event_windows": 1,
+    "computed_stock_probability_estimates": 0,
+    "missing_target_window_incidents": 1,
+    "products_with_multiple_current_retailers": 3,
+    "seller_review_eligible_in_stock_offers": 0,
+    "unverified_seller_current_prices": 11,
+    "publication_linked_multi_source_cases": 2,
+    "announced_release_cases": 1,
+    "analogue_queries": 1,
+    "analogue_queries_with_sufficient_history": 0,
+    "candidate_assessments": 31,
+    "assessment_status": "OK",
+    "data_policy": "OBSERVED_INPUTS_WITH_SEPARATE_LABELLED_ESTIMATES_V1",
+    "computed_probability_estimates": 0,
+    "primary_review_matches": 2,
+    "primary_review_partial_matches": 1,
+    "primary_source_recheck_status": "PARTIAL",
+    "monthly_history_status": "IMPORTED_NATIVE_SCOPE",
+    "monthly_history_series": 7406,
+    "monthly_trajectory_status": "RETROSPECTIVE_RESEARCH_COMPLETE",
+    "monthly_trajectory_queries": 200,
+    "frozen_forecast_records": 3,
+    "scored_prospective_forecasts": 0
+  }
+}
