@@ -69,9 +69,21 @@ def append_run_event(run_id, event_type, payload=None, occurred_at=None):
     if not isinstance(payload, dict):
         raise ValueError("payload doit être un objet")
     timestamp = occurred_at or _utc_now()
+    allowed_fields = {
+        "STARTED": {"trigger", "scheduled_at"},
+        "FINISHED": {
+            "run_status", "sources_expected", "sources_failed",
+            "collected_records", "product_price_snapshots", "retail_offer_batches",
+            "error_type", "started_at", "completed_at",
+        },
+    }[event_type]
+    unexpected = set(payload) - allowed_fields
+    if unexpected:
+        raise ValueError("champs non autorisés dans le journal de heartbeat")
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     con = sqlite3.connect(DB)
     try:
+        con.execute("BEGIN IMMEDIATE")
         counts = con.execute(
             "SELECT SUM(CASE WHEN event_type='STARTED' THEN 1 ELSE 0 END), "
             "SUM(CASE WHEN event_type='FINISHED' THEN 1 ELSE 0 END) "
