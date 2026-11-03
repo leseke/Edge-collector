@@ -72,6 +72,17 @@ def append_run_event(run_id, event_type, payload=None, occurred_at=None):
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     con = sqlite3.connect(DB)
     try:
+        counts = con.execute(
+            "SELECT SUM(CASE WHEN event_type='STARTED' THEN 1 ELSE 0 END), "
+            "SUM(CASE WHEN event_type='FINISHED' THEN 1 ELSE 0 END) "
+            "FROM run_event WHERE run_id=?",
+            (run_id,),
+        ).fetchone()
+        started_count, finished_count = (counts[0] or 0), (counts[1] or 0)
+        if event_type == "STARTED" and (started_count or finished_count):
+            raise ValueError("run_id déjà utilisé")
+        if event_type == "FINISHED" and (started_count != 1 or finished_count != 0):
+            raise ValueError("FINISHED exige un STARTED unique et aucun FINISHED antérieur")
         con.execute(
             "INSERT INTO run_event (run_id, event_type, occurred_at, payload_json) VALUES (?,?,?,?)",
             (run_id, event_type, timestamp, encoded),
