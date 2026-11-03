@@ -40,7 +40,7 @@ Les compteurs séparent les enregistrements de collecte, les snapshots de prix p
 2. Le workflow `.github/workflows/collect.yml` actuel exécute `diagnose_scavio.py`, pas `collect.py`. L'instrumentation du collecteur n'est donc pas encore appelée par ce workflow.
 3. Il n'existe pas encore de cadence planifiée ni de `scheduled_at` fiable ; le champ reste explicitement nul.
 4. Les fenêtres attendues ne sont pas encore produites par un scheduler et reliées à ce journal.
-5. La suite complète a été exécutée avec succès : 351 tests réussis, 1 test ignoré. Le dernier run GitHub Actions est vert.
+5. La suite complète a été exécutée avec succès : 353 tests réussis, 1 test ignoré. Le dernier run GitHub Actions est vert.
 
 ## Ajustement du banc de tests
 
