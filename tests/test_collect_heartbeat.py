@@ -59,6 +59,7 @@ class CollectorHeartbeatTests(unittest.TestCase):
 
     @mock.patch.object(collect, "init_db")
     @mock.patch.object(collect, "append_run_event")
+    @mock.patch.object(collect, "SQLiteContinuityJournal")
     @mock.patch.object(collect, "_run_once", return_value={
         "run_status": "OK",
         "sources_expected": ["ebay:item-a"],
@@ -68,7 +69,7 @@ class CollectorHeartbeatTests(unittest.TestCase):
         "retail_offer_batches": 0,
     })
     def test_explicit_scheduled_context_is_written_without_inference(
-        self, run_once, append_event, init_db
+        self, run_once, journal_class, append_event, init_db
     ):
         os.environ["GITHUB_RUN_ID"] = "123"
         os.environ["GITHUB_RUN_ATTEMPT"] = "2"
@@ -88,12 +89,11 @@ class CollectorHeartbeatTests(unittest.TestCase):
         result = collect.run(scheduled_context=context, expected_windows=[window])
 
         self.assertEqual(result["run_status"], "OK")
-        started = append_event.call_args_list[0]
-        self.assertEqual(started.args[1], "STARTED")
-        self.assertEqual(started.args[2], {
-            "trigger": "schedule",
-            "scheduled_at": "2026-11-03T01:00:00Z",
-        })
+        journal_class.return_value.start.assert_called_once_with(
+            context, [window], occurred_at=mock.ANY
+        )
+        journal_class.return_value.finish.assert_called_once()
+        append_event.assert_not_called()
         init_db.assert_called_once()
 
     @mock.patch.object(collect, "init_db")
