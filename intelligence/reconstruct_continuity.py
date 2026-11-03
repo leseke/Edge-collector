@@ -93,13 +93,26 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
         key = (item["run_id"], item["attempt"])
         if key not in starts:
             raise ValueError("résultat sans exécution STARTED vérifiée")
+        start_event = starts[key]
+        scheduled_at = start_event["payload"].get("scheduled_at")
+        if not scheduled_at or _instant(scheduled_at) != windows[window_id]["scheduled"]:
+            raise ValueError("résultat lié à une exécution planifiée différente")
         if item["outcome"] not in OUTCOMES:
             raise ValueError("outcome invalide")
         if not isinstance(item["source_id"], str) or not item["source_id"].strip():
             raise ValueError("source_id invalide")
         occurred = _instant(item["occurred_at"])
-        if occurred < windows[window_id]["scheduled"] or occurred > cut:
-            raise ValueError("résultat hors de sa fenêtre temporelle")
+        started_at = _instant(start_event["occurred_at_utc"])
+        if occurred < started_at or occurred > cut:
+            raise ValueError("résultat hors de la période d'exécution")
+        finish_event = next((
+            event for event in run_events
+            if event["run_id"] == item["run_id"]
+            and event["attempt"] == item["attempt"]
+            and event["event_type"] == "FINISHED"
+        ), None)
+        if finish_event and occurred > _instant(finish_event["occurred_at_utc"]):
+            raise ValueError("résultat postérieur à la fin de l'exécution")
         outcome_by_window[window_id] = item
 
     # A run whose scheduled_at matches a window but has no source outcome is
