@@ -102,3 +102,9 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - `intelligence/run_journal.py` expose maintenant `source_result()` dans le protocole `RunJournal` et dans l'adaptateur `SQLiteRunJournal` ; le test de délégation correspondant est ajouté.
 - Cette méthode délègue uniquement à la liste blanche SQLite déjà testée. Elle n'est pas appelée depuis `collect.py` tant que le collecteur ne reçoit pas une fenêtre planifiée vérifiable.
 - La dernière suite complète confirmée reste 389 tests réussis, 1 ignoré au commit `81a4fdf`. Le nouvel ajout de l'adaptateur et son test sont en cours de validation GitHub Actions (run `41660866058`) ; ne pas étendre la mention de réussite au commit suivant avant son résultat.
+## Validation finale de l'adaptateur source
+
+- Commit testé : `bc945d2e4050105db2822167b37b834fba1651ac`.
+- GitHub Actions run `41660866058` : **success** — 390 tests exécutés, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41660866058
+- Le test ajouté valide la délégation `SQLiteRunJournal.source_result()` vers le stockage SQLite ; les tests couvrent aussi l'ordre STARTED/SOURCE_RESULT/FINISHED, plusieurs sources, l'idempotence, le rejet des changements de contenu et des champs privés.
+- Cette validation ne couvre pas encore une collecte réelle avec fenêtre planifiée : `collect.py` n'émet pas `SOURCE_RESULT` tant qu'aucun scheduler fiable ne fournit les identifiants de fenêtre et les sources attendues.
