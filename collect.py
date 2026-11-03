@@ -1,5 +1,6 @@
 import os
 import json
+import uuid
 from datetime import datetime, timezone
 
 from connectors.ebay import fetch_sold as fetch_ebay
@@ -8,7 +9,7 @@ from connectors.trends_spy import fetch_trends_spy
 from connectors.reddit import fetch_reddit
 from connectors.scavio import fetch_scavio_offers
 from connectors.telegram import send_message, format_alert, send_daily_digest
-from storage import init_db, insert_snapshots
+from storage import init_db, insert_snapshots, append_run_event
 from edge_engine import (load_config, load_portfolio, decide, capital_state,
                          summarize, public_policy, public_product_view,
                          public_summary, assert_no_private_leak)
@@ -288,7 +289,7 @@ def build_outputs(products, config, sources_failed, trends_signals,
     return radar, private
 
 
-def run():
+def _run_once():
     init_db().close()
     config = load_config()
     portfolio = load_portfolio()
@@ -438,6 +439,61 @@ def run():
     print("\n=== RESUME ===", flush=True)
     print(f"statut donnees : {s['data_status']} (couverture {s['coverage']:.0%})", flush=True)
     print(f"posture : {s['posture']} -> {s['decision']}", flush=True)
+
+    active_sources = sorted(k for k, v in enabled.items() if v)
+    if sources_failed and not results:
+        run_status = "FAILED"
+    elif sources_failed:
+        run_status = "PARTIAL"
+    elif not results:
+        run_status = "EMPTY"
+    else:
+        run_status = "OK"
+    return {
+        "run_status": run_status,
+        "sources_expected": active_sources,
+        "sources_failed": sorted(sources_failed),
+        "market_observations": len(results),
+        "products_observed": len(snaps),
+    }
+
+
+def run():
+    """Persist STARTED before work and FINISHED even when the collector raises."""
+    run_id = "edge-" + os.environ.get("GITHUB_RUN_ID", str(uuid.uuid4()))
+    attempt = os.environ.get("GITHUB_RUN_ATTEMPT")
+    if attempt:
+        run_id += "-attempt-" + attempt
+    started_at = datetime.now(timezone.utc).isoformat()
+    append_run_event(run_id, "STARTED", {
+        "trigger": os.environ.get("GITHUB_EVENT_NAME", "local"),
+        "scheduled_at": None,
+    }, started_at)
+
+    result = None
+    failure = None
+    try:
+        result = _run_once()
+        return result
+    except Exception as exc:
+        failure = exc
+        raise
+    finally:
+        completed_at = datetime.now(timezone.utc).isoformat()
+        if failure is not None:
+            payload = {
+                "run_status": "FAILED",
+                "error_type": type(failure).__name__,
+                "market_observations": 0,
+                "products_observed": 0,
+            }
+        else:
+            payload = dict(result or {})
+            payload.setdefault("run_status", "EMPTY")
+        payload["started_at"] = started_at
+        payload["completed_at"] = completed_at
+        append_run_event(run_id, "FINISHED", payload, completed_at)
+
 
 
 def _flatten(s):
