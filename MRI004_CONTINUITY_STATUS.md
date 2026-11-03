@@ -76,3 +76,17 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - 14 tests dédiés dans `tests/test_reconstruct_continuity.py` et 12 tests dans `tests/test_remote_journal_simulator.py` (26 tests ciblés au total), dont une restauration effective du journal depuis le simulateur et un cas de runs concurrents ambigus, ainsi que des événements source intégrés au journal simulé (écrits, CI à confirmer).
 - Toujours pas d'émission de preuves source par le collecteur réel : les données sont injectées dans le modèle de reconstruction hors ligne. `collect.run()` écrit encore `scheduled_at=None`; le scheduler et le branchement réel restent à faire.
 - Vérification GitHub du commit de tests : aucun statut de test GitHub Actions n'est remonté par l'API de statut consultée ; le déploiement Vercel du commit de test échoue avec `missing_pages_app` (build Next.js sans application Pages détectée) ; aucun run GitHub Actions de tests n'est visible via les statuts/endpoint PR consultés, ce qui ne permet pas de conclure sur les tests Python. Aucun test n'est déclaré vert sans log explicite.
+
+## MRI-004.7 — Journal source-level SQLite
+
+- `storage.py` accepte maintenant les événements `SOURCE_RESULT` dans le journal SQLite local, avec liste blanche stricte (`window_id`, `source_id`, `outcome`).
+- Le cycle est contrôlé dans une transaction `BEGIN IMMEDIATE` : un résultat source exige un STARTED unique et doit précéder FINISHED.
+- Plusieurs sources peuvent être enregistrées pour un même run/fenêtre. Une répétition identique est idempotente ; une répétition avec contenu différent est rejetée.
+- Les issues inconnues, les identifiants vides et les champs privés supplémentaires sont rejetés.
+- `tests/test_run_journal.py` couvre les nouveaux cas SQLite ; `tests/test_reconstruct_continuity.py` couvre aussi le rejet d'un événement source malformé avant extraction de son payload.
+- `reconstruct_continuity.py` valide maintenant l'intégralité de l'historique avant de lire les champs internes des événements source, évitant une extraction prématurée susceptible de lever une erreur de clé non contrôlée.
+- Le collecteur réel n'émet **toujours pas** `SOURCE_RESULT` : aucune fenêtre planifiée fiable n'est disponible (`scheduled_at=None`) et aucun scheduler ne définit `window_id` ou la liste `expected_sources`. Les écrire aujourd'hui reviendrait à inventer une preuve de planification. Cette étape ajoute donc le contrat de stockage, sans attribuer de faux résultats aux sources.
+- Les états `NO_REACTION_OBSERVED` et `SOURCE_FAILED` ne sont pas encore dérivés automatiquement des appels fournisseurs. Une réponse vide n'est pas assimilée à une absence de réaction ; une source désactivée ou non appelée ne devient pas un échec.
+- Tests ciblés présents après cette étape : 15 tests du journal SQLite, 15 tests de reconstruction, 12 tests du simulateur (42 ciblés). **Ils ne sont pas déclarés réussis : aucune exécution Python ni CI GitHub Actions confirmée pour ces derniers commits.**
+- Le statut combiné GitHub consulté sur le commit de tests ne remonte que le contrôle Vercel, en attente ; il ne donne pas le résultat du workflow Python. Le déploiement Vercel reste indépendant de ces tests.
+- Aucun scheduler, backend distant, secret, appel payant, notification réelle ou changement de `main` n'a été activé.
