@@ -56,6 +56,9 @@ class ReconstructContinuityTests(unittest.TestCase):
                                       events, [outcome], T2)
         self.assertEqual(result["counts"]["SOURCE_FAILED"], 1)
         self.assertEqual(result["counts"]["MISSED"], 0)
+        self.assertEqual(result["continuity_status"], "DEGRADED")
+        self.assertEqual(result["observation_coverage_ratio"], 0.0)
+        self.assertEqual(result["attempt_coverage_ratio"], 1.0)
 
     def test_started_run_without_finish_or_evidence_is_unknown_not_missed(self):
         events = run_events("run-a", T0, finished=False)
