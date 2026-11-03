@@ -33,9 +33,31 @@ class SQLiteContinuityJournal:
             ))
         return events
 
-    def start(self, context, trigger="schedule", occurred_at=None):
+    @staticmethod
+    def _validate_expected_window(context, expected_windows):
+        if not isinstance(expected_windows, list):
+            raise ValueError("expected_windows must be a list")
+        matches = [item for item in expected_windows
+                   if isinstance(item, dict) and item.get("window_id") == context.window_id]
+        if len(matches) != 1:
+            raise ValueError("window_id must identify exactly one expected window")
+        item = matches[0]
+        if set(item) != {"window_id", "scheduled_at", "expected_sources"}:
+            raise ValueError("expected window structure is invalid")
+        from intelligence.scheduled_run_context import _canonical_utc
+        if _canonical_utc(item["scheduled_at"]) != context.scheduled_at:
+            raise ValueError("context scheduled_at differs from expected window")
+        sources = item["expected_sources"]
+        if (not isinstance(sources, list) or not sources
+                or any(not isinstance(source, str) or not source.strip() for source in sources)
+                or len(set(sources)) != len(sources)
+                or tuple(sorted(sources)) != context.expected_sources):
+            raise ValueError("context expected_sources differ from expected window")
+
+    def start(self, context, expected_windows, trigger="schedule", occurred_at=None):
         if trigger != "schedule":
             raise ValueError("scheduled context requires schedule trigger")
+        self._validate_expected_window(context, expected_windows)
         self._append_event(context.run_id, "STARTED", {
             "trigger": trigger,
             "scheduled_at": context.scheduled_at,
