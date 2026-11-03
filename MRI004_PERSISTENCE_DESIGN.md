@@ -116,3 +116,13 @@ Le simulateur est un modèle de test en mémoire, pas une persistance réelle. I
 ## Limite de cette livraison
 
 Cette livraison valide un contrat et un simulateur. Elle ne rend pas encore le journal durable : le dépôt privé, le credential, l'adaptateur distant réel, la reconstruction bout en bout depuis un historique distant et le scheduler restent absents.
+
+## MRI-004.5 — Reconstruction multi-exécutions (implémentation en cours de validation)
+
+`intelligence/reconstruct_continuity.py` rejoue le journal STARTED/FINISHED restauré dans le simulateur pour vérifier l'ordre, l'idempotence et l'intégrité des événements. Il croise ensuite trois flux indépendants : fenêtres attendues fournies par un scheduler, exécutions vérifiées, et résultats de source explicitement associés à une fenêtre et à une exécution.
+
+Les états reconstruits sont `OBSERVED`, `NO_REACTION_OBSERVED`, `SOURCE_FAILED`, `MISSED` et `UNKNOWN`. Une fenêtre sans exécution correspondante est `MISSED`. Si une exécution existe mais qu'aucune preuve de résultat source n'est disponible, l'état est `UNKNOWN`, même si le processus s'est terminé. Un résultat doit référencer le run exact, sa fenêtre planifiée et se situer dans l'intervalle temporel de cette exécution.
+
+Les métriques distinguent `observation_coverage_ratio` (interrogations réussies, y compris sans réaction observée) et `attempt_coverage_ratio` (inclut les échecs de source). Ces ratios sont masqués si au moins une fenêtre reste `UNKNOWN`. Une source en échec ne compte donc jamais comme observation de marché.
+
+Limite volontaire : le contrat accepte actuellement un résultat agrégé par fenêtre. Si plusieurs sources doivent contribuer à une même fenêtre, leur agrégation et les règles de priorité doivent être définies explicitement avant l'intégration. Le scheduler n'est pas encore branché et les résultats de source ne sont pas encore émis par le collecteur. Cette étape valide le modèle de reconstruction, pas la surveillance en production.
