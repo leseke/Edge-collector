@@ -140,3 +140,38 @@ def build_continuity_report(
         report["unknown_reason"] = "UNLINKED_RUN_HISTORY"
 
     return report
+
+def build_local_sqlite_continuity_report(
+    cadence, source_plan, as_of, journal, source_id_map=None
+):
+    """Replay the accessible local SQLite journal without claiming durable coverage.
+
+    A runner-local SQLite database may be absent or incomplete after runner
+    replacement. Positive recorded observations remain visible, but missing
+    windows are downgraded to UNKNOWN and coverage ratios are suppressed.
+    """
+    read_history = getattr(journal, "read_history", None)
+    if not callable(read_history):
+        raise ValueError("journal must expose read_history()")
+    run_events = read_history()
+    report = build_continuity_report(
+        cadence, source_plan, as_of, run_events, source_id_map=source_id_map
+    )
+    for row in report["windows"]:
+        if row["status"] == "MISSED":
+            row["status"] = "UNKNOWN"
+    report["window_counts"] = {
+        status: sum(row["status"] == status for row in report["windows"])
+        for status in (
+            "OBSERVED", "NO_REACTION_OBSERVED", "SOURCE_FAILED",
+            "DEGRADED", "MISSED", "UNKNOWN",
+        )
+    }
+    report["journal_status"] = "DEGRADED" if run_events else "UNKNOWN"
+    report["continuity_status"] = "UNKNOWN"
+    report["observation_coverage_ratio"] = None
+    report["attempt_coverage_ratio"] = None
+    report["journal_backend"] = "SQLITE_LOCAL"
+    report["journal_completeness"] = "NOT_PROVEN"
+    report["unknown_reason"] = "LOCAL_SQLITE_HISTORY_NOT_DURABLE"
+    return report
