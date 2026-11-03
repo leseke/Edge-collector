@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timedelta
 
 from intelligence.reconstruct_continuity import reconstruct_windows
-from intelligence.remote_journal_simulator import make_event
+from intelligence.remote_journal_simulator import InMemoryRemoteJournal, make_event
 
 
 T0 = "2026-11-03T01:00:00Z"
@@ -47,6 +47,28 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["continuity_status"], "GAP")
         self.assertEqual(result["observation_coverage_ratio"], 2 / 3)
         self.assertEqual(result["attempt_coverage_ratio"], 2 / 3)
+
+    def test_reconstructs_from_restored_journal_history(self):
+        journal = InMemoryRemoteJournal()
+        for event in run_events("run-a", T0) + run_events("run-b", T2):
+            journal.append_if_head(journal.head, event)
+        restored_events = journal.read_events()
+        expected = [
+            {"window_id": "w1", "scheduled_at": T0, "expected_sources": ["source-a"]},
+            {"window_id": "w2", "scheduled_at": T2, "expected_sources": ["source-a"]},
+        ]
+        outcomes = [
+            {"window_id": "w1", "run_id": "run-a", "attempt": 1,
+             "source_id": "source-a", "outcome": "OBSERVED", "occurred_at": T1},
+            {"window_id": "w2", "run_id": "run-b", "attempt": 1,
+             "source_id": "source-a", "outcome": "NO_REACTION_OBSERVED", "occurred_at": T3},
+        ]
+        result = reconstruct_windows(expected, restored_events, outcomes,
+                                      "2026-11-03T03:00:00Z")
+        self.assertEqual(result["continuity_status"], "CONTINUOUS")
+        self.assertEqual(result["observation_coverage_ratio"], 1.0)
+        self.assertEqual(result["window_counts"]["OBSERVED"], 1)
+        self.assertEqual(result["window_counts"]["NO_REACTION_OBSERVED"], 1)
 
     def test_source_failure_is_not_missed_or_no_reaction(self):
         events = run_events("run-a", T0)
