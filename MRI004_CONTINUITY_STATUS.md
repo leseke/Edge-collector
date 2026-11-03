@@ -18,6 +18,7 @@ Branche : `edge/mri-004-continuity-notification-contract`
 - STARTED est persisté avant l'exécution métier.
 - FINISHED est ajouté après succès ou exception.
 - Les événements sont append-only ; aucun événement existant n'est modifié.
+- Les écritures sont sérialisées par transaction SQLite et le payload applique une liste blanche de champs ; les clés financières privées sont refusées.
 - Un FINISHED sans STARTED, un second STARTED ou un second FINISHED sont refusés.
 - Un run interrompu brutalement avant FINISHED reste détectable via `find_unfinished_runs()`.
 - Le journal n'enregistre ni montants de capital, ni clés, ni messages d'exception bruts.
@@ -29,7 +30,7 @@ Le collecteur renvoie désormais un état de run distinct de la qualité des don
 - `OK` : au moins une famille de données a produit un résultat et aucune source n'a échoué ;
 - `PARTIAL` : au moins un résultat existe, mais une ou plusieurs sources ont échoué ;
 - `EMPTY` : aucune source n'a fourni de résultat et aucune erreur source n'a été relevée ;
-- `FAILED` : toutes les sources attendues ont échoué ou l'exécution a levé une exception non gérée.
+- `FAILED` : aucune observation exploitable n'a été obtenue avec au moins une erreur source, ou l'exécution a levé une exception non gérée.
 
 Les compteurs séparent les enregistrements de collecte, les snapshots de prix produit et les lots d'offres retail. Une erreur non gérée ne prétend pas connaître le nombre de données partiellement collectées : les compteurs restent inconnus.
 
