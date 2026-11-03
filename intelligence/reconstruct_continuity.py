@@ -47,7 +47,7 @@ def verify_run_history(run_events):
     if not isinstance(run_events, list):
         raise ValueError("run_events doit être une liste")
     journal = InMemoryRemoteJournal()
-    starts, finishes = {}, set()
+    starts, finishes, finished_events = {}, set(), {}
     last_instant = {}
     for event in run_events:
         journal.append_if_head(journal.head, event)
@@ -72,8 +72,12 @@ def verify_run_history(run_events):
             starts[key] = event
         elif event["event_type"] == "FINISHED":
             finishes.add(key)
+            finished_events[key] = event
 
-    return {"started": starts, "finished": finishes, "verified": True}
+    return {
+        "started": starts, "finished": finishes,
+        "finished_events": finished_events, "verified": True,
+    }
 
 
 def _validate_external_outcomes(source_outcomes, journal_outcomes):
@@ -193,7 +197,11 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
             raise ValueError("une fenêtre ne peut pas agréger plusieurs exécutions")
         run_key = next(iter(run_keys), None)
         missing_sources = sorted(window["expected_sources"] - set(bucket))
-        run_finished = run_key in history["finished"] if run_key else False
+        finish_event = history["finished_events"].get(run_key) if run_key else None
+        run_finished = (
+            finish_event is not None
+            and _instant(finish_event["occurred_at_utc"]) <= cut
+        ) if run_key else False
         if not bucket and not matching_runs:
             status = "MISSED"
         elif not run_key:
