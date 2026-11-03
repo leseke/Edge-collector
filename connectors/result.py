@@ -41,7 +41,7 @@ class ConnectorResult:
         if self.error_type is not None:
             if not isinstance(self.error_type, str) or not self.error_type.strip():
                 raise ValueError("error_type must be a non-empty class name or None")
-            if any(ch in self.error_type for ch in "\\r\\n"):
+            if any(ch in self.error_type for ch in "\r\n"):
                 raise ValueError("error_type must be a single-line class name")
 
         if self.status == OBSERVED:
