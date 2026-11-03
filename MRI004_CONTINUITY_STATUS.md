@@ -67,3 +67,12 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - Les ratios d'observation et de tentative sont séparés et masqués dès qu'une fenêtre reste `UNKNOWN`. Une erreur source produit `DEGRADED`, pas `CONTINUOUS`.
 - Le scheduler et l'émission de preuves source par le collecteur restent à intégrer. Le résultat actuel est un modèle hors ligne alimenté par des événements synthétiques.
 - CI : résultat des nouveaux commits à confirmer ; aucun total de tests n'est revendiqué à ce stade.
+
+## MRI-004.6 — Granularité par source
+
+- `intelligence/reconstruct_continuity.py` accepte maintenant plusieurs résultats source pour une même fenêtre, avec une liste indépendante `expected_sources` fournie par le scheduler.
+- Agrégation testée : observation, absence de réaction, échec total, échec partiel (`DEGRADED`), source attendue manquante (`UNKNOWN`) et fenêtre sans exécution (`MISSED`).
+- Les détails de chaque source restent visibles dans le résultat reconstruit ; les métriques distinguent couverture d'observation et couverture de tentative.
+- 11 tests dédiés dans `tests/test_reconstruct_continuity.py` (écrits, CI à confirmer).
+- Toujours pas d'émission de preuves source par le collecteur réel : les données sont injectées dans le modèle de reconstruction hors ligne. `collect.run()` écrit encore `scheduled_at=None`; le scheduler et le branchement réel restent à faire.
+- Vérification GitHub du commit de tests : aucun statut de test GitHub Actions n'est remonté par l'API de statut consultée ; un statut Vercel est en échec, ce qui ne permet pas de conclure sur les tests Python. Aucun test n'est déclaré vert sans log explicite.
