@@ -55,9 +55,11 @@ class SQLiteContinuityJournal:
 
     def finish(self, context, payload, occurred_at=None):
         history = self._history(context.run_id, context.attempt)
-        # Validate lifecycle before allowing FINISHED. STARTED must be unique.
-        if len(history) != 1 or history[0]["event_type"] != "STARTED":
-            raise ValueError("FINISHED requires exactly one prior STARTED event")
+        # Validate lifecycle before allowing FINISHED. Source results may already exist.
+        starts = [event for event in history if event["event_type"] == "STARTED"]
+        finishes = [event for event in history if event["event_type"] == "FINISHED"]
+        if len(starts) != 1 or finishes:
+            raise ValueError("FINISHED requires exactly one prior STARTED event and no prior FINISHED")
         resolved = resolve_scheduled_run_context(
             [{"window_id": context.window_id,
               "scheduled_at": context.scheduled_at,
