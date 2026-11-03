@@ -34,6 +34,16 @@ class CollectorHeartbeatTests(unittest.TestCase):
 
     @mock.patch.object(collect, "init_db")
     @mock.patch.object(collect, "append_run_event")
+    @mock.patch.object(collect, "_run_once", side_effect=KeyboardInterrupt())
+    def test_keyboard_interrupt_is_not_recorded_as_empty(self, run_once, append_event, init_db):
+        with self.assertRaises(KeyboardInterrupt):
+            collect.run()
+        payload = append_event.call_args_list[1].args[2]
+        self.assertEqual(payload["run_status"], "FAILED")
+        self.assertEqual(payload["error_type"], "KeyboardInterrupt")
+
+    @mock.patch.object(collect, "init_db")
+    @mock.patch.object(collect, "append_run_event")
     @mock.patch.object(collect, "_run_once", side_effect=RuntimeError("sensitive raw error"))
     def test_run_records_failed_finish_without_raw_exception(self, run_once, append_event, init_db):
         with self.assertRaisesRegex(RuntimeError, "sensitive raw error"):
