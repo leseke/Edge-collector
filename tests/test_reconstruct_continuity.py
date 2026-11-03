@@ -195,6 +195,17 @@ class ReconstructContinuityTests(unittest.TestCase):
                                   "expected_sources": ["source-a"]}],
                                 events, as_of=T2)
 
+    def test_finish_after_as_of_cutoff_keeps_window_unknown(self):
+        events = run_events("run-a", T0, source_results=[
+            {"source_id": "source-a", "outcome": "OBSERVED", "occurred_at": T1},
+        ])
+        result = reconstruct_windows(
+            [{"window_id": "w1", "scheduled_at": T0, "expected_sources": ["source-a"]}],
+            events, as_of="2026-11-03T01:05:00Z",
+        )
+        self.assertEqual(result["window_counts"]["UNKNOWN"], 1)
+        self.assertEqual(result["window_counts"]["OBSERVED"], 0)
+        self.assertIsNone(result["observation_coverage_ratio"])
     def test_corrupt_run_history_is_rejected(self):
         invalid = make_event("run-a", 1, "FINISHED", T1, {"run_status": "OK"})
         with self.assertRaises(ValueError):
