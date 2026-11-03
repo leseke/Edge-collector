@@ -2,7 +2,10 @@ import unittest
 
 from connectors.result import completed_query, failed_query, unknown
 from intelligence.remote_journal_simulator import make_event
-from intelligence.scheduled_run_context import (\n    ScheduledRunContext, resolve_scheduled_run_context,\n    validate_scheduled_invocation,\n)
+from intelligence.scheduled_run_context import (
+    ScheduledRunContext, resolve_scheduled_run_context,
+    validate_scheduled_invocation,
+)
 
 
 SCHEDULED = "2026-11-03T01:00:00Z"
@@ -120,7 +123,8 @@ class ScheduledRunContextTests(unittest.TestCase):
         changed = {**WINDOW, "expected_sources": ["ebay:item-a"]}
         with self.assertRaisesRegex(ValueError, "expected_sources differ"):
             validate_scheduled_invocation(context, [changed], "run-a", 1)
-\n    def test_source_result_payload_is_limited_to_expected_source_and_allowlist(self):
+
+    def test_source_result_payload_is_limited_to_expected_source_and_allowlist(self):
         context = resolve_scheduled_run_context(
             [WINDOW], [started("run-a")], "run-a", 1, WINDOW["window_id"]
         )
