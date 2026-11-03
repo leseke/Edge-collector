@@ -73,6 +73,6 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - `intelligence/reconstruct_continuity.py` accepte maintenant plusieurs résultats source pour une même fenêtre, avec une liste indépendante `expected_sources` fournie par le scheduler.
 - Agrégation testée : observation, absence de réaction, échec total, échec partiel (`DEGRADED`), source attendue manquante (`UNKNOWN`) et fenêtre sans exécution (`MISSED`).
 - Les détails de chaque source restent visibles dans le résultat reconstruit ; les métriques distinguent couverture d'observation et couverture de tentative.
-- 11 tests dédiés dans `tests/test_reconstruct_continuity.py` (écrits, CI à confirmer).
+- 12 tests dédiés dans `tests/test_reconstruct_continuity.py`, dont une restauration effective du journal depuis le simulateur (écrits, CI à confirmer).
 - Toujours pas d'émission de preuves source par le collecteur réel : les données sont injectées dans le modèle de reconstruction hors ligne. `collect.run()` écrit encore `scheduled_at=None`; le scheduler et le branchement réel restent à faire.
-- Vérification GitHub du commit de tests : aucun statut de test GitHub Actions n'est remonté par l'API de statut consultée ; un statut Vercel est en échec, ce qui ne permet pas de conclure sur les tests Python. Aucun test n'est déclaré vert sans log explicite.
+- Vérification GitHub du commit de tests : aucun statut de test GitHub Actions n'est remonté par l'API de statut consultée ; le statut Vercel du dernier commit est en attente ; aucun run GitHub Actions de tests n'est visible via les statuts/endpoint PR consultés, ce qui ne permet pas de conclure sur les tests Python. Aucun test n'est déclaré vert sans log explicite.
