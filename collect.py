@@ -440,7 +440,8 @@ def _run_once():
     print(f"statut donnees : {s['data_status']} (couverture {s['coverage']:.0%})", flush=True)
     print(f"posture : {s['posture']} -> {s['decision']}", flush=True)
 
-    active_sources = sorted(k for k, v in enabled.items() if v)
+    source_names = {it["source"] for it in WATCHLIST} | {"trends", "reddit", "scavio"}
+    active_sources = sorted(name for name in source_names if _is_enabled(config, name))
     has_observations = bool(results or scavio_offers)
     if sources_failed and not has_observations:
         run_status = "FAILED"
@@ -478,7 +479,7 @@ def run():
     try:
         result = _run_once()
         return result
-    except Exception as exc:
+    except BaseException as exc:
         failure = exc
         raise
     finally:
