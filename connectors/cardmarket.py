@@ -94,3 +94,30 @@ def fetch_cardmarket(game, search_query, product_type="sealed",
         "_momentum_30": best.get("momentum30Pct"),
         "_expansion": best.get("expansionName"),
     }
+
+def fetch_cardmarket_with_status(game, search_query, product_type="sealed",
+                                must_all=None, must_any=None, must_not=None):
+    """Return (legacy snapshot, sanitized outcome) without changing the API.
+
+    A legacy None remains UNKNOWN because it can mean an empty response,
+    no title matches, or no usable trend prices.
+    """
+    from connectors.result import completed_query, failed_query, unknown
+
+    try:
+        snapshot = fetch_cardmarket(
+            game=game, search_query=search_query, product_type=product_type,
+            must_all=must_all, must_any=must_any, must_not=must_not,
+        )
+    except Exception as exc:
+        return None, failed_query(exc)
+
+    if snapshot is None:
+        return None, unknown()
+
+    evidence_count = snapshot.get("_n_matched")
+    if isinstance(evidence_count, bool) or not isinstance(evidence_count, int) or evidence_count < 1:
+        evidence_count = 1
+    return snapshot, completed_query(evidence_count)
+
+
