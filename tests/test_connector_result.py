@@ -36,7 +36,7 @@ class ConnectorResultTests(unittest.TestCase):
     def test_legacy_none_is_not_implicitly_classified(self):
         # There is intentionally no API that accepts a legacy return value
         # and silently treats None as a completed empty search.
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             completed_query(None)
 
     def test_completed_query_rejects_negative_count(self):
