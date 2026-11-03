@@ -41,7 +41,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_complete_lifecycle_writes_only_allowlisted_events(self):
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         self.journal.record_source_result(
             self.context, [WINDOW], completed_query(3), "source-a", RESULT_AT
         )
@@ -67,7 +67,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.assertEqual(rows[2]["payload"]["outcome"], "NO_REACTION_OBSERVED")
 
     def test_duplicate_identical_source_result_is_idempotent(self):
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         self.journal.record_source_result(
             self.context, [WINDOW], completed_query(1), "source-a", RESULT_AT
         )
@@ -79,7 +79,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.assertEqual(sum(row["event_type"] == "SOURCE_RESULT" for row in rows), 1)
 
     def test_conflicting_duplicate_source_result_is_rejected(self):
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         self.journal.record_source_result(
             self.context, [WINDOW], completed_query(1), "source-a", RESULT_AT
         )
@@ -95,7 +95,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
             )
 
     def test_unexpected_source_is_rejected_without_journal_write(self):
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         with self.assertRaisesRegex(ValueError, "not expected"):
             self.journal.record_source_result(
                 self.context, [WINDOW], completed_query(1), "source-z", RESULT_AT
@@ -103,7 +103,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.assertEqual(len(storage.list_run_events(self.context.run_id)), 1)
 
     def test_source_failure_records_only_safe_outcome(self):
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         self.journal.record_source_result(
             self.context, [WINDOW], failed_query(RuntimeError("secret payload")),
             "source-a", RESULT_AT
@@ -116,7 +116,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
     def test_finish_requires_start_and_valid_run_status(self):
         with self.assertRaisesRegex(ValueError, "exactly one prior STARTED"):
             self.journal.finish(self.context, {"run_status": "OK"}, FINISHED_AT)
-        self.journal.start(self.context, occurred_at=STARTED_AT)
+        self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
         with self.assertRaisesRegex(ValueError, "valid run_status"):
             self.journal.finish(self.context, {"run_status": "UNKNOWN"}, FINISHED_AT)
 
@@ -131,7 +131,7 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
 
     def test_start_rejects_manual_trigger(self):
         with self.assertRaisesRegex(ValueError, "schedule trigger"):
-            self.journal.start(self.context, trigger="workflow_dispatch")
+            self.journal.start(self.context, [WINDOW], trigger="workflow_dispatch")
 
 
 if __name__ == "__main__":
