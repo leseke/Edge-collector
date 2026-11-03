@@ -70,6 +70,7 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
     starts = history["started"]
 
     windows = {}
+    scheduled_seen = set()
     for item in expected_windows:
         if not isinstance(item, dict) or set(item) != {"window_id", "scheduled_at"}:
             raise ValueError("fenêtre attendue invalide")
@@ -77,6 +78,9 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
         if not isinstance(window_id, str) or not window_id.strip() or window_id in windows:
             raise ValueError("window_id invalide ou dupliqué")
         scheduled = _instant(item["scheduled_at"])
+        if scheduled in scheduled_seen:
+            raise ValueError("horaires de fenêtres dupliqués")
+        scheduled_seen.add(scheduled)
         if scheduled <= cut:
             windows[window_id] = {"scheduled": scheduled, "status": None}
 
@@ -90,6 +94,10 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
             raise ValueError("résultat lié à une fenêtre inconnue ou future")
         if window_id in outcome_by_window:
             raise ValueError("plusieurs résultats pour une même fenêtre non agrégés")
+        if (not isinstance(item["run_id"], str) or not item["run_id"].strip()
+                or isinstance(item["attempt"], bool) or not isinstance(item["attempt"], int)
+                or item["attempt"] < 1):
+            raise ValueError("identité de run invalide")
         key = (item["run_id"], item["attempt"])
         if key not in starts:
             raise ValueError("résultat sans exécution STARTED vérifiée")
@@ -163,7 +171,7 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
     return {
         "journal_status": "VERIFIED",
         "continuity_status": (
-            "UNKNOWN" if counts["UNKNOWN"] else
+            "UNKNOWN" if total == 0 or counts["UNKNOWN"] else
             "GAP" if counts["MISSED"] else
             "DEGRADED" if counts["SOURCE_FAILED"] else
             "CONTINUOUS"
