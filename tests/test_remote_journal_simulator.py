@@ -78,6 +78,52 @@ class RemoteJournalSimulatorTests(unittest.TestCase):
         with self.assertRaises(JournalIntegrityError):
             journal.append_if_head(journal.head, changed)
 
+    def test_multiple_source_results_are_immutable_and_restorable(self):
+        journal = InMemoryRemoteJournal()
+        append_with_retry(journal, started("run-a"))
+        first = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "window-1", "source_id": "ebay",
+            "outcome": "OBSERVED",
+        })
+        second = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "window-1", "source_id": "reddit",
+            "outcome": "NO_REACTION_OBSERVED",
+        })
+        append_with_retry(journal, first)
+        append_with_retry(journal, second)
+        append_with_retry(journal, finished("run-a"))
+        restored = journal.read_events()
+        self.assertEqual([e["event_type"] for e in restored],
+                         ["STARTED", "SOURCE_RESULT", "SOURCE_RESULT", "FINISHED"])
+
+    def test_source_result_requires_started_and_must_precede_finish(self):
+        journal = InMemoryRemoteJournal()
+        result = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "window-1", "source_id": "ebay",
+            "outcome": "OBSERVED",
+        })
+        with self.assertRaises(JournalIntegrityError):
+            journal.append_if_head(journal.head, result)
+        append_with_retry(journal, started("run-a"))
+        append_with_retry(journal, finished("run-a"))
+        with self.assertRaises(JournalIntegrityError):
+            journal.append_if_head(journal.head, result)
+
+    def test_changed_source_result_under_same_key_is_rejected(self):
+        journal = InMemoryRemoteJournal()
+        append_with_retry(journal, started("run-a"))
+        first = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "window-1", "source_id": "ebay",
+            "outcome": "OBSERVED",
+        })
+        changed = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "window-1", "source_id": "ebay",
+            "outcome": "SOURCE_FAILED",
+        })
+        append_with_retry(journal, first)
+        with self.assertRaises(JournalIntegrityError):
+            journal.append_if_head(journal.head, changed)
+
     def test_private_fields_are_rejected(self):
         journal = InMemoryRemoteJournal()
         event = make_event("run-a", 1, "STARTED", T0, {
