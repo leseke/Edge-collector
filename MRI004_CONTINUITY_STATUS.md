@@ -120,3 +120,15 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - Validation CI exacte : commit `fcefc4f0bc630ab8a265aa74f44bcb0fa71fd0bc`, GitHub Actions run `41684437278` : **success**, 495 tests exécutés, 494 réussis, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41684437278
 - Limite explicite : ce dispatcher n'est pas encore appelé depuis `collect.py`. La CI teste les appels avec mocks ; aucun connecteur externe n'a été appelé et aucune fenêtre planifiée n'a été créée. Les étapes 004.14-B à 004.14-E restent à réaliser.
 - Aucun changement sur `main`, aucun scheduler réel, aucun appel payant, aucune notification réelle et aucun nouveau secret.
+
+
+## MRI-004.14-B — Injection explicite du contexte planifié
+
+- `intelligence/scheduled_run_context.py` expose `validate_scheduled_invocation()` : avant toute écriture, la fonction vérifie le type du contexte, l'identité exacte du run et de sa tentative, l'unicité de la fenêtre, l'instant UTC et l'ensemble exact des sources attendues.
+- `collect.run()` accepte maintenant deux arguments facultatifs : `scheduled_context` et `expected_windows`. Ils doivent être fournis ensemble. Un contexte incohérent est rejeté avant `init_db()` et avant toute écriture STARTED.
+- Sans contexte explicite, le chemin manuel/local historique est conservé : `scheduled_at=None`. L'heure de démarrage du processus et les métadonnées GitHub ne sont jamais utilisées pour deviner une fenêtre.
+- Avec contexte vérifié, STARTED reçoit l'instant explicite fourni et le déclencheur logique `schedule`. Cette interface n'active aucun scheduler et n'est pas appelée par le workflow existant.
+- Tests : cas valide avec tentative GitHub, identité de run incohérente, fenêtre absente, instant différent, sources attendues modifiées, et compatibilité du chemin manuel.
+- Validation CI du commit `087c6bb566e7b3adfd08c1491e4541c792aade90`, run `41684991658` : **success**, 501 tests exécutés, 500 réussis, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41684991658
+- Le changement de docstring de `intelligence/scheduled_run_context.py` a ensuite été fait sur le commit `8e1096b5ff3fd59ac46767fa9b5a5820b54af633` ; la CI de ce HEAD doit être vérifiée séparément avant de considérer ce dernier commit validé.
+- Limite : le collecteur n'émet pas encore `SOURCE_RESULT` et ne reconstruit pas encore le rapport de continuité. C'est le périmètre de 004.14-C/D. Aucun scheduler, appel externe ou changement de `main`.
