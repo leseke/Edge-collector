@@ -130,10 +130,9 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
             })
             continue
         matching_runs = started_by_schedule.get(window["scheduled"], [])
-        if matching_runs:
-            status = "UNKNOWN" if any(key not in history["finished"] for key in matching_runs) else "MISSED"
-        else:
-            status = "MISSED"
+        # A run at the expected time without source-level evidence is UNKNOWN,
+        # even when the process finished: the run journal is not market proof.
+        status = "UNKNOWN" if matching_runs else "MISSED"
         rows.append({
             "window_id": window_id,
             "scheduled_at": _iso(window["scheduled"]),
@@ -153,7 +152,14 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
         "as_of": _iso(cut),
         "expected_windows": total,
         "classified_windows": classified,
-        "coverage_ratio": round(classified / total, 4) if total else None,
+        "observation_coverage_ratio": (
+            round(successful_observations / total, 4)
+            if total and counts["UNKNOWN"] == 0 else None
+        ),
+        "attempt_coverage_ratio": (
+            round(classified / total, 4)
+            if total and counts["UNKNOWN"] == 0 else None
+        ),
         "counts": counts,
         "windows": rows,
     }
