@@ -62,7 +62,7 @@ def append_run_event(run_id, event_type, payload=None, occurred_at=None):
     """Append-only execution journal. Payload must contain metadata, never secrets."""
     if not isinstance(run_id, str) or not run_id.strip():
         raise ValueError("run_id requis")
-    if event_type not in {"STARTED", "FINISHED"}:
+    if event_type not in {"STARTED", "SOURCE_RESULT", "FINISHED"}:
         raise ValueError("event_type invalide")
     if payload is None:
         payload = {}
@@ -71,6 +71,7 @@ def append_run_event(run_id, event_type, payload=None, occurred_at=None):
     timestamp = occurred_at or _utc_now()
     allowed_fields = {
         "STARTED": {"trigger", "scheduled_at"},
+        "SOURCE_RESULT": {"window_id", "source_id", "outcome"},
         "FINISHED": {
             "run_status", "sources_expected", "sources_failed",
             "collected_records", "product_price_snapshots", "retail_offer_batches",
@@ -80,21 +81,38 @@ def append_run_event(run_id, event_type, payload=None, occurred_at=None):
     unexpected = set(payload) - allowed_fields
     if unexpected:
         raise ValueError("champs non autorisés dans le journal de heartbeat")
+    if event_type == "SOURCE_RESULT":
+        if not isinstance(payload.get("window_id"), str) or not payload["window_id"].strip():
+            raise ValueError("window_id invalide")
+        if not isinstance(payload.get("source_id"), str) or not payload["source_id"].strip():
+            raise ValueError("source_id invalide")
+        if payload.get("outcome") not in {"OBSERVED", "NO_REACTION_OBSERVED", "SOURCE_FAILED"}:
+            raise ValueError("outcome source invalide")
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     con = sqlite3.connect(DB)
     try:
         con.execute("BEGIN IMMEDIATE")
-        counts = con.execute(
-            "SELECT SUM(CASE WHEN event_type='STARTED' THEN 1 ELSE 0 END), "
-            "SUM(CASE WHEN event_type='FINISHED' THEN 1 ELSE 0 END) "
-            "FROM run_event WHERE run_id=?",
+        rows = con.execute(
+            "SELECT event_type, payload_json FROM run_event WHERE run_id=? ORDER BY id",
             (run_id,),
-        ).fetchone()
-        started_count, finished_count = (counts[0] or 0), (counts[1] or 0)
-        if event_type == "STARTED" and (started_count or finished_count):
+        ).fetchall()
+        started_count = sum(row[0] == "STARTED" for row in rows)
+        finished_count = sum(row[0] == "FINISHED" for row in rows)
+        if event_type == "STARTED" and (started_count or finished_count or rows):
             raise ValueError("run_id déjà utilisé")
         if event_type == "FINISHED" and (started_count != 1 or finished_count != 0):
             raise ValueError("FINISHED exige un STARTED unique et aucun FINISHED antérieur")
+        if event_type == "SOURCE_RESULT":
+            if started_count != 1 or finished_count != 0:
+                raise ValueError("SOURCE_RESULT exige un STARTED et précède FINISHED")
+            for prior_type, prior_json in rows:
+                if prior_type == "SOURCE_RESULT":
+                    prior = json.loads(prior_json)
+                    if (prior.get("window_id"), prior.get("source_id")) == (payload["window_id"], payload["source_id"]):
+                        if prior == payload:
+                            con.rollback()
+                            return
+                        raise ValueError("résultat source dupliqué avec contenu différent")
         con.execute(
             "INSERT INTO run_event (run_id, event_type, occurred_at, payload_json) VALUES (?,?,?,?)",
             (run_id, event_type, timestamp, encoded),
