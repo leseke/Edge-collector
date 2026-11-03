@@ -555,7 +555,12 @@ def run(scheduled_context=None, expected_windows=None):
 
     init_db().close()
     started_at = datetime.now(timezone.utc).isoformat()
-    append_run_event(run_id, "STARTED", started_payload, started_at)
+    journal = None
+    if scheduled_context is None:
+        append_run_event(run_id, "STARTED", started_payload, started_at)
+    else:
+        journal = SQLiteContinuityJournal(append_run_event, list_run_events)
+        journal.start(scheduled_context, expected_windows, occurred_at=started_at)
 
     result = None
     failure = None
@@ -563,8 +568,6 @@ def run(scheduled_context=None, expected_windows=None):
         if scheduled_context is None:
             result = _run_once()
         else:
-            journal = SQLiteContinuityJournal(append_run_event, list_run_events)
-            journal.start(scheduled_context, expected_windows, occurred_at=started_at)
             result = _run_once(
                 journal=journal, scheduled_context=scheduled_context,
                 expected_windows=expected_windows,
