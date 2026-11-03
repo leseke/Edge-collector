@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 from intelligence.remote_journal_simulator import (
-    InMemoryRemoteJournal, JournalIntegrityError,
+    InMemoryRemoteJournal,
 )
 
 
@@ -146,6 +146,7 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
               for status in ("OBSERVED", "NO_REACTION_OBSERVED", "SOURCE_FAILED", "MISSED", "UNKNOWN")}
     total = len(rows)
     classified = counts["OBSERVED"] + counts["NO_REACTION_OBSERVED"] + counts["SOURCE_FAILED"]
+    successful_observations = counts["OBSERVED"] + counts["NO_REACTION_OBSERVED"]
     return {
         "journal_status": "VERIFIED",
         "continuity_status": "UNKNOWN" if counts["UNKNOWN"] else ("GAP" if counts["MISSED"] else "CONTINUOUS"),
