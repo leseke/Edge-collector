@@ -39,6 +39,21 @@ class RunJournalTests(unittest.TestCase):
         storage.append_run_event("ok", "FINISHED", {}, "2026-11-03T01:01:00Z")
         self.assertEqual(storage.find_unfinished_runs(), [])
 
+    def test_finish_requires_started_event(self):
+        with self.assertRaises(ValueError):
+            storage.append_run_event("orphan", "FINISHED", {})
+
+    def test_duplicate_start_rejected(self):
+        storage.append_run_event("run-1", "STARTED", {})
+        with self.assertRaises(ValueError):
+            storage.append_run_event("run-1", "STARTED", {})
+
+    def test_second_finish_rejected(self):
+        storage.append_run_event("run-1", "STARTED", {})
+        storage.append_run_event("run-1", "FINISHED", {})
+        with self.assertRaises(ValueError):
+            storage.append_run_event("run-1", "FINISHED", {})
+
     def test_invalid_event_type_rejected(self):
         with self.assertRaises(ValueError):
             storage.append_run_event("run-1", "UPDATE", {})
