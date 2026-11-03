@@ -1,7 +1,10 @@
 import unittest
 from unittest.mock import patch
 
-from connectors.result import (OBSERVED, NO_REACTION_OBSERVED, SOURCE_FAILED,\n                               completed_query, failed_query, unknown)
+from connectors.result import (
+    OBSERVED, NO_REACTION_OBSERVED, SOURCE_FAILED,
+    completed_query, failed_query, unknown,
+)
 from connectors.status_adapters import fetch_source_with_status
 
 
@@ -22,7 +25,6 @@ class SourceStatusDispatchTests(unittest.TestCase):
 
     @patch("connectors.cardmarket.fetch_cardmarket_with_status")
     def test_cardmarket_dispatch_uses_sealed_default_and_filters(self, fetch):
-        from connectors.result import completed_query
         snapshot = {"sold_price_median": 100}
         outcome = completed_query(1)
         fetch.return_value = (snapshot, outcome)
@@ -39,7 +41,6 @@ class SourceStatusDispatchTests(unittest.TestCase):
 
     @patch("connectors.trends_spy.fetch_trends_spy_with_status")
     def test_trends_dispatch(self, fetch):
-        from connectors.result import completed_query
         fetch.return_value = ({"trend_acceleration": 1.3}, completed_query(1))
         snapshot, outcome = fetch_source_with_status("trends", {"keyword": "Lorcana"})
         self.assertEqual(snapshot["trend_acceleration"], 1.3)
@@ -48,18 +49,16 @@ class SourceStatusDispatchTests(unittest.TestCase):
 
     @patch("connectors.reddit.fetch_reddit_with_status")
     def test_reddit_dispatch(self, fetch):
-        from connectors.result import completed_query
-        fetch.return_value = ({"reddit_total": 0}, completed_query(3))
+        fetch.return_value = ({"reddit_total": 3}, completed_query(3))
         snapshot, outcome = fetch_source_with_status(
             "reddit", {"subreddit": "lego", "query": "Mew"}
         )
-        self.assertEqual(snapshot["reddit_total"], 0)
+        self.assertEqual(snapshot["reddit_total"], 3)
         self.assertEqual(outcome.status, OBSERVED)
         fetch.assert_called_once_with("lego", "Mew", limit=25)
 
     @patch("connectors.status_adapters.fetch_scavio_with_status")
     def test_scavio_dispatch(self, fetch):
-        from connectors.result import completed_query
         fetch.return_value = (None, completed_query(0))
         snapshot, outcome = fetch_source_with_status("scavio", {"query": "LEGO"})
         self.assertIsNone(snapshot)
@@ -78,9 +77,12 @@ class SourceStatusDispatchTests(unittest.TestCase):
     def test_ambiguous_legacy_none_remains_unknown(self, fetch):
         snapshot, outcome = fetch_source_with_status("ebay", {"query": "LEGO"})
         self.assertIsNone(snapshot)
-        self.assertEqual(outcome.status, UNKNOWN)
+        self.assertEqual(outcome.status, "UNKNOWN")
 
-    @patch("connectors.ebay.fetch_sold_with_status", return_value=(None, failed_query(RuntimeError("private"))))
+    @patch(
+        "connectors.ebay.fetch_sold_with_status",
+        return_value=(None, failed_query(RuntimeError("private"))),
+    )
     def test_source_failure_is_preserved(self, fetch):
         snapshot, outcome = fetch_source_with_status("ebay", {"query": "LEGO"})
         self.assertIsNone(snapshot)
