@@ -146,3 +146,31 @@ def fetch_sold_items(query, count=100):
                       headers=headers, timeout=300)
     r.raise_for_status()
     return r.json() or []
+
+
+def fetch_sold_with_status(query, must_all=None, must_any=None, count=100,
+                          days_window=90):
+    """Return (legacy snapshot, sanitized outcome) without changing fetch_sold.
+
+    A legacy None is UNKNOWN: fetch_sold currently uses it for several
+    different post-query conditions, so it cannot prove a clean zero-result.
+    """
+    from connectors.result import completed_query, failed_query, unknown
+
+    try:
+        snapshot = fetch_sold(
+            query, must_all=must_all, must_any=must_any,
+            count=count, days_window=days_window,
+        )
+    except Exception as exc:
+        return None, failed_query(exc)
+
+    if snapshot is None:
+        return None, unknown()
+
+    evidence_count = snapshot.get("_n_filtered")
+    if isinstance(evidence_count, bool) or not isinstance(evidence_count, int) or evidence_count < 1:
+        evidence_count = 1
+    return snapshot, completed_query(evidence_count)
+
+
