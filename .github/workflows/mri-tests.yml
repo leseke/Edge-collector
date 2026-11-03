@@ -6,6 +6,7 @@ on:
       - "edge/mri-004-*"
     paths:
       - "collect.py"
+      - "connectors/**"
       - "storage.py"
       - "intelligence/**"
       - "tests/**"
