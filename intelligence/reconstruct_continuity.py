@@ -47,8 +47,10 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
     source_outcomes: {window_id, run_id, attempt, source_id, outcome, occurred_at}.
     Each expected source must have exactly one outcome for a fully known window.
     """
-    if not isinstance(expected_windows, list) or not isinstance(source_outcomes, list):
+    if not isinstance(expected_windows, list) or (source_outcomes is not None and not isinstance(source_outcomes, list)):
         raise ValueError("fenêtres et résultats doivent être des listes")
+    if not isinstance(run_events, list):
+        raise ValueError("run_events doit être une liste")
     cut = _instant(as_of)
     if source_outcomes is None:
         source_outcomes = [
