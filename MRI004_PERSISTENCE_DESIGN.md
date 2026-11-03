@@ -87,13 +87,14 @@ Les heures planifiées doivent venir d'un calendrier de scheduler vérifiable, a
 
 1. [FAIT] Formaliser un protocole `RunJournal` indépendant du backend dans `intelligence/run_journal.py`.
 2. [FAIT] Encapsuler SQLite dans `SQLiteRunJournal`, sans changer le collecteur ni la persistance active.
-3. [EN VALIDATION CI] Tester le contrat de l'adaptateur local.
-4. Ajouter un adaptateur distant simulé et tester les conflits, doublons, panne réseau, reprise et corruption.
-5. Vérifier qu'une reconstruction multi-runs calcule correctement les fenêtres manquées.
-6. Provisionner un dépôt privé uniquement après accord explicite et créer un jeton à portée minimale.
-7. Tester lecture/écriture sur un jeu synthétique non sensible.
-8. Vérifier la restauration depuis zéro et le comportement en cas de journal inaccessible.
-9. Seulement ensuite, envisager une cadence planifiée distincte, avec limites de coûts et arrêt d'urgence.
+3. [FAIT] Ajouter `InMemoryRemoteJournal`, simulateur sans réseau avec compare-and-swap, événements immuables, clé idempotente et retries bornés.
+4. [FAIT] Couvrir les écritures concurrentes, les réponses perdues après commit, les doublons altérés, l'absence de STARTED, les champs privés et l'indisponibilité.
+5. [FAIT] Faire échouer en mode prudent l'évaluation de continuité lorsque `journal_status` n'est pas explicitement `VERIFIED` : compteurs et couverture restent inconnus.
+6. [EN VALIDATION CI] Exécuter la suite complète avec ces nouveaux tests.
+7. [À FAIRE] Vérifier une reconstruction multi-runs de bout en bout depuis un flux d'événements restauré.
+8. Provisionner un dépôt privé uniquement après accord explicite et créer un jeton à portée minimale.
+9. Tester lecture/écriture sur un jeu synthétique non sensible, puis vérifier restauration depuis zéro et comportement en cas de journal inaccessible.
+10. Seulement ensuite, envisager une cadence planifiée distincte, avec limites de coûts et arrêt d'urgence.
 
 ## Critères d'acceptation
 
@@ -106,6 +107,12 @@ Les heures planifiées doivent venir d'un calendrier de scheduler vérifiable, a
 - Restauration complète depuis le backend distant démontrée.
 - Aucun appel fournisseur payant ni cadence nocturne activé par cette étape.
 
+## MRI-004.4 — Résultat de la simulation
+
+Le simulateur est un modèle de test en mémoire, pas une persistance réelle. Il valide le protocole de concurrence optimiste : un writer avec une tête périmée reçoit un conflit, relit et réessaie ; un rejeu identique après une réponse perdue ne crée pas de doublon ; un contenu différent sous la même clé idempotente est rejeté.
+
+`assess_continuity()` exige désormais `journal_status="VERIFIED"` pour produire des compteurs de couverture. Sa valeur par défaut est `UNKNOWN`. Si le journal est `DEGRADED`, `UNAVAILABLE` ou `UNKNOWN`, EDGE masque les compteurs d'observation et n'affiche aucune couverture calculée sur un historique potentiellement incomplet.
+
 ## Limite de cette livraison
 
-Ce document formalise le contrat et le choix du premier candidat. Il ne rend pas encore le journal durable : le dépôt privé, le credential, l'adaptateur distant et le scheduler restent absents.
+Cette livraison valide un contrat et un simulateur. Elle ne rend pas encore le journal durable : le dépôt privé, le credential, l'adaptateur distant réel, la reconstruction bout en bout depuis un historique distant et le scheduler restent absents.
