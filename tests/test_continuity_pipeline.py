@@ -67,7 +67,7 @@ class ContinuityPipelineTests(unittest.TestCase):
         self.assertEqual(result["schedule_status"], "SCHEDULED")
         self.assertEqual(result["not_scheduled_sources"], ["disabled-c"])
         self.assertTrue(all(
-            row["expected_sources"] == ["check-a", "check-b"]
+            row["missing_sources"] == ["check-a", "check-b"]
             for row in result["windows"]
         ))
         self.assertEqual(result["expected_source_checks"], 6)
@@ -100,7 +100,7 @@ class ContinuityPipelineTests(unittest.TestCase):
         })
         result = build_continuity_report(CADENCE, PLAN, AS_OF, [old])
         self.assertEqual(result["continuity_status"], "GAP")
-        self.assertEqual(result["window_counts"]["MISSED"], 2)
+        self.assertEqual(result["window_counts"]["MISSED"], 3)
         self.assertNotIn("unknown_reason", result)
 
     def test_scheduled_run_with_complete_results_reconstructs(self):
@@ -129,7 +129,7 @@ class ContinuityPipelineTests(unittest.TestCase):
         self.assertEqual(row["status"], "OBSERVED")
         self.assertEqual(result["window_counts"]["OBSERVED"], 1)
         self.assertEqual(result["source_counts"]["NO_REACTION_OBSERVED"], 1)
-        self.assertIsNone(result["unknown_reason"])
+        self.assertNotIn("unknown_reason", result)
 
     def test_unlinked_run_only_affects_windows_that_would_otherwise_be_missed(self):
         scheduled_at = "2026-11-03T01:00:00Z"
