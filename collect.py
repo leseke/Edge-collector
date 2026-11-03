@@ -441,11 +441,12 @@ def _run_once():
     print(f"posture : {s['posture']} -> {s['decision']}", flush=True)
 
     active_sources = sorted(k for k, v in enabled.items() if v)
-    if sources_failed and not results:
+    has_observations = bool(results or scavio_offers)
+    if sources_failed and not has_observations:
         run_status = "FAILED"
     elif sources_failed:
         run_status = "PARTIAL"
-    elif not results:
+    elif not has_observations:
         run_status = "EMPTY"
     else:
         run_status = "OK"
@@ -455,6 +456,7 @@ def _run_once():
         "sources_failed": sorted(sources_failed),
         "collected_records": len(results),
         "product_price_snapshots": len(snaps),
+        "retail_offer_batches": len(scavio_offers),
     }
 
 
