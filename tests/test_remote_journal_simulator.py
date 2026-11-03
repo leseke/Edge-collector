@@ -65,12 +65,18 @@ class RemoteJournalSimulatorTests(unittest.TestCase):
         with self.assertRaises(JournalIntegrityError):
             journal.append_if_head(journal.head, finished("run-a"))
 
-    def test_second_finish_is_rejected(self):
+    def test_second_finish_with_changed_content_is_rejected(self):
         journal = InMemoryRemoteJournal()
         append_with_retry(journal, started("run-a"))
         append_with_retry(journal, finished("run-a"))
+        changed = make_event("run-a", 1, "FINISHED", "2026-11-03T01:02:00Z", {
+            "run_status": "OK", "sources_expected": ["scavio"],
+            "sources_failed": [], "collected_records": 1,
+            "product_price_snapshots": 1, "retail_offer_batches": 0,
+            "started_at": T0, "completed_at": "2026-11-03T01:02:00Z",
+        })
         with self.assertRaises(JournalIntegrityError):
-            journal.append_if_head(journal.head, finished("run-a", attempt=2))
+            journal.append_if_head(journal.head, changed)
 
     def test_private_fields_are_rejected(self):
         journal = InMemoryRemoteJournal()
