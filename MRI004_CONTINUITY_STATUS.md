@@ -155,3 +155,14 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - Tests ajoutés/renforcés : résultat externe falsifié, résultats dupliqués, exécution manuelle revendiquant une fenêtre planifiée, horodatages non monotones, FINISHED postérieur à `as_of`, lecture multi-événements SQLite et rapport local prudent.
 - Validation CI : commit testé `d8855adc44332a9a5053dd0a02b26b1686f63d7d`, run `41694975268` : **success**, 509 tests exécutés, 508 réussis, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41694975268
 - Limite non levée : ce rapport local n'est pas une persistance durable. Tant que le journal n'est pas conservé entre runners et que son exhaustivité n'est pas prouvée, il ne peut annoncer une continuité globale ni des fenêtres manquées fiables. Aucun scheduler ni appel externe n'est activé.
+
+
+## MRI-004.16 — Architecture de persistance durable
+
+- Nouveau document `MRI004_16_DURABLE_PERSISTENCE.md` : décision MVP en faveur d'un dépôt GitHub privé dédié, distinct du dépôt applicatif public.
+- Format retenu : un fichier JSON immuable par événement, partitionné par date UTC. Cela évite le verrou global d'un fichier JSONL partagé ; les collisions d'identité sont traitées par relecture et comparaison stricte.
+- Le manifeste reste reconstructible et non autoritaire. Une restauration ne peut être déclarée vérifiée qu'après pagination complète et validation de l'ensemble des événements.
+- Matrice d'acceptation définie pour les retries ambigus, les écritures concurrentes, les collisions contradictoires, les pannes, la pagination incomplète, les événements malformés et la restauration depuis un environnement vierge.
+- Sécurité : aucun journal opérationnel dans le dépôt public ; aucune donnée financière/personnelle ou payload fournisseur ; aucun secret dans le code ou la conversation.
+- **Limite bloquante assumée :** aucun dépôt privé ni credential n'est provisionné. L'adaptateur réel n'est donc pas activé et SQLite reste non durable entre runners. Cette livraison est une décision d'architecture documentée, pas une persistance opérationnelle.
+- Prochaine dépendance : création manuelle du dépôt privé et configuration d'une identité d'écriture limitée à ce dépôt. Communiquer uniquement `owner/repository`, jamais le jeton.
