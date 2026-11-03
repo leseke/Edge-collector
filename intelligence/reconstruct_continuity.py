@@ -52,6 +52,9 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
     if not isinstance(run_events, list):
         raise ValueError("run_events doit être une liste")
     cut = _instant(as_of)
+    # Validate the complete event stream before reading nested source payloads.
+    history = verify_run_history(run_events)
+    starts = history["started"]
     if source_outcomes is None:
         source_outcomes = [
             {
@@ -64,8 +67,6 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
             }
             for event in run_events if event["event_type"] == "SOURCE_RESULT"
         ]
-    history = verify_run_history(run_events)
-    starts = history["started"]
 
     windows, schedule_seen = {}, set()
     for item in expected_windows:
