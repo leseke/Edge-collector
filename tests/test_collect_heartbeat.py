@@ -57,5 +57,74 @@ class CollectorHeartbeatTests(unittest.TestCase):
         self.assertNotIn("sensitive raw error", str(payload))
 
 
+    @mock.patch.object(collect, "init_db")
+    @mock.patch.object(collect, "append_run_event")
+    @mock.patch.object(collect, "_run_once", return_value={
+        "run_status": "OK",
+        "sources_expected": ["ebay:item-a"],
+        "sources_failed": [],
+        "collected_records": 1,
+        "product_price_snapshots": 1,
+        "retail_offer_batches": 0,
+    })
+    def test_explicit_scheduled_context_is_written_without_inference(
+        self, run_once, append_event, init_db
+    ):
+        os.environ["GITHUB_RUN_ID"] = "123"
+        os.environ["GITHUB_RUN_ATTEMPT"] = "2"
+        window = {
+            "window_id": "hourly:20261103T010000Z",
+            "scheduled_at": "2026-11-03T01:00:00Z",
+            "expected_sources": ["ebay:item-a"],
+        }
+        context = ScheduledRunContext(
+            window_id=window["window_id"],
+            scheduled_at=window["scheduled_at"],
+            run_id="edge-123-attempt-2",
+            attempt=2,
+            expected_sources=("ebay:item-a",),
+        )
+
+        result = collect.run(scheduled_context=context, expected_windows=[window])
+
+        self.assertEqual(result["run_status"], "OK")
+        started = append_event.call_args_list[0]
+        self.assertEqual(started.args[1], "STARTED")
+        self.assertEqual(started.args[2], {
+            "trigger": "schedule",
+            "scheduled_at": "2026-11-03T01:00:00Z",
+        })
+        init_db.assert_called_once()
+
+    @mock.patch.object(collect, "init_db")
+    @mock.patch.object(collect, "append_run_event")
+    def test_invalid_scheduled_context_is_rejected_before_any_journal_write(
+        self, append_event, init_db
+    ):
+        os.environ["GITHUB_RUN_ID"] = "123"
+        os.environ["GITHUB_RUN_ATTEMPT"] = "1"
+        window = {
+            "window_id": "hourly:20261103T010000Z",
+            "scheduled_at": "2026-11-03T01:00:00Z",
+            "expected_sources": ["ebay:item-a"],
+        }
+        context = ScheduledRunContext(
+            window_id=window["window_id"],
+            scheduled_at=window["scheduled_at"],
+            run_id="some-other-run",
+            attempt=1,
+            expected_sources=("ebay:item-a",),
+        )
+
+        with self.assertRaisesRegex(ValueError, "run attempt"):
+            collect.run(scheduled_context=context, expected_windows=[window])
+        init_db.assert_not_called()
+        append_event.assert_not_called()
+
+    def test_expected_windows_without_context_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "requires an explicit"):
+            collect.run(expected_windows=[])
+
+
 if __name__ == "__main__":
     unittest.main()
