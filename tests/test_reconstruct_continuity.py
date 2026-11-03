@@ -63,7 +63,7 @@ class ReconstructContinuityTests(unittest.TestCase):
                                       events, [], T2)
         self.assertEqual(result["counts"]["UNKNOWN"], 1)
         self.assertEqual(result["counts"]["MISSED"], 0)
-        self.assertIsNone(result["coverage_ratio"])
+        self.assertIsNone(result["observation_coverage_ratio"])
 
     def test_finished_run_without_source_evidence_is_unknown_not_missed(self):
         events = run_events("run-a", T0, finished=True)
@@ -90,7 +90,7 @@ class ReconstructContinuityTests(unittest.TestCase):
         future = {"window_id": "future", "scheduled_at": T3}
         result = reconstruct_windows([future], [], [], T2)
         self.assertEqual(result["expected_windows"], 0)
-        self.assertIsNone(result["coverage_ratio"])
+        self.assertIsNone(result["observation_coverage_ratio"])
 
     def test_duplicate_window_outcomes_are_rejected(self):
         events = run_events("run-a", T0)
