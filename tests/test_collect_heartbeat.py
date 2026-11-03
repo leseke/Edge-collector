@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 
 import collect
+from intelligence.scheduled_run_context import ScheduledRunContext
 
 
 class CollectorHeartbeatTests(unittest.TestCase):
