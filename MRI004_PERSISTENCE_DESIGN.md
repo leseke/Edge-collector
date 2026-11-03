@@ -142,3 +142,10 @@ L'agrégation conserve les résultats individuels :
 Les compteurs et ratios sont désormais calculés au niveau des vérifications source. `observation_coverage_ratio` compte uniquement les réponses `OBSERVED` et `NO_REACTION_OBSERVED`; `attempt_coverage_ratio` compte aussi les `SOURCE_FAILED`. Les ratios restent masqués si une fenêtre est `UNKNOWN`. La présence d'une observation sur une source ne masque donc plus l'échec d'une autre.
 
 Limite : ce contrat et ses tests sont encore hors ligne. Le collecteur réel n'émet pas encore ces résultats source dans son journal, le scheduler n'est pas branché, et `collect.run()` inscrit actuellement `scheduled_at=None`. La workflow de collecte documentée auparavant n'utilise pas encore ce collecteur. Aucun changement n'active la collecte ou une cadence planifiée.
+
+
+### MRI-004.6 — Événements de résultat source dans le journal simulé
+
+Le simulateur `InMemoryRemoteJournal` accepte désormais `SOURCE_RESULT` en plus de `STARTED` et `FINISHED`. Le payload est strictement limité à `window_id`, `source_id` et `outcome`; l'horodatage est porté par l'événement lui-même. La clé idempotente inclut la fenêtre et la source, ce qui permet plusieurs sources pour un même run sans collision. Un résultat source doit être écrit après `STARTED` et avant `FINISHED`; un doublon identique est idempotent et un contenu modifié sous la même clé est rejeté. `reconstruct_windows(..., as_of=...)` peut maintenant extraire ces preuves directement d'un historique restauré, sans fournir un tableau de résultats séparé.
+
+Cette capacité reste limitée au simulateur et aux tests : `storage.py` et `collect.py` ne journalisent pas encore `SOURCE_RESULT`. Aucun résultat de marché réel n'est écrit dans le journal par cette modification.
