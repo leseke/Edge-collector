@@ -8,6 +8,7 @@ Branche : `edge/mri-004-continuity-notification-contract`
 - `tests/test_continuity.py` : tests unitaires du calcul.
 - `storage.py` : table SQLite `run_event` et fonctions d'écriture/lecture du journal.
 - `tests/test_run_journal.py` : tests du journal append-only, des exécutions interrompues et de l'ordre des événements.
+- `tests/test_collect_heartbeat.py` : tests de l'enveloppe réelle du collecteur, du cas réussi et de l'exception sans fuite du message brut.
 - `collect.py` : enveloppe de début/fin autour de l'exécution du collecteur. Un événement STARTED est écrit avant le travail ; FINISHED est écrit dans finally, y compris après exception.
 - `.github/workflows/mri-tests.yml` : workflow de tests hors ligne uniquement, sans secrets ni appels fournisseurs.
 
@@ -38,7 +39,11 @@ Les compteurs séparent les enregistrements de collecte, les snapshots de prix p
 2. Le workflow `.github/workflows/collect.yml` actuel exécute `diagnose_scavio.py`, pas `collect.py`. L'instrumentation du collecteur n'est donc pas encore appelée par ce workflow.
 3. Il n'existe pas encore de cadence planifiée ni de `scheduled_at` fiable ; le champ reste explicitement nul.
 4. Les fenêtres attendues ne sont pas encore produites par un scheduler et reliées à ce journal.
-5. Les tests sont écrits et un workflow de validation hors ligne est ajouté, mais aucune exécution de test n'est revendiquée dans cette étape.
+5. La suite complète a été exécutée avec succès : 349 tests réussis, 1 test ignoré. Après ajout des deux tests d'intégration du wrapper heartbeat, une nouvelle exécution CI est en cours.
+
+## Ajustement du banc de tests
+
+La première exécution complète a révélé trois échecs préexistants dans les tests du plafond mensuel : GitHub Actions définit automatiquement `GITHUB_ACTIONS=true`, ce qui active volontairement le refus des dépenses à plafond mensuel dans cet environnement. Les tests qui vérifient le calcul local et la concurrence ont été isolés explicitement avec `GITHUB_ACTIONS=false`, tandis que le test dédié vérifiant le refus en CI reste actif. Le code de sécurité de `investigation/spend.py` n'a pas été modifié.
 
 ## Décision de sécurité
 
