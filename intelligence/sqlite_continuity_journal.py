@@ -16,11 +16,14 @@ class SQLiteContinuityJournal:
     one attempt (as collect.py's GitHub run/attempt suffix currently does).
     """
 
-    def __init__(self, append_event, list_events):
+    def __init__(self, append_event, list_events, list_all_events=None):
         if not callable(append_event) or not callable(list_events):
             raise ValueError("append_event and list_events must be callable")
+        if list_all_events is not None and not callable(list_all_events):
+            raise ValueError("list_all_events must be callable")
         self._append_event = append_event
         self._list_events = list_events
+        self._list_all_events = list_all_events
 
     def _history(self, run_id, attempt):
         rows = self._list_events(run_id)
@@ -30,6 +33,30 @@ class SQLiteContinuityJournal:
                 raise ValueError("SQLite run event row is malformed")
             events.append(make_event(
                 run_id, attempt, row["event_type"], row["occurred_at"], row["payload"]
+            ))
+        return events
+
+    def read_history(self):
+        """Restore all local events in insertion order for continuity replay.
+
+        SQLite keys each attempt by a unique run_id, so the replay attempt field
+        is normalized to 1; run_id remains the unique execution identity.
+        """
+        if self._list_all_events is None:
+            raise ValueError("list_all_events is required to restore full journal history")
+        rows = self._list_all_events()
+        if not isinstance(rows, list):
+            raise ValueError("SQLite full history must be a list")
+        events = []
+        for row in rows:
+            if not isinstance(row, dict) or set(row) != {
+                "run_id", "event_type", "occurred_at", "payload"
+            }:
+                raise ValueError("SQLite full-history row is malformed")
+            if not isinstance(row["run_id"], str) or not row["run_id"].strip():
+                raise ValueError("SQLite full-history run_id is invalid")
+            events.append(make_event(
+                row["run_id"], 1, row["event_type"], row["occurred_at"], row["payload"]
             ))
         return events
 
