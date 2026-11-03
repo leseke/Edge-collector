@@ -1,7 +1,8 @@
 """Explicit, validated association between one execution and one MRI window.
 
-This contract is deliberately separate from collect.py: no scheduler is started,
-no timestamp is inferred from process start, and no connector is invoked.
+The contract is injected into collect.py only when a caller supplies an explicit
+context and expected-window registry. No scheduler is started, no timestamp is
+inferred from process start, and no connector is invoked by this module.
 """
 from __future__ import annotations
 
