@@ -128,6 +128,16 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["windows"][0]["missing_sources"], ["source-b"])
         self.assertIsNone(result["observation_coverage_ratio"])
 
+    def test_multiple_runs_for_same_window_make_result_unknown(self):
+        events = run_events("run-a", T0) + run_events("run-b", T0)
+        expected = [{"window_id": "w1", "scheduled_at": T0,
+                     "expected_sources": ["source-a"]}]
+        outcome = {"window_id": "w1", "run_id": "run-a", "attempt": 1,
+                   "source_id": "source-a", "outcome": "OBSERVED", "occurred_at": T1}
+        result = reconstruct_windows(expected, events, [outcome], T2)
+        self.assertEqual(result["window_counts"]["UNKNOWN"], 1)
+        self.assertIsNone(result["observation_coverage_ratio"])
+
     def test_source_not_expected_for_window_is_rejected(self):
         events = run_events("run-a", T0)
         outcome = {"window_id": "w1", "run_id": "run-a", "attempt": 1,
