@@ -15,7 +15,7 @@ def _instant(value):
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except (ValueError, AttributeError) as exc:
         raise ValueError("timestamp ISO invalide") from exc
-    if parsed.tzinfo is None:
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
         raise ValueError("timezone obligatoire")
     return parsed.astimezone(timezone.utc)
 
@@ -24,49 +24,103 @@ def _iso(value):
     return value.isoformat().replace("+00:00", "Z")
 
 
+def _journal_source_outcomes(run_events):
+    """Extract source evidence exclusively from immutable SOURCE_RESULT events."""
+    results = []
+    for event in run_events:
+        if event["event_type"] != "SOURCE_RESULT":
+            continue
+        payload = event["payload"]
+        results.append({
+            "window_id": payload["window_id"],
+            "run_id": event["run_id"],
+            "attempt": event["attempt"],
+            "source_id": payload["source_id"],
+            "outcome": payload["outcome"],
+            "occurred_at": event["occurred_at_utc"],
+        })
+    return results
+
+
 def verify_run_history(run_events):
-    """Verify the append-only STARTED/FINISHED journal by replay."""
+    """Verify append-only lifecycle, scheduled claims, and event chronology."""
     if not isinstance(run_events, list):
         raise ValueError("run_events doit être une liste")
     journal = InMemoryRemoteJournal()
     starts, finishes = {}, set()
+    last_instant = {}
     for event in run_events:
         journal.append_if_head(journal.head, event)
         key = (event["run_id"], event["attempt"])
+        occurred = _instant(event["occurred_at_utc"])
+        if key in last_instant and occurred < last_instant[key]:
+            raise ValueError("horodatage d'événement non monotone")
+        last_instant[key] = occurred
+
         if event["event_type"] == "STARTED":
+            payload = event["payload"]
+            trigger = payload.get("trigger")
+            scheduled_at = payload.get("scheduled_at")
+            if not isinstance(trigger, str) or not trigger.strip():
+                raise ValueError("déclencheur STARTED invalide")
+            if trigger == "schedule":
+                if scheduled_at is None:
+                    raise ValueError("STARTED planifié sans scheduled_at explicite")
+                _instant(scheduled_at)
+            elif scheduled_at is not None:
+                raise ValueError("scheduled_at réservé aux exécutions planifiées")
             starts[key] = event
         elif event["event_type"] == "FINISHED":
             finishes.add(key)
+
     return {"started": starts, "finished": finishes, "verified": True}
 
 
+def _validate_external_outcomes(source_outcomes, journal_outcomes):
+    """Compatibility input is accepted only as an exact mirror of journal proof."""
+    if source_outcomes is None:
+        return journal_outcomes
+    if not isinstance(source_outcomes, list):
+        raise ValueError("source_outcomes doit être une liste")
+    def identity(item):
+        required = {"window_id", "run_id", "attempt", "source_id", "outcome", "occurred_at"}
+        if not isinstance(item, dict) or set(item) != required:
+            raise ValueError("résultat source invalide")
+        if (not isinstance(item["run_id"], str) or not item["run_id"].strip()
+                or isinstance(item["attempt"], bool) or not isinstance(item["attempt"], int)
+                or item["attempt"] < 1):
+            raise ValueError("identité de run invalide")
+        if item["outcome"] not in SOURCE_OUTCOMES:
+            raise ValueError("outcome invalide")
+        if any(not isinstance(item[key], str) or not item[key].strip()
+               for key in ("window_id", "source_id")):
+            raise ValueError("identifiant source invalide")
+        return (
+            item["window_id"], item["run_id"], item["attempt"], item["source_id"],
+            item["outcome"], _instant(item["occurred_at"]),
+        )
+    supplied = sorted(identity(item) for item in source_outcomes)
+    recorded = sorted(identity(item) for item in journal_outcomes)
+    if supplied != recorded:
+        raise ValueError("source_outcomes ne correspond pas aux événements SOURCE_RESULT vérifiés")
+    return journal_outcomes
+
+
 def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_of=None):
-    """Reconstruct windows from scheduler expectations and per-source outcomes.
+    """Reconstruct windows using only source outcomes present in verified journal events.
 
     expected_windows: {window_id, scheduled_at, expected_sources:[source ids]}.
-    source_outcomes: {window_id, run_id, attempt, source_id, outcome, occurred_at}.
-    Each expected source must have exactly one outcome for a fully known window.
+    source_outcomes, when supplied for compatibility, must exactly mirror the
+    immutable SOURCE_RESULT events; it can never add or override evidence.
     """
-    if not isinstance(expected_windows, list) or (source_outcomes is not None and not isinstance(source_outcomes, list)):
-        raise ValueError("fenêtres et résultats doivent être des listes")
+    if not isinstance(expected_windows, list):
+        raise ValueError("fenêtres attendues doivent être une liste")
     if not isinstance(run_events, list):
         raise ValueError("run_events doit être une liste")
     cut = _instant(as_of)
-    # Validate the complete event stream before reading nested source payloads.
     history = verify_run_history(run_events)
-    starts = history["started"]
-    if source_outcomes is None:
-        source_outcomes = [
-            {
-                "window_id": event["payload"]["window_id"],
-                "run_id": event["run_id"],
-                "attempt": event["attempt"],
-                "source_id": event["payload"]["source_id"],
-                "outcome": event["payload"]["outcome"],
-                "occurred_at": event["occurred_at_utc"],
-            }
-            for event in run_events if event["event_type"] == "SOURCE_RESULT"
-        ]
+    journal_outcomes = _journal_source_outcomes(run_events)
+    source_outcomes = _validate_external_outcomes(source_outcomes, journal_outcomes)
 
     windows, schedule_seen = {}, set()
     for item in expected_windows:
@@ -89,18 +143,12 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
                 "scheduled": scheduled, "expected_sources": set(sources)
             }
 
+    starts = history["started"]
     outcomes_by_window = {}
     for item in source_outcomes:
-        required = {"window_id", "run_id", "attempt", "source_id", "outcome", "occurred_at"}
-        if not isinstance(item, dict) or set(item) != required:
-            raise ValueError("résultat source invalide")
         window_id = item["window_id"]
         if window_id not in windows:
             raise ValueError("résultat lié à une fenêtre inconnue ou future")
-        if (not isinstance(item["run_id"], str) or not item["run_id"].strip()
-                or isinstance(item["attempt"], bool) or not isinstance(item["attempt"], int)
-                or item["attempt"] < 1):
-            raise ValueError("identité de run invalide")
         source_id = item["source_id"]
         window = windows[window_id]
         if source_id not in window["expected_sources"]:
@@ -108,8 +156,6 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_o
         bucket = outcomes_by_window.setdefault(window_id, {})
         if source_id in bucket:
             raise ValueError("résultat source dupliqué pour cette fenêtre")
-        if item["outcome"] not in SOURCE_OUTCOMES:
-            raise ValueError("outcome invalide")
         key = (item["run_id"], item["attempt"])
         if key not in starts:
             raise ValueError("résultat sans exécution STARTED vérifiée")
