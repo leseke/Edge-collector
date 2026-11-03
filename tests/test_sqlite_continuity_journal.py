@@ -4,6 +4,7 @@ import unittest
 from unittest import mock
 
 import storage
+from intelligence.continuity_pipeline import build_local_sqlite_continuity_report
 from connectors.result import completed_query, failed_query
 from intelligence.scheduled_run_context import ScheduledRunContext
 from intelligence.sqlite_continuity_journal import SQLiteContinuityJournal
@@ -28,7 +29,8 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         self.db_patch.start()
         storage.init_db().close()
         self.journal = SQLiteContinuityJournal(
-            storage.append_run_event, storage.list_run_events
+            storage.append_run_event, storage.list_run_events,
+            storage.list_all_run_events,
         )
         self.context = ScheduledRunContext(
             window_id=WINDOW["window_id"], scheduled_at=SCHEDULED,
@@ -65,6 +67,55 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
             "outcome": "OBSERVED",
         })
         self.assertEqual(rows[2]["payload"]["outcome"], "NO_REACTION_OBSERVED")
+
+    def test_local_sqlite_history_replays_but_never_claims_durable_coverage(self):
+        context = ScheduledRunContext(
+            window_id="pipeline-hourly:20261103T010000Z",
+            scheduled_at=SCHEDULED, run_id="sqlite-report-run-attempt-1",
+            attempt=1, expected_sources=("check-a", "check-b"),
+        )
+        window = {
+            "window_id": context.window_id,
+            "scheduled_at": SCHEDULED,
+            "expected_sources": ["check-a", "check-b"],
+        }
+        self.journal.start(context, [window], occurred_at=STARTED_AT)
+        self.journal.record_source_result(
+            context, [window], completed_query(2), "check-a", RESULT_AT
+        )
+        self.journal.record_source_result(
+            context, [window], completed_query(0), "check-b",
+            "2026-11-03T01:01:30Z",
+        )
+        self.journal.finish(context, {
+            "run_status": "OK", "sources_expected": ["check-a", "check-b"],
+            "sources_failed": [], "collected_records": 2,
+            "product_price_snapshots": 1, "retail_offer_batches": 0,
+        }, FINISHED_AT)
+
+        report = build_local_sqlite_continuity_report(
+            {
+                "schedule_id": "pipeline-hourly", "timezone": "UTC",
+                "interval_minutes": 60, "lookback_days": 0,
+            },
+            {
+                "expected_sources": ["check-a", "check-b"],
+                "not_scheduled_sources": [],
+                "providers": {"check-a": "ebay", "check-b": "cardmarket"},
+            },
+            "2026-11-03T02:00:00Z",
+            self.journal,
+        )
+        row = next(item for item in report["windows"]
+                   if item["window_id"] == context.window_id)
+        self.assertEqual(row["status"], "OBSERVED")
+        self.assertEqual(report["source_counts"]["NO_REACTION_OBSERVED"], 1)
+        self.assertEqual(report["journal_backend"], "SQLITE_LOCAL")
+        self.assertEqual(report["journal_status"], "DEGRADED")
+        self.assertEqual(report["continuity_status"], "UNKNOWN")
+        self.assertEqual(report["unknown_reason"], "LOCAL_SQLITE_HISTORY_NOT_DURABLE")
+        self.assertIsNone(report["observation_coverage_ratio"])
+        self.assertGreater(report["window_counts"]["UNKNOWN"], 0)
 
     def test_duplicate_identical_source_result_is_idempotent(self):
         self.journal.start(self.context, [WINDOW], occurred_at=STARTED_AT)
