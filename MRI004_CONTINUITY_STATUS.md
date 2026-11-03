@@ -90,3 +90,10 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - Tests ciblés présents après cette étape : 15 tests du journal SQLite, 15 tests de reconstruction, 12 tests du simulateur (42 ciblés). **Ils ne sont pas déclarés réussis : aucune exécution Python ni CI GitHub Actions confirmée pour ces derniers commits.**
 - Le statut combiné GitHub consulté sur le commit de tests ne remonte que le contrôle Vercel, en attente ; il ne donne pas le résultat du workflow Python. Le déploiement Vercel reste indépendant de ces tests.
 - Aucun scheduler, backend distant, secret, appel payant, notification réelle ou changement de `main` n'a été activé.
+## Validation MRI-004.7 — CI confirmé
+
+- Après correction des deux assertions qui comparaient un ratio arrondi (`0.6667`) à la fraction exacte (`2/3`), le workflow hors ligne a réussi.
+- Commit testé : `81a4fdf645fd610fd51688d91a58e2b3c46f2b42`.
+- GitHub Actions run `41660626186` : **success** — 389 tests exécutés, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41660626186
+- Cette réussite couvre la suite complète au commit testé, y compris les nouveaux tests SQLite, les tests de reconstruction et le test de validation du payload source malformé. Elle ne signifie pas que le collecteur réel émet déjà des événements `SOURCE_RESULT`.
+- Le document lui-même est mis à jour après le commit testé ; le changement documentaire ne modifie pas le code testé.
