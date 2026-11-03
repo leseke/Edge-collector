@@ -60,7 +60,7 @@ class WindowScheduleTests(unittest.TestCase):
     def test_as_of_boundary_is_inclusive(self):
         result = build_expected_windows(cadence(), PLAN, "2026-11-03T12:00:00+01:00")
         self.assertIn(
-            "mri-hourly:20261103T120000Z",
+            "mri-hourly:20261103T110000Z",
             [row["window_id"] for row in result["expected_windows"]],
         )
 
@@ -79,7 +79,12 @@ class WindowScheduleTests(unittest.TestCase):
         result = build_expected_windows(
             cadence(lookback_days=1), PLAN, "2026-11-03T12:00:00Z"
         )
-        dates = {row["scheduled_at"][:10] for row in result["expected_windows"]}
+        from zoneinfo import ZoneInfo
+        dates = {
+            datetime.fromisoformat(row["scheduled_at"].replace("Z", "+00:00"))
+            .astimezone(ZoneInfo("Europe/Paris")).date().isoformat()
+            for row in result["expected_windows"]
+        }
         self.assertEqual(dates, {"2026-11-02", "2026-11-03"})
 
     def test_spring_forward_skips_nonexistent_local_hour(self):
@@ -91,10 +96,11 @@ class WindowScheduleTests(unittest.TestCase):
         instants = [row["scheduled_at"] for row in result["expected_windows"]]
         self.assertIn("2026-03-29T00:00:00Z", instants)  # 01:00 CET
         self.assertIn("2026-03-29T01:00:00Z", instants)  # 03:00 CEST
-        self.assertNotIn("2026-03-29T01:00:00Z", [
-            row["scheduled_at"] for row in result["expected_windows"]
-            if row["scheduled_at"] == "2026-03-29T01:00:00Z"
-        ][1:])
+        self.assertEqual(
+            instants,
+            ["2026-03-28T23:00:00Z", "2026-03-29T00:00:00Z",
+             "2026-03-29T01:00:00Z"],
+        )
 
     def test_fall_back_retains_both_occurrences_of_ambiguous_hour(self):
         result = build_expected_windows(
