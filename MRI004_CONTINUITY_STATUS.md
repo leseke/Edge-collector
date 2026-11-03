@@ -65,7 +65,7 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - `tests/test_reconstruct_continuity.py` : scénarios multi-runs, fenêtre manquée, absence de réaction, échec source, run interrompu, run terminé sans preuve source, historique corrompu et résultats non rattachés à un run vérifié.
 - Règle de prudence : fenêtre sans exécution = `MISSED`; exécution présente sans preuve source = `UNKNOWN`; aucune assimilation du heartbeat à une observation.
 - Les ratios d'observation et de tentative sont séparés et masqués dès qu'une fenêtre reste `UNKNOWN`. Une erreur source produit `DEGRADED`, pas `CONTINUOUS`.
-- Le scheduler et l'émission de preuves source par le collecteur restent à intégrer. Le résultat actuel est un modèle hors ligne alimenté par des événements synthétiques.
+- Le simulateur accepte maintenant les événements `SOURCE_RESULT` et la reconstruction peut extraire les preuves directement du journal restauré ; `storage.py` et le collecteur réel ne les écrivent pas encore. Le scheduler et l'émission de preuves source par le collecteur restent à intégrer. Le résultat actuel est un modèle hors ligne alimenté par des événements synthétiques.
 - CI : résultat des nouveaux commits à confirmer ; aucun total de tests n'est revendiqué à ce stade.
 
 ## MRI-004.6 — Granularité par source
@@ -73,6 +73,6 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - `intelligence/reconstruct_continuity.py` accepte maintenant plusieurs résultats source pour une même fenêtre, avec une liste indépendante `expected_sources` fournie par le scheduler.
 - Agrégation testée : observation, absence de réaction, échec total, échec partiel (`DEGRADED`), source attendue manquante (`UNKNOWN`) et fenêtre sans exécution (`MISSED`).
 - Les détails de chaque source restent visibles dans le résultat reconstruit ; les métriques distinguent couverture d'observation et couverture de tentative.
-- 13 tests dédiés dans `tests/test_reconstruct_continuity.py`, dont une restauration effective du journal depuis le simulateur et un cas de runs concurrents ambigus (écrits, CI à confirmer).
+- 14 tests dédiés dans `tests/test_reconstruct_continuity.py`, dont une restauration effective du journal depuis le simulateur et un cas de runs concurrents ambigus, ainsi que des événements source intégrés au journal simulé (écrits, CI à confirmer).
 - Toujours pas d'émission de preuves source par le collecteur réel : les données sont injectées dans le modèle de reconstruction hors ligne. `collect.run()` écrit encore `scheduled_at=None`; le scheduler et le branchement réel restent à faire.
 - Vérification GitHub du commit de tests : aucun statut de test GitHub Actions n'est remonté par l'API de statut consultée ; le statut Vercel du dernier commit est en attente ; aucun run GitHub Actions de tests n'est visible via les statuts/endpoint PR consultés, ce qui ne permet pas de conclure sur les tests Python. Aucun test n'est déclaré vert sans log explicite.
