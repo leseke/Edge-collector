@@ -14,6 +14,7 @@ from edge_engine import (load_config, load_portfolio, decide, capital_state,
                          summarize, public_policy, public_product_view,
                          public_summary, assert_no_private_leak)
 from edge_io import atomic_write_json, redact
+from intelligence.source_plan import build_source_plan
 
 USD_TO_EUR = 0.92
 
@@ -296,6 +297,9 @@ def _run_once():
     state = capital_state(config)
 
     enabled = config.get("enabled_sources", {})
+    source_plan = build_source_plan(
+        config, WATCHLIST, _get_trends_watch(), _get_reddit_watch(), SCAVIO_WATCH
+    )
     # Aucun montant dans les logs (logs Actions publics sur depot public).
     print(f"[config] capital : {'renseigne' if state['capital_known'] else 'NON renseigne (execution bloquee)'}", flush=True)
     if state["config_errors"]:
@@ -440,8 +444,10 @@ def _run_once():
     print(f"statut donnees : {s['data_status']} (couverture {s['coverage']:.0%})", flush=True)
     print(f"posture : {s['posture']} -> {s['decision']}", flush=True)
 
-    source_names = {it["source"] for it in WATCHLIST} | {"trends", "reddit", "scavio"}
-    active_sources = sorted(name for name in source_names if _is_enabled(config, name))
+    active_sources = sorted({
+        source_plan["providers"][check_id]
+        for check_id in source_plan["expected_sources"]
+    })
     has_observations = bool(results or scavio_offers)
     if sources_failed and not has_observations:
         run_status = "FAILED"
