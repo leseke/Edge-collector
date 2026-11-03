@@ -139,6 +139,23 @@ def list_run_events(run_id):
         con.close()
 
 
+
+def list_all_run_events():
+    """Read the append-only event stream across all local runs in insertion order."""
+    con = sqlite3.connect(DB)
+    try:
+        rows = con.execute(
+            "SELECT run_id, event_type, occurred_at, payload_json "
+            "FROM run_event ORDER BY id"
+        ).fetchall()
+        return [
+            {"run_id": run_id, "event_type": event_type,
+             "occurred_at": occurred_at, "payload": json.loads(payload_json)}
+            for run_id, event_type, occurred_at, payload_json in rows
+        ]
+    finally:
+        con.close()
+
 def find_unfinished_runs():
     """Return STARTED runs without a later FINISHED event (e.g. killed runner)."""
     con = sqlite3.connect(DB)
