@@ -58,3 +58,12 @@ La première exécution complète a révélé trois échecs préexistants dans l
 ## Décision de sécurité
 
 Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manuel existant. Avant la surveillance continue, il faut connecter et valider une persistance durable du journal, tester la reconstruction multi-runs et mesurer les coûts/quotas des collecteurs. Aucun appel payant, publication de données, notification Telegram ou changement de `main` n'est autorisé ici.
+
+## MRI-004.5 — Reconstruction multi-runs
+
+- `intelligence/reconstruct_continuity.py` : vérification par rejeu du journal d'exécution restauré et reconstruction des fenêtres planifiées à partir de preuves source séparées.
+- `tests/test_reconstruct_continuity.py` : scénarios multi-runs, fenêtre manquée, absence de réaction, échec source, run interrompu, run terminé sans preuve source, historique corrompu et résultats non rattachés à un run vérifié.
+- Règle de prudence : fenêtre sans exécution = `MISSED`; exécution présente sans preuve source = `UNKNOWN`; aucune assimilation du heartbeat à une observation.
+- Les ratios d'observation et de tentative sont séparés et masqués dès qu'une fenêtre reste `UNKNOWN`.
+- Le scheduler et l'émission de preuves source par le collecteur restent à intégrer. Le résultat actuel est un modèle hors ligne alimenté par des événements synthétiques.
+- CI : résultat des nouveaux commits à confirmer ; aucun total de tests n'est revendiqué à ce stade.
