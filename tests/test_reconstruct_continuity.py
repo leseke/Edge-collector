@@ -70,6 +70,26 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["window_counts"]["OBSERVED"], 1)
         self.assertEqual(result["window_counts"]["NO_REACTION_OBSERVED"], 1)
 
+    def test_source_evidence_is_rebuilt_directly_from_journal_events(self):
+        journal = InMemoryRemoteJournal()
+        start, finish = run_events("run-a", T0)
+        journal.append_if_head(journal.head, start)
+        source_result = make_event("run-a", 1, "SOURCE_RESULT", T1, {
+            "window_id": "w1", "source_id": "source-a",
+            "outcome": "OBSERVED",
+        })
+        journal.append_if_head(journal.head, source_result)
+        journal.append_if_head(journal.head, finish)
+        result = reconstruct_windows(
+            [{"window_id": "w1", "scheduled_at": T0,
+              "expected_sources": ["source-a"]}],
+            journal.read_events(),
+            as_of=T2,
+        )
+        self.assertEqual(result["window_counts"]["OBSERVED"], 1)
+        self.assertEqual(result["source_counts"]["OBSERVED"], 1)
+        self.assertEqual(result["observation_coverage_ratio"], 1.0)
+
     def test_source_failure_is_not_missed_or_no_reaction(self):
         events = run_events("run-a", T0)
         outcome = {"window_id": "w1", "run_id": "run-a", "attempt": 1,
