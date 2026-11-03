@@ -105,3 +105,24 @@ def fetch_reddit(subreddit, query, limit=25):
         "reddit_avg_score": round(avg_score, 1),
         "reddit_avg_comments": round(avg_comments, 1),
     }
+
+def fetch_reddit_with_status(subreddit, query, limit=25):
+    """Return (legacy Reddit snapshot, sanitized outcome).
+
+    Legacy None conflates confirmed empty posts with transport, HTTP and
+    decoding failures; it is intentionally kept UNKNOWN.
+    """
+    from connectors.result import completed_query, failed_query, unknown
+
+    try:
+        snapshot = fetch_reddit(subreddit, query, limit=limit)
+    except Exception as exc:
+        return None, failed_query(exc)
+    if snapshot is None:
+        return None, unknown()
+    evidence_count = snapshot.get("reddit_total")
+    if isinstance(evidence_count, bool) or not isinstance(evidence_count, int) or evidence_count < 1:
+        evidence_count = 1
+    return snapshot, completed_query(evidence_count)
+
+
