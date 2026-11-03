@@ -97,3 +97,8 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - GitHub Actions run `41660626186` : **success** — 389 tests exécutés, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41660626186
 - Cette réussite couvre la suite complète au commit testé, y compris les nouveaux tests SQLite, les tests de reconstruction et le test de validation du payload source malformé. Elle ne signifie pas que le collecteur réel émet déjà des événements `SOURCE_RESULT`.
 - Le document lui-même est mis à jour après le commit testé ; le changement documentaire ne modifie pas le code testé.
+## Extension du contrat applicatif
+
+- `intelligence/run_journal.py` expose maintenant `source_result()` dans le protocole `RunJournal` et dans l'adaptateur `SQLiteRunJournal` ; le test de délégation correspondant est ajouté.
+- Cette méthode délègue uniquement à la liste blanche SQLite déjà testée. Elle n'est pas appelée depuis `collect.py` tant que le collecteur ne reçoit pas une fenêtre planifiée vérifiable.
+- La dernière suite complète confirmée reste 389 tests réussis, 1 ignoré au commit `81a4fdf`. Le nouvel ajout de l'adaptateur et son test sont en cours de validation GitHub Actions (run `41660866058`) ; ne pas étendre la mention de réussite au commit suivant avant son résultat.
