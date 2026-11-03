@@ -13,6 +13,10 @@ class RunJournal(Protocol):
         """Append one STARTED event."""
         ...
 
+    def source_result(self, run_id: str, payload: dict[str, Any], occurred_at: str | None = None) -> None:
+        """Append one minimal SOURCE_RESULT event."""
+        ...
+
     def finish(self, run_id: str, payload: dict[str, Any], occurred_at: str | None = None) -> None:
         """Append one FINISHED event."""
         ...
@@ -31,6 +35,9 @@ class SQLiteRunJournal:
 
     def start(self, run_id: str, payload: dict[str, Any], occurred_at: str | None = None) -> None:
         storage.append_run_event(run_id, "STARTED", payload, occurred_at)
+
+    def source_result(self, run_id: str, payload: dict[str, Any], occurred_at: str | None = None) -> None:
+        storage.append_run_event(run_id, "SOURCE_RESULT", payload, occurred_at)
 
     def finish(self, run_id: str, payload: dict[str, Any], occurred_at: str | None = None) -> None:
         storage.append_run_event(run_id, "FINISHED", payload, occurred_at)
