@@ -108,3 +108,15 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - GitHub Actions run `41660866058` : **success** — 390 tests exécutés, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41660866058
 - Le test ajouté valide la délégation `SQLiteRunJournal.source_result()` vers le stockage SQLite ; les tests couvrent aussi l'ordre STARTED/SOURCE_RESULT/FINISHED, plusieurs sources, l'idempotence, le rejet des changements de contenu et des champs privés.
 - Cette validation ne couvre pas encore une collecte réelle avec fenêtre planifiée : `collect.py` n'émet pas `SOURCE_RESULT` tant qu'aucun scheduler fiable ne fournit les identifiants de fenêtre et les sources attendues.
+
+## MRI-004.14-A — Dispatch uniforme des connecteurs
+
+- `connectors/status_adapters.py` expose désormais `fetch_source_with_status(provider, item)`, point d'entrée uniforme vers les adaptateurs de statut des cinq familles actuellement utilisées : eBay, Cardmarket, Google Trends, Reddit et Scavio.
+- Le contrat de retour est strict : `(snapshot | None, ConnectorResult)`. Le snapshot historique reste inchangé ; le résultat de statut doit être une instance valide de `ConnectorResult`.
+- Les fournisseurs inconnus, champs de requête obligatoires absents, formes de retour incorrectes et résultats non conformes sont rejetés explicitement.
+- Les cas `None` ambigus des connecteurs historiques eBay, Cardmarket, Trends et Reddit restent `UNKNOWN`. Ils ne deviennent pas artificiellement `NO_REACTION_OBSERVED`. Seul l'adaptateur Scavio, qui demande explicitement les erreurs et distingue une réponse Shopping vide réussie, peut déclarer `NO_REACTION_OBSERVED`.
+- `NOT_SCHEDULED` n'est pas fabriqué par le dispatcher : l'absence de programmation reste une décision du plan de sources, en amont de tout appel.
+- `tests/test_source_status_dispatch.py` couvre les cinq dispatchs, la conservation du snapshot et du statut, le rejet d'un provider inconnu, les paramètres requis, et la conservation de `UNKNOWN` / `SOURCE_FAILED`.
+- Validation CI exacte : commit `fcefc4f0bc630ab8a265aa74f44bcb0fa71fd0bc`, GitHub Actions run `41684437278` : **success**, 495 tests exécutés, 494 réussis, 1 ignoré, 0 échec. Journal : https://github.com/leseke/Edge-collector/actions/runs/41684437278
+- Limite explicite : ce dispatcher n'est pas encore appelé depuis `collect.py`. La CI teste les appels avec mocks ; aucun connecteur externe n'a été appelé et aucune fenêtre planifiée n'a été créée. Les étapes 004.14-B à 004.14-E restent à réaliser.
+- Aucun changement sur `main`, aucun scheduler réel, aucun appel payant, aucune notification réelle et aucun nouveau secret.
