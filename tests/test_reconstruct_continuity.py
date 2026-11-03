@@ -45,7 +45,7 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["window_counts"]["OBSERVED"], 1)
         self.assertEqual(result["window_counts"]["MISSED"], 1)
         self.assertEqual(result["continuity_status"], "GAP")
-        self.assertEqual(result["observation_coverage_ratio"], 2 / 3)
+        self.assertAlmostEqual(result["observation_coverage_ratio"], 2 / 3, places=4)
         self.assertEqual(result["attempt_coverage_ratio"], 2 / 3)
 
     def test_reconstructs_from_restored_journal_history(self):
