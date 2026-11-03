@@ -85,14 +85,15 @@ Les heures planifiées doivent venir d'un calendrier de scheduler vérifiable, a
 
 ## Séquence de validation avant activation
 
-1. Formaliser un protocole d'interface `RunJournal` indépendant du backend.
-2. Garder SQLite comme adaptateur local de test.
-3. Ajouter un adaptateur distant simulé et tester les conflits, doublons, panne réseau, reprise et corruption.
-4. Vérifier qu'une reconstruction multi-runs calcule correctement les fenêtres manquées.
-5. Provisionner un dépôt privé uniquement après accord explicite et créer un jeton à portée minimale.
-6. Tester lecture/écriture sur un jeu synthétique non sensible.
-7. Vérifier la restauration depuis zéro et le comportement en cas de journal inaccessible.
-8. Seulement ensuite, envisager une cadence planifiée distincte, avec limites de coûts et arrêt d'urgence.
+1. [FAIT] Formaliser un protocole `RunJournal` indépendant du backend dans `intelligence/run_journal.py`.
+2. [FAIT] Encapsuler SQLite dans `SQLiteRunJournal`, sans changer le collecteur ni la persistance active.
+3. [EN VALIDATION CI] Tester le contrat de l'adaptateur local.
+4. Ajouter un adaptateur distant simulé et tester les conflits, doublons, panne réseau, reprise et corruption.
+5. Vérifier qu'une reconstruction multi-runs calcule correctement les fenêtres manquées.
+6. Provisionner un dépôt privé uniquement après accord explicite et créer un jeton à portée minimale.
+7. Tester lecture/écriture sur un jeu synthétique non sensible.
+8. Vérifier la restauration depuis zéro et le comportement en cas de journal inaccessible.
+9. Seulement ensuite, envisager une cadence planifiée distincte, avec limites de coûts et arrêt d'urgence.
 
 ## Critères d'acceptation
 
