@@ -35,12 +35,12 @@ def verify_run_history(run_events):
         key = (event["run_id"], event["attempt"])
         if event["event_type"] == "STARTED":
             starts[key] = event
-        else:
+        elif event["event_type"] == "FINISHED":
             finishes.add(key)
     return {"started": starts, "finished": finishes, "verified": True}
 
 
-def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
+def reconstruct_windows(expected_windows, run_events, source_outcomes=None, as_of=None):
     """Reconstruct windows from scheduler expectations and per-source outcomes.
 
     expected_windows: {window_id, scheduled_at, expected_sources:[source ids]}.
@@ -50,6 +50,18 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
     if not isinstance(expected_windows, list) or not isinstance(source_outcomes, list):
         raise ValueError("fenêtres et résultats doivent être des listes")
     cut = _instant(as_of)
+    if source_outcomes is None:
+        source_outcomes = [
+            {
+                "window_id": event["payload"]["window_id"],
+                "run_id": event["run_id"],
+                "attempt": event["attempt"],
+                "source_id": event["payload"]["source_id"],
+                "outcome": event["payload"]["outcome"],
+                "occurred_at": event["occurred_at_utc"],
+            }
+            for event in run_events if event["event_type"] == "SOURCE_RESULT"
+        ]
     history = verify_run_history(run_events)
     starts = history["started"]
 
