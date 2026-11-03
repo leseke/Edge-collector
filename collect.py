@@ -9,7 +9,10 @@ from connectors.trends_spy import fetch_trends_spy
 from connectors.reddit import fetch_reddit
 from connectors.scavio import fetch_scavio_offers
 from connectors.telegram import send_message, format_alert, send_daily_digest
-from storage import init_db, insert_snapshots, append_run_event
+from storage import init_db, insert_snapshots, append_run_event, list_run_events
+from connectors.status_adapters import fetch_source_with_status
+from connectors.result import SOURCE_FAILED
+from intelligence.sqlite_continuity_journal import SQLiteContinuityJournal
 from edge_engine import (load_config, load_portfolio, decide, capital_state,
                          summarize, public_policy, public_product_view,
                          public_summary, assert_no_private_leak)
@@ -293,7 +296,19 @@ def build_outputs(products, config, sources_failed, trends_signals,
     return radar, private
 
 
-def _run_once():
+def _fetch_source(provider, item, source_id, legacy_fetch, journal=None,
+                  scheduled_context=None, expected_windows=None):
+    """Use legacy fetches manually; journal sanitized outcomes when scheduled."""
+    if journal is None:
+        return legacy_fetch(), None
+    snapshot, outcome = fetch_source_with_status(provider, item)
+    journal.record_source_result(
+        scheduled_context, expected_windows, outcome, source_id
+    )
+    return snapshot, outcome
+
+
+def _run_once(journal=None, scheduled_context=None, expected_windows=None):
     init_db().close()
     config = load_config()
     portfolio = load_portfolio()
@@ -327,7 +342,15 @@ def _run_once():
             products.append(_failure_product(item, "NO_DATA", "source desactivee"))
             continue
         try:
-            snap = fetch_one(item)
+            snap, outcome = _fetch_source(
+                item["source"], item, item["id"], lambda: fetch_one(item),
+                journal, scheduled_context, expected_windows,
+            )
+            if outcome is not None and outcome.status == SOURCE_FAILED:
+                sources_failed.add(item["source"])
+                products.append(_failure_product(item, "ERROR", outcome.error_type))
+                print(f"[{item['source']}] {item['id']} ERREUR : {outcome.error_type}", flush=True)
+                continue
             if not snap:
                 print(f"[{item['source']}] {item['id']} : aucun resultat", flush=True)
                 products.append(_failure_product(item, "NO_DATA", "aucun resultat"))
@@ -348,7 +371,15 @@ def _run_once():
     else:
         for item in _get_trends_watch():
             try:
-                trend = fetch_trends_spy(item["keyword"])
+                trend, outcome = _fetch_source(
+                    "trends", item, item["id"],
+                    lambda: fetch_trends_spy(item["keyword"]),
+                    journal, scheduled_context, expected_windows,
+                )
+                if outcome is not None and outcome.status == SOURCE_FAILED:
+                    sources_failed.add("trends")
+                    print(f"[trends] {item['id']} ERREUR : {outcome.error_type}", flush=True)
+                    continue
                 if trend:
                     trend["product_id"] = item["id"]
                     results.append(trend)
@@ -370,7 +401,15 @@ def _run_once():
     else:
         for item in _get_reddit_watch():
             try:
-                snap = fetch_reddit(item["subreddit"], item["query"], limit=25)
+                snap, outcome = _fetch_source(
+                    "reddit", item, item["id"],
+                    lambda: fetch_reddit(item["subreddit"], item["query"], limit=25),
+                    journal, scheduled_context, expected_windows,
+                )
+                if outcome is not None and outcome.status == SOURCE_FAILED:
+                    sources_failed.add("reddit")
+                    print(f"[reddit] {item['id']} ERREUR : {outcome.error_type}", flush=True)
+                    continue
                 if snap:
                     snap["product_id"] = item["id"]
                     results.append(snap)
@@ -393,8 +432,17 @@ def _run_once():
     else:
         for item in SCAVIO_WATCH:
             try:
-                snap = fetch_scavio_offers(item["query"], gl="fr", hl="fr",
-                                           limit=10, raise_errors=True)
+                snap, outcome = _fetch_source(
+                    "scavio", item, item["id"],
+                    lambda: fetch_scavio_offers(
+                        item["query"], gl="fr", hl="fr", limit=10, raise_errors=True
+                    ),
+                    journal, scheduled_context, expected_windows,
+                )
+                if outcome is not None and outcome.status == SOURCE_FAILED:
+                    sources_failed.add("scavio")
+                    print(f"[scavio] {item['id']} ERREUR : {outcome.error_type}", flush=True)
+                    continue
                 if snap:
                     entry = {"id": item["id"], "query": item["query"],
                              "n_offers": snap["n_offers"],
@@ -512,7 +560,15 @@ def run(scheduled_context=None, expected_windows=None):
     result = None
     failure = None
     try:
-        result = _run_once()
+        if scheduled_context is None:
+            result = _run_once()
+        else:
+            journal = SQLiteContinuityJournal(append_run_event, list_run_events)
+            journal.start(scheduled_context, expected_windows, occurred_at=started_at)
+            result = _run_once(
+                journal=journal, scheduled_context=scheduled_context,
+                expected_windows=expected_windows,
+            )
         return result
     except BaseException as exc:
         failure = exc
@@ -531,7 +587,10 @@ def run(scheduled_context=None, expected_windows=None):
             payload.setdefault("run_status", "EMPTY")
         payload["started_at"] = started_at
         payload["completed_at"] = completed_at
-        append_run_event(run_id, "FINISHED", payload, completed_at)
+        if scheduled_context is None:
+            append_run_event(run_id, "FINISHED", payload, completed_at)
+        else:
+            journal.finish(scheduled_context, payload, completed_at)
 
 
 
