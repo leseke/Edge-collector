@@ -453,8 +453,8 @@ def _run_once():
         "run_status": run_status,
         "sources_expected": active_sources,
         "sources_failed": sorted(sources_failed),
-        "market_observations": len(results),
-        "products_observed": len(snaps),
+        "collected_records": len(results),
+        "product_price_snapshots": len(snaps),
     }
 
 
@@ -464,6 +464,7 @@ def run():
     attempt = os.environ.get("GITHUB_RUN_ATTEMPT")
     if attempt:
         run_id += "-attempt-" + attempt
+    init_db().close()
     started_at = datetime.now(timezone.utc).isoformat()
     append_run_event(run_id, "STARTED", {
         "trigger": os.environ.get("GITHUB_EVENT_NAME", "local"),
@@ -484,8 +485,8 @@ def run():
             payload = {
                 "run_status": "FAILED",
                 "error_type": type(failure).__name__,
-                "market_observations": 0,
-                "products_observed": 0,
+                "collected_records": None,
+                "product_price_snapshots": None,
             }
         else:
             payload = dict(result or {})
