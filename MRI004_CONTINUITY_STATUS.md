@@ -1,38 +1,45 @@
-# MRI-004 — État du premier incrément
+# MRI-004 — État du journal de continuité
 
-Branche : `edge/mri-004-continuity-notification-contract`  
-Base fonctionnelle : `edge/mri-003-historical-evidence-gate`
+Branche : `edge/mri-004-continuity-notification-contract`
 
-## Livré dans cette étape
+## Réalisé
 
-- `docs/MRI-004-continuity-notification-contract.md` : contrat de continuité, de preuve et de notification utilisateur.
-- `intelligence/continuity.py` : calcul pur, sans I/O ni réseau, de couverture des fenêtres attendues.
-- `tests/test_continuity.py` : tests unitaires du calcul de couverture et des cas limites.
+- `intelligence/continuity.py` : calcul pur des fenêtres observées/manquées.
+- `tests/test_continuity.py` : tests unitaires du calcul.
+- `storage.py` : table SQLite `run_event` et fonctions d'écriture/lecture du journal.
+- `tests/test_run_journal.py` : tests du journal append-only, des exécutions interrompues et de l'ordre des événements.
+- `collect.py` : enveloppe de début/fin autour de l'exécution du collecteur. Un événement STARTED est écrit avant le travail ; FINISHED est écrit dans finally, y compris après exception.
+- `.github/workflows/mri-tests.yml` : workflow de tests hors ligne uniquement, sans secrets ni appels fournisseurs.
 
-Le calcul :
-- prend les horaires théoriques depuis le scheduler, sans inventer de cadence ;
-- ne compte que les observations explicitement marquées comme observations de marché exploitables ;
-- exclut les observations futures par rapport à `as_of` ;
-- interdit qu'une capture remplisse plusieurs fenêtres ;
-- distingue `UNKNOWN`, `CONTINUOUS` et `GAP` ;
-- expose les fenêtres manquées, la couverture et l'âge de la dernière observation.
+## Contrat du journal
 
-## Limites connues — rien n'est encore intégré au collecteur
+- Un run reçoit un identifiant unique, incluant le numéro de tentative GitHub Actions lorsqu'il est disponible.
+- STARTED est persisté avant l'exécution métier.
+- FINISHED est ajouté après succès ou exception.
+- Les événements sont append-only ; aucun événement existant n'est modifié.
+- Un FINISHED sans STARTED, un second STARTED ou un second FINISHED sont refusés.
+- Un run interrompu brutalement avant FINISHED reste détectable via `find_unfinished_runs()`.
+- Le journal n'enregistre ni montants de capital, ni clés, ni messages d'exception bruts.
+- Une exécution/heartbeat n'est jamais comptée comme observation du marché.
 
-Ce premier incrément est volontairement isolé. Il n'écrit pas encore de heartbeat, ne modifie pas `collect.py`, ne lit pas encore `storage.db` et ne déclenche aucune notification.
+## Statut transmis
 
-Le workflow `.github/workflows/collect.yml` de cette branche est manuel et exécute `diagnose_scavio.py`, pas la collecte EDGE complète. Le workflow Discovery est également manuel ; son commentaire indique explicitement que la planification attend la mesure des coûts réels.
+Le collecteur renvoie désormais un état de run distinct de la qualité des données :
+- `OK` : au moins une famille de données a produit un résultat et aucune source n'a échoué ;
+- `PARTIAL` : au moins un résultat existe, mais une ou plusieurs sources ont échoué ;
+- `EMPTY` : aucune source n'a fourni de résultat et aucune erreur source n'a été relevée ;
+- `FAILED` : toutes les sources attendues ont échoué ou l'exécution a levé une exception non gérée.
 
-**Ne pas ajouter de planification automatique à ce stade.** Elle pourrait augmenter les appels Scavio / Apify et consommer des quotas avant que les coûts, limites et protections soient validés.
+Les compteurs séparent les enregistrements de collecte, les snapshots de prix produit et les lots d'offres retail. Une erreur non gérée ne prétend pas connaître le nombre de données partiellement collectées : les compteurs restent inconnus.
 
-## Validation
+## Limites restantes
 
-Les tests sont écrits mais **n'ont pas encore été exécutés dans cet incrément**. Aucune réussite de tests n'est revendiquée. Aucun workflow n'a été lancé, aucun appel fournisseur effectué, aucun déploiement réalisé et aucune modification de `main` effectuée.
+1. Le journal SQLite est local à l'environnement d'exécution et `storage.db` est ignoré par Git. Il ne survit donc pas à la destruction du runner GitHub Actions.
+2. Le workflow `.github/workflows/collect.yml` actuel exécute `diagnose_scavio.py`, pas `collect.py`. L'instrumentation du collecteur n'est donc pas encore appelée par ce workflow.
+3. Il n'existe pas encore de cadence planifiée ni de `scheduled_at` fiable ; le champ reste explicitement nul.
+4. Les fenêtres attendues ne sont pas encore produites par un scheduler et reliées à ce journal.
+5. Les tests sont écrits et un workflow de validation hors ligne est ajouté, mais aucune exécution de test n'est revendiquée dans cette étape.
 
-## Étape suivante
+## Décision de sécurité
 
-1. Ajouter un journal de heartbeat append-only pour chaque exécution, y compris les échecs.
-2. Instrumenter le collecteur avec un bloc de finalisation garanti (`finally`) afin qu'une interruption normale ou une exception soit visible.
-3. Relier les observations existantes aux fenêtres planifiées sans confondre heartbeat et données de marché.
-4. Ajouter les tests d'intégration et exécuter la suite hors réseau.
-5. Mesurer les coûts et les quotas avant toute proposition de planification nocturne.
+Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manuel existant. Avant la surveillance continue, il faut choisir une persistance durable du journal et mesurer les coûts/quotas des collecteurs. Aucun appel payant, publication de données, notification Telegram ou changement de `main` n'est autorisé ici.
