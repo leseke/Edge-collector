@@ -56,23 +56,28 @@ def assess_continuity(expected_at, observations, as_of, tolerance_minutes=10):
         if item["usable_market_observation"] and observed <= cut:
             usable.append((observed, item["id"]))
 
-    # Greedy global par proximité : une capture ne peut couvrir deux fenêtres.
-    candidates = []
-    tolerance_seconds = tolerance_minutes * 60
-    for slot_index, slot in enumerate(expected):
-        for observed, observation_id in usable:
-            delta = abs((observed - slot).total_seconds())
-            if delta <= tolerance_seconds:
-                candidates.append((delta, slot_index, observed, observation_id))
-    candidates.sort(key=lambda x: (x[0], x[1], x[2], x[3]))
-
+    # Appariement chronologique à deux pointeurs. Pour des fenêtres et
+    # observations ordonnées sur une ligne temporelle, cette stratégie
+    # maximise le nombre d'appariements dans une tolérance symétrique.
+    usable.sort(key=lambda x: (x[0], x[1]))
     matched_slots = {}
-    used_observations = set()
-    for _, slot_index, observed, observation_id in candidates:
-        if slot_index in matched_slots or observation_id in used_observations:
-            continue
-        matched_slots[slot_index] = {"observed_at": _iso(observed), "observation_id": observation_id}
-        used_observations.add(observation_id)
+    slot_index = observation_index = 0
+    tolerance_seconds = tolerance_minutes * 60
+    while slot_index < len(expected) and observation_index < len(usable):
+        slot = expected[slot_index]
+        observed, observation_id = usable[observation_index]
+        delta = (observed - slot).total_seconds()
+        if delta < -tolerance_seconds:
+            observation_index += 1
+        elif delta > tolerance_seconds:
+            slot_index += 1
+        else:
+            matched_slots[slot_index] = {
+                "observed_at": _iso(observed),
+                "observation_id": observation_id,
+            }
+            slot_index += 1
+            observation_index += 1
 
     missed_indices = [i for i in range(len(expected)) if i not in matched_slots]
     longest_run = current_run = 0
