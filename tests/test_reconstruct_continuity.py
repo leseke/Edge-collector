@@ -1,4 +1,5 @@
 import unittest
+from datetime import datetime, timedelta
 
 from intelligence.reconstruct_continuity import reconstruct_windows
 from intelligence.remote_journal_simulator import make_event
@@ -15,11 +16,12 @@ def run_events(run_id, scheduled_at, finished=True):
         "trigger": "schedule", "scheduled_at": scheduled_at,
     })]
     if finished:
-        events.append(make_event(run_id, 1, "FINISHED", T1, {
+        completed_at = (datetime.fromisoformat(scheduled_at.replace("Z", "+00:00")) + timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+        events.append(make_event(run_id, 1, "FINISHED", completed_at, {
             "run_status": "PARTIAL", "sources_expected": ["source-a"],
             "sources_failed": [], "collected_records": 0,
             "product_price_snapshots": 0, "retail_offer_batches": 0,
-            "started_at": scheduled_at, "completed_at": T1,
+            "started_at": scheduled_at, "completed_at": completed_at,
         }))
     return events
 
@@ -43,7 +45,8 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["counts"]["OBSERVED"], 1)
         self.assertEqual(result["counts"]["MISSED"], 1)
         self.assertEqual(result["continuity_status"], "GAP")
-        self.assertEqual(result["coverage_ratio"], 2 / 3)
+        self.assertEqual(result["observation_coverage_ratio"], 2 / 3)
+        self.assertEqual(result["attempt_coverage_ratio"], 2 / 3)
 
     def test_source_failure_is_not_missed_or_no_reaction(self):
         events = run_events("run-a", T0)
@@ -61,6 +64,14 @@ class ReconstructContinuityTests(unittest.TestCase):
         self.assertEqual(result["counts"]["UNKNOWN"], 1)
         self.assertEqual(result["counts"]["MISSED"], 0)
         self.assertIsNone(result["coverage_ratio"])
+
+    def test_finished_run_without_source_evidence_is_unknown_not_missed(self):
+        events = run_events("run-a", T0, finished=True)
+        result = reconstruct_windows([{"window_id": "w1", "scheduled_at": T0}],
+                                      events, [], T2)
+        self.assertEqual(result["counts"]["UNKNOWN"], 1)
+        self.assertEqual(result["counts"]["MISSED"], 0)
+        self.assertIsNone(result["observation_coverage_ratio"])
 
     def test_outcome_without_verified_started_run_is_rejected(self):
         outcome = {"window_id": "w1", "run_id": "missing", "attempt": 1,
