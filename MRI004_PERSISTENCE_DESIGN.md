@@ -126,3 +126,19 @@ Les états reconstruits sont `OBSERVED`, `NO_REACTION_OBSERVED`, `SOURCE_FAILED`
 Les métriques distinguent `observation_coverage_ratio` (interrogations réussies, y compris sans réaction observée) et `attempt_coverage_ratio` (inclut les échecs de source). Ces ratios sont masqués si au moins une fenêtre reste `UNKNOWN`. Une source en échec ne compte donc jamais comme observation de marché.
 
 Limite volontaire : le contrat accepte actuellement un résultat agrégé par fenêtre. Si plusieurs sources doivent contribuer à une même fenêtre, leur agrégation et les règles de priorité doivent être définies explicitement avant l'intégration. Le scheduler n'est pas encore branché et les résultats de source ne sont pas encore émis par le collecteur. Cette étape valide le modèle de reconstruction, pas la surveillance en production.
+
+## MRI-004.6 — Preuves source multi-sources
+
+Le contrat de reconstruction est maintenant au niveau de chaque source, pas seulement au niveau d'une fenêtre agrégée. Chaque fenêtre attendue déclare `expected_sources`. Chaque résultat est rattaché à une source, à une fenêtre et à un run vérifié. Une fenêtre n'est pleinement classée que lorsque toutes les sources attendues ont produit un résultat et que le run est terminé.
+
+L'agrégation conserve les résultats individuels :
+- toutes les sources ont répondu sans réaction : `NO_REACTION_OBSERVED` ;
+- au moins une source a observé un signal et aucune n'a échoué : `OBSERVED` ;
+- toutes les sources ont échoué : `SOURCE_FAILED` ;
+- mélange de sources en échec et de sources réussies : `DEGRADED`, avec les résultats de chaque source conservés ;
+- source attendue absente, exécution inachevée ou historique insuffisant : `UNKNOWN` ;
+- aucune exécution sur une fenêtre attendue : `MISSED`.
+
+Les compteurs et ratios sont désormais calculés au niveau des vérifications source. `observation_coverage_ratio` compte uniquement les réponses `OBSERVED` et `NO_REACTION_OBSERVED`; `attempt_coverage_ratio` compte aussi les `SOURCE_FAILED`. Les ratios restent masqués si une fenêtre est `UNKNOWN`. La présence d'une observation sur une source ne masque donc plus l'échec d'une autre.
+
+Limite : ce contrat et ses tests sont encore hors ligne. Le collecteur réel n'émet pas encore ces résultats source dans son journal, le scheduler n'est pas branché, et `collect.run()` inscrit actuellement `scheduled_at=None`. La workflow de collecte documentée auparavant n'utilise pas encore ce collecteur. Aucun changement n'active la collecte ou une cadence planifiée.
