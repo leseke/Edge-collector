@@ -133,6 +133,13 @@ class SQLiteContinuityJournalTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "schedule trigger"):
             self.journal.start(self.context, [WINDOW], trigger="workflow_dispatch")
 
+    def test_start_rejects_context_not_present_in_expected_schedule(self):
+        wrong_window = [{**WINDOW, "window_id": "another-window"}]
+        with self.assertRaisesRegex(ValueError, "exactly one expected window"):
+            self.journal.start(self.context, wrong_window, occurred_at=STARTED_AT)
+        self.assertEqual(storage.list_run_events(self.context.run_id), [])
+
+
 
 if __name__ == "__main__":
     unittest.main()
