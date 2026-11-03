@@ -15,6 +15,9 @@ from edge_engine import (load_config, load_portfolio, decide, capital_state,
                          public_summary, assert_no_private_leak)
 from edge_io import atomic_write_json, redact
 from intelligence.source_plan import build_source_plan
+from intelligence.scheduled_run_context import (
+    ScheduledRunContext, validate_scheduled_invocation,
+)
 
 USD_TO_EUR = 0.92
 
@@ -467,18 +470,44 @@ def _run_once():
     }
 
 
-def run():
-    """Persist STARTED before work and FINISHED even when the collector raises."""
-    run_id = "edge-" + os.environ.get("GITHUB_RUN_ID", str(uuid.uuid4()))
-    attempt = os.environ.get("GITHUB_RUN_ATTEMPT")
-    if attempt:
-        run_id += "-attempt-" + attempt
+def run(scheduled_context=None, expected_windows=None):
+    """Persist lifecycle events; scheduled claims must be injected explicitly.
+
+    Manual/local invocations keep scheduled_at=None. A scheduled invocation
+    is accepted only with a validated context and its expected-window registry;
+    no timestamp or window is inferred from process start or GitHub metadata.
+    """
+    github_run_id = os.environ.get("GITHUB_RUN_ID")
+    run_id = "edge-" + (github_run_id or str(uuid.uuid4()))
+    attempt_raw = os.environ.get("GITHUB_RUN_ATTEMPT")
+    if attempt_raw:
+        run_id += "-attempt-" + attempt_raw
+
+    if scheduled_context is None:
+        if expected_windows is not None:
+            raise ValueError("expected_windows requires an explicit scheduled_context")
+        started_payload = {
+            "trigger": os.environ.get("GITHUB_EVENT_NAME", "local"),
+            "scheduled_at": None,
+        }
+    else:
+        if not isinstance(scheduled_context, ScheduledRunContext):
+            raise ValueError("scheduled_context must be a ScheduledRunContext")
+        try:
+            attempt_number = int(attempt_raw or "1")
+        except (TypeError, ValueError) as exc:
+            raise ValueError("GitHub run attempt must be an integer for scheduled context") from exc
+        validate_scheduled_invocation(
+            scheduled_context, expected_windows, run_id, attempt_number
+        )
+        started_payload = {
+            "trigger": "schedule",
+            "scheduled_at": scheduled_context.scheduled_at,
+        }
+
     init_db().close()
     started_at = datetime.now(timezone.utc).isoformat()
-    append_run_event(run_id, "STARTED", {
-        "trigger": os.environ.get("GITHUB_EVENT_NAME", "local"),
-        "scheduled_at": None,
-    }, started_at)
+    append_run_event(run_id, "STARTED", started_payload, started_at)
 
     result = None
     failure = None
