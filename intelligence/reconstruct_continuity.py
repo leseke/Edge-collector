@@ -162,7 +162,12 @@ def reconstruct_windows(expected_windows, run_events, source_outcomes, as_of):
     successful_observations = counts["OBSERVED"] + counts["NO_REACTION_OBSERVED"]
     return {
         "journal_status": "VERIFIED",
-        "continuity_status": "UNKNOWN" if counts["UNKNOWN"] else ("GAP" if counts["MISSED"] else "CONTINUOUS"),
+        "continuity_status": (
+            "UNKNOWN" if counts["UNKNOWN"] else
+            "GAP" if counts["MISSED"] else
+            "DEGRADED" if counts["SOURCE_FAILED"] else
+            "CONTINUOUS"
+        ),
         "as_of": _iso(cut),
         "expected_windows": total,
         "classified_windows": classified,
