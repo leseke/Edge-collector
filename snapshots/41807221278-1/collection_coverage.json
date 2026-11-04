@@ -1,0 +1,422 @@
+{
+  "schema": "edge.mri.collection_coverage.v1",
+  "generated_at": "2026-11-04T09:25:12.167638+00:00",
+  "status": "INCIDENTS_PRESENT",
+  "expected_cadence_hours": 3,
+  "capture_window_tolerance_hours": 6,
+  "observed_inter_run_gaps_over_six_hours": [
+    {
+      "previous_run_observed_at": "2026-10-29T23:21:11.345088+00:00",
+      "next_run_observed_at": "2026-10-30T06:24:09.062383+00:00",
+      "gap_hours": 7.049
+    },
+    {
+      "previous_run_observed_at": "2026-10-30T13:29:48.484498+00:00",
+      "next_run_observed_at": "2026-10-30T22:37:47.198162+00:00",
+      "gap_hours": 9.133
+    },
+    {
+      "previous_run_observed_at": "2026-10-30T22:37:47.198162+00:00",
+      "next_run_observed_at": "2026-10-31T06:14:22.592939+00:00",
+      "gap_hours": 7.61
+    },
+    {
+      "previous_run_observed_at": "2026-10-31T21:50:17.359148+00:00",
+      "next_run_observed_at": "2026-11-01T06:47:59.801000+00:00",
+      "gap_hours": 8.962
+    },
+    {
+      "previous_run_observed_at": "2026-11-01T21:58:22.601249+00:00",
+      "next_run_observed_at": "2026-11-02T06:18:27.518026+00:00",
+      "gap_hours": 8.335
+    },
+    {
+      "previous_run_observed_at": "2026-11-02T06:18:27.518026+00:00",
+      "next_run_observed_at": "2026-11-02T17:09:26.139022+00:00",
+      "gap_hours": 10.85
+    },
+    {
+      "previous_run_observed_at": "2026-11-02T17:09:26.139022+00:00",
+      "next_run_observed_at": "2026-11-02T23:54:11.842545+00:00",
+      "gap_hours": 6.746
+    },
+    {
+      "previous_run_observed_at": "2026-11-02T23:54:11.842545+00:00",
+      "next_run_observed_at": "2026-11-03T06:55:22.126186+00:00",
+      "gap_hours": 7.02
+    },
+    {
+      "previous_run_observed_at": "2026-11-03T06:55:22.126186+00:00",
+      "next_run_observed_at": "2026-11-03T15:16:57.439464+00:00",
+      "gap_hours": 8.36
+    },
+    {
+      "previous_run_observed_at": "2026-11-04T01:26:59.908036+00:00",
+      "next_run_observed_at": "2026-11-04T09:24:34.107127+00:00",
+      "gap_hours": 7.959
+    }
+  ],
+  "missed_targets": [
+    {
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "seller": "LDLC",
+      "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "horizon_hours": 24,
+      "window_start": "2026-10-31T22:37:51.698791+00:00",
+      "window_end": "2026-11-01T04:37:51.698791+00:00",
+      "diagnosis": "NO_ARCHIVED_CAPTURE_RUN_IN_TARGET_WINDOW",
+      "archived_runs_in_window": 0,
+      "source_attempts_in_window": [],
+      "last_success_before": {
+        "snapshot": "41245422467-1",
+        "id": "ldlc_discovered_40744",
+        "observed_at": "2026-10-31T21:50:23.634674+00:00",
+        "status": "OK",
+        "availability": "OUT_OF_STOCK",
+        "price": "12.95",
+        "currency": "EUR",
+        "body_sha256": "b3a40ec5970995649771823442719a1f1b62a8d5a6ad8bb0e0c1457c00eafac1",
+        "error_type": null,
+        "error": null
+      },
+      "first_success_after": {
+        "snapshot": "41282248988-1",
+        "id": "ldlc_discovered_40744",
+        "observed_at": "2026-11-01T06:48:06.117751+00:00",
+        "status": "OK",
+        "availability": "OUT_OF_STOCK",
+        "price": "12.95",
+        "currency": "EUR",
+        "body_sha256": "b3a40ec5970995649771823442719a1f1b62a8d5a6ad8bb0e0c1457c00eafac1",
+        "error_type": null,
+        "error": null
+      },
+      "successful_capture_gap_hours": 8.962,
+      "scheduler_root_cause_proven": false,
+      "missing_outcome_filled": false
+    }
+  ],
+  "latest_archived_or_current_run_at": "2026-11-04T09:24:34.107127+00:00",
+  "scheduler_root_cause_proven": false,
+  "alert_delivery": "REPORT_ONLY_NO_EXTERNAL_MESSAGES",
+  "event_preparation": {
+    "assessed_at": "2026-11-04T09:25:12.167638+00:00",
+    "scope": "POTENTIAL_BASELINES_FOR_FUTURE_EVENTS_NOT_RETROACTIVE_REACTIONS",
+    "maximum_baseline_age_hours": 24,
+    "products": [
+      {
+        "product_id": "lego_10365",
+        "recent_baseline_seller_count": 1,
+        "sources": [
+          {
+            "seller": "LEGO France",
+            "source_url": "https://www.lego.com/fr-fr/product/captain-jack-sparrows-pirate-ship-10365",
+            "status": "NO_VALID_CAPTURE",
+            "successful_distinct_capture_count": 0,
+            "recent_distinct_capture_count": 0,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": null,
+            "potential_baseline_expires_at": null,
+            "recent_max_gap_hours": null,
+            "has_recent_potential_baseline": false,
+            "current_source_status": "FAILED"
+          },
+          {
+            "seller": "La Grande Recre",
+            "source_url": "https://www.lagranderecre.fr/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+            "status": "NO_VALID_CAPTURE",
+            "successful_distinct_capture_count": 0,
+            "recent_distinct_capture_count": 0,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": null,
+            "potential_baseline_expires_at": null,
+            "recent_max_gap_hours": null,
+            "has_recent_potential_baseline": false,
+            "current_source_status": "FAILED"
+          },
+          {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 45,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "joueclub_10365",
+              "observed_at": "2026-11-04T09:24:36.890548+00:00",
+              "price": "349.99",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "81d9a8081b7495f675861a4e4106f4092a3c18f1f5f041f2bed87f1b799d1095"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:36.890548+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_11383",
+        "recent_baseline_seller_count": 2,
+        "sources": [
+          {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 19,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "joueclub_11383",
+              "observed_at": "2026-11-04T09:24:41.247185+00:00",
+              "price": "109.99",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "401b41bb15e91f0d7e74b099f3cbcee71dfef4acab1977b70019f0af577528e7"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:41.247185+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          },
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 33,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_discovered_11383",
+              "observed_at": "2026-11-04T09:24:49.042625+00:00",
+              "price": "104.95",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "32d106a6be3a9e8773cc4aea911bf11307af54b8c32b6167a8ae083e1b6ce6a7"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:49.042625+00:00",
+            "recent_max_gap_hours": 7.961,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_11388",
+        "recent_baseline_seller_count": 1,
+        "sources": [
+          {
+            "seller": "BRICKshop",
+            "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 11,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "brickshop_11388",
+              "observed_at": "2026-11-04T09:24:44.678353+00:00",
+              "price": "599.99",
+              "currency": "EUR",
+              "availability": "OUT_OF_STOCK",
+              "body_sha256": "0ca875918f76a28ab33530c81dbdf4ab888896cdf94f0aa7e7389137fd9c2918"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:44.678353+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_40744",
+        "recent_baseline_seller_count": 1,
+        "sources": [
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 37,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_discovered_40744",
+              "observed_at": "2026-11-04T09:24:47.706922+00:00",
+              "price": "12.95",
+              "currency": "EUR",
+              "availability": "OUT_OF_STOCK",
+              "body_sha256": "909d89971e8dcee4302347968b8c07c1fe19cfc1a790c381b32910368c200361"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:47.706922+00:00",
+            "recent_max_gap_hours": 7.961,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_42179",
+        "recent_baseline_seller_count": 1,
+        "sources": [
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00731483.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 23,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_discovered_42179",
+              "observed_at": "2026-11-04T09:24:50.183149+00:00",
+              "price": "74.95",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "0dc4882274491d7afa2cf74d63a6f66a8fe201dba13f246371624b1ae469357d"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:50.183149+00:00",
+            "recent_max_gap_hours": 7.961,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_42705",
+        "recent_baseline_seller_count": 2,
+        "sources": [
+          {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 19,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "joueclub_42705",
+              "observed_at": "2026-11-04T09:24:42.321510+00:00",
+              "price": "94.99",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "10dff508e0aa12c2e7c4c93694517806ab42deb966d96348bd7b362ccc08ef94"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:42.321510+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          },
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 40,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_discovered_42705",
+              "observed_at": "2026-11-04T09:24:46.389136+00:00",
+              "price": "92.95",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "a0b0ea251e331b14b808a800b48c178dbb00e21572dea4416e74209692904d71"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:46.389136+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_75639",
+        "recent_baseline_seller_count": 2,
+        "sources": [
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00701668.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 44,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_75639",
+              "observed_at": "2026-11-04T09:24:38.603247+00:00",
+              "price": "129.95",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "fd78b1bdbc780d76a540830aa306e259d1ecc0376e0cae0507ac8c586f262931"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:38.603247+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          },
+          {
+            "seller": "King Jouet France",
+            "source_url": "https://www.king-jouet.com/jeu-jouet/jeux-constructions/lego-planchettes/ref-990051-75639-lego-one-piece-bateau-pirate-vogue-merry.htm",
+            "status": "NO_VALID_CAPTURE",
+            "successful_distinct_capture_count": 0,
+            "recent_distinct_capture_count": 0,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": null,
+            "potential_baseline_expires_at": null,
+            "recent_max_gap_hours": null,
+            "has_recent_potential_baseline": false,
+            "current_source_status": "FAILED"
+          },
+          {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 20,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "joueclub_75639",
+              "observed_at": "2026-11-04T09:24:40.144708+00:00",
+              "price": "103.99",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "468f4ada4830574a0807ed259799d66f2dd1f7089df059adfa8c56a91c68a7bd"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:40.144708+00:00",
+            "recent_max_gap_hours": 7.96,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      },
+      {
+        "product_id": "lego_75642",
+        "recent_baseline_seller_count": 1,
+        "sources": [
+          {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00759565.html",
+            "status": "GAPPED_RECENT_SERIES",
+            "successful_distinct_capture_count": 7,
+            "recent_distinct_capture_count": 4,
+            "conflicting_timestamps_excluded": 0,
+            "latest_valid_evidence": {
+              "id": "ldlc_discovered_75642",
+              "observed_at": "2026-11-04T09:24:51.491633+00:00",
+              "price": "53.95",
+              "currency": "EUR",
+              "availability": "IN_STOCK",
+              "body_sha256": "28678d3ff4184aa501d237c76932c9e273f8d5c83d15eef166ae3d7f9da2e82a"
+            },
+            "potential_baseline_expires_at": "2026-11-05T09:24:51.491633+00:00",
+            "recent_max_gap_hours": 7.961,
+            "has_recent_potential_baseline": true,
+            "current_source_status": "OK"
+          }
+        ]
+      }
+    ],
+    "products_with_recent_baseline": 8,
+    "products_with_multiple_baseline_sellers": 3,
+    "buy_signal": false,
+    "predictive_advantage_established": false
+  },
+  "new_incident_count": 0
+}

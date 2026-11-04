@@ -1,0 +1,111 @@
+{
+  "schema": "edge.mri.retail_event_followup.v1",
+  "observed_at": "2026-11-04T09:25:12.061669+00:00",
+  "events": [
+    {
+      "id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_40744",
+      "observation_id": "ldlc_discovered_40744",
+      "seller": "LDLC",
+      "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "occurrence_interval_start": "2026-10-30T13:29:53.789734+00:00",
+      "occurrence_interval_end": "2026-10-30T22:37:51.698791+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "12.95",
+      "detected_price": "12.95",
+      "currency": "EUR",
+      "previous_evidence_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+      "detected_evidence_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+      "latest_observed_at": "2026-11-04T09:24:47.706922+00:00",
+      "latest_price": "12.95",
+      "latest_availability": "OUT_OF_STOCK",
+      "latest_evidence_sha256": "909d89971e8dcee4302347968b8c07c1fe19cfc1a790c381b32910368c200361",
+      "elapsed_observed_hours": 106.782,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 33,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-10-31T22:37:51.698791+00:00",
+          "status": "MISSING_WINDOW_OBSERVATION"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-02T22:37:51.698791+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-02T23:54:20.684738+00:00",
+          "price": "12.95",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "cbcda4634e620b6efb769a25dd4245713bd72a821af044b207c9608072b0302d",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-06T22:37:51.698791+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "family": "OBSERVED_AVAILABILITY_CHANGE",
+      "product_id": "lego_11388",
+      "observation_id": "brickshop_11388",
+      "seller": "BRICKshop",
+      "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "occurrence_interval_start": "2026-11-03T21:07:56.175708+00:00",
+      "occurrence_interval_end": "2026-11-04T01:27:08.120706+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "COMING_SOON",
+      "after": "OUT_OF_STOCK",
+      "before_price": "599.99",
+      "detected_price": "599.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+      "detected_evidence_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+      "latest_observed_at": "2026-11-04T09:24:44.678353+00:00",
+      "latest_price": "599.99",
+      "latest_availability": "OUT_OF_STOCK",
+      "latest_evidence_sha256": "0ca875918f76a28ab33530c81dbdf4ab888896cdf94f0aa7e7389137fd9c2918",
+      "elapsed_observed_hours": 7.96,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 2,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-05T01:27:08.120706+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-07T01:27:08.120706+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-11T01:27:08.120706+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    }
+  ],
+  "excluded_events": [
+    {
+      "id": "864bf65f3d5aa92ed0cf702a1442e02bc898e9a8abe82238cd0c7f02136d986b",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    }
+  ],
+  "scope": "SAME_SOURCE_POST_DETECTION_DISPLAYED_PRICE_AND_DECLARED_STOCK",
+  "causality_proven": false
+}
