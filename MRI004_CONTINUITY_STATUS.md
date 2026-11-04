@@ -192,3 +192,11 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - **État réel :** aucun code du validateur n'a été intégré ; aucun test v2 n'a été exécuté. Le plan et le recalcul Python ne constituent pas une validation CI.
 - Dernier commit de code testé connu inchangé : `d8855adc44332a9a5053dd0a02b26b1686f63d7d`, run `41694975268` (509 tests, 508 passés, 1 ignoré).
 - Aucun changement à `main`, aucun appel fournisseur, aucun secret, aucun scheduler et aucune dépense API.
+
+
+### Complément MRI-004.18-A — vérification croisée des vecteurs
+
+- Les vecteurs de base `run-demo` ont maintenant été recalculés dans deux implémentations indépendantes, Python et JavaScript.
+- Résultats identiques : run_key `9b040e473d10a66e79a716c4ff6f35bd543d18358c1017c3421b4f2d6c96afd3`, event_id `bb1d229746609f259481e8685f82a9b19b274daf38a6e05f9b189e34de66a416`, event_hash `a41cb5fb52e4bc3f079090647e02e204f8a1b4c9e84fa8f79bd5d57f48dd8d90`; canonical JSON identique octet pour octet.
+- Plan mis à jour dans `MRI004_18_VALIDATOR_V2_PLAN.md`, commit `7c18b71ca492d7e2303fd3736caea6c338514ef7`.
+- Cette double concordance valide les formules du vecteur minimal, pas le code d'un validateur ni les payloads complets encore à produire.
