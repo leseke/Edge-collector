@@ -179,3 +179,16 @@ Ne pas activer de planification nocturne et ne pas remplacer le diagnostic manue
 - **État réel :** aucun code v2 n'a été intégré ; aucun test v2 n'a été exécuté ; aucun backend privé n'est provisionné ; aucun scheduler n'est activé. La CI de 509 tests (508 réussis, 1 ignoré) reste celle du dernier commit de code testé `d8855adc44332a9a5053dd0a02b26b1686f63d7d`, run `41694975268`. Le commit `64ea778` est documentaire et n'est pas présenté comme un commit de code testé.
 - Vérification GitHub du 4 novembre 2026 : la branche de travail est actuellement signalée `protected=false`. Il faudra activer des protections adaptées avant de lui confier une fonction d'archive durable. Cela ne constitue pas une protection du journal privé cible.
 - La branche `main` n'a pas été modifiée. Aucun merge, rebase, force-push, secret, appel fournisseur, dépense API ou notification réelle n'a été effectué.
+
+
+## MRI-004.18-A — Plan du validateur v2 (documentation uniquement)
+
+- Nouveau document : `MRI004_18_VALIDATOR_V2_PLAN.md`.
+- Commit du plan : `b9470caaa05e0e7c28c278056c4b088d2195dffd`.
+- Vecteurs STARTED MRI-004.17 recalculés indépendamment en Python : event_id `bb1d229746609f259481e8685f82a9b19b274daf38a6e05f9b189e34de66a416`, event_hash `a41cb5fb52e4bc3f079090647e02e204f8a1b4c9e84fa8f79bd5d57f48dd8d90`. Concordance exacte avec le document v2.
+- run_key calculé pour `run-demo` : `9b040e473d10a66e79a716c4ff6f35bd543d18358c1017c3421b4f2d6c96afd3`. La vérification indépendante dans une seconde implémentation reste à faire.
+- Le plan précise le domaine ASCII canonique, les types entiers stricts, les regex d'identifiants, les horodatages UTC, les payloads STARTED/SOURCE_RESULT/FINISHED, les règles inter-événements, les fonctions pures envisagées, les catégories d'erreur et la matrice de tests.
+- Clarification : la valeur STARTED publiée en MRI-004.17 est un vecteur hash minimal et non un exemple complet du payload STARTED final ; le plan demande des vecteurs complets schedule et manual.
+- **État réel :** aucun code du validateur n'a été intégré ; aucun test v2 n'a été exécuté. Le plan et le recalcul Python ne constituent pas une validation CI.
+- Dernier commit de code testé connu inchangé : `d8855adc44332a9a5053dd0a02b26b1686f63d7d`, run `41694975268` (509 tests, 508 passés, 1 ignoré).
+- Aucun changement à `main`, aucun appel fournisseur, aucun secret, aucun scheduler et aucune dépense API.
