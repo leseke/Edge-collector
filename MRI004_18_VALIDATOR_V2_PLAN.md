@@ -251,3 +251,18 @@ La validation d'un événement individuel ne prouve pas que la chaîne est compl
 - Le commit code testé connu reste `d8855adc44332a9a5053dd0a02b26b1686f63d7d`, CI `41694975268` (509 tests, 508 passés, 1 ignoré).
 - Le code GitHub n'est pas modifié par ce plan.
 - Aucun scheduler, backend privé, secret, appel fournisseur ou dépense n'est activé.
+
+
+## 8. Vérification croisée des vecteurs de base — 4 novembre 2026
+
+Les vecteurs `run-demo` ont été recalculés par deux implémentations indépendantes :
+- Python : `json.dumps(sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)` puis SHA-256 avec les préfixes normatifs.
+- JavaScript : sérialiseur récursif indépendant à clés triées, puis SHA-256 via le module crypto standard.
+
+Résultats identiques dans les deux implémentations :
+- run_key : `9b040e473d10a66e79a716c4ff6f35bd543d18358c1017c3421b4f2d6c96afd3`
+- event_id : `bb1d229746609f259481e8685f82a9b19b274daf38a6e05f9b189e34de66a416`
+- event_hash : `a41cb5fb52e4bc3f079090647e02e204f8a1b4c9e84fa8f79bd5d57f48dd8d90`
+- canonical JSON : octets ASCII strictement identiques.
+
+Cette vérification croisée confirme les formules et le vecteur minimal STARTED. Elle ne constitue pas encore un validateur implémenté, ni une suite de tests du dépôt. Les vecteurs de payloads complets STARTED/SOURCE_RESULT/FINISHED restent à construire et à vérifier.
