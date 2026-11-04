@@ -1,0 +1,24 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "AVAILABILITY_CHANGE",
+      "observation_id": "brickshop_11388",
+      "product_id": "lego_11388",
+      "seller": "BRICKshop",
+      "field": "availability",
+      "before": "COMING_SOON",
+      "after": "OUT_OF_STOCK",
+      "window_start": "2026-11-03T21:07:56.175708+00:00",
+      "window_end": "2026-11-04T01:27:08.120706+00:00",
+      "previous_snapshot_at": "2026-11-03T21:07:46.339793+00:00",
+      "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "evidence_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef"
+    }
+  ]
+}
