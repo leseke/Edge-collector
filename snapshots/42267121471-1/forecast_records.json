@@ -1,0 +1,654 @@
+{
+  "schema": "edge.mri.frozen_forecasts.v1",
+  "generated_at": "2026-11-06T18:03:36.807103+00:00",
+  "records": [
+    {
+      "id": "71877129cf8a830b73a3d7c9980060094b25b3eb0f460a2c24f832f035f5e166",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "created_at": "2026-11-01T08:18:55.287088+00:00",
+      "feature_as_of": "2026-10-30T22:37:51.698791+00:00",
+      "configuration": {
+        "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "product_id": "lego_40744",
+        "as_of": "2026-10-30T22:37:51.698791+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "LDLC",
+        "price": 12.95,
+        "month": 10,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-10-30T11:20:43.294492+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-10-30T11:20:43.294492+00:00",
+            "body_sha256": "fe58894264fac73ac2cacc31de6ce0c57513f53d2b114aedae015e8f3400440a",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:33:04.818197+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:35:36.318095+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T13:29:53.789734+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T22:37:51.698791+00:00",
+            "body_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 24,
+      "target_at": "2026-10-31T22:37:51.698791+00:00",
+      "window_end": "2026-11-01T04:37:51.698791+00:00",
+      "registration_timing": "LATE_REGISTRATION",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": 0,
+      "analogue_evidence": {
+        "horizon_hours": 24,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "f3999e8f46b4c9b18c33a414b6e368e7dd1e1037672dd8e8ea7b02b68c32755c",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "29709f805c9b38e673c5c8642f4036e6d8e17e11e1b181a6e9da8a10ce5aee0b"
+    },
+    {
+      "id": "dac93201cfabc2e59af4c9ace829ff058667cf710d82c9d07ccc55e9aa19b328",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "created_at": "2026-11-01T08:18:55.287088+00:00",
+      "feature_as_of": "2026-10-30T22:37:51.698791+00:00",
+      "configuration": {
+        "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "product_id": "lego_40744",
+        "as_of": "2026-10-30T22:37:51.698791+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "LDLC",
+        "price": 12.95,
+        "month": 10,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-10-30T11:20:43.294492+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-10-30T11:20:43.294492+00:00",
+            "body_sha256": "fe58894264fac73ac2cacc31de6ce0c57513f53d2b114aedae015e8f3400440a",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:33:04.818197+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:35:36.318095+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T13:29:53.789734+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T22:37:51.698791+00:00",
+            "body_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 72,
+      "target_at": "2026-11-02T22:37:51.698791+00:00",
+      "window_end": "2026-11-03T04:37:51.698791+00:00",
+      "registration_timing": "BEFORE_TARGET",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": 0,
+      "analogue_evidence": {
+        "horizon_hours": 72,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "f3999e8f46b4c9b18c33a414b6e368e7dd1e1037672dd8e8ea7b02b68c32755c",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "cdec83fbb5ca88d52ddad2700311e27a46030982057c1e0455a6b51555352180"
+    },
+    {
+      "id": "de30105aad7a8e2436e6e0eb68e37fe19f9f9fc1ce5951e64907b746addf7fa2",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "created_at": "2026-11-01T08:18:55.287088+00:00",
+      "feature_as_of": "2026-10-30T22:37:51.698791+00:00",
+      "configuration": {
+        "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "product_id": "lego_40744",
+        "as_of": "2026-10-30T22:37:51.698791+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "LDLC",
+        "price": 12.95,
+        "month": 10,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-10-30T11:20:43.294492+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-10-30T11:20:43.294492+00:00",
+            "body_sha256": "fe58894264fac73ac2cacc31de6ce0c57513f53d2b114aedae015e8f3400440a",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:33:04.818197+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:35:36.318095+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T13:29:53.789734+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T22:37:51.698791+00:00",
+            "body_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 168,
+      "target_at": "2026-11-06T22:37:51.698791+00:00",
+      "window_end": "2026-11-07T04:37:51.698791+00:00",
+      "registration_timing": "BEFORE_TARGET",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": 0,
+      "analogue_evidence": {
+        "horizon_hours": 168,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "f3999e8f46b4c9b18c33a414b6e368e7dd1e1037672dd8e8ea7b02b68c32755c",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "e086bf7921a04d2c2adab489c6704473d4193ab198bf5a8798fc08b2441073b4"
+    },
+    {
+      "id": "3b70bee219ebbf152704f8526de16e94d598cd985cb4c1aa99ad7460f5c60fc6",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "product_id": "lego_11388",
+      "created_at": "2026-11-04T01:27:27.062993+00:00",
+      "feature_as_of": "2026-11-04T01:27:08.120706+00:00",
+      "configuration": {
+        "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+        "product_id": "lego_11388",
+        "as_of": "2026-11-04T01:27:08.120706+00:00",
+        "family": "OBSERVED_AVAILABILITY_CHANGE",
+        "currency": "EUR",
+        "seller": "BRICKshop",
+        "price": 599.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-01T21:39:28.389701+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-01T21:39:28.389701+00:00",
+            "body_sha256": "93f578ff9e21642bb9be89a4757abc0aade4297769fa58292c1f9d61d1a50d30",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:43:11.461400+00:00",
+            "body_sha256": "9bb18a41e464a2b62abba76c87315eb93082e3b588575a629e06d4ac059ddaf2",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:55:32.777397+00:00",
+            "body_sha256": "318f94e7a20388a3df43ee597d92e6951c141b26982d5ef52f1e7b5c17f45610",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:58:32.517662+00:00",
+            "body_sha256": "4ad66015694704e326f5374aa95ca9879247d4c9a3951d792f4400f08a53a4c9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T17:09:34.717249+00:00",
+            "body_sha256": "389fbd69ce015c2171d7374d9accb99a02eec9cb65cadafa4bc2ae3b2c066361",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T23:54:19.228048+00:00",
+            "body_sha256": "80f0d4169275a4c8149b453e8439b1bf57811320cca3b6494424dc5770a46f33",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T06:55:30.736267+00:00",
+            "body_sha256": "ab14b47a889ae607d7ef83a51f8d42515272906124b9a3c8149e5a054b3326e9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T15:17:08.467511+00:00",
+            "body_sha256": "4ea6fced667b0c6b1914e0148dd1b74dc6b57a116ae5e35d741464d08f76a696",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T21:07:56.175708+00:00",
+            "body_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-04T01:27:08.120706+00:00",
+            "body_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 72,
+      "target_at": "2026-11-07T01:27:08.120706+00:00",
+      "window_end": "2026-11-07T07:27:08.120706+00:00",
+      "registration_timing": "BEFORE_TARGET",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": null,
+      "analogue_evidence": {
+        "horizon_hours": 72,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+          },
+          {
+            "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "63b06001ba2868f09a68a970a45580097c49c8a5b9b83fd3c70bf7ab45d6a1e3",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "e3fc505a3499cb0cfcb342c47a181a651dfdd0e3ac7f30da9bcefca3c9e84f08"
+    },
+    {
+      "id": "6af89c5c17ac67ad0b1ff09b814b490f07051defb4147c7aa3afe3b50ba998e6",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "product_id": "lego_11388",
+      "created_at": "2026-11-04T01:27:27.062993+00:00",
+      "feature_as_of": "2026-11-04T01:27:08.120706+00:00",
+      "configuration": {
+        "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+        "product_id": "lego_11388",
+        "as_of": "2026-11-04T01:27:08.120706+00:00",
+        "family": "OBSERVED_AVAILABILITY_CHANGE",
+        "currency": "EUR",
+        "seller": "BRICKshop",
+        "price": 599.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-01T21:39:28.389701+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-01T21:39:28.389701+00:00",
+            "body_sha256": "93f578ff9e21642bb9be89a4757abc0aade4297769fa58292c1f9d61d1a50d30",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:43:11.461400+00:00",
+            "body_sha256": "9bb18a41e464a2b62abba76c87315eb93082e3b588575a629e06d4ac059ddaf2",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:55:32.777397+00:00",
+            "body_sha256": "318f94e7a20388a3df43ee597d92e6951c141b26982d5ef52f1e7b5c17f45610",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:58:32.517662+00:00",
+            "body_sha256": "4ad66015694704e326f5374aa95ca9879247d4c9a3951d792f4400f08a53a4c9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T17:09:34.717249+00:00",
+            "body_sha256": "389fbd69ce015c2171d7374d9accb99a02eec9cb65cadafa4bc2ae3b2c066361",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T23:54:19.228048+00:00",
+            "body_sha256": "80f0d4169275a4c8149b453e8439b1bf57811320cca3b6494424dc5770a46f33",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T06:55:30.736267+00:00",
+            "body_sha256": "ab14b47a889ae607d7ef83a51f8d42515272906124b9a3c8149e5a054b3326e9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T15:17:08.467511+00:00",
+            "body_sha256": "4ea6fced667b0c6b1914e0148dd1b74dc6b57a116ae5e35d741464d08f76a696",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T21:07:56.175708+00:00",
+            "body_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-04T01:27:08.120706+00:00",
+            "body_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 24,
+      "target_at": "2026-11-05T01:27:08.120706+00:00",
+      "window_end": "2026-11-05T07:27:08.120706+00:00",
+      "registration_timing": "BEFORE_TARGET",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": null,
+      "analogue_evidence": {
+        "horizon_hours": 24,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+          },
+          {
+            "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "63b06001ba2868f09a68a970a45580097c49c8a5b9b83fd3c70bf7ab45d6a1e3",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "05fc5bb147a920427c67be3691017fc257977deea56bb0d1d1cf299240efd131"
+    },
+    {
+      "id": "c85d39614bcfb79cecaee33093ebd5b97877061313d5aa4d775c7dff54416fba",
+      "model": {
+        "id": "1b2a56a3d385c60c721845c9a14701074eaa1f226ffd59dca1c5858286c55ab0",
+        "source_sha256": {
+          "analogue_history.py": "2f750d255ae1f44e5351cf5eabef4ae1711c914050037d32556b195e719e213e",
+          "commercial_reaction_history.py": "8080285fdfd5c1f9e948c20f0cd82fce814fadcc42582032fde5fa5fe3b9de67",
+          "probability_history.py": "61630ab95be4f876e49b268aacf57a4f5daac4e017ba85e679d68584000c61b7",
+          "forecast_history.py": "4ff7768e87f23a6313afa4c76db9080ec16b2155a81e5fe7e8276041db7ae29d"
+        },
+        "target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE_WITHIN_SIX_HOURS",
+        "calibrated_for_future_prediction": false
+      },
+      "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "product_id": "lego_11388",
+      "created_at": "2026-11-04T01:27:27.062993+00:00",
+      "feature_as_of": "2026-11-04T01:27:08.120706+00:00",
+      "configuration": {
+        "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+        "product_id": "lego_11388",
+        "as_of": "2026-11-04T01:27:08.120706+00:00",
+        "family": "OBSERVED_AVAILABILITY_CHANGE",
+        "currency": "EUR",
+        "seller": "BRICKshop",
+        "price": 599.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-01T21:39:28.389701+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-01T21:39:28.389701+00:00",
+            "body_sha256": "93f578ff9e21642bb9be89a4757abc0aade4297769fa58292c1f9d61d1a50d30",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:43:11.461400+00:00",
+            "body_sha256": "9bb18a41e464a2b62abba76c87315eb93082e3b588575a629e06d4ac059ddaf2",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:55:32.777397+00:00",
+            "body_sha256": "318f94e7a20388a3df43ee597d92e6951c141b26982d5ef52f1e7b5c17f45610",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:58:32.517662+00:00",
+            "body_sha256": "4ad66015694704e326f5374aa95ca9879247d4c9a3951d792f4400f08a53a4c9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T17:09:34.717249+00:00",
+            "body_sha256": "389fbd69ce015c2171d7374d9accb99a02eec9cb65cadafa4bc2ae3b2c066361",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T23:54:19.228048+00:00",
+            "body_sha256": "80f0d4169275a4c8149b453e8439b1bf57811320cca3b6494424dc5770a46f33",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T06:55:30.736267+00:00",
+            "body_sha256": "ab14b47a889ae607d7ef83a51f8d42515272906124b9a3c8149e5a054b3326e9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T15:17:08.467511+00:00",
+            "body_sha256": "4ea6fced667b0c6b1914e0148dd1b74dc6b57a116ae5e35d741464d08f76a696",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T21:07:56.175708+00:00",
+            "body_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-04T01:27:08.120706+00:00",
+            "body_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizon_hours": 168,
+      "target_at": "2026-11-11T01:27:08.120706+00:00",
+      "window_end": "2026-11-11T07:27:08.120706+00:00",
+      "registration_timing": "BEFORE_TARGET",
+      "estimate_status": "ABSTAIN_INSUFFICIENT_HISTORY",
+      "estimated_in_stock_probability": null,
+      "sample_count": 0,
+      "eligible_for_prospective_scoring": false,
+      "baseline_in_stock_probability": null,
+      "analogue_evidence": {
+        "horizon_hours": 168,
+        "analogues": [],
+        "exclusions": [
+          {
+            "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+            "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+          },
+          {
+            "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+            "reason": "SELF"
+          }
+        ],
+        "sample_count": 0,
+        "in_stock_count": 0,
+        "minimum_samples": 5,
+        "estimated_in_stock_frequency": null,
+        "binomial_reference_interval_95": null,
+        "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+      },
+      "input_report_sha256": "63b06001ba2868f09a68a970a45580097c49c8a5b9b83fd3c70bf7ab45d6a1e3",
+      "data_kind": "COMPUTED_ESTIMATE_OR_EXPLICIT_ABSTENTION",
+      "buy_signal": false,
+      "record_sha256": "9d9ac32c4d92e42151d56aeb9bbbe60b8e3a7d32e19d809303694f7ebd2cbc06"
+    }
+  ],
+  "created_this_run": 0,
+  "reused_this_run": 6,
+  "policy": "FIRST_ISSUANCE_PER_MODEL_EVENT_HORIZON_IS_IMMUTABLE"
+}
