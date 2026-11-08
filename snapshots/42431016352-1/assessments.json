@@ -1,0 +1,4445 @@
+{
+  "schema": "edge.mri.observed_dossiers.v2",
+  "observed_at": "2026-11-08T00:44:28.714459+00:00",
+  "data_policy": "OBSERVED_INPUTS_WITH_SEPARATE_LABELLED_ESTIMATES_V1",
+  "assessments": [
+    {
+      "id": "assessment_lego_10182",
+      "candidate_id": "lego_10182",
+      "sku": "10182",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10185",
+      "candidate_id": "lego_10185",
+      "sku": "10185",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10190",
+      "candidate_id": "lego_10190",
+      "sku": "10190",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10197",
+      "candidate_id": "lego_10197",
+      "sku": "10197",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10211",
+      "candidate_id": "lego_10211",
+      "sku": "10211",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10218",
+      "candidate_id": "lego_10218",
+      "sku": "10218",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10224",
+      "candidate_id": "lego_10224",
+      "sku": "10224",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10228",
+      "candidate_id": "lego_10228",
+      "sku": "10228",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_10232",
+      "candidate_id": "lego_10232",
+      "sku": "10232",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10243",
+      "candidate_id": "lego_10243",
+      "sku": "10243",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10251",
+      "candidate_id": "lego_10251",
+      "sku": "10251",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10255",
+      "candidate_id": "lego_10255",
+      "sku": "10255",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10260",
+      "candidate_id": "lego_10260",
+      "sku": "10260",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10264",
+      "candidate_id": "lego_10264",
+      "sku": "10264",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10278",
+      "candidate_id": "lego_10278",
+      "sku": "10278",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10297",
+      "candidate_id": "lego_10297",
+      "sku": "10297",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10312",
+      "candidate_id": "lego_10312",
+      "sku": "10312",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10326",
+      "candidate_id": "lego_10326",
+      "sku": "10326",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_10350",
+      "candidate_id": "lego_10350",
+      "sku": "10350",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "4dacb4e30451e2e40c7728ed4686a77b7bc342055538888bedc4487abea80306",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135979",
+          "source_published_at": "2026-11-07T10:00:00+00:00",
+          "title": "Which is the best modular building?",
+          "content_sha256": "3a0acc88afce9a5884a371fb9d2904a6efd6ee27b9eae8ce5acf191bf96dea54"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "revision": 3,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_11227",
+      "candidate_id": "lego_11227",
+      "sku": "11227",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "45889b41b3ef7d9cd8a7c33b4a308b53a56170332916519b8f0d1d5dcbe1a180",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-11227-gabbys-dollhouse-and-doozies-doghouse-january-2027-revealed-us-canada-prices-release-dates-set-images",
+          "source_published_at": "2026-11-03T04:42:28+00:00",
+          "title": "LEGO 11227 Gabby’s Dollhouse and Doozie’s Doghouse January 2027 Revealed: US/Canada Prices, Release Dates & Set Images",
+          "content_sha256": "fc96e1838c642cacc1d3486cac5a317874175b4bc1104a5ea801ed1f62cda4c2"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "133cf8e15f613973a3be53a9fc5222ac761ab764c80625d078a0adf9195976a7",
+      "revision": 1,
+      "first_assessed_at": "2026-11-03T06:56:35.101936+00:00"
+    },
+    {
+      "id": "assessment_lego_11371",
+      "candidate_id": "lego_11371",
+      "sku": "11371",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c260de61fc4f71ae7acd5c9eb7025573ec188637a9b1ee5b0bdc8c5bf90a8637",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135935",
+          "source_published_at": "2026-11-05T14:00:00+00:00",
+          "title": "Poll: Which is your favourite modular building?",
+          "content_sha256": "96ab144feaba5e076be862e51c7a7022d386f337320057b156f69d9ba22292c8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "revision": 2,
+      "first_assessed_at": "2026-11-05T15:35:10.539633+00:00"
+    },
+    {
+      "id": "assessment_lego_11380",
+      "candidate_id": "lego_11380",
+      "sku": "11380",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bc455071395b8588ad9dee408a97ffec54bfb96ba0aedc89a4be330e26aef7e5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135898",
+          "source_published_at": "2026-11-03T12:00:00+00:00",
+          "title": "Mark's Magic display frame for 11380 Road Bike",
+          "content_sha256": "43e6b35d0a4f7cf0e2f8f9c751f1a6ffc2e1e3bc9812e77c9c7b6c7ea28c7b23"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_11380",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743955.html",
+          "price": "112.94",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-03T15:17:30.603131+00:00",
+          "age_hours": 105.45,
+          "fresh_within_24h": false,
+          "shipping_eur": null,
+          "evidence_sha256": "cd40fd9635199d28c356d66526a2b800391b2c74a7c227a7bf002c81e95ddf46",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "NOT_IN_CURRENT_CAPTURE"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "bdc0aef84be737583f64a9a61b4fe073e464f0153fc77a29bad68087db4a6a61",
+      "revision": 3,
+      "first_assessed_at": "2026-11-03T15:18:25.762500+00:00"
+    },
+    {
+      "id": "assessment_lego_11383",
+      "candidate_id": "lego_11383",
+      "sku": "11383",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_11383",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "price": "104.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:19.575443+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "2ae875d5be68d8da6b448a11b9f4f6ae8d37f0579f0cd2fdf3a1fd6138872b73",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "joueclub_11383",
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+          "price": "109.99",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:13.069249+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "3b1857a7773aa5a53388c3fabd8089c908a0d6ab611aedb2e429792f6f10d012",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "0f3656cf306823374e41afc452f99112aac5b481d45ab502a268cec0d393a139",
+      "revision": 37,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_11388",
+      "candidate_id": "lego_11388",
+      "sku": "11388",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "source_published_at": "2026-10-15T13:27:14+00:00",
+          "title": "Ciao, Venice: The LEGO Group floats new Icons set",
+          "content_sha256": "4c9b603ae1afc459d6d4af8d2855318c1f7234a5366b773efc151f46eab5a8a0"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135699",
+          "source_published_at": "2026-10-26T15:00:00+00:00",
+          "title": "11388 Venetian Neighbourhood minifigures",
+          "content_sha256": "d411da50ff593fcccd7e0e45750de8ceac51a443a9f4da608b8b4da933669fc8"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "adfc9dadfac0e82d8d02cd94f842d2894e1561623ba52dd82120b4683a00a336",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135838",
+          "source_published_at": "2026-11-01T05:00:00+00:00",
+          "title": "New sets out now!",
+          "content_sha256": "9b59f1fea3bb01df153f5290220ecb7e6ca65cbbb9d259d80b2c74206c62fb8a"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "brickshop_11388",
+          "seller": "BRICKshop",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "price": "599.99",
+          "currency": "EUR",
+          "availability": "OUT_OF_STOCK",
+          "observed_at": "2026-11-08T00:43:16.298787+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "2a4ff88a35dd2db4c7c2d8f0f9f60560bfde23bd683f54267a908f68c1530015",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "BRICKshop",
+            "site_origin": "https://www.brickshop.eu",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "PUBLISHED_RECOMMENDED_PRICE_EUR",
+            "value": "499.99",
+            "currency": "EUR",
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "c7621a5d9d9b18a287d722be398bdead4c0318d8688064bf8d453d65d3862aa8",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_EARLY_ACCESS",
+            "date": "2026-11-01",
+            "membership_required": "LEGO Insiders"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "c7621a5d9d9b18a287d722be398bdead4c0318d8688064bf8d453d65d3862aa8",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_GENERAL_RELEASE",
+            "date": "2026-11-04"
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "c7621a5d9d9b18a287d722be398bdead4c0318d8688064bf8d453d65d3862aa8",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_LINKED_GIFT",
+            "gift_sku": "40898",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "c7621a5d9d9b18a287d722be398bdead4c0318d8688064bf8d453d65d3862aa8",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        }
+      ],
+      "missing_data": [
+        "DELIVERED_PRICE_UNKNOWN",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "SOME_PRIMARY_CLAIMS_NOT_RECHECKED",
+        "FRENCH_CATALOGUE_PRICE_NOT_RECHECKED",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_PARTIALLY_RECHECKED",
+        "observed_at": "2026-11-08T00:43:41.608813+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "event_phase": "SOURCE_DATE_WINDOW",
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "secondary_market_evidence": {
+        "observed_at": "2026-11-08T00:43:43.001264+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [],
+        "one_time_baseline": [
+          {
+            "sku": "11388",
+            "observed_at": "2026-10-31T11:58:06.762814+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+11388",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_168794982887",
+                "listing_id": "168794982887",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO Icons Venetian Neighborhood (11388)",
+                "url": "https://www.ebay.ie/itm/168794982887",
+                "asking_price_eur": "434.37",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "denheartstring2012 98.6% positive (1K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "28.71",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_257823646231",
+                "listing_id": "257823646231",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO Icons #11388 Venetian Neighbourhood PRE-ORDER will post 01/11",
+                "url": "https://www.ebay.ie/itm/257823646231",
+                "asking_price_eur": "539.96",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided starlibrarian77 100% positive (495)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "50.00",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_198717225513",
+                "listing_id": "198717225513",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO #11388 Icons Venetian Neighborhood: Brand New in Box: PREORDER SHIPS 11/4",
+                "url": "https://www.ebay.ie/itm/198717225513",
+                "asking_price_eur": "564.47",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "maxwell-007 100% positive (3.8K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "81.30",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              },
+              {
+                "id": "ebay_237142793559",
+                "listing_id": "237142793559",
+                "product_id": "lego_11388",
+                "sku": "11388",
+                "title": "LEGO ICONS 11388 QUARTIERE VENEZIANO",
+                "url": "https://www.ebay.ie/itm/237142793559",
+                "asking_price_eur": "593.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "cdpumi 99% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "40.00",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.762814+00:00"
+              }
+            ],
+            "source_body_sha256": "34f42d28edc002a580de3dd1616de906eedde8e6412a840ec0c201ad5bcebd3d",
+            "observed_matches": 35,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 31,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "83a99fc65f6a08796ba2d188a704613ea3e5ebbeee45870eb7db5a8b8280edb1",
+      "revision": 33,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_11505",
+      "candidate_id": "lego_11505",
+      "sku": "11505",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "10c1134d0c185db657146babcd4e9083d45729ec65eff74c017d610fa50d4496",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135941",
+          "source_published_at": "2026-11-06T00:00:01+00:00",
+          "title": "First images of 2027 LEGO Botanicals sets!",
+          "content_sha256": "d886b107e6d866b764a4b29e4fe1b217f212819384ddf00a31a261274c0b0298"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_11505",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00749822.html",
+          "price": "74.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-06T02:32:43.069518+00:00",
+          "age_hours": 46.2,
+          "fresh_within_24h": false,
+          "shipping_eur": null,
+          "evidence_sha256": "974345a6bf3712748e3a2d6b26d8d449c4cf29a68a030488c821cd14cd1e167c",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "NOT_IN_CURRENT_CAPTURE"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "1f7b01d11e67e0f3550b1b3c56a17fae4f03e44fb911c236272e89c5af165f9e",
+      "revision": 3,
+      "first_assessed_at": "2026-11-06T02:33:18.877185+00:00"
+    },
+    {
+      "id": "assessment_lego_11515",
+      "candidate_id": "lego_11515",
+      "sku": "11515",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c16f037f35f10990fe60c5cd1416cac309c1586ef6a58526aa881152f025cb36",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-upcoming-lego-botanical-january-2027-sets-revealed-11515-11516-11519-release-dates-us-canada-prices-set-images",
+          "source_published_at": "2026-11-06T19:44:27+00:00",
+          "title": "Three Upcoming LEGO Botanical January 2027 Sets Revealed (11515 11516 11519): Release Dates, US/Canada Prices & Set Images",
+          "content_sha256": "a9d83281d3be0667a8c6998a9db2f6ca53b3e8e1c2525bb638a0b9b1f3e9c92d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874",
+      "revision": 1,
+      "first_assessed_at": "2026-11-06T23:15:37.914503+00:00"
+    },
+    {
+      "id": "assessment_lego_11516",
+      "candidate_id": "lego_11516",
+      "sku": "11516",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c16f037f35f10990fe60c5cd1416cac309c1586ef6a58526aa881152f025cb36",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-upcoming-lego-botanical-january-2027-sets-revealed-11515-11516-11519-release-dates-us-canada-prices-set-images",
+          "source_published_at": "2026-11-06T19:44:27+00:00",
+          "title": "Three Upcoming LEGO Botanical January 2027 Sets Revealed (11515 11516 11519): Release Dates, US/Canada Prices & Set Images",
+          "content_sha256": "a9d83281d3be0667a8c6998a9db2f6ca53b3e8e1c2525bb638a0b9b1f3e9c92d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874",
+      "revision": 1,
+      "first_assessed_at": "2026-11-06T23:15:37.914503+00:00"
+    },
+    {
+      "id": "assessment_lego_11519",
+      "candidate_id": "lego_11519",
+      "sku": "11519",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "10c1134d0c185db657146babcd4e9083d45729ec65eff74c017d610fa50d4496",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135941",
+          "source_published_at": "2026-11-06T00:00:01+00:00",
+          "title": "First images of 2027 LEGO Botanicals sets!",
+          "content_sha256": "d886b107e6d866b764a4b29e4fe1b217f212819384ddf00a31a261274c0b0298"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "c16f037f35f10990fe60c5cd1416cac309c1586ef6a58526aa881152f025cb36",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-upcoming-lego-botanical-january-2027-sets-revealed-11515-11516-11519-release-dates-us-canada-prices-set-images",
+          "source_published_at": "2026-11-06T19:44:27+00:00",
+          "title": "Three Upcoming LEGO Botanical January 2027 Sets Revealed (11515 11516 11519): Release Dates, US/Canada Prices & Set Images",
+          "content_sha256": "a9d83281d3be0667a8c6998a9db2f6ca53b3e8e1c2525bb638a0b9b1f3e9c92d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "bcaa73c9fa2628566a1bb79e60567bfbd4a9278830273f5602dca5dfab156a2c",
+      "revision": 2,
+      "first_assessed_at": "2026-11-06T02:33:18.877185+00:00"
+    },
+    {
+      "id": "assessment_lego_11522",
+      "candidate_id": "lego_11522",
+      "sku": "11522",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "40585808fcecc7be14d1d54147f28d96b39b1846f5888fdf3347598fae6a6826",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-botanical-11522-perfectly-pastel-flower-bouquet-february-2027-set-revealed-release-dates-us-canada-prices-set-images-info",
+          "source_published_at": "2026-11-06T19:49:03+00:00",
+          "title": "LEGO Botanical 11522 Perfectly Pastel Flower Bouquet February 2027 Set Revealed: Release Dates, US/Canada Prices & Set Images Info",
+          "content_sha256": "8b0024e07d6de7a6134d20d11c2fec8e368468f65d8cd2c38eb39d1e4375c20c"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "689af5b0c76cc2c518b534935139b81314b3a985f804ee2cc45fe1fa27dabf9e",
+      "revision": 1,
+      "first_assessed_at": "2026-11-06T23:15:37.914503+00:00"
+    },
+    {
+      "id": "assessment_lego_11532",
+      "candidate_id": "lego_11532",
+      "sku": "11532",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_11533",
+      "candidate_id": "lego_11533",
+      "sku": "11533",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_11534",
+      "candidate_id": "lego_11534",
+      "sku": "11534",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_11535",
+      "candidate_id": "lego_11535",
+      "sku": "11535",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_11536",
+      "candidate_id": "lego_11536",
+      "sku": "11536",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_11537",
+      "candidate_id": "lego_11537",
+      "sku": "11537",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0431bd6b6131da78e913dd6882afc44ebd6d038a9b2fd4fe107b4374774708a6",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/six-lego-botanical-mini-flower-january-2027-sets-revealed-11537-11536-11535-11534-11533-11532-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-07T00:07:25+00:00",
+          "title": "Six LEGO Botanical Mini Flower January 2027 Sets Revealed (11537 11536 11535 11534 11533 11532): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "410107c1d53eb9f5fe3645f30bb764a4608353b733575ef8ef5a02bee95f84a8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T02:55:53.967405+00:00"
+    },
+    {
+      "id": "assessment_lego_21065",
+      "candidate_id": "lego_21065",
+      "sku": "21065",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "a183d58cdfd4c3118e6a29f840b66430e0a21c41c806313c794064365efb4c97",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/the-brand-new-architecture-sagrada-familia-november-2026-lego-set-is-already-sold-out",
+          "source_published_at": "2026-11-05T18:24:37+00:00",
+          "title": "The Brand-New Architecture Sagrada Familia November 2026 LEGO Set is Already Sold Out",
+          "content_sha256": "b26a90a4dc46048ac8120928eee48fbb91ffadb4c14f87a3e246c7350168a596"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "29b303f2f9b0914a83de59113f0ff3e6744fb044186d949d0684c90a8bfd97c4",
+      "revision": 1,
+      "first_assessed_at": "2026-11-05T22:05:55.592551+00:00"
+    },
+    {
+      "id": "assessment_lego_21359",
+      "candidate_id": "lego_21359",
+      "sku": "21359",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "source_published_at": "2026-10-25T14:00:00+00:00",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "fb779a402eaf837136851ed163f1c554e531896a3b96be30ee015ad40c38e446",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_21375",
+      "candidate_id": "lego_21375",
+      "sku": "21375",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "ab130e24dd97681405d4e8abbcec3969f837d9f7ab8688245fe10bd2f26755a6",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/november/first-ever-lego-set-featuring-godzilla",
+          "source_published_at": "2026-11-03T09:39:28+00:00",
+          "title": "The King of the Monsters awakens: First-ever LEGO® set featuring Godzilla from Legendary’s Monsterverse® unveiled",
+          "content_sha256": "4e7267a37c498e592e6dd0e7f5f2d88fd989f50480e6797ce6eee839a12ceff6"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1e862ed567d54b9f649fc0cf9c94b4a125b12310298ac5fa3d44f2d13aecb7e4",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135900",
+          "source_published_at": "2026-11-03T14:00:00+00:00",
+          "title": "21375 Godzilla, the biggest ever LEGO Ideas set, revealed!",
+          "content_sha256": "3e4839931bb64b6816617905716934ba29611b6fece6c36c200cbf4f92192343"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "9ce15d383788420a15938c552815419410547eca440208e992042b6114d34425",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/two-lego-ideas-godzilla-sets-gwp-for-november-2026-black-friday-revealed-us-canada-prices-release-dates-set-images",
+          "source_published_at": "2026-11-03T18:59:39+00:00",
+          "title": "Two LEGO IDEAS Godzilla Sets & GWP for November 2026 Black Friday Revealed (21375 40888): US/Canada Prices, Release Dates & Set Images",
+          "content_sha256": "2b946f256472e3c2af753a8a639e8793cc58253c029e88660ab83b9baecaa311"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f320a35d2e320b7df2c4047006bcca44002ef8139a0590cc2dce17ad214979d4",
+      "revision": 2,
+      "first_assessed_at": "2026-11-03T15:18:25.762500+00:00"
+    },
+    {
+      "id": "assessment_lego_30762",
+      "candidate_id": "lego_30762",
+      "sku": "30762",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b5dd982cc286affa5c47ba181c573f89bd7444cfe20ecedd3435c5936603a06b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135188",
+          "source_published_at": "2026-10-22T13:00:00+00:00",
+          "title": "Review: 30762 Retro Video Game Batman",
+          "content_sha256": "20cedd9c60db9df899f33cf4caa999f6877032ef73792f1af602b6427d9db274"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "d1ef3a94cbe9170bde4bfb89a5b4f4803cbc4ae269bb6e0ea24503dce6443ea1",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_31167",
+      "candidate_id": "lego_31167",
+      "sku": "31167",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "source_published_at": "2026-10-30T14:00:00+00:00",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T22:38:02.438974+00:00"
+    },
+    {
+      "id": "assessment_lego_40744",
+      "candidate_id": "lego_40744",
+      "sku": "40744",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_40744",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+          "price": "12.95",
+          "currency": "EUR",
+          "availability": "OUT_OF_STOCK",
+          "observed_at": "2026-11-08T00:43:18.615894+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "255fdb7f4dead832ec3c99f7a9dce2d62c7c5c20c37ad261b8dbe9edb62c01b8",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f49266769368d641296f9c98d2a857f8498e647c42d8fc7aaae3cbe976c01acf",
+      "revision": 16,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40862",
+      "candidate_id": "lego_40862",
+      "sku": "40862",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8b476301e6bbe9a4ee8ab0a1dc1a0d4a9bc5350a3822e35a19ff4c6ad6e89f86",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135271",
+          "source_published_at": "2026-10-23T13:00:00+00:00",
+          "title": "Quick look: 40862 Holiday Ornament Selection 2",
+          "content_sha256": "69669f0f3e1adbd93b67de9134d6a729b3a68910933f86736dab917783eb7f4d"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "ca436db114f4dceb648c7e4af625288e8e999d34675e56334115dcc14a6780d0",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40866",
+      "candidate_id": "lego_40866",
+      "sku": "40866",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db759db0c55e673b727414d4116c9f4b29add0e2f62bc9aee7cf570bf7b1d3c7",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135272",
+          "source_published_at": "2026-10-20T14:00:00+00:00",
+          "title": "Review: 40866 Santa's Holiday Sleigh Adventure",
+          "content_sha256": "d62de42f43dcad5fc1ac8ac024bdec3d8089634bf8b05ff8263c05ac03c61c00"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "c1980c37413efcf1ad8131767904e8c4528bf829e0baa4ec2fe12e4520a64d0e",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40874",
+      "candidate_id": "lego_40874",
+      "sku": "40874",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "3217d583ccfa9487b8ae30a76c82e71dce5961bb330717296b787af427e0b73e",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135696",
+          "source_published_at": "2026-11-01T16:30:00+00:00",
+          "title": "Review: 40874 Santa's Holiday Countdown",
+          "content_sha256": "76c838df01802fefdd7871e1dddac008986ed0cd1c95b9a54407620b938e2396"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "ff7fa09137b166c7d65b856fc3b4b4821405f12a7b5bede66bfa2d2811bff626",
+      "revision": 1,
+      "first_assessed_at": "2026-11-01T19:46:02.446078+00:00"
+    },
+    {
+      "id": "assessment_lego_40888",
+      "candidate_id": "lego_40888",
+      "sku": "40888",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "9ce15d383788420a15938c552815419410547eca440208e992042b6114d34425",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/two-lego-ideas-godzilla-sets-gwp-for-november-2026-black-friday-revealed-us-canada-prices-release-dates-set-images",
+          "source_published_at": "2026-11-03T18:59:39+00:00",
+          "title": "Two LEGO IDEAS Godzilla Sets & GWP for November 2026 Black Friday Revealed (21375 40888): US/Canada Prices, Release Dates & Set Images",
+          "content_sha256": "2b946f256472e3c2af753a8a639e8793cc58253c029e88660ab83b9baecaa311"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "5ebd041f01cb00ccc29c7be790e08645e10cbad7784ee7e3c1aeb2f634578324",
+      "revision": 1,
+      "first_assessed_at": "2026-11-03T21:09:07.352174+00:00"
+    },
+    {
+      "id": "assessment_lego_40889",
+      "candidate_id": "lego_40889",
+      "sku": "40889",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "db217c59d7480c1fa9438b10519b3c3cba2a6d2ea05285e1fd08dad80bbf3c79",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135605",
+          "source_published_at": "2026-10-24T13:30:00+00:00",
+          "title": "Review: 40889 Build, Paint and Play!",
+          "content_sha256": "01e3616768494fc3dc533a85b0e2b8d48ee27e795e6becb514e61027d12ea7c9"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "54369a8e82d599f55c44d750d71b747e7aee9c6809c77b1e980b1a211b8cd802",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135604",
+          "source_published_at": "2026-10-23T07:00:00+00:00",
+          "title": "LEGO Ideas 40889 Build, Paint and Play revealed!",
+          "content_sha256": "446afb4eb11bc27ca0fe46093d7a4e5909713321578147353bd375c55fc9c649"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_ELIGIBILITY",
+            "region": "FR",
+            "start_date": "2026-10-28",
+            "end_date": "2026-11-08",
+            "minimum_spend_eur": "130.00",
+            "eligible_goods": "LEGO merchandise",
+            "limit_per_household": 1,
+            "while_stocks_last": true,
+            "standalone_purchase_allowed_under_promotion": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "4f3f957973186ce5ecebd5c3c04e75485504a627827bc016934290d21b7dbbf4",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "APPROXIMATE_PROMOTIONAL_VALUE",
+            "value": "19.99",
+            "currency": "EUR",
+            "resale_value_verified": false,
+            "executable_offer_verified": false
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "4f3f957973186ce5ecebd5c3c04e75485504a627827bc016934290d21b7dbbf4",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_fr_40889_terms",
+            "kind": "GIFT_RETURN_REQUIRED_WITH_ELIGIBLE_RETURN",
+            "value": true
+          },
+          "source_url": "https://www.lego.com/fr-fr/page/lego-offers-promotions/latest-terms-and-conditions",
+          "scope": "FRENCH_PROMOTION_TERMS",
+          "evidence_sha256": "4f3f957973186ce5ecebd5c3c04e75485504a627827bc016934290d21b7dbbf4",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        }
+      ],
+      "missing_data": [
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-11-08T00:43:41.608813+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": true
+      },
+      "event_phase": "SOURCE_DATE_WINDOW",
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "secondary_market_evidence": {
+        "observed_at": "2026-11-08T00:43:43.001264+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [
+          {
+            "id": "ebay_198752609812_review_20261031",
+            "sku": "40889",
+            "url": "https://www.ebay.es/itm/198752609812",
+            "label": "Annonce 40889 du vendeur tuttolego3",
+            "asking_price_eur": "39.50",
+            "displayed_shipping_eur": "12.00",
+            "shipping_destination_context": "28001 Spain",
+            "france_delivery_verified": false,
+            "delivered_price_fr_eur": null,
+            "seller_declared_metrics": "100% positive, 1529 feedback entries displayed",
+            "seller_reliability_verified": false,
+            "completed_sale_verified": false,
+            "interpretation": "39,50 € demandés. Les 12 € de port affichés concernent le contexte espagnol de la page ; aucun total livré en France n'est établi. Les métriques du vendeur sont déclaratives et ne prouvent pas l'authenticité du lot."
+          },
+          {
+            "id": "ebay_287685264496_review_20261031",
+            "sku": "40889",
+            "url": "https://www.ebay.es/itm/287685264496",
+            "label": "Annonce 40889 marquée vendue, titre de prévente",
+            "displayed_price_eur": "44.90",
+            "sold_marker_observed": true,
+            "evidence_class": "SOLD_LISTING_MARKER_WITH_DISPLAYED_PRICE",
+            "settled_transaction_verified": false,
+            "realized_transaction_price_verified": false,
+            "presale_claim": true,
+            "france_delivery_verified": false,
+            "interpretation": "La page indique une annonce vendue le 29 octobre et affiche 44,90 €. Cela constitue un signal de vente déclarée par la plateforme, pas une preuve du prix encaissé, du paiement, de la livraison ou de l'absence d'annulation. Ce point ne sert pas de médiane ni de recette de revente."
+          }
+        ],
+        "one_time_baseline": [
+          {
+            "sku": "40889",
+            "observed_at": "2026-10-31T11:58:06.764081+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40889",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_940052539843",
+                "listing_id": "940052539843",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO Build Paint and Play Set 40889 - Brand New",
+                "url": "https://www.ebay.ie/itm/940052539843",
+                "asking_price_eur": "23.43",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "eddiemcdoodle 100% positive (560)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "16.28",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_206664677110",
+                "listing_id": "206664677110",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO 40889 Ideas Build, Paint and Play! Promotional GWP SEALED",
+                "url": "https://www.ebay.ie/itm/206664677110",
+                "asking_price_eur": "31.51",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "bhowarth0201 100% positive (2.2K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "31.82",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_198759348541",
+                "listing_id": "198759348541",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO IDEAS 40889 - Build Paint and Play! - NEW",
+                "url": "https://www.ebay.ie/itm/198759348541",
+                "asking_price_eur": "33.79",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "Customs services and international tracking provided skunkarella 100% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "18.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_900051837302",
+                "listing_id": "900051837302",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing 🌟✅️PRE ORDER Lego 40889 GWP Ideas Build Paint And Play - New/sealed",
+                "url": "https://www.ebay.ie/itm/900051837302",
+                "asking_price_eur": "33.80",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided timelesskicksco 100% positive (119)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "18.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_860100156423",
+                "listing_id": "860100156423",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing LEGO IDEAS (40889 ) Build Paint and Play Spaceman GWP - PRESALE",
+                "url": "https://www.ebay.ie/itm/860100156423",
+                "asking_price_eur": "34.80",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "Customs services and international tracking provided athp2014_7 99.9% positive (1.5K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "19.03",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              },
+              {
+                "id": "ebay_366772587289",
+                "listing_id": "366772587289",
+                "product_id": "lego_40889",
+                "sku": "40889",
+                "title": "New listing Lego 40889 Ideas Build Paint and Play - Brand New Sealed",
+                "url": "https://www.ebay.ie/itm/366772587289",
+                "asking_price_eur": "36.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "Customs services and international tracking provided heba-701 99.9% positive (1.6K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "19.08",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764081+00:00"
+              }
+            ],
+            "source_body_sha256": "e8d56f4669250f57d2091a9611c7a5321cc1082a2b1f14bb7cb521f64a31a13b",
+            "observed_matches": 60,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 4,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "d29b0fd78ce44331aad028886365a565ea66d72aa47d751021512665022b0a88",
+      "revision": 48,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40898",
+      "candidate_id": "lego_40898",
+      "sku": "40898",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "source_published_at": "2026-10-27T14:00:00+00:00",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "adfc9dadfac0e82d8d02cd94f842d2894e1561623ba52dd82120b4683a00a336",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135838",
+          "source_published_at": "2026-11-01T05:00:00+00:00",
+          "title": "New sets out now!",
+          "content_sha256": "9b59f1fea3bb01df153f5290220ecb7e6ca65cbbb9d259d80b2c74206c62fb8a"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "764d3d02850b2f94a48b74700f3d00251939f9c26cfecbb4fdead0a48b2d1115",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-icons-venetian-water-taxi-gwp-gift-with-purchase-promotion-now-live-november-1-8-2026",
+          "source_published_at": "2026-11-01T04:00:00+00:00",
+          "title": "LEGO Icons Venetian Water Taxi GWP Gift with Purchase Promotion Now Live: November 1-8, 2026",
+          "content_sha256": "803a73bfa1f3bb2f576c490bf3b409dc7dcd458db424171e5e7e9da3929fe326"
+        },
+        {
+          "type": "VERIFIED_PRIMARY_CLAIM",
+          "claim": {
+            "source_id": "lego_venice_press",
+            "kind": "ANNOUNCED_CONDITIONAL_GIFT",
+            "required_purchase_sku": "11388",
+            "start_date": "2026-11-01",
+            "end_date": "2026-11-08",
+            "while_stocks_last": true,
+            "france_complete_terms_verified": false
+          },
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "scope": "MANUFACTURER_PRESS_RELEASE_NOT_FULL_FRENCH_TERMS",
+          "evidence_sha256": "c7621a5d9d9b18a287d722be398bdead4c0318d8688064bf8d453d65d3862aa8",
+          "observed_at": "2026-11-08T00:43:41.608813+00:00"
+        }
+      ],
+      "missing_data": [
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "NO_RECENT_RETAIL_QUOTE",
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "FRANCE_COMPLETE_GIFT_TERMS_UNCONFIRMED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "primary_verification": {
+        "status": "REVIEWED_CLAIMS_RECHECKED",
+        "observed_at": "2026-11-08T00:43:41.608813+00:00",
+        "reviewed_at": "2026-10-30T11:27:34Z",
+        "full_local_terms_verified": false
+      },
+      "linked_opportunity_group": "venice_launch_2026_11",
+      "event_phase": "SOURCE_DATE_WINDOW",
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "secondary_market_evidence": {
+        "observed_at": "2026-11-08T00:43:43.001264+00:00",
+        "status": "FAILED",
+        "listings": [],
+        "reviewed_historical_evidence": [],
+        "one_time_baseline": [
+          {
+            "sku": "40898",
+            "observed_at": "2026-10-31T11:58:06.764713+00:00",
+            "url": "https://www.ebay.ie/sch/i.html?_nkw=LEGO+40898",
+            "status": "OK",
+            "listings": [
+              {
+                "id": "ebay_168794961824",
+                "listing_id": "168794961824",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "New listing LEGO Icons Venice - Venetian Water Taxi (40898)",
+                "url": "https://www.ebay.ie/itm/168794961824",
+                "asking_price_eur": "107.74",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "denheartstring2012 98.6% positive (1K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "15.38",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_407325094789",
+                "listing_id": "407325094789",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO 40898 Icons Venetian Water Taxi Gwp",
+                "url": "https://www.ebay.ie/itm/407325094789",
+                "asking_price_eur": "109.00",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "dh2010australien 99.4% positive (1.7K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "12.82",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_920064330765",
+                "listing_id": "920064330765",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO VENETIAN WATER TAXI (40898) VERY DETAILED SET - NISB [will ship Nov 1]",
+                "url": "https://www.ebay.ie/itm/920064330765",
+                "asking_price_eur": "154.45",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "lego-a-holic 100% positive (465)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "30.63",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_920042769255",
+                "listing_id": "920042769255",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO Icons Venetian Water Taxi 40898 NEW GWP SEALED EXCLUSIVE PRESALE",
+                "url": "https://www.ebay.ie/itm/920042769255",
+                "asking_price_eur": "156.81",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "PRESALE_CLAIM",
+                "seller_declared_text": "golfballgirl22 98.6% positive (1.4K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "37.03",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_407316455325",
+                "listing_id": "407316455325",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "HOT !LEGO Icons 40898 Venetian Water Taxi",
+                "url": "https://www.ebay.ie/itm/407316455325",
+                "asking_price_eur": "167.98",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "yosiciljj 100% positive (1.4K)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "5.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              },
+              {
+                "id": "ebay_820209429944",
+                "listing_id": "820209429944",
+                "product_id": "lego_40898",
+                "sku": "40898",
+                "title": "LEGO Icons Venetian Neighbourhood Venetian Water Taxi 40898 SEALED EXCLUSIVE GWP",
+                "url": "https://www.ebay.ie/itm/820209429944",
+                "asking_price_eur": "172.25",
+                "evidence_class": "SEARCH_CARD_ASK",
+                "sale_price_verified": false,
+                "currency_basis": "SEARCH_DISPLAY_EUR_NOT_VERIFIED_SETTLEMENT_CURRENCY",
+                "completed_sale_verified": false,
+                "fulfilment": "NOT_VERIFIED",
+                "seller_declared_text": "strayfloatstore 100% positive (139)",
+                "seller_reliability_verified": false,
+                "displayed_shipping_eur": "35.99",
+                "shipping_quote_destination": "UNCONFIRMED_SEARCH_CONTEXT",
+                "france_delivery_verified": false,
+                "delivered_price_fr_eur": null,
+                "individual_listing_verified": false,
+                "exclusions": [],
+                "buy_signal": false,
+                "observed_at": "2026-10-31T11:58:06.764713+00:00"
+              }
+            ],
+            "source_body_sha256": "1f32891e89c726ec09120f725f31c78884d55522941116b10a2968503d024657",
+            "observed_matches": 6,
+            "retained_limit": 6,
+            "sampling": "LOWEST_SIX_NON_EXCLUDED_ASKS_IN_CAPTURE_NOT_EXHAUSTIVE_MARKET",
+            "excluded_matches": 0,
+            "source_raw_html_in_snapshot": false
+          }
+        ],
+        "one_time_baseline_refreshed_by_workflow": false,
+        "france_delivered_offers_verified": 0,
+        "realized_transaction_prices_verified": 0
+      },
+      "semantic_sha256": "b67f195f133b65f0589c1674c1eff05ecc7337858973903e84020848d9470ee7",
+      "revision": 11,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40913",
+      "candidate_id": "lego_40913",
+      "sku": "40913",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b1dcf45e765438b37d8bed1fce54c5e9f50e889921d4478ffa8be368ccf20142",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135481",
+          "source_published_at": "2026-10-20T04:00:00+00:00",
+          "title": "[US] Brickset member offer: Free Vintage Parade Car at LEGO.com",
+          "content_sha256": "87d109bf4895a3c6b8ec4c3d01fe6a0ad492b29daa27705b99cc03049e2c7ce1"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "87eb668abe7f8d51f1f2aecbf8478129475234fb462e34d81895ca9a71ddac57",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_40976",
+      "candidate_id": "lego_40976",
+      "sku": "40976",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "cf638b9358fa07456c1dd8f1e0d62ee97c41e64cac91fd17167880f311fe4bc8",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135948",
+          "source_published_at": "2026-11-06T05:00:00+00:00",
+          "title": "LEGO Prosperity Lion gift-with-purchase announced!",
+          "content_sha256": "060fd78d12eb78dbe7bce5b352c240bb6bad6986b1319d8134502991ee28d3b6"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "3773fae9d29517b5e5c7827dacd382f70e8b5c7d112a75ad1ad3415127930bdc",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/two-lego-spring-festival-january-2027-sets-revealed-80122-auspicious-pixiu-under-fortune-tree-and-40976-prosperity-lion-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-06T07:23:04+00:00",
+          "title": "Two LEGO Spring Festival January 2027 Sets Revealed (80122 Auspicious Pixiu Under Fortune Tree and 40976 Prosperity Lion): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "8e6480a6bfc0ebe7c550304d1dedd302384f872e01b03e32ebdd419741b94527"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "0b9aa3a346a85054bc1d4b5ae9db8cbdcd2d47d59c1e7bfc1476da9ab90207d5",
+      "revision": 2,
+      "first_assessed_at": "2026-11-06T11:02:48.222315+00:00"
+    },
+    {
+      "id": "assessment_lego_41392",
+      "candidate_id": "lego_41392",
+      "sku": "41392",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42179",
+      "candidate_id": "lego_42179",
+      "sku": "42179",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "7a3d0b110966249290f3da778d906023534b7c27af0784aa757f58a02e0be0ad",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135844",
+          "source_published_at": "2026-11-01T00:00:01+00:00",
+          "title": "Technic 42254 Solar System Planets in Orbit official images!",
+          "content_sha256": "7363b4004618ada899ac17384a8033909a485d43e0bcac75a7d0b5797e1e0dab"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_42179",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00731483.html",
+          "price": "74.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:20.539674+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "d0c778af9fa070d4e384f3990da53ec14cb6c1abd56f5a6fbf1918cdc9abe3f3",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "4361a3f1ba386712a742785863038f889a2080bbd51f47298e86dec7bd69fa4d",
+      "revision": 11,
+      "first_assessed_at": "2026-11-01T06:49:05.253723+00:00"
+    },
+    {
+      "id": "assessment_lego_42254",
+      "candidate_id": "lego_42254",
+      "sku": "42254",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "7a3d0b110966249290f3da778d906023534b7c27af0784aa757f58a02e0be0ad",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135844",
+          "source_published_at": "2026-11-01T00:00:01+00:00",
+          "title": "Technic 42254 Solar System Planets in Orbit official images!",
+          "content_sha256": "7363b4004618ada899ac17384a8033909a485d43e0bcac75a7d0b5797e1e0dab"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1e26f62d60e66ef3dd722d5576ce77c134c2c19a499290e5e6046ca23c2b8452",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-technic-42254-solar-system-planets-in-orbit-january-2027-set-revealed-us-canada-prices-release-dates-set-images",
+          "source_published_at": "2026-11-03T04:24:44+00:00",
+          "title": "LEGO Technic 42254 Solar System Planets in Orbit January 2027 Set Revealed: US/Canada Prices, Release Dates & Set Images",
+          "content_sha256": "87d1b38fabfa6ba2fb5838a1bf14e07a38d54dcc7fc64f73e6b8407bc054f6ed"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "06cbdd591a53ca57ea4dcf2aeb0b8f5ff02e13b69c280a03296ced3fee8b2165",
+      "revision": 2,
+      "first_assessed_at": "2026-11-01T06:49:05.253723+00:00"
+    },
+    {
+      "id": "assessment_lego_42682",
+      "candidate_id": "lego_42682",
+      "sku": "42682",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "bccea942665745f6de249bb44849542bc4691f88f5c398de9f66ea4394b5afd5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135420",
+          "source_published_at": "2026-10-19T14:00:00+00:00",
+          "title": "Review: 42682 Nature Glamping Cabin",
+          "content_sha256": "317a3ab02f567968e72c7d66d5ef3dd4475df7807d84647c621fa95a3868888e"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42690",
+      "candidate_id": "lego_42690",
+      "sku": "42690",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "ef2686f31bcf66ec09eab95d94137ff92ea359a3f6b0212c1c0ed94eb253712d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135416",
+          "source_published_at": "2026-10-21T14:00:00+00:00",
+          "title": "Quick look: 42690 Forest Tea Party",
+          "content_sha256": "5a378ac010e9d984f8e2564ea8f9e9970a7473ea45e299524de313f411bff06f"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "5b6130c7c082704955e45aee1681ab65149f05c7c608d6eb8a12ffeb6f3830b4",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42705",
+      "candidate_id": "lego_42705",
+      "sku": "42705",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135584",
+          "source_published_at": "2026-10-29T15:00:00+00:00",
+          "title": "Review: 42705 Cosy Autumn Forest Cabin",
+          "content_sha256": "71bf362a81354153cc2f1cbe85b0bb862ea0deacd167e2af25a02c8ab31cb223"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_42705",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "price": "92.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:17.447829+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "7122c865eb93bf84e2db77c85c53f971348a2b547f75a00a69b1cb6068674a49",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "joueclub_42705",
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+          "price": "94.99",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:14.091581+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "f118b406c392700228ab536f420aa21982e7f521f04d8a8fd61baabdf200b982",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "cefb8b5012dc86a064bcc3708a16fc77d669953d79f178c10e9525b52bd01c24",
+      "revision": 37,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42709",
+      "candidate_id": "lego_42709",
+      "sku": "42709",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "b0d5fe730f7599e75ac80198ded61193dc30fe037d45541362ed015f36def4c2",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42718",
+      "candidate_id": "lego_42718",
+      "sku": "42718",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_42719",
+      "candidate_id": "lego_42719",
+      "sku": "42719",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "b285e549547d2d35e737ca6424084450dfed7b404459805f4cc29ab743c4996b",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135733",
+          "source_published_at": "2026-10-28T16:00:00+00:00",
+          "title": "Three 2027 LEGO Friends sets announced!",
+          "content_sha256": "7a9bc9273a9b7e9994a0a9ba881d21a372082d454d14c22c1e840ff28a426d16"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1c621d3849f90f8667f8be701ab41205ba954b3333138486bd035db69c2338d0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/three-lego-friends-january-2027-sets-revealed-us-canada-prices-release-dates-set-images-42709-42718-42719",
+          "source_published_at": "2026-10-29T04:58:45+00:00",
+          "title": "Three LEGO Friends January 2027 Sets Revealed: US/Canada Prices, Release Dates & Set Images (42709 42718 42719)",
+          "content_sha256": "1c85700b3b53e683cfd938dc647d3592c3bf14839446173c06016f437f23f955"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67005",
+      "candidate_id": "lego_67005",
+      "sku": "67005",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "5716f9ad76b36b0884604763fb48310f654a088ac0af26e69278fb09c1980bd3",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135732",
+          "source_published_at": "2026-10-28T15:00:00+00:00",
+          "title": "LEGO Marvel What If...? Sanctum Sanctorum revealed!",
+          "content_sha256": "94ffe5d2e3a76ef7222cf89219da563839d64bc0bf273aa5eb2102c87dc07a2e"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "0c542f5d287ad6dc57a05348ec1da666caf0d44b1f981e77c57b45635c5e90c5",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-67005-marvel-what-if-doctor-strange-supreme-january-2027-set-revealed-us-canada-prices-release-dates-minifigures",
+          "source_published_at": "2026-10-28T23:19:55+00:00",
+          "title": "LEGO 67005 Marvel What if…? Doctor Strange Supreme January 2027 Set Revealed: US/Canada Prices, Release Dates & Minifigures",
+          "content_sha256": "c9d69c5ceccb6413a6dffcc344ce7c195d20765573a5546db1d7b6144ec1d8a4"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "6ac0cba839c021f3be10cfa68ae4e48a4a18e2af4a3bff2f230789007be6a22d",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67006",
+      "candidate_id": "lego_67006",
+      "sku": "67006",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "edd54f06c0b8787429fb927826d27257abc78765c40762b9e30f5659bdddb175",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135798",
+          "source_published_at": "2026-10-30T09:20:00+00:00",
+          "title": "Blocks magazine issue 145 press release",
+          "content_sha256": "ddbc46107c6e3369b908717585fa8030aea74b38cf52ad27acdcb54a79c98082"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "e9bda0fe4861d314c9065bf22b9c22abf047be349657f8515e86ca204af47bc2",
+      "revision": 2,
+      "first_assessed_at": "2026-10-30T11:19:10.898522+00:00"
+    },
+    {
+      "id": "assessment_lego_67012",
+      "candidate_id": "lego_67012",
+      "sku": "67012",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "2e59abfbf6280d8d20d207aecd3173fd43f7f1fbb2a496b688bda3df0c5b4167",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135830",
+          "source_published_at": "2026-10-31T15:00:00+00:00",
+          "title": "My LEGO 'Fear'",
+          "content_sha256": "831d2070999453deb2ba9c24b2fe3fd3d2f2732fa9272fafd78c5643351bc65a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "d4ebe3faac3f059b460d4dabf247df28daef515549334aa2920b5ac7946c0661",
+      "revision": 3,
+      "first_assessed_at": "2026-10-31T16:23:58.723741+00:00"
+    },
+    {
+      "id": "assessment_lego_71888",
+      "candidate_id": "lego_71888",
+      "sku": "71888",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "8bd840df11df97ae1698716c5e736bfc93f78ba2b087a6680e0208426e2e6648",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135947",
+          "source_published_at": "2026-11-06T03:30:00+00:00",
+          "title": "LEGO NINJAGO 71888 Ivo's Ninja Dojo revealed!",
+          "content_sha256": "4f6bee32338d0e39edb8d1acf4c268a6da08f612821cbd3ca89323312cdf2b95"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "1d196147abc628b3a59e01fa1c835bec13b5b0c0ba7cee1c9b446c4dd38f25c0",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-ninjago-71888-ivos-ninja-dojo-january-2027-set-revealed-release-dates-us-canada-prices-pre-orders",
+          "source_published_at": "2026-11-07T14:01:42+00:00",
+          "title": "LEGO Ninjago 71888 Ivo’s Ninja Dojo January 2027 Set Revealed: Release Dates, US/Canada Prices & Pre-Orders",
+          "content_sha256": "dce6def1c89c2f25b31f6425854a39eb25276a8a06584b618558087b1a73eef4"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "73f7130acaa8b896ff7775398765c42b129116fa36a16ab79048ebb07cdb4186",
+      "revision": 2,
+      "first_assessed_at": "2026-11-06T11:02:48.222315+00:00"
+    },
+    {
+      "id": "assessment_lego_72161",
+      "candidate_id": "lego_72161",
+      "sku": "72161",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d0b30784098c74e4f6055d5b7ce0b211fb1af23bd61247d9d4c4c90969574713",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/133777",
+          "source_published_at": "2026-11-07T14:00:00+00:00",
+          "title": "Review: 72161 Drone Search for Mythical Mew",
+          "content_sha256": "6ce19955d064d4b912b17beeb3535bc4248e3b13ce27adccf94bdd1b7836fdd8"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "536f6c86e87d93303a8d44e080d6c676b4870da73f80b3ee198ead74d0be6950",
+      "revision": 1,
+      "first_assessed_at": "2026-11-07T16:54:03.700909+00:00"
+    },
+    {
+      "id": "assessment_lego_75642",
+      "candidate_id": "lego_75642",
+      "sku": "75642",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "cb55d2b1682716c3ad15bc9e5cfc4d2f5492a79d98ed13d69246008277c7e45a",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135711",
+          "source_published_at": "2026-11-02T14:00:00+00:00",
+          "title": "Review: 75642 Showdown with Captain Smoker",
+          "content_sha256": "12da08893c1f87e70ab0a292b14619e87741db7db702c8660cd3f4f5771950c0"
+        },
+        {
+          "type": "RETAIL_OBSERVATION",
+          "observation_id": "ldlc_discovered_75642",
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759565.html",
+          "price": "53.95",
+          "currency": "EUR",
+          "availability": "IN_STOCK",
+          "observed_at": "2026-11-08T00:43:21.713329+00:00",
+          "age_hours": 0.02,
+          "fresh_within_24h": true,
+          "shipping_eur": null,
+          "evidence_sha256": "80cba6305e025b54c5b99933133620979552e1ba789acb8bf2c0a78c6291f185",
+          "completed_sale": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "current_capture_status": "OK"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_MEASURED_EVENT_REACTION",
+        "DELIVERED_PRICE_UNKNOWN",
+        "SELLER_RELIABILITY_UNVERIFIED_OR_EXPIRED"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "7f45d6add4b8ba139e52f8c8faf5653f56497f7228f6a0d7839cc378246ff57d",
+      "revision": 8,
+      "first_assessed_at": "2026-11-02T17:10:31.541345+00:00"
+    },
+    {
+      "id": "assessment_lego_76387",
+      "candidate_id": "lego_76387",
+      "sku": "76387",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "2e59abfbf6280d8d20d207aecd3173fd43f7f1fbb2a496b688bda3df0c5b4167",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135830",
+          "source_published_at": "2026-10-31T15:00:00+00:00",
+          "title": "My LEGO 'Fear'",
+          "content_sha256": "2822bc008003dd49196db1c5704ed9c3e10f6ccca5ab2e4651b5612bfe36b566"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "80e2d3d16e54a83b17799f415e222ae1aa0be07b9ca26f96c1bf17165f499879",
+      "revision": 2,
+      "first_assessed_at": "2026-10-31T16:23:58.723741+00:00"
+    },
+    {
+      "id": "assessment_lego_80122",
+      "candidate_id": "lego_80122",
+      "sku": "80122",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "a1e5b3725a05f813d1f2ec0dd32063518c2909dc051a54ddf27b2dbad09eae41",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135953",
+          "source_published_at": "2026-11-06T09:30:00+00:00",
+          "title": "2027 Chinese Festival sets revealed",
+          "content_sha256": "640e4b2d12b9b5579d68139b0ac04363ace671c77ade079f502297fc6411eef9"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "3773fae9d29517b5e5c7827dacd382f70e8b5c7d112a75ad1ad3415127930bdc",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/two-lego-spring-festival-january-2027-sets-revealed-80122-auspicious-pixiu-under-fortune-tree-and-40976-prosperity-lion-us-canada-prices-release-dates-images",
+          "source_published_at": "2026-11-06T07:23:04+00:00",
+          "title": "Two LEGO Spring Festival January 2027 Sets Revealed (80122 Auspicious Pixiu Under Fortune Tree and 40976 Prosperity Lion): US/Canada Prices, Release Dates & Images",
+          "content_sha256": "8e6480a6bfc0ebe7c550304d1dedd302384f872e01b03e32ebdd419741b94527"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "6ad6d394d401634c2826645034126506b11a88da75f32bb84e1b69060c2d7c23",
+      "revision": 1,
+      "first_assessed_at": "2026-11-06T11:02:48.222315+00:00"
+    },
+    {
+      "id": "assessment_lego_80123",
+      "candidate_id": "lego_80123",
+      "sku": "80123",
+      "assessed_at": "2026-11-08T00:44:28.714459+00:00",
+      "data_policy": "OBSERVED_DATA_ONLY_V1",
+      "facts": [
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "a1e5b3725a05f813d1f2ec0dd32063518c2909dc051a54ddf27b2dbad09eae41",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135953",
+          "source_published_at": "2026-11-06T09:30:00+00:00",
+          "title": "2027 Chinese Festival sets revealed",
+          "content_sha256": "640e4b2d12b9b5579d68139b0ac04363ace671c77ade079f502297fc6411eef9"
+        },
+        {
+          "type": "PUBLICATION_REFERENCE",
+          "publication_id": "d9cc056613ff63aabd7ada3bf5701a526f5a20176b7971bc31b1f81365b1e4e4",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://www.toysnbricks.com/lego-80123-spring-festival-voyage-january-2027-set-revealed-us-canada-prices-release-dates-pre-orders",
+          "source_published_at": "2026-11-06T23:08:12+00:00",
+          "title": "LEGO 80123 Spring Festival Voyage January 2027 Set Revealed: US/Canada Prices, Release Dates & Pre-Orders",
+          "content_sha256": "3c3058b4d03ee69b586227cbd7bc211f27084e87ff613ee5c7eeaf5b0cc9ec8a"
+        }
+      ],
+      "missing_data": [
+        "REALIZED_TRANSACTION_PRICES_NOT_VERIFIED",
+        "LIQUIDITY_NOT_MEASURED",
+        "NET_MARGIN_NOT_MEASURED",
+        "NO_RECENT_RETAIL_QUOTE",
+        "NO_MEASURED_EVENT_REACTION"
+      ],
+      "measured_reaction_windows": [],
+      "financial_decision": "NOT_COMPUTABLE_FROM_CURRENT_VERIFIED_DATA",
+      "buy_signal": false,
+      "purchase_authorized": false,
+      "seller_purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "semantic_sha256": "f9ac846be240f9d6e6792337cd85d35e756dea9f9f7f0b20017101dfa040f930",
+      "revision": 2,
+      "first_assessed_at": "2026-11-06T11:02:48.222315+00:00"
+    }
+  ],
+  "transitions": [
+    {
+      "assessment_id": "assessment_lego_10182",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10185",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10190",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10197",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10211",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10218",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10224",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10228",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "current_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e"
+    },
+    {
+      "assessment_id": "assessment_lego_10232",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10243",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10251",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10255",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10260",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10264",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10278",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10297",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10312",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_10326",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_10350",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7",
+      "current_sha256": "f8522311fd7f3e148c6ddcc9ac67d5f79699a9de74b1ef88b9818dd705372cf7"
+    },
+    {
+      "assessment_id": "assessment_lego_11227",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "133cf8e15f613973a3be53a9fc5222ac761ab764c80625d078a0adf9195976a7",
+      "current_sha256": "133cf8e15f613973a3be53a9fc5222ac761ab764c80625d078a0adf9195976a7"
+    },
+    {
+      "assessment_id": "assessment_lego_11371",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25",
+      "current_sha256": "eabad9f0353c85b21ae29924a35471b8427c850d77b49beece0208c7c750cb25"
+    },
+    {
+      "assessment_id": "assessment_lego_11380",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "bdc0aef84be737583f64a9a61b4fe073e464f0153fc77a29bad68087db4a6a61",
+      "current_sha256": "bdc0aef84be737583f64a9a61b4fe073e464f0153fc77a29bad68087db4a6a61"
+    },
+    {
+      "assessment_id": "assessment_lego_11383",
+      "revision": 37,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "97fc173c7ff73ed0b4d0fadb69ba6283d54af2d5fbd9d7bbf6c3a5bdc322b999",
+      "current_sha256": "0f3656cf306823374e41afc452f99112aac5b481d45ab502a268cec0d393a139"
+    },
+    {
+      "assessment_id": "assessment_lego_11388",
+      "revision": 33,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "de7cfca5b2585483704742a64e5b8b2dba65cd85960eac9b2045d9a6fe4083fe",
+      "current_sha256": "83a99fc65f6a08796ba2d188a704613ea3e5ebbeee45870eb7db5a8b8280edb1"
+    },
+    {
+      "assessment_id": "assessment_lego_11505",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "1f7b01d11e67e0f3550b1b3c56a17fae4f03e44fb911c236272e89c5af165f9e",
+      "current_sha256": "1f7b01d11e67e0f3550b1b3c56a17fae4f03e44fb911c236272e89c5af165f9e"
+    },
+    {
+      "assessment_id": "assessment_lego_11515",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874",
+      "current_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874"
+    },
+    {
+      "assessment_id": "assessment_lego_11516",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874",
+      "current_sha256": "3032c7379796bd792b939c07381211e8d7335e1609dfaa3a9a11062289380874"
+    },
+    {
+      "assessment_id": "assessment_lego_11519",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "bcaa73c9fa2628566a1bb79e60567bfbd4a9278830273f5602dca5dfab156a2c",
+      "current_sha256": "bcaa73c9fa2628566a1bb79e60567bfbd4a9278830273f5602dca5dfab156a2c"
+    },
+    {
+      "assessment_id": "assessment_lego_11522",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "689af5b0c76cc2c518b534935139b81314b3a985f804ee2cc45fe1fa27dabf9e",
+      "current_sha256": "689af5b0c76cc2c518b534935139b81314b3a985f804ee2cc45fe1fa27dabf9e"
+    },
+    {
+      "assessment_id": "assessment_lego_11532",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_11533",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_11534",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_11535",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_11536",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_11537",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403",
+      "current_sha256": "609b5abd6cb47f1e28ae96ad5999052c5a514d2918fde6ad7038fa8da169e403"
+    },
+    {
+      "assessment_id": "assessment_lego_21065",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "29b303f2f9b0914a83de59113f0ff3e6744fb044186d949d0684c90a8bfd97c4",
+      "current_sha256": "29b303f2f9b0914a83de59113f0ff3e6744fb044186d949d0684c90a8bfd97c4"
+    },
+    {
+      "assessment_id": "assessment_lego_21359",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "fb779a402eaf837136851ed163f1c554e531896a3b96be30ee015ad40c38e446",
+      "current_sha256": "fb779a402eaf837136851ed163f1c554e531896a3b96be30ee015ad40c38e446"
+    },
+    {
+      "assessment_id": "assessment_lego_21375",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "f320a35d2e320b7df2c4047006bcca44002ef8139a0590cc2dce17ad214979d4",
+      "current_sha256": "f320a35d2e320b7df2c4047006bcca44002ef8139a0590cc2dce17ad214979d4"
+    },
+    {
+      "assessment_id": "assessment_lego_30762",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "d1ef3a94cbe9170bde4bfb89a5b4f4803cbc4ae269bb6e0ea24503dce6443ea1",
+      "current_sha256": "d1ef3a94cbe9170bde4bfb89a5b4f4803cbc4ae269bb6e0ea24503dce6443ea1"
+    },
+    {
+      "assessment_id": "assessment_lego_31167",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e",
+      "current_sha256": "472d6c52552079fc880fb2d90d26c6be5c8f7ce3da65d3bcfd3e66c46172c30e"
+    },
+    {
+      "assessment_id": "assessment_lego_40744",
+      "revision": 16,
+      "type": "UNCHANGED",
+      "previous_sha256": "f49266769368d641296f9c98d2a857f8498e647c42d8fc7aaae3cbe976c01acf",
+      "current_sha256": "f49266769368d641296f9c98d2a857f8498e647c42d8fc7aaae3cbe976c01acf"
+    },
+    {
+      "assessment_id": "assessment_lego_40862",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "ca436db114f4dceb648c7e4af625288e8e999d34675e56334115dcc14a6780d0",
+      "current_sha256": "ca436db114f4dceb648c7e4af625288e8e999d34675e56334115dcc14a6780d0"
+    },
+    {
+      "assessment_id": "assessment_lego_40866",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "c1980c37413efcf1ad8131767904e8c4528bf829e0baa4ec2fe12e4520a64d0e",
+      "current_sha256": "c1980c37413efcf1ad8131767904e8c4528bf829e0baa4ec2fe12e4520a64d0e"
+    },
+    {
+      "assessment_id": "assessment_lego_40874",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "ff7fa09137b166c7d65b856fc3b4b4821405f12a7b5bede66bfa2d2811bff626",
+      "current_sha256": "ff7fa09137b166c7d65b856fc3b4b4821405f12a7b5bede66bfa2d2811bff626"
+    },
+    {
+      "assessment_id": "assessment_lego_40888",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "5ebd041f01cb00ccc29c7be790e08645e10cbad7784ee7e3c1aeb2f634578324",
+      "current_sha256": "5ebd041f01cb00ccc29c7be790e08645e10cbad7784ee7e3c1aeb2f634578324"
+    },
+    {
+      "assessment_id": "assessment_lego_40889",
+      "revision": 48,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "35ee70226df0f632a0f8e9f27974e67d85257d8b71b762405a596ce5f500217e",
+      "current_sha256": "d29b0fd78ce44331aad028886365a565ea66d72aa47d751021512665022b0a88"
+    },
+    {
+      "assessment_id": "assessment_lego_40898",
+      "revision": 11,
+      "type": "UNCHANGED",
+      "previous_sha256": "b67f195f133b65f0589c1674c1eff05ecc7337858973903e84020848d9470ee7",
+      "current_sha256": "b67f195f133b65f0589c1674c1eff05ecc7337858973903e84020848d9470ee7"
+    },
+    {
+      "assessment_id": "assessment_lego_40913",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "87eb668abe7f8d51f1f2aecbf8478129475234fb462e34d81895ca9a71ddac57",
+      "current_sha256": "87eb668abe7f8d51f1f2aecbf8478129475234fb462e34d81895ca9a71ddac57"
+    },
+    {
+      "assessment_id": "assessment_lego_40976",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "0b9aa3a346a85054bc1d4b5ae9db8cbdcd2d47d59c1e7bfc1476da9ab90207d5",
+      "current_sha256": "0b9aa3a346a85054bc1d4b5ae9db8cbdcd2d47d59c1e7bfc1476da9ab90207d5"
+    },
+    {
+      "assessment_id": "assessment_lego_41392",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "current_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561"
+    },
+    {
+      "assessment_id": "assessment_lego_42179",
+      "revision": 11,
+      "type": "UNCHANGED",
+      "previous_sha256": "4361a3f1ba386712a742785863038f889a2080bbd51f47298e86dec7bd69fa4d",
+      "current_sha256": "4361a3f1ba386712a742785863038f889a2080bbd51f47298e86dec7bd69fa4d"
+    },
+    {
+      "assessment_id": "assessment_lego_42254",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "06cbdd591a53ca57ea4dcf2aeb0b8f5ff02e13b69c280a03296ced3fee8b2165",
+      "current_sha256": "06cbdd591a53ca57ea4dcf2aeb0b8f5ff02e13b69c280a03296ced3fee8b2165"
+    },
+    {
+      "assessment_id": "assessment_lego_42682",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561",
+      "current_sha256": "0d3fe870047502cdc7ab66c702330b8d0d2fdc9697c77888bb90dd2de5668561"
+    },
+    {
+      "assessment_id": "assessment_lego_42690",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "5b6130c7c082704955e45aee1681ab65149f05c7c608d6eb8a12ffeb6f3830b4",
+      "current_sha256": "5b6130c7c082704955e45aee1681ab65149f05c7c608d6eb8a12ffeb6f3830b4"
+    },
+    {
+      "assessment_id": "assessment_lego_42705",
+      "revision": 37,
+      "type": "OBSERVATIONS_CHANGED",
+      "previous_sha256": "e943e1683b6f701f86864692e801e6f770eeab32924aff861f094fc5331d7724",
+      "current_sha256": "cefb8b5012dc86a064bcc3708a16fc77d669953d79f178c10e9525b52bd01c24"
+    },
+    {
+      "assessment_id": "assessment_lego_42709",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "b0d5fe730f7599e75ac80198ded61193dc30fe037d45541362ed015f36def4c2",
+      "current_sha256": "b0d5fe730f7599e75ac80198ded61193dc30fe037d45541362ed015f36def4c2"
+    },
+    {
+      "assessment_id": "assessment_lego_42718",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "current_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b"
+    },
+    {
+      "assessment_id": "assessment_lego_42719",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b",
+      "current_sha256": "c759384bd9f76034334e6b74329f0c44eeacf75607eeecc3cb456c494144914b"
+    },
+    {
+      "assessment_id": "assessment_lego_67005",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "6ac0cba839c021f3be10cfa68ae4e48a4a18e2af4a3bff2f230789007be6a22d",
+      "current_sha256": "6ac0cba839c021f3be10cfa68ae4e48a4a18e2af4a3bff2f230789007be6a22d"
+    },
+    {
+      "assessment_id": "assessment_lego_67006",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "e9bda0fe4861d314c9065bf22b9c22abf047be349657f8515e86ca204af47bc2",
+      "current_sha256": "e9bda0fe4861d314c9065bf22b9c22abf047be349657f8515e86ca204af47bc2"
+    },
+    {
+      "assessment_id": "assessment_lego_67012",
+      "revision": 3,
+      "type": "UNCHANGED",
+      "previous_sha256": "d4ebe3faac3f059b460d4dabf247df28daef515549334aa2920b5ac7946c0661",
+      "current_sha256": "d4ebe3faac3f059b460d4dabf247df28daef515549334aa2920b5ac7946c0661"
+    },
+    {
+      "assessment_id": "assessment_lego_71888",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "73f7130acaa8b896ff7775398765c42b129116fa36a16ab79048ebb07cdb4186",
+      "current_sha256": "73f7130acaa8b896ff7775398765c42b129116fa36a16ab79048ebb07cdb4186"
+    },
+    {
+      "assessment_id": "assessment_lego_72161",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "536f6c86e87d93303a8d44e080d6c676b4870da73f80b3ee198ead74d0be6950",
+      "current_sha256": "536f6c86e87d93303a8d44e080d6c676b4870da73f80b3ee198ead74d0be6950"
+    },
+    {
+      "assessment_id": "assessment_lego_75642",
+      "revision": 8,
+      "type": "UNCHANGED",
+      "previous_sha256": "7f45d6add4b8ba139e52f8c8faf5653f56497f7228f6a0d7839cc378246ff57d",
+      "current_sha256": "7f45d6add4b8ba139e52f8c8faf5653f56497f7228f6a0d7839cc378246ff57d"
+    },
+    {
+      "assessment_id": "assessment_lego_76387",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "80e2d3d16e54a83b17799f415e222ae1aa0be07b9ca26f96c1bf17165f499879",
+      "current_sha256": "80e2d3d16e54a83b17799f415e222ae1aa0be07b9ca26f96c1bf17165f499879"
+    },
+    {
+      "assessment_id": "assessment_lego_80122",
+      "revision": 1,
+      "type": "UNCHANGED",
+      "previous_sha256": "6ad6d394d401634c2826645034126506b11a88da75f32bb84e1b69060c2d7c23",
+      "current_sha256": "6ad6d394d401634c2826645034126506b11a88da75f32bb84e1b69060c2d7c23"
+    },
+    {
+      "assessment_id": "assessment_lego_80123",
+      "revision": 2,
+      "type": "UNCHANGED",
+      "previous_sha256": "f9ac846be240f9d6e6792337cd85d35e756dea9f9f7f0b20017101dfa040f930",
+      "current_sha256": "f9ac846be240f9d6e6792337cd85d35e756dea9f9f7f0b20017101dfa040f930"
+    }
+  ],
+  "status": "OK",
+  "policy_migration": "PREVIOUS_HYPOTHETICAL_REPORTS_REMAIN_HISTORICAL_ONLY",
+  "financial_decisions_made": 0,
+  "purchase_authorized": false
+}
