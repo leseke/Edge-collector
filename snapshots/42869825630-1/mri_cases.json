@@ -1,0 +1,907 @@
+{
+  "schema": "edge.mri.multi_source_cases.v1",
+  "generated_at": "2026-11-10T17:55:50.883190+00:00",
+  "cases": [
+    {
+      "product_id": "lego_11383",
+      "case_kind": "PUBLICATION_AND_RETAIL_OBSERVATIONS",
+      "announced_release": null,
+      "publication_evidence": [
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135784",
+          "published_at": "2026-10-30T14:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "How 11383 Mayor Manor looks with 10228 Haunted House",
+          "content_sha256": "ca676cfd7c4506ea1dc9009c7d95300fffb7157adb98aef30917983e8dc0466a",
+          "reference_in_title": true,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        }
+      ],
+      "candidate_first_observed_at": "2026-10-30T22:37:55.146351+00:00",
+      "retail_sources": [
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+          "current_quote": {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+            "observed_at": "2026-11-10T17:55:26.383449+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "109.99",
+            "body_sha256": "c621b0c6edce2c1c6c5ee5c32e482b0a6aed73995e223d66548744cd4b34e00a",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "JoueClub",
+              "site_origin": "https://www.joueclub.fr",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 42,
+          "first_observation": {
+            "id": "joueclub_11383",
+            "observed_at": "2026-11-01T08:49:35.232435+00:00",
+            "price": "109.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "2c258a0a6619fcdc89ed8e325a6552a29973b47b83a0b5fe094d96191ee07cdd"
+          },
+          "latest_observation": {
+            "id": "joueclub_11383",
+            "observed_at": "2026-11-10T17:55:26.383449+00:00",
+            "price": "109.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "c621b0c6edce2c1c6c5ee5c32e482b0a6aed73995e223d66548744cd4b34e00a"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        },
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "current_quote": {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+            "observed_at": "2026-11-10T17:55:32.036805+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "104.95",
+            "body_sha256": "e4aced68bd19e9531ad0400e013765804de3c43a38e696072d49eaed09391c14",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "LDLC",
+              "site_origin": "https://www.ldlc.com",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 56,
+          "first_observation": {
+            "id": "ldlc_discovered_11383",
+            "observed_at": "2026-10-30T22:37:59.298737+00:00",
+            "price": "104.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "19e6ad1ea8f91766233f07152f52c254df47925ff53c2ff9e0575c2a98cb90ba"
+          },
+          "latest_observation": {
+            "id": "ldlc_discovered_11383",
+            "observed_at": "2026-11-10T17:55:32.036805+00:00",
+            "price": "104.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "e4aced68bd19e9531ad0400e013765804de3c43a38e696072d49eaed09391c14"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        }
+      ],
+      "current_availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "publication_reaction_measurements": [
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "observation_id": "ldlc_discovered_11383",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "seller": "LDLC",
+          "product_id": "lego_11383",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-10-30T22:37:59.298737+00:00",
+            "first_capture_offset_hours": 8.633138538055556
+          },
+          "anchor": "2026-10-30T14:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "24a808fad232d96f347b740f1fd897b46937cddd00961890fddc9b6cc77e21f7",
+          "observation_id": "joueclub_11383",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+          "seller": "JoueClub",
+          "product_id": "lego_11383",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T08:49:35.232435+00:00",
+            "first_capture_offset_hours": 42.82645345416667
+          },
+          "anchor": "2026-10-30T14:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        }
+      ],
+      "measured_publication_reaction_windows": 0,
+      "reaction_status": "PUBLICATION_REACTION_NOT_MEASURED",
+      "missing_data": [
+        "VERIFIED_REALIZED_SALES",
+        "TRANSACTION_VOLUME",
+        "FRANCE_DELIVERED_PRICES",
+        "NET_MARGIN",
+        "MEASURED_BEFORE_AND_AFTER_PUBLICATION_REACTION"
+      ],
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "causality_proven": false,
+      "buy_signal": false,
+      "financial_decision": "NOT_ESTABLISHED"
+    },
+    {
+      "product_id": "lego_11388",
+      "case_kind": "ANNOUNCED_RELEASE_AND_RETAIL_OBSERVATIONS",
+      "announced_release": {
+        "date": "2026-11-04",
+        "date_precision": "DAY",
+        "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+        "status": "MANUFACTURER_ANNOUNCEMENT_NOT_CONFIRMED_LAUNCH_HOUR"
+      },
+      "publication_evidence": [
+        {
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "source_id": "lego_newsroom",
+          "source_role": "MANUFACTURER",
+          "source_url": "https://www.lego.com/en-us/aboutus/news/2026/october/ciao-venice-the-lego-group-floats-new-icons-set",
+          "published_at": "2026-10-15T13:27:14+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "Ciao, Venice: The LEGO Group floats new Icons set",
+          "content_sha256": "4c9b603ae1afc459d6d4af8d2855318c1f7234a5366b773efc151f46eab5a8a0",
+          "reference_in_title": false,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        },
+        {
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135718",
+          "published_at": "2026-10-27T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Quick look: 40898 Venetian Water Taxi",
+          "content_sha256": "32316f90e23b726b9cdb4c02a3a5e97289534a7bae196768ed9914cbd8cdf34c",
+          "reference_in_title": false,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        },
+        {
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135699",
+          "published_at": "2026-10-26T15:00:00+00:00",
+          "signal_context": "MENTION",
+          "title": "11388 Venetian Neighbourhood minifigures",
+          "content_sha256": "d411da50ff593fcccd7e0e45750de8ceac51a443a9f4da608b8b4da933669fc8",
+          "reference_in_title": true,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        },
+        {
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135635",
+          "published_at": "2026-10-25T14:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 11388 Venetian Neighbourhood",
+          "content_sha256": "7cece5b88a52cdc68afdc474bca76b23a6b78093bac312aaa377744cce601a0d",
+          "reference_in_title": true,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        },
+        {
+          "publication_id": "adfc9dadfac0e82d8d02cd94f842d2894e1561623ba52dd82120b4683a00a336",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135838",
+          "published_at": "2026-11-01T05:00:00+00:00",
+          "signal_context": "ANNOUNCEMENT",
+          "title": "New sets out now!",
+          "content_sha256": "9b59f1fea3bb01df153f5290220ecb7e6ca65cbbb9d259d80b2c74206c62fb8a",
+          "reference_in_title": false,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        }
+      ],
+      "candidate_first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "retail_sources": [
+        {
+          "seller": "BRICKshop",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "current_quote": {
+            "seller": "BRICKshop",
+            "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+            "observed_at": "2026-11-10T17:55:29.091420+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "OUT_OF_STOCK",
+            "displayed_price_eur": "599.99",
+            "body_sha256": "36ba09e128f07baa0e212be8016a002e35587be82f07d7f10eeedf64a552204a",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": false,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "BRICKshop",
+              "site_origin": "https://www.brickshop.eu",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 30,
+          "first_observation": {
+            "id": "brickshop_11388",
+            "observed_at": "2026-11-01T21:39:28.389701+00:00",
+            "price": "599.99",
+            "currency": "EUR",
+            "availability": "COMING_SOON",
+            "body_sha256": "93f578ff9e21642bb9be89a4757abc0aade4297769fa58292c1f9d61d1a50d30"
+          },
+          "latest_observation": {
+            "id": "brickshop_11388",
+            "observed_at": "2026-11-10T17:55:29.091420+00:00",
+            "price": "599.99",
+            "currency": "EUR",
+            "availability": "OUT_OF_STOCK",
+            "body_sha256": "36ba09e128f07baa0e212be8016a002e35587be82f07d7f10eeedf64a552204a"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        }
+      ],
+      "current_availability_context": "SINGLE_SOURCE_STOCKOUT",
+      "publication_reaction_measurements": [
+        {
+          "publication_id": "fb1a9e4da123fb2be453e9c212197c35412b67ccd7f5bb9bec136bb4b60278c4",
+          "observation_id": "brickshop_11388",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "seller": "BRICKshop",
+          "product_id": "lego_11388",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T21:39:28.389701+00:00",
+            "first_capture_offset_hours": 416.20399713916663
+          },
+          "anchor": "2026-10-15T13:27:14+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "d414c14369ea4ce57390a27e69e75dc7dd1dc2810787fe760f7a588b84b5e7b9",
+          "observation_id": "brickshop_11388",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "seller": "BRICKshop",
+          "product_id": "lego_11388",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T21:39:28.389701+00:00",
+            "first_capture_offset_hours": 127.65788602805556
+          },
+          "anchor": "2026-10-27T14:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "e7d19095ace23cc245f9aa72fa995ae6d71593ca269222d9069034ee9e9d854d",
+          "observation_id": "brickshop_11388",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "seller": "BRICKshop",
+          "product_id": "lego_11388",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T21:39:28.389701+00:00",
+            "first_capture_offset_hours": 150.65788602805554
+          },
+          "anchor": "2026-10-26T15:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "5cf701ce99d43ba9cb6f82003ca7fe2125d165297cb2a7624060f607d151571b",
+          "observation_id": "brickshop_11388",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "seller": "BRICKshop",
+          "product_id": "lego_11388",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T21:39:28.389701+00:00",
+            "first_capture_offset_hours": 175.65788602805554
+          },
+          "anchor": "2026-10-25T14:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "adfc9dadfac0e82d8d02cd94f842d2894e1561623ba52dd82120b4683a00a336",
+          "observation_id": "brickshop_11388",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "seller": "BRICKshop",
+          "product_id": "lego_11388",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T21:39:28.389701+00:00",
+            "first_capture_offset_hours": 16.657886028055554
+          },
+          "anchor": "2026-11-01T05:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        }
+      ],
+      "measured_publication_reaction_windows": 0,
+      "reaction_status": "PUBLICATION_REACTION_NOT_MEASURED",
+      "missing_data": [
+        "VERIFIED_REALIZED_SALES",
+        "TRANSACTION_VOLUME",
+        "FRANCE_DELIVERED_PRICES",
+        "NET_MARGIN",
+        "MEASURED_BEFORE_AND_AFTER_PUBLICATION_REACTION"
+      ],
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "causality_proven": false,
+      "buy_signal": false,
+      "financial_decision": "NOT_ESTABLISHED"
+    },
+    {
+      "product_id": "lego_42705",
+      "case_kind": "PUBLICATION_AND_RETAIL_OBSERVATIONS",
+      "announced_release": null,
+      "publication_evidence": [
+        {
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "source_id": "brickset",
+          "source_role": "SPECIALIST_MEDIA",
+          "source_url": "https://brickset.com/article/135584",
+          "published_at": "2026-10-29T15:00:00+00:00",
+          "signal_context": "REVIEW",
+          "title": "Review: 42705 Cosy Autumn Forest Cabin",
+          "content_sha256": "71bf362a81354153cc2f1cbe85b0bb862ea0deacd167e2af25a02c8ab31cb223",
+          "reference_in_title": true,
+          "relationship": "EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"
+        }
+      ],
+      "candidate_first_observed_at": "2026-10-30T10:37:05.530841+00:00",
+      "retail_sources": [
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+          "current_quote": {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+            "observed_at": "2026-11-10T17:55:26.925139+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "94.99",
+            "body_sha256": "d5f8e58229967a1638577c6017ea8ae87b81102b2e7becf15c75a8637c33ed40",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "JoueClub",
+              "site_origin": "https://www.joueclub.fr",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 42,
+          "first_observation": {
+            "id": "joueclub_42705",
+            "observed_at": "2026-11-01T08:49:36.197112+00:00",
+            "price": "94.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "ae0b6b7926aa0e7d44fd9e280cded40a1091bd9392727fc10f2dbff8321ac26c"
+          },
+          "latest_observation": {
+            "id": "joueclub_42705",
+            "observed_at": "2026-11-10T17:55:26.925139+00:00",
+            "price": "94.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "d5f8e58229967a1638577c6017ea8ae87b81102b2e7becf15c75a8637c33ed40"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        },
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "current_quote": {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+            "observed_at": "2026-11-10T17:55:30.085113+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "92.95",
+            "body_sha256": "96f2ce2b13bcb29f2f1c84669c299b9f3cf73c932934443e1125d063a8b188d5",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "LDLC",
+              "site_origin": "https://www.ldlc.com",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 63,
+          "first_observation": {
+            "id": "ldlc_discovered_42705",
+            "observed_at": "2026-10-30T10:37:11.697375+00:00",
+            "price": "92.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "2e7113e435ff76aee0918142615c5b93d662388325ff9d61faf87f490a58950a"
+          },
+          "latest_observation": {
+            "id": "ldlc_discovered_42705",
+            "observed_at": "2026-11-10T17:55:30.085113+00:00",
+            "price": "92.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "96f2ce2b13bcb29f2f1c84669c299b9f3cf73c932934443e1125d063a8b188d5"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        }
+      ],
+      "current_availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "publication_reaction_measurements": [
+        {
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "observation_id": "ldlc_discovered_42705",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "seller": "LDLC",
+          "product_id": "lego_42705",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-10-30T10:37:11.697375+00:00",
+            "first_capture_offset_hours": 19.6199159375
+          },
+          "anchor": "2026-10-29T15:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        },
+        {
+          "publication_id": "260a74ee546d04a37dc27104ab540c92a89061afc8fa44f55f8f3b0922329f3d",
+          "observation_id": "joueclub_42705",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+          "seller": "JoueClub",
+          "product_id": "lego_42705",
+          "currency": "EUR",
+          "baseline_audit": {
+            "status": "NO_PRIOR_CAPTURE",
+            "maximum_age_hours": 24,
+            "strictly_before_publication": true,
+            "prior_age_hours": null,
+            "latest_prior_observation": null,
+            "first_capture_at": "2026-11-01T08:49:36.197112+00:00",
+            "first_capture_offset_hours": 65.82672142
+          },
+          "anchor": "2026-10-29T15:00:00+00:00",
+          "anchor_kind": "SOURCE_PUBLICATION_TIME",
+          "causality_proven": false,
+          "buy_signal": false,
+          "windows": [
+            {
+              "horizon_hours": 24,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 72,
+              "status": "NO_PRE_EVENT_BASELINE"
+            },
+            {
+              "horizon_hours": 168,
+              "status": "NO_PRE_EVENT_BASELINE"
+            }
+          ],
+          "status": "NO_PRE_EVENT_BASELINE"
+        }
+      ],
+      "measured_publication_reaction_windows": 0,
+      "reaction_status": "PUBLICATION_REACTION_NOT_MEASURED",
+      "missing_data": [
+        "VERIFIED_REALIZED_SALES",
+        "TRANSACTION_VOLUME",
+        "FRANCE_DELIVERED_PRICES",
+        "NET_MARGIN",
+        "MEASURED_BEFORE_AND_AFTER_PUBLICATION_REACTION"
+      ],
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "causality_proven": false,
+      "buy_signal": false,
+      "financial_decision": "NOT_ESTABLISHED"
+    },
+    {
+      "product_id": "lego_75639",
+      "case_kind": "RETAIL_CONTROL_WITHOUT_DISCOVERY_PUBLICATION",
+      "announced_release": null,
+      "publication_evidence": [],
+      "candidate_first_observed_at": null,
+      "retail_sources": [
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00701668.html",
+          "current_quote": {
+            "seller": "LDLC",
+            "source_url": "https://www.ldlc.com/fiche/PB00701668.html",
+            "observed_at": "2026-11-10T17:55:23.713565+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "129.95",
+            "body_sha256": "83438900bd0d75fd1187cda8d9cd3f863bafbde6ef96c4ebdce85fc13e1d4cea",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "LDLC",
+              "site_origin": "https://www.ldlc.com",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 67,
+          "first_observation": {
+            "id": "ldlc_75639",
+            "observed_at": "2026-10-29T23:15:12.109226+00:00",
+            "price": "129.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "d761d9406d5cb7570aa184fbd3e095825088d74ed38e4659879b1fec2bd79567"
+          },
+          "latest_observation": {
+            "id": "ldlc_75639",
+            "observed_at": "2026-11-10T17:55:23.713565+00:00",
+            "price": "129.95",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "83438900bd0d75fd1187cda8d9cd3f863bafbde6ef96c4ebdce85fc13e1d4cea"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        },
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+          "current_quote": {
+            "seller": "JoueClub",
+            "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+            "observed_at": "2026-11-10T17:55:25.491343+00:00",
+            "status": "OK",
+            "usable_current_quote": true,
+            "availability": "IN_STOCK",
+            "displayed_price_eur": "103.99",
+            "body_sha256": "56c139a0e0fefb6d9b5b4327b6bf1d6767fbb3078d9e4765b227880c79893b18",
+            "shipping_eur": null,
+            "error": null,
+            "shipping_to_france_verified": null,
+            "seller_reliability": {
+              "schema": "edge.seller.reliability.v1",
+              "status": "UNVERIFIED",
+              "seller": "JoueClub",
+              "site_origin": "https://www.joueclub.fr",
+              "reviewed_at": null,
+              "valid_until": null,
+              "eligible_for_economic_use": false,
+              "blockers": [
+                "SELLER_RELIABILITY_UNVERIFIED"
+              ]
+            },
+            "retailer_announced_available_date": null
+          },
+          "successful_capture_count": 43,
+          "first_observation": {
+            "id": "joueclub_75639",
+            "observed_at": "2026-11-01T08:37:56.578070+00:00",
+            "price": "103.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "d9051c42b9f33cf797767a845452953c9b0af850f3b7ee4b325d34d359ba13ba"
+          },
+          "latest_observation": {
+            "id": "joueclub_75639",
+            "observed_at": "2026-11-10T17:55:25.491343+00:00",
+            "price": "103.99",
+            "currency": "EUR",
+            "availability": "IN_STOCK",
+            "body_sha256": "56c139a0e0fefb6d9b5b4327b6bf1d6767fbb3078d9e4765b227880c79893b18"
+          },
+          "displayed_price_change_since_first_capture_pct": "0",
+          "change_is_publication_effect": false
+        }
+      ],
+      "current_availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "publication_reaction_measurements": [],
+      "measured_publication_reaction_windows": 0,
+      "reaction_status": "PUBLICATION_REACTION_NOT_MEASURED",
+      "missing_data": [
+        "VERIFIED_REALIZED_SALES",
+        "TRANSACTION_VOLUME",
+        "FRANCE_DELIVERED_PRICES",
+        "NET_MARGIN",
+        "MEASURED_BEFORE_AND_AFTER_PUBLICATION_REACTION"
+      ],
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "causality_proven": false,
+      "buy_signal": false,
+      "financial_decision": "NOT_ESTABLISHED"
+    }
+  ],
+  "publication_linked_cases": 3,
+  "measured_publication_reaction_windows": 0,
+  "data_policy": "OBSERVED_PUBLICATIONS_AND_RETAIL_QUOTES_ONLY"
+}

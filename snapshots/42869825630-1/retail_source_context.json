@@ -1,0 +1,672 @@
+{
+  "schema": "edge.mri.retail_source_context.v1",
+  "generated_at": "2026-11-10T17:55:50.777575+00:00",
+  "products": [
+    {
+      "product_id": "lego_10365",
+      "sources": [
+        {
+          "seller": "LEGO France",
+          "source_url": "https://www.lego.com/fr-fr/product/captain-jack-sparrows-pirate-ship-10365",
+          "observed_at": "2026-11-10T17:55:20.208606+00:00",
+          "status": "FAILED",
+          "usable_current_quote": false,
+          "availability": "UNKNOWN",
+          "displayed_price_eur": null,
+          "body_sha256": null,
+          "shipping_eur": null,
+          "error": "HTTP Error 403: Forbidden",
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LEGO France",
+            "site_origin": "https://www.lego.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "La Grande Recre",
+          "source_url": "https://www.lagranderecre.fr/jeux-de-construction/jeux-de-construction-en-briques/super-heros-cinema-et-jeux-video/le-bateau-pirate-du-capitaine-jack-sparrow-lego-icons-10365.html",
+          "observed_at": "2026-11-10T17:55:21.128747+00:00",
+          "status": "FAILED",
+          "usable_current_quote": false,
+          "availability": "UNKNOWN",
+          "displayed_price_eur": null,
+          "body_sha256": "d8ab6696fcf0305769a76615068400f277ca708ad25bde78320e205e8151ba34",
+          "shipping_eur": null,
+          "error": "Expected exactly one identified EUR Offer; found 0",
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "La Grande Recre",
+            "site_origin": "https://www.lagranderecre.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+          "observed_at": "2026-11-10T17:55:22.259729+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "349.99",
+          "body_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 1,
+      "in_stock_seller_count": 1,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "349.99",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_11383",
+      "sources": [
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-11383-le-manoir-du-maire-5702018063644.html",
+          "observed_at": "2026-11-10T17:55:26.383449+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "109.99",
+          "body_sha256": "c621b0c6edce2c1c6c5ee5c32e482b0a6aed73995e223d66548744cd4b34e00a",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+          "observed_at": "2026-11-10T17:55:32.036805+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "104.95",
+          "body_sha256": "e4aced68bd19e9531ad0400e013765804de3c43a38e696072d49eaed09391c14",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 2,
+      "in_stock_seller_count": 2,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "104.95",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_11388",
+      "sources": [
+        {
+          "seller": "BRICKshop",
+          "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+          "observed_at": "2026-11-10T17:55:29.091420+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "OUT_OF_STOCK",
+          "displayed_price_eur": "599.99",
+          "body_sha256": "36ba09e128f07baa0e212be8016a002e35587be82f07d7f10eeedf64a552204a",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": false,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "BRICKshop",
+            "site_origin": "https://www.brickshop.eu",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 1,
+      "in_stock_seller_count": 0,
+      "out_of_stock_seller_count": 1,
+      "availability_context": "SINGLE_SOURCE_STOCKOUT",
+      "lowest_observed_in_stock_asking_price_eur": null,
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_40744",
+      "sources": [
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+          "observed_at": "2026-11-10T17:55:31.157173+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "OUT_OF_STOCK",
+          "displayed_price_eur": "12.95",
+          "body_sha256": "564bd46ee2fd09f53d28771d1c05d52661bb08df5444a3d705b004f10d5d1bf7",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 1,
+      "in_stock_seller_count": 0,
+      "out_of_stock_seller_count": 1,
+      "availability_context": "SINGLE_SOURCE_STOCKOUT",
+      "lowest_observed_in_stock_asking_price_eur": null,
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_42179",
+      "sources": [
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00731483.html",
+          "observed_at": "2026-11-10T17:55:32.962939+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "74.95",
+          "body_sha256": "137172e998ba5d74c31c4e1701728bf866e5aa0f1632bb8d89aa37ff37ab199f",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 1,
+      "in_stock_seller_count": 1,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "74.95",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_42705",
+      "sources": [
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-friends-42705-la-cabane-chaleureuse-dans-la-foret-5702018060629.html",
+          "observed_at": "2026-11-10T17:55:26.925139+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "94.99",
+          "body_sha256": "d5f8e58229967a1638577c6017ea8ae87b81102b2e7becf15c75a8637c33ed40",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+          "observed_at": "2026-11-10T17:55:30.085113+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "92.95",
+          "body_sha256": "96f2ce2b13bcb29f2f1c84669c299b9f3cf73c932934443e1125d063a8b188d5",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 2,
+      "in_stock_seller_count": 2,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "92.95",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_75639",
+      "sources": [
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00701668.html",
+          "observed_at": "2026-11-10T17:55:23.713565+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "129.95",
+          "body_sha256": "83438900bd0d75fd1187cda8d9cd3f863bafbde6ef96c4ebdce85fc13e1d4cea",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "King Jouet France",
+          "source_url": "https://www.king-jouet.com/jeu-jouet/jeux-constructions/lego-planchettes/ref-990051-75639-lego-one-piece-bateau-pirate-vogue-merry.htm",
+          "observed_at": "2026-11-10T17:55:23.722946+00:00",
+          "status": "FAILED",
+          "usable_current_quote": false,
+          "availability": "UNKNOWN",
+          "displayed_price_eur": null,
+          "body_sha256": null,
+          "shipping_eur": null,
+          "error": "HTTP Error 403: Forbidden",
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "King Jouet France",
+            "site_origin": "https://www.king-jouet.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        },
+        {
+          "seller": "JoueClub",
+          "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-one-piece-75639-le-bateau-pirate-vogue-merry-5702017818023.html",
+          "observed_at": "2026-11-10T17:55:25.491343+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "103.99",
+          "body_sha256": "56c139a0e0fefb6d9b5b4327b6bf1d6767fbb3078d9e4765b227880c79893b18",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "JoueClub",
+            "site_origin": "https://www.joueclub.fr",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 2,
+      "in_stock_seller_count": 2,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "103.99",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "lego_75642",
+      "sources": [
+        {
+          "seller": "LDLC",
+          "source_url": "https://www.ldlc.com/fiche/PB00759565.html",
+          "observed_at": "2026-11-10T17:55:33.915892+00:00",
+          "status": "OK",
+          "usable_current_quote": true,
+          "availability": "IN_STOCK",
+          "displayed_price_eur": "53.95",
+          "body_sha256": "02da9bdd21724dd9d3eaed897056d169da55cd8bc8ca958aba457757740a3efa",
+          "shipping_eur": null,
+          "error": null,
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "LDLC",
+            "site_origin": "https://www.ldlc.com",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 1,
+      "in_stock_seller_count": 1,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "IN_STOCK_ON_OBSERVED_SOURCES",
+      "lowest_observed_in_stock_asking_price_eur": "53.95",
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER",
+          "UNVERIFIED_SELLER_OFFERS_EXCLUDED_FROM_ECONOMIC_COMPARISONS"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "pokemon_card_base1-4",
+      "sources": [
+        {
+          "seller": "Cardmarket indication via TCGdex",
+          "source_url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+          "observed_at": "2026-11-10T17:55:21.129543+00:00",
+          "status": "FAILED",
+          "usable_current_quote": false,
+          "availability": "UNKNOWN",
+          "displayed_price_eur": null,
+          "body_sha256": null,
+          "shipping_eur": null,
+          "error": "HTTP Error 503: Service Unavailable",
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "Cardmarket indication via TCGdex",
+            "site_origin": "https://api.tcgdex.net",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 0,
+      "in_stock_seller_count": 0,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "AVAILABILITY_NOT_ESTABLISHED",
+      "lowest_observed_in_stock_asking_price_eur": null,
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    },
+    {
+      "product_id": "pokemon_card_swsh3-136",
+      "sources": [
+        {
+          "seller": "Cardmarket indication via TCGdex",
+          "source_url": "https://api.tcgdex.net/v2/fr/cards/swsh3-136",
+          "observed_at": "2026-11-10T17:55:21.351719+00:00",
+          "status": "FAILED",
+          "usable_current_quote": false,
+          "availability": "UNKNOWN",
+          "displayed_price_eur": null,
+          "body_sha256": null,
+          "shipping_eur": null,
+          "error": "HTTP Error 503: Service Unavailable",
+          "shipping_to_france_verified": null,
+          "seller_reliability": {
+            "schema": "edge.seller.reliability.v1",
+            "status": "UNVERIFIED",
+            "seller": "Cardmarket indication via TCGdex",
+            "site_origin": "https://api.tcgdex.net",
+            "reviewed_at": null,
+            "valid_until": null,
+            "eligible_for_economic_use": false,
+            "blockers": [
+              "SELLER_RELIABILITY_UNVERIFIED"
+            ]
+          },
+          "retailer_announced_available_date": null
+        }
+      ],
+      "verified_current_seller_count": 0,
+      "in_stock_seller_count": 0,
+      "out_of_stock_seller_count": 0,
+      "availability_context": "AVAILABILITY_NOT_ESTABLISHED",
+      "lowest_observed_in_stock_asking_price_eur": null,
+      "market_wide_shortage_proven": false,
+      "completed_sales_verified": false,
+      "buy_signal": false,
+      "purchase_gate": {
+        "status": "BLOCKED",
+        "seller_eligible_offer_count": 0,
+        "blockers": [
+          "NO_IN_STOCK_OFFER_FROM_A_REVIEWED_SELLER"
+        ],
+        "buy_signal": false,
+        "purchase_authorized": false,
+        "financial_decision": "NOT_ESTABLISHED"
+      },
+      "lowest_reviewed_seller_in_stock_price_eur": null
+    }
+  ],
+  "scope": "CURRENT_RUN_QUOTES_WITHIN_24_HOURS_NOT_EXHAUSTIVE_MARKET",
+  "net_margin_computed": false
+}
