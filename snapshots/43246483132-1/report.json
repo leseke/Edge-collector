@@ -1,0 +1,1 @@
+{"completed_sale_verified": false, "coverage": "SNAPSHOT_ONLY", "market_offer_evidence": false, "observed_at": "2026-11-12T15:19:16Z", "purchase_authorized": false, "schema": "edge.tcg.scheduled_snapshot.v1", "set_count": 203, "sha256": "df7aafa42dab5edf3b2491eceade9a14649102ee887f47c5c089fbf4444d1df7", "source_url": "https://api.tcgdex.net/v2/fr/sets"}
