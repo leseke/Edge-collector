@@ -1,0 +1,1133 @@
+{
+  "schema": "edge.mri.retail_analogues.v1",
+  "generated_at": "2026-11-12T12:51:01.225662+00:00",
+  "method": "RETAIL_EVENT_ANALOGUES_V1",
+  "similarity_threshold": 0.75,
+  "maximum_analogues": 20,
+  "policy": "FEATURES_AND_PRECEDENT_OUTCOMES_KNOWN_AT_QUERY_DETECTION_TIME",
+  "feature_weights": "EQUAL; PRICE_RATIO, CIRCULAR_MONTH, SAME_SELLER, PRIOR_PRICE_CHANGE",
+  "threshold_and_weights_validated": false,
+  "independence_verified": false,
+  "calibrated_for_future_prediction": false,
+  "out_of_sample_performance": null,
+  "probability_target": "SOURCE_DECLARED_IN_STOCK_AT_TARGET_CAPTURE",
+  "not_a_probability_of": [
+    "profit",
+    "sale",
+    "optimal_entry_or_exit"
+  ],
+  "verified_episode_count": 6,
+  "queries": [
+    {
+      "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "product_id": "lego_40744",
+      "configuration": {
+        "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "product_id": "lego_40744",
+        "as_of": "2026-10-30T22:37:51.698791+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "LDLC",
+        "price": 12.95,
+        "month": 10,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-10-30T11:20:43.294492+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-10-30T11:20:43.294492+00:00",
+            "body_sha256": "fe58894264fac73ac2cacc31de6ce0c57513f53d2b114aedae015e8f3400440a",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:33:04.818197+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T11:35:36.318095+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T13:29:53.789734+00:00",
+            "body_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          },
+          {
+            "observed_at": "2026-10-30T22:37:51.698791+00:00",
+            "body_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+            "url": "https://www.ldlc.com/fiche/PB00707328.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "NOT_PRIOR_TO_QUERY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    },
+    {
+      "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "product_id": "lego_11388",
+      "configuration": {
+        "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+        "product_id": "lego_11388",
+        "as_of": "2026-11-04T01:27:08.120706+00:00",
+        "family": "OBSERVED_AVAILABILITY_CHANGE",
+        "currency": "EUR",
+        "seller": "BRICKshop",
+        "price": 599.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-01T21:39:28.389701+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-01T21:39:28.389701+00:00",
+            "body_sha256": "93f578ff9e21642bb9be89a4757abc0aade4297769fa58292c1f9d61d1a50d30",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:43:11.461400+00:00",
+            "body_sha256": "9bb18a41e464a2b62abba76c87315eb93082e3b588575a629e06d4ac059ddaf2",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:55:32.777397+00:00",
+            "body_sha256": "318f94e7a20388a3df43ee597d92e6951c141b26982d5ef52f1e7b5c17f45610",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-01T21:58:32.517662+00:00",
+            "body_sha256": "4ad66015694704e326f5374aa95ca9879247d4c9a3951d792f4400f08a53a4c9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T17:09:34.717249+00:00",
+            "body_sha256": "389fbd69ce015c2171d7374d9accb99a02eec9cb65cadafa4bc2ae3b2c066361",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-02T23:54:19.228048+00:00",
+            "body_sha256": "80f0d4169275a4c8149b453e8439b1bf57811320cca3b6494424dc5770a46f33",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T06:55:30.736267+00:00",
+            "body_sha256": "ab14b47a889ae607d7ef83a51f8d42515272906124b9a3c8149e5a054b3326e9",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T15:17:08.467511+00:00",
+            "body_sha256": "4ea6fced667b0c6b1914e0148dd1b74dc6b57a116ae5e35d741464d08f76a696",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-03T21:07:56.175708+00:00",
+            "body_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          },
+          {
+            "observed_at": "2026-11-04T01:27:08.120706+00:00",
+            "body_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+            "url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    },
+    {
+      "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+      "product_id": "lego_10365",
+      "configuration": {
+        "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+        "product_id": "lego_10365",
+        "as_of": "2026-11-10T09:58:15.449447+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "JoueClub",
+        "price": 349.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-07T10:22:22.402834+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-07T10:22:22.402834+00:00",
+            "body_sha256": "595fa7395836a28ee618d9e9f90205f366b17b0a84a7ab46f7fcd23171543f37",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-07T16:52:48.290908+00:00",
+            "body_sha256": "3f35a9c006f848d8ebdb5d507c7120b812eb2b67f5df70a965e4080ddd6ba27d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-07T20:56:29.005512+00:00",
+            "body_sha256": "0fc40ea74175fbb86efebcb28027af56f3f7dcaa4e4e917d47d5691729afdd7e",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T00:43:09.202502+00:00",
+            "body_sha256": "3c0e5d82ca9bf4f4f771b5d720a06ff7e02dc20aac9e97077263276d69ae237d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T07:27:50.347685+00:00",
+            "body_sha256": "ee44068a116a32e128c33af299065051f19d09c5a0f5305f9ae7460a36d444e8",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T15:19:28.348038+00:00",
+            "body_sha256": "f2dd276e423926e4f7bced4488e0f2f2c8a60cf77d8af55f72965520d7cf06ef",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T20:32:21.038097+00:00",
+            "body_sha256": "47994dbf005fece83d1b2b1116399520eff4bd37b5dc4a558f2639f32d027e6a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T00:57:50.355561+00:00",
+            "body_sha256": "fd74ae74af8cc4e6fa8d54c045b0b7696084529c50bac1fd20934e94c3a0130a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T08:02:50.696175+00:00",
+            "body_sha256": "f6ff5660ec87390109db18e47332a396ed15373945f69e2847e33fa9cad64b91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T18:52:51.467904+00:00",
+            "body_sha256": "b1a22914a082d3b1b6787ffa869789631d8dd27131753dbcddfeb8438504ff91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T02:12:45.023776+00:00",
+            "body_sha256": "05e4141ecabf47c3626175825cc731db56d3714bc52438f415eec168451dae48",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T09:58:15.449447+00:00",
+            "body_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "OUTCOME_NOT_KNOWN_AT_QUERY_TIME"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "BELOW_RESEARCH_SIMILARITY_THRESHOLD"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "BELOW_RESEARCH_SIMILARITY_THRESHOLD"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    },
+    {
+      "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+      "product_id": "lego_10365",
+      "configuration": {
+        "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+        "product_id": "lego_10365",
+        "as_of": "2026-11-10T17:55:22.259729+00:00",
+        "family": "OBSERVED_RESTOCK",
+        "currency": "EUR",
+        "seller": "JoueClub",
+        "price": 349.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-07T20:56:29.005512+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-07T20:56:29.005512+00:00",
+            "body_sha256": "0fc40ea74175fbb86efebcb28027af56f3f7dcaa4e4e917d47d5691729afdd7e",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T00:43:09.202502+00:00",
+            "body_sha256": "3c0e5d82ca9bf4f4f771b5d720a06ff7e02dc20aac9e97077263276d69ae237d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T07:27:50.347685+00:00",
+            "body_sha256": "ee44068a116a32e128c33af299065051f19d09c5a0f5305f9ae7460a36d444e8",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T15:19:28.348038+00:00",
+            "body_sha256": "f2dd276e423926e4f7bced4488e0f2f2c8a60cf77d8af55f72965520d7cf06ef",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T20:32:21.038097+00:00",
+            "body_sha256": "47994dbf005fece83d1b2b1116399520eff4bd37b5dc4a558f2639f32d027e6a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T00:57:50.355561+00:00",
+            "body_sha256": "fd74ae74af8cc4e6fa8d54c045b0b7696084529c50bac1fd20934e94c3a0130a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T08:02:50.696175+00:00",
+            "body_sha256": "f6ff5660ec87390109db18e47332a396ed15373945f69e2847e33fa9cad64b91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T18:52:51.467904+00:00",
+            "body_sha256": "b1a22914a082d3b1b6787ffa869789631d8dd27131753dbcddfeb8438504ff91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T02:12:45.023776+00:00",
+            "body_sha256": "05e4141ecabf47c3626175825cc731db56d3714bc52438f415eec168451dae48",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T09:58:15.449447+00:00",
+            "body_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T17:55:22.259729+00:00",
+            "body_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    },
+    {
+      "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+      "product_id": "lego_10365",
+      "configuration": {
+        "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+        "product_id": "lego_10365",
+        "as_of": "2026-11-10T23:27:57.615500+00:00",
+        "family": "OBSERVED_STOCKOUT",
+        "currency": "EUR",
+        "seller": "JoueClub",
+        "price": 349.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-08T00:43:09.202502+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-08T00:43:09.202502+00:00",
+            "body_sha256": "3c0e5d82ca9bf4f4f771b5d720a06ff7e02dc20aac9e97077263276d69ae237d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T07:27:50.347685+00:00",
+            "body_sha256": "ee44068a116a32e128c33af299065051f19d09c5a0f5305f9ae7460a36d444e8",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T15:19:28.348038+00:00",
+            "body_sha256": "f2dd276e423926e4f7bced4488e0f2f2c8a60cf77d8af55f72965520d7cf06ef",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-08T20:32:21.038097+00:00",
+            "body_sha256": "47994dbf005fece83d1b2b1116399520eff4bd37b5dc4a558f2639f32d027e6a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T00:57:50.355561+00:00",
+            "body_sha256": "fd74ae74af8cc4e6fa8d54c045b0b7696084529c50bac1fd20934e94c3a0130a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T08:02:50.696175+00:00",
+            "body_sha256": "f6ff5660ec87390109db18e47332a396ed15373945f69e2847e33fa9cad64b91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-09T18:52:51.467904+00:00",
+            "body_sha256": "b1a22914a082d3b1b6787ffa869789631d8dd27131753dbcddfeb8438504ff91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T02:12:45.023776+00:00",
+            "body_sha256": "05e4141ecabf47c3626175825cc731db56d3714bc52438f415eec168451dae48",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T09:58:15.449447+00:00",
+            "body_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T17:55:22.259729+00:00",
+            "body_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T23:27:57.615500+00:00",
+            "body_sha256": "ad11e90769b9607894d1da7312a0b6b53bce29c091accd34ed6c658679bf5fc0",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "OUTCOME_NOT_KNOWN_AT_QUERY_TIME"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "BELOW_RESEARCH_SIMILARITY_THRESHOLD"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "BELOW_RESEARCH_SIMILARITY_THRESHOLD"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SELF"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    },
+    {
+      "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+      "product_id": "lego_10365",
+      "configuration": {
+        "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+        "product_id": "lego_10365",
+        "as_of": "2026-11-12T12:50:34.455393+00:00",
+        "family": "OBSERVED_RESTOCK",
+        "currency": "EUR",
+        "seller": "JoueClub",
+        "price": 349.99,
+        "month": 11,
+        "prior_price_change_pct": 0.0,
+        "prior_price_baseline_at": "2026-11-09T18:52:51.467904+00:00",
+        "evidence": [
+          {
+            "observed_at": "2026-11-09T18:52:51.467904+00:00",
+            "body_sha256": "b1a22914a082d3b1b6787ffa869789631d8dd27131753dbcddfeb8438504ff91",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T02:12:45.023776+00:00",
+            "body_sha256": "05e4141ecabf47c3626175825cc731db56d3714bc52438f415eec168451dae48",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T09:58:15.449447+00:00",
+            "body_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T17:55:22.259729+00:00",
+            "body_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-10T23:27:57.615500+00:00",
+            "body_sha256": "ad11e90769b9607894d1da7312a0b6b53bce29c091accd34ed6c658679bf5fc0",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-11T06:36:53.015782+00:00",
+            "body_sha256": "87400063308a20bb934fe833f924c162df85fde19d89128a185e2f5d48758808",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-11T15:20:00.019056+00:00",
+            "body_sha256": "35d006a5ba413adc42e22fcb56b488216f0329cf2420e1abcd3e538ebbd7796c",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-11T22:44:47.026685+00:00",
+            "body_sha256": "83109864d72d97001af35d748faa35f57bee2d3b3ce832d698ffa66e3fb00a5a",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-12T03:51:48.057339+00:00",
+            "body_sha256": "e4fac20dfd010418f9b653eff4ef0776a9416771cf8970aa0083d00ef8505936",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          },
+          {
+            "observed_at": "2026-11-12T12:50:34.455393+00:00",
+            "body_sha256": "84ec41ce9c8d0e09bb1d93131df7b368609a84e906dc5ef957abd28ad78ca4d1",
+            "url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html"
+          }
+        ],
+        "unavailable_features": [
+          "licence",
+          "distribution",
+          "production_quantity",
+          "transaction_volume",
+          "net_margin"
+        ]
+      },
+      "horizons": [
+        {
+          "horizon_hours": 24,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 72,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        },
+        {
+          "horizon_hours": 168,
+          "analogues": [],
+          "exclusions": [
+            {
+              "event_id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+              "reason": "DIFFERENT_EVENT_FAMILY_OR_CURRENCY"
+            },
+            {
+              "event_id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+              "reason": "SAME_PRODUCT_DEPENDENCE"
+            },
+            {
+              "event_id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+              "reason": "SELF"
+            }
+          ],
+          "sample_count": 0,
+          "in_stock_count": 0,
+          "minimum_samples": 5,
+          "estimated_in_stock_frequency": null,
+          "binomial_reference_interval_95": null,
+          "status": "INSUFFICIENT_COMPARABLE_HISTORY"
+        }
+      ],
+      "buy_signal": false
+    }
+  ]
+}
