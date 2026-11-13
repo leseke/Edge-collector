@@ -1,0 +1,558 @@
+{
+  "schema": "edge.mri.retail_event_followup.v1",
+  "observed_at": "2026-11-13T23:38:56.515006+00:00",
+  "events": [
+    {
+      "id": "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_40744",
+      "observation_id": "ldlc_discovered_40744",
+      "seller": "LDLC",
+      "source_url": "https://www.ldlc.com/fiche/PB00707328.html",
+      "occurrence_interval_start": "2026-10-30T13:29:53.789734+00:00",
+      "occurrence_interval_end": "2026-10-30T22:37:51.698791+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "12.95",
+      "detected_price": "12.95",
+      "currency": "EUR",
+      "previous_evidence_sha256": "94224949cf5d3c57b3f95ae03d17ea2ca83c3adea6be048470c1f0422f2a7dc1",
+      "detected_evidence_sha256": "1987abe52da407e187ec02f90e68b462de23a9268f5d722a46a85dbcfe4a3437",
+      "latest_observed_at": "2026-11-13T23:38:35.877854+00:00",
+      "latest_price": "12.95",
+      "latest_availability": "OUT_OF_STOCK",
+      "latest_evidence_sha256": "01d703a030f97dc50189b44f968545823ed0b7f854389d0be66538e044f82f92",
+      "elapsed_observed_hours": 337.012,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 67,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-10-31T22:37:51.698791+00:00",
+          "status": "MISSING_WINDOW_OBSERVATION"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-02T22:37:51.698791+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-02T23:54:20.684738+00:00",
+          "price": "12.95",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "cbcda4634e620b6efb769a25dd4245713bd72a821af044b207c9608072b0302d",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-06T22:37:51.698791+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-06T23:14:30.317345+00:00",
+          "price": "12.95",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "e17939a47d343eff9a0a4e42f5bccedd85d75cd57da079eed2648466d45d0560",
+          "observed_displayed_price_change_pct": "0"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "e7bb8eebaa9e4e83c453d4cd1bdbdb6bdea98caaa28a43ddec5fe016858453ef",
+      "family": "OBSERVED_AVAILABILITY_CHANGE",
+      "product_id": "lego_11388",
+      "observation_id": "brickshop_11388",
+      "seller": "BRICKshop",
+      "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "occurrence_interval_start": "2026-11-03T21:07:56.175708+00:00",
+      "occurrence_interval_end": "2026-11-04T01:27:08.120706+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "COMING_SOON",
+      "after": "OUT_OF_STOCK",
+      "before_price": "599.99",
+      "detected_price": "599.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "78f3cd4dfd0685c35772c0bdb2f6d820954238d83d24b1c8d8e8e59fdfa59ec6",
+      "detected_evidence_sha256": "2cf1e20e2ff5c96b7ecb7b4cf55cb381040d87b8f74c558227bf782618e2b3f3",
+      "latest_observed_at": "2026-11-13T23:38:34.356235+00:00",
+      "latest_price": "599.99",
+      "latest_availability": "OUT_OF_STOCK",
+      "latest_evidence_sha256": "244ac2a927893e58eb0979a9b379c4adddc8a193c00502f4931d7d26b7da75d8",
+      "elapsed_observed_hours": 238.191,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 31,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-05T01:27:08.120706+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-05T06:56:29.262628+00:00",
+          "price": "599.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "a28d972065f0cf158deb32a47dbc313004d4c580a54cdc544f8964e784a11bd8",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-07T01:27:08.120706+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-07T02:54:46.875714+00:00",
+          "price": "599.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "93a1347dfd9cc6cad6054a19e2073aeb27d32df9f840a2f2d957ee970de26657",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-11T01:27:08.120706+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-11T06:36:58.768044+00:00",
+          "price": "599.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "8dff9896a763441e627b2b911df2ce413cd711c65428ac85f13d3533100874fa",
+          "observed_displayed_price_change_pct": "0"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-10T02:12:45.023776+00:00",
+      "occurrence_interval_end": "2026-11-10T09:58:15.449447+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "05e4141ecabf47c3626175825cc731db56d3714bc52438f415eec168451dae48",
+      "detected_evidence_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 85.67,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 13,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-11T09:58:15.449447+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-11T15:20:00.019056+00:00",
+          "price": "349.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "35d006a5ba413adc42e22fcb56b488216f0329cf2420e1abcd3e538ebbd7796c",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-13T09:58:15.449447+00:00",
+          "status": "MISSING_WINDOW_OBSERVATION"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-17T09:58:15.449447+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "e80ddda9012ea4b1e64b11dcf97e1baa98f9cfd6eb52d0e59879d31ebfbe0a09",
+      "family": "OBSERVED_RESTOCK",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-10T09:58:15.449447+00:00",
+      "occurrence_interval_end": "2026-11-10T17:55:22.259729+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "b65ee7709dd21f8527f07e4159776cf9031d533fea364a538ae8c5d3c8bd3c1d",
+      "detected_evidence_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 77.718,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 12,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-11T17:55:22.259729+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-11T22:44:47.026685+00:00",
+          "price": "349.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "83109864d72d97001af35d748faa35f57bee2d3b3ce832d698ffa66e3fb00a5a",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-13T17:55:22.259729+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-13T23:38:27.803450+00:00",
+          "price": "349.99",
+          "availability": "IN_STOCK",
+          "evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-17T17:55:22.259729+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-10T17:55:22.259729+00:00",
+      "occurrence_interval_end": "2026-11-10T23:27:57.615500+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "bcf00b6223d4eb9f99f6add4d12707c8665f1a8cb0a3c0ea61bf9c56e1274e04",
+      "detected_evidence_sha256": "ad11e90769b9607894d1da7312a0b6b53bce29c091accd34ed6c658679bf5fc0",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 72.175,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 11,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-11T23:27:57.615500+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-12T03:51:48.057339+00:00",
+          "price": "349.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "e4fac20dfd010418f9b653eff4ef0776a9416771cf8970aa0083d00ef8505936",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-13T23:27:57.615500+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-13T23:38:27.803450+00:00",
+          "price": "349.99",
+          "availability": "IN_STOCK",
+          "evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-17T23:27:57.615500+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "4a8a5cd04b256b772b057ccd5d0fc464b9c73ba0f2da793b46463ad6e6c8385e",
+      "family": "OBSERVED_RESTOCK",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-12T03:51:48.057339+00:00",
+      "occurrence_interval_end": "2026-11-12T12:50:34.455393+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "e4fac20dfd010418f9b653eff4ef0776a9416771cf8970aa0083d00ef8505936",
+      "detected_evidence_sha256": "84ec41ce9c8d0e09bb1d93131df7b368609a84e906dc5ef957abd28ad78ca4d1",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 34.798,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 6,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-13T12:50:34.455393+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-13T17:48:42.760662+00:00",
+          "price": "349.99",
+          "availability": "OUT_OF_STOCK",
+          "evidence_sha256": "f5aa76b0d53e162a17236e67c86a9bca8bb6a2f23151cddcc4c13f68f535e29b",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-15T12:50:34.455393+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-19T12:50:34.455393+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "63f634c4a22fc64af6dff051be359bb2acf34cebd21b8ee56fc1ca3e622539ff",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-12T12:50:34.455393+00:00",
+      "occurrence_interval_end": "2026-11-12T20:52:53.248724+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "84ec41ce9c8d0e09bb1d93131df7b368609a84e906dc5ef957abd28ad78ca4d1",
+      "detected_evidence_sha256": "ed812ef9ae263bab7a4a8835e27544aed43118840cf9d5616a842caae21b746b",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 26.76,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 5,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-13T20:52:53.248724+00:00",
+          "status": "MEASURED",
+          "observed_at": "2026-11-13T23:38:27.803450+00:00",
+          "price": "349.99",
+          "availability": "IN_STOCK",
+          "evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+          "observed_displayed_price_change_pct": "0"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-15T20:52:53.248724+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-19T20:52:53.248724+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "62a9c2516d566a2e6ac474ef96077c2af09dc9d5c8d649f0f650bdae0d4d376b",
+      "family": "OBSERVED_RESTOCK",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-12T20:52:53.248724+00:00",
+      "occurrence_interval_end": "2026-11-13T01:53:36.535752+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "ed812ef9ae263bab7a4a8835e27544aed43118840cf9d5616a842caae21b746b",
+      "detected_evidence_sha256": "63ad7026d0e0d4c6e0a3f11e2dacf29e2d49ea4675531bd94e72cb050b89987f",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 21.748,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 4,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-14T01:53:36.535752+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-16T01:53:36.535752+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-20T01:53:36.535752+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "5e3d9210120c847f41efb5416f4b4fe5140aa1d2975f140529c24abac6e804d9",
+      "family": "OBSERVED_STOCKOUT",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-13T09:39:07.186523+00:00",
+      "occurrence_interval_end": "2026-11-13T17:48:42.760662+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "71730f8de68c557e37131c286c379fc02723df03b838914c75c95d9ed0f81aa9",
+      "detected_evidence_sha256": "f5aa76b0d53e162a17236e67c86a9bca8bb6a2f23151cddcc4c13f68f535e29b",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 5.829,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 2,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-14T17:48:42.760662+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-16T17:48:42.760662+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-20T17:48:42.760662+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    },
+    {
+      "id": "37458c23bceee398eea8a16dde6d46b224dc5e27083d8e2314c42887b1a95b3f",
+      "family": "OBSERVED_RESTOCK",
+      "product_id": "lego_10365",
+      "observation_id": "joueclub_10365",
+      "seller": "JoueClub",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "occurrence_interval_start": "2026-11-13T17:48:42.760662+00:00",
+      "occurrence_interval_end": "2026-11-13T23:38:27.803450+00:00",
+      "anchor_kind": "OBSERVATION_WINDOW_END_NOT_EXACT_EVENT_TIME",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "before_price": "349.99",
+      "detected_price": "349.99",
+      "currency": "EUR",
+      "previous_evidence_sha256": "f5aa76b0d53e162a17236e67c86a9bca8bb6a2f23151cddcc4c13f68f535e29b",
+      "detected_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "latest_observed_at": "2026-11-13T23:38:27.803450+00:00",
+      "latest_price": "349.99",
+      "latest_availability": "IN_STOCK",
+      "latest_evidence_sha256": "24458d09ee5fdd8c417e6c0c3af6c64b0f5a9765d7dfa50996ea4d7413342f20",
+      "elapsed_observed_hours": 0.0,
+      "observed_displayed_price_change_pct": "0",
+      "successful_captures_since_detection": 1,
+      "windows": [
+        {
+          "horizon_hours": 24,
+          "target_at": "2026-11-14T23:38:27.803450+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 72,
+          "target_at": "2026-11-16T23:38:27.803450+00:00",
+          "status": "PENDING_HORIZON"
+        },
+        {
+          "horizon_hours": 168,
+          "target_at": "2026-11-20T23:38:27.803450+00:00",
+          "status": "PENDING_HORIZON"
+        }
+      ],
+      "causality_proven": false,
+      "completed_sale_verified": false,
+      "buy_signal": false
+    }
+  ],
+  "excluded_events": [
+    {
+      "id": "864bf65f3d5aa92ed0cf702a1442e02bc898e9a8abe82238cd0c7f02136d986b",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "bcda219395625d3e2ff1b171608480f08a7ec0c8bae105fb99720539cb594b6d",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "0f235c4b1953ffaa52a0f7efa8452ebf2f7af33d3337d6aa6f4a5adf36d8a845",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "a27bf375d2d4267959bc9363744dc1055ea02122be7f5abca25e0a74fedd24ec",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "6130d586adb284bc159ce8a22f7feccd745a3dd433c7d06ef6fb79e9bbcce704",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "03453df2b5a1cf63aac2100765d0b2e599e072bdf2c180ab934c2d66b1938e59",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    },
+    {
+      "id": "716c858b1a936802f0601e9905f03e822b11604323214ccf976a2dc46943f410",
+      "reason": "NOT_A_RETAIL_OFFER_TRANSITION"
+    }
+  ],
+  "scope": "SAME_SOURCE_POST_DETECTION_DISPLAYED_PRICE_AND_DECLARED_STOCK",
+  "causality_proven": false
+}

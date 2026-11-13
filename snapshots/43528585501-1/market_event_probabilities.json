@@ -1,0 +1,55 @@
+{
+  "schema": "edge.mri.stock_event_estimates.v1",
+  "observed_at": "2026-11-13T23:38:56.515006+00:00",
+  "data_kind": "COMPUTED_ESTIMATE_NOT_OBSERVED_FACT",
+  "target": "IN_STOCK_AT_FIRST_CAPTURE_WITHIN_SIX_HOURS_AFTER_HORIZON_FROM_STOCKOUT_DETECTION",
+  "not_a_probability_of": [
+    "restock at any moment during the interval",
+    "sale",
+    "profit",
+    "causal impact"
+  ],
+  "calibrated_for_future_prediction": false,
+  "independence_verified": false,
+  "estimates": [
+    {
+      "horizon_hours": 24,
+      "sample_count": 3,
+      "in_stock_count": 1,
+      "minimum_samples": 5,
+      "event_ids": [
+        "0f6e0524347351aa1978914ae52901a0b0763ac41a175ab567c8b3bb19477e63",
+        "63f634c4a22fc64af6dff051be359bb2acf34cebd21b8ee56fc1ca3e622539ff",
+        "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26"
+      ],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    },
+    {
+      "horizon_hours": 72,
+      "sample_count": 2,
+      "in_stock_count": 1,
+      "minimum_samples": 5,
+      "event_ids": [
+        "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a",
+        "adde4cb1119865c6749177c5305a4b7a7df3c3a0be4e35bc72e73c59e4142b26"
+      ],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    },
+    {
+      "horizon_hours": 168,
+      "sample_count": 1,
+      "in_stock_count": 0,
+      "minimum_samples": 5,
+      "event_ids": [
+        "115316957f8e67caec1804b3d8ab89e0064cee402322a915bfee950d3aaa005a"
+      ],
+      "estimated_probability": null,
+      "binomial_reference_interval_95": null,
+      "status": "INSUFFICIENT_MEASURED_SAMPLE"
+    }
+  ]
+}
