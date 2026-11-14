@@ -431,12 +431,18 @@ class CompatibilityTests(unittest.TestCase):
         self.assertEqual(SCHEMA["properties"]["schema"]["const"], "edge.intelligence_report")
         self.assertEqual(len(SCHEMA["required"]), 16)
 
-    def test_existing_dashboard_consumers_kept(self):
+    def test_current_dashboard_consumers_kept(self):
         with open(os.path.join(ROOT, "index.html"), encoding="utf-8") as f:
             html = f.read()
-        for needle in ('getJSON("data/discovery/latest.json")', 'getJSON("data/searchlab/index.json")',
-                       'fetch("radar.json', 'getJSON("data/intelligence/index.json")'):
-            self.assertIn(needle.split("(")[1][:25], html)
+        self.assertIn('src="./assets/edge-live.mjs"', html)
+        with open(os.path.join(ROOT, "assets/edge-live.mjs"), encoding="utf-8") as f:
+            live = f.read()
+        self.assertIn("loadCapture", live)
+        with open(os.path.join(ROOT, "assets/edge-data.mjs"), encoding="utf-8") as f:
+            data = f.read()
+        self.assertIn("export async function loadCapture", data)
+        self.assertIn("'latest.json'", data)
+        self.assertIn("'edge.public.live_capture.v1'", data)
 
     def test_unknown_schema_rejected(self):
         self.assertEqual(assess({"schema": "autre"})["verification_level"], "invalid")
