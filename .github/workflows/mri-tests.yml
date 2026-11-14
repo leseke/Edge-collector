@@ -37,3 +37,5 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Run offline unit tests
         run: python -m tools.run_tests_offline
+      - name: Run live interface tests
+        run: node --test tests/test_edge_live.mjs
