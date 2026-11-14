@@ -1,0 +1,8 @@
+{
+  "_note": "Hypotheses de frais A VERIFIER par l'utilisateur. verified=false abaisse la confiance du rapport. Aucune valeur ici n'est une donnee officielle.",
+  "profiles": {
+    "cardmarket_pro": {"commission_pct": 5.0, "payment_pct": 0.0, "fixed_fee_eur": 0.0, "shipping_out_eur": 8.0, "packaging_eur": 1.5, "verified": false},
+    "ebay_fr": {"commission_pct": 13.0, "payment_pct": 0.0, "fixed_fee_eur": 0.35, "shipping_out_eur": 8.0, "packaging_eur": 1.5, "verified": false},
+    "conservative_default": {"commission_pct": 15.0, "payment_pct": 0.0, "fixed_fee_eur": 0.5, "shipping_out_eur": 10.0, "packaging_eur": 2.0, "verified": false}
+  }
+}

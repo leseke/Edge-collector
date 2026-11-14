@@ -1,0 +1,27 @@
+{
+  "_note": "Copier en config.private.json (ignore par git). Ne jamais committer ce fichier. En CI, utiliser plutot les secrets EDGE_TREASURY / EDGE_ENGAGED.",
+  "treasury": 0,
+  "engaged": 0,
+  "min_coverage_for_cash": 1.0,
+  "investigation_policy": {
+    "min_net_roi_pct": 20
+  },
+  "discovery_policy": {
+    "anomaly_min_discount": 0.25,
+    "anomaly_min_sold": 3
+  },
+  "usd_to_eur": null,
+  "aggregate_policy": {
+    "max_fetch_age_days": 7,
+    "min_total_quantity": 10,
+    "min_lots": 5,
+    "max_price_spread_ratio": 3.0,
+    "max_avg_divergence": 0.2,
+    "prudent_haircut": 0.1
+  },
+  "paid_investigation": {
+    "authorized": false,
+    "max_usd_per_run": 0,
+    "est_usd_per_call": null
+  }
+}

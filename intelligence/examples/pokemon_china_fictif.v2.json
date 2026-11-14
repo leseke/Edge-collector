@@ -1,0 +1,528 @@
+{
+  "schema": "edge.intelligence_report",
+  "schema_version": "1.0.0",
+  "report_id": "eir_pokemon-cn-sealed-demo",
+  "report_version": 2,
+  "supersedes": {
+    "report_id": "eir_pokemon-cn-sealed-demo",
+    "report_version": 1,
+    "content_sha256": "ac8f57dee26b013eace1bc7bcceeb2d9aa341c8cf8c3ca39d16dd6932c0a2510"
+  },
+  "created_at": "2026-10-20T09:00:00+00:00",
+  "data_as_of": "2026-10-15T00:00:00+00:00",
+  "production_status": "partial",
+  "simulated": true,
+  "freshness": {
+    "max_data_age_days": 30
+  },
+  "subject": {
+    "title": "Produits scelles Pokemon en Chine continentale — EXEMPLE FICTIF",
+    "market": "Pokemon TCG, produits scelles (chinois simplifie)",
+    "category": "tcg",
+    "region": "CN",
+    "language": "zh-Hans",
+    "tags": [
+      "exemple",
+      "fictif",
+      "ai-001"
+    ]
+  },
+  "sources": [
+    {
+      "source_id": "src_marketplace-a",
+      "title": "Releve d'annonces d'une place de marche (EXEMPLE FICTIF — aucune valeur reelle)",
+      "publisher": "Place de marche fictive A",
+      "url": null,
+      "published_at": "2026-09-30",
+      "accessed_at": "2026-10-15",
+      "tier": "secondary",
+      "simulated": true,
+      "notes": "EXEMPLE FICTIF — aucune valeur reelle"
+    },
+    {
+      "source_id": "src_ventes-b",
+      "title": "Historique de ventes conclues (EXEMPLE FICTIF — aucune valeur reelle)",
+      "publisher": "Plateforme fictive B",
+      "url": null,
+      "published_at": "2026-09-30",
+      "accessed_at": "2026-10-15",
+      "tier": "primary",
+      "simulated": true,
+      "notes": "EXEMPLE FICTIF — aucune valeur reelle"
+    },
+    {
+      "source_id": "src_forum-c",
+      "title": "Discussion de collectionneurs (EXEMPLE FICTIF — aucune valeur reelle)",
+      "publisher": "Forum fictif C",
+      "url": null,
+      "published_at": "2026-09-30",
+      "accessed_at": "2026-10-15",
+      "tier": "unverified",
+      "simulated": true,
+      "notes": "EXEMPLE FICTIF — aucune valeur reelle"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "clm_prix-affiche-hausse",
+      "kind": "fact",
+      "verification": "simulated",
+      "author": "collector",
+      "statement": "Le prix affiche median du display etudie augmente sur la periode (serie fictive ds_prix-affiche).",
+      "source_ids": [
+        "src_marketplace-a"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "clm_ventes-rares",
+      "kind": "fact",
+      "verification": "simulated",
+      "author": "collector",
+      "statement": "Les ventes conclues observees sont peu nombreuses (serie fictive ds_volume).",
+      "source_ids": [
+        "src_ventes-b"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "clm_ecart-affiche-vendu",
+      "kind": "invalidated",
+      "verification": "simulated",
+      "author": "human",
+      "statement": "Les prix affiches depassent nettement les prix de vente realises.",
+      "source_ids": [
+        "src_marketplace-a"
+      ],
+      "contradicting_source_ids": [
+        "src_forum-c"
+      ],
+      "confidence": "low",
+      "invalidated_by": "clm_ecart-non-etabli",
+      "invalidation_reason": "contredite par une source plus representative (fictif)"
+    },
+    {
+      "claim_id": "clm_hyp-demande",
+      "kind": "hypothesis",
+      "verification": "unverified",
+      "author": "agent",
+      "statement": "La hausse des prix affiches pourrait refleter une demande de collectionneurs plutot qu'une rarete reelle.",
+      "source_ids": [],
+      "confidence": "low"
+    },
+    {
+      "claim_id": "clm_incertitude-change",
+      "kind": "uncertainty",
+      "verification": "unverified",
+      "author": "human",
+      "statement": "La conversion CNY/EUR et les frais d'importation ne sont pas modelises.",
+      "source_ids": [],
+      "confidence": "medium"
+    },
+    {
+      "claim_id": "clm_limite-echantillon",
+      "kind": "limitation",
+      "verification": "unverified",
+      "author": "human",
+      "statement": "Une seule place de marche et une seule plateforme de ventes : echantillon non representatif.",
+      "source_ids": [],
+      "confidence": "high"
+    },
+    {
+      "claim_id": "clm_frais-hypothese",
+      "kind": "hypothesis",
+      "verification": "unverified",
+      "author": "human",
+      "statement": "Hypothese de frais de revente et d'expedition non verifiee.",
+      "source_ids": [],
+      "confidence": "low"
+    },
+    {
+      "claim_id": "clm_ecart-non-etabli",
+      "kind": "fact",
+      "verification": "simulated",
+      "author": "human",
+      "statement": "L'ecart entre prix affiches et realises n'est pas etabli.",
+      "source_ids": [
+        "src_forum-c"
+      ],
+      "confidence": "low"
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "ds_prix-affiche",
+      "title": "Prix affiche median, display (fictif)",
+      "unit": "currency",
+      "currency": "CNY",
+      "measure": "asking_price",
+      "territory": "CN",
+      "period": {
+        "start": "2025-10-01",
+        "end": "2026-09-01"
+      },
+      "frequency": "monthly",
+      "provenance": {
+        "source_ids": [
+          "src_marketplace-a"
+        ],
+        "method": "mediane mensuelle d'annonces (fictif)",
+        "collected_by": "collector"
+      },
+      "simulated": true,
+      "points": [
+        {
+          "t": "2025-10-01",
+          "value": 420,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-11-01",
+          "value": 430,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-12-01",
+          "value": 445,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-01-01",
+          "value": 450,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-02-01",
+          "value": null,
+          "status": "missing",
+          "missing_reason": "mois non couvert par la source fictive (exemple de donnee manquante)"
+        },
+        {
+          "t": "2026-03-01",
+          "value": 470,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-04-01",
+          "value": 480,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-05-01",
+          "value": 495,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-06-01",
+          "value": 505,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-07-01",
+          "value": 520,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-08-01",
+          "value": 530,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-09-01",
+          "value": 545,
+          "status": "simulated"
+        }
+      ]
+    },
+    {
+      "dataset_id": "ds_prix-vendu",
+      "title": "Prix de vente realise median, display (fictif)",
+      "unit": "currency",
+      "currency": "CNY",
+      "measure": "sold_price",
+      "territory": "CN",
+      "period": {
+        "start": "2025-10-01",
+        "end": "2026-09-01"
+      },
+      "frequency": "monthly",
+      "provenance": {
+        "source_ids": [
+          "src_ventes-b"
+        ],
+        "method": "mediane mensuelle de ventes conclues (fictif)",
+        "collected_by": "collector"
+      },
+      "simulated": true,
+      "points": [
+        {
+          "t": "2025-10-01",
+          "value": 380,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-11-01",
+          "value": 385,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-12-01",
+          "value": null,
+          "status": "missing",
+          "missing_reason": "mois non couvert par la source fictive (exemple de donnee manquante)"
+        },
+        {
+          "t": "2026-01-01",
+          "value": 395,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-02-01",
+          "value": 400,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-03-01",
+          "value": 398,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-04-01",
+          "value": 410,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-05-01",
+          "value": null,
+          "status": "missing",
+          "missing_reason": "mois non couvert par la source fictive (exemple de donnee manquante)"
+        },
+        {
+          "t": "2026-06-01",
+          "value": 415,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-07-01",
+          "value": 420,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-08-01",
+          "value": 425,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-09-01",
+          "value": 430,
+          "status": "simulated"
+        }
+      ]
+    },
+    {
+      "dataset_id": "ds_volume",
+      "title": "Ventes conclues par mois (fictif)",
+      "unit": "count",
+      "currency": null,
+      "measure": "volume",
+      "territory": "CN",
+      "period": {
+        "start": "2025-10-01",
+        "end": "2026-09-01"
+      },
+      "frequency": "monthly",
+      "provenance": {
+        "source_ids": [
+          "src_ventes-b"
+        ],
+        "method": "comptage mensuel (fictif)",
+        "collected_by": "collector"
+      },
+      "simulated": true,
+      "points": [
+        {
+          "t": "2025-10-01",
+          "value": 12,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-11-01",
+          "value": 9,
+          "status": "simulated"
+        },
+        {
+          "t": "2025-12-01",
+          "value": null,
+          "status": "missing",
+          "missing_reason": "mois non couvert par la source fictive (exemple de donnee manquante)"
+        },
+        {
+          "t": "2026-01-01",
+          "value": 14,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-02-01",
+          "value": 11,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-03-01",
+          "value": 10,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-04-01",
+          "value": 8,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-05-01",
+          "value": null,
+          "status": "missing",
+          "missing_reason": "mois non couvert par la source fictive (exemple de donnee manquante)"
+        },
+        {
+          "t": "2026-06-01",
+          "value": 13,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-07-01",
+          "value": 9,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-08-01",
+          "value": 7,
+          "status": "simulated"
+        },
+        {
+          "t": "2026-09-01",
+          "value": 8,
+          "status": "simulated"
+        }
+      ]
+    }
+  ],
+  "charts": [
+    {
+      "chart_id": "cht_prix",
+      "type": "line",
+      "title": "Prix affiche vs prix realise (CNY, fictif)",
+      "dataset_ids": [
+        "ds_prix-affiche",
+        "ds_prix-vendu"
+      ]
+    },
+    {
+      "chart_id": "cht_volume",
+      "type": "bar",
+      "title": "Ventes conclues par mois (fictif)",
+      "dataset_ids": [
+        "ds_volume"
+      ]
+    }
+  ],
+  "economics": {
+    "listed_price_dataset_ids": [
+      "ds_prix-affiche"
+    ],
+    "realized_sale_dataset_ids": [
+      "ds_prix-vendu"
+    ],
+    "availability": {
+      "buyable_verified": false,
+      "evidence_claim_ids": []
+    },
+    "fees": {
+      "claim_ids": [
+        "clm_frais-hypothese"
+      ],
+      "verified": false
+    },
+    "liquidity": {
+      "claim_ids": [
+        "clm_ventes-rares"
+      ]
+    },
+    "roi_hypotheses": [
+      {
+        "scenario": "favorable",
+        "net_roi_pct": 12.0,
+        "assumption_claim_ids": [
+          "clm_hyp-demande",
+          "clm_frais-hypothese"
+        ],
+        "is_hypothesis": true
+      },
+      {
+        "scenario": "central",
+        "net_roi_pct": -3.0,
+        "assumption_claim_ids": [
+          "clm_frais-hypothese"
+        ],
+        "is_hypothesis": true
+      },
+      {
+        "scenario": "unfavorable",
+        "net_roi_pct": -18.0,
+        "assumption_claim_ids": [
+          "clm_frais-hypothese",
+          "clm_incertitude-change"
+        ],
+        "is_hypothesis": true
+      }
+    ],
+    "supply_demand_claim_ids": [
+      "clm_prix-affiche-hausse",
+      "clm_ventes-rares",
+      "clm_hyp-demande"
+    ]
+  },
+  "decisions": {
+    "agent_opinion": {
+      "stance": "insufficient_evidence",
+      "is_decision": false,
+      "rationale": "Ecart affiche/realise non confirme, frais non verifies, achetabilite inconnue.",
+      "claim_ids": [
+        "clm_ecart-affiche-vendu",
+        "clm_frais-hypothese",
+        "clm_limite-echantillon"
+      ]
+    },
+    "edge_decision": {
+      "decision": "NOT_EVALUATED",
+      "decided_by": "none",
+      "rules_applied": [],
+      "evidence_refs": [],
+      "decided_at": null
+    }
+  },
+  "history": {
+    "previous_versions": [
+      {
+        "report_version": 1,
+        "content_sha256": "ac8f57dee26b013eace1bc7bcceeb2d9aa341c8cf8c3ca39d16dd6932c0a2510"
+      }
+    ],
+    "related_report_ids": [],
+    "changes": [],
+    "corrections": [
+      {
+        "correction_id": "cor_1",
+        "target": "$.claims[clm_ecart-affiche-vendu]",
+        "description": "Conclusion infirmee : l'ecart n'est pas confirme par les ventes du forum fictif.",
+        "reason": "nouvelle observation contradictoire (fictive)",
+        "corrected_at": "2026-10-20T09:00:00+00:00"
+      }
+    ],
+    "conclusion_changes": [
+      {
+        "from": "ecart affiche/realise important",
+        "to": "ecart non etabli",
+        "reason": "source contradictoire jugee plus representative (exemple fictif)"
+      }
+    ]
+  }
+}

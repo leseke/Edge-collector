@@ -92,3 +92,21 @@ def fetch_trends_spy(keyword, geo="FR", timeframe="today 12-m"):
         "trend_acceleration": acceleration,
         "trend_statut": statut,
     }
+
+def fetch_trends_spy_with_status(keyword, geo="FR", timeframe="today 12-m"):
+    """Return (legacy trend snapshot, sanitized outcome).
+
+    The legacy function maps missing dependency, request failure and empty
+    data to None. Those cases remain UNKNOWN until its internals expose proof.
+    """
+    from connectors.result import completed_query, failed_query, unknown
+
+    try:
+        snapshot = fetch_trends_spy(keyword, geo=geo, timeframe=timeframe)
+    except Exception as exc:
+        return None, failed_query(exc)
+    if snapshot is None:
+        return None, unknown()
+    return snapshot, completed_query(1)
+
+

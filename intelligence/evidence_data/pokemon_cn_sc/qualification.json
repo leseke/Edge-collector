@@ -1,0 +1,53 @@
+{
+  "mirrors": [
+    {
+      "sha256": "94706ce7bdb07d18cbe6c5319d935d6c7513bc32469f4c14a6d1e814ce18b184",
+      "evidence_ids": [
+        "ev_4a6dc9b700fccba6",
+        "ev_54242478d6e7c2d1"
+      ],
+      "urls": [
+        "https://r2.angelcam.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts",
+        "https://dr2.studiocalico.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts"
+      ]
+    }
+  ],
+  "changed_pages": [],
+  "contradictions": [
+    {
+      "type": "assertion",
+      "topic_id": "availability",
+      "assertion_key": "first_sc_release",
+      "positions": {
+        "2022": [
+          "ev_9e1b55e0b425ab9c"
+        ],
+        "1999": [
+          "ev_4a6dc9b700fccba6",
+          "ev_54242478d6e7c2d1"
+        ]
+      }
+    }
+  ],
+  "stale_measurements": [
+    {
+      "evidence_id": "ev_24d63e7dfeb309fe",
+      "period_end": "2022-10-28"
+    },
+    {
+      "evidence_id": "ev_52b0145f52276cb1",
+      "period_end": "2025-06-25"
+    }
+  ],
+  "insufficient_topics": [
+    "anniversaries",
+    "cn_eu_comparison",
+    "realized_prices",
+    "volumes"
+  ],
+  "insufficient_reasons": [
+    "aucune vente conclue documentee : prix realises et volumes inconnus",
+    "aucune preuve verifiee par un humain"
+  ],
+  "flagged_suspicious": []
+}

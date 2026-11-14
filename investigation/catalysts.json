@@ -1,0 +1,23 @@
+{
+  "_note": "Catalyseurs d'exemple. Chaque entree doit etre sourcee et verifiee avant usage reel (verified=false sinon). Un evenement n'est jamais une preuve de hausse.",
+  "catalysts": [
+    {
+      "id": "pokemon_30th_anniversary",
+      "title": "30 ans de la licence Pokemon (sortie japonaise le 27/02/1996)",
+      "date": "2026-02-27",
+      "type": "anniversary",
+      "keywords": ["pokemon", "pikachu"],
+      "source_url": null,
+      "verified": false
+    },
+    {
+      "id": "example_film_release",
+      "title": "Exemple fictif : sortie d'un film adapte d'une licence",
+      "date": "2027-06-01",
+      "type": "media_release",
+      "keywords": ["exemple-licence"],
+      "source_url": null,
+      "verified": false
+    }
+  ]
+}

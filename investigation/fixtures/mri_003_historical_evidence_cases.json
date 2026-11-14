@@ -1,0 +1,62 @@
+{
+  "schema": "edge.mri.historical_evidence_candidates.v1",
+  "verification_date": "2026-10-22",
+  "cases": [
+    {
+      "case_id": "pokemon-cn-2022",
+      "cutoff": "2022-09-21T23:59:59+08:00",
+      "hypothesis": "The simplified Chinese TCG launch could build persistent local play and collector demand.",
+      "rival": "Short-lived attention may not develop into durable participation or profitable resale.",
+      "sources": [
+        {
+          "source_id": "pokemon-cn-announcement",
+          "url": "https://www.pokemon.cn/tcg/product/16380.html",
+          "published_at": "2022-09-21T00:00:00+08:00",
+          "retrieved_at": "2026-10-22T12:00:00Z",
+          "role": "pre_signal",
+          "support": "publisher_date_only"
+        },
+        {
+          "source_id": "pokemon-cn-release-details",
+          "url": "https://www.pokemon.cn/tcg/other/17201.html",
+          "published_at": "2022-09-28T00:00:00+08:00",
+          "retrieved_at": "2026-10-22T12:00:00Z",
+          "role": "later_event",
+          "support": "modern_retrieval"
+        },
+        {
+          "source_id": "pokemon-cn-organized-play",
+          "url": "https://www.pokemon.cn/tcg/event/16369.html",
+          "published_at": "2022-10-27T00:00:00+08:00",
+          "retrieved_at": "2026-10-22T12:00:00Z",
+          "role": "outcome_context",
+          "support": "modern_retrieval"
+        }
+      ]
+    },
+    {
+      "case_id": "lego-10365-2025",
+      "cutoff": "2025-08-26T23:59:59+02:00",
+      "hypothesis": "Nostalgia for a renewed licensed LEGO theme could affect demand for both new and older Black Pearl sets.",
+      "rival": "The new set could cannibalize the older edition, without increasing completed resale volume.",
+      "sources": [
+        {
+          "source_id": "lego-official-announcement",
+          "url": "https://www.lego.com/en-us/aboutus/news/2025/august/lego-icons-captain-jack-sparrow-s-pirate-ship",
+          "published_at": "2025-08-26T00:00:00+02:00",
+          "retrieved_at": "2026-10-22T12:00:00Z",
+          "role": "pre_signal",
+          "support": "publisher_date_only"
+        },
+        {
+          "source_id": "lego-contemporaneous-press",
+          "url": "https://www.brickfanatics.com/lego-10365-jack-sparrow-pirate-ship-revealed",
+          "published_at": "2025-08-26T00:00:00+02:00",
+          "retrieved_at": "2026-10-22T12:00:00Z",
+          "role": "pre_signal",
+          "support": "publisher_date_only"
+        }
+      ]
+    }
+  ]
+}
