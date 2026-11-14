@@ -1,0 +1,1059 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edge.local/schema/edge_intelligence_report.v1.schema.json",
+  "title": "EDGE Intelligence Report v1",
+  "description": "Structure des rapports d'analyse EDGE. Les regles semantiques (references croisees, coherence des dates/devises, politique d'allocation, niveau de verification) sont appliquees par intelligence/validator.py, qui fait foi.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "report_id",
+    "report_version",
+    "created_at",
+    "data_as_of",
+    "production_status",
+    "simulated",
+    "subject",
+    "sources",
+    "claims",
+    "datasets",
+    "charts",
+    "economics",
+    "decisions",
+    "history"
+  ],
+  "properties": {
+    "schema": {
+      "const": "edge.intelligence_report"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+\\.\\d+$"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^eir_[a-z0-9][a-z0-9_.-]{1,63}$"
+    },
+    "report_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "supersedes": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "report_id",
+        "report_version",
+        "content_sha256"
+      ],
+      "properties": {
+        "report_id": {
+          "type": "string",
+          "pattern": "^eir_[a-z0-9][a-z0-9_.-]{1,63}$"
+        },
+        "report_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 20,
+      "description": "ISO 8601 avec fuseau, ex. 2026-10-19T12:00:00+00:00"
+    },
+    "data_as_of": {
+      "type": "string",
+      "minLength": 20,
+      "description": "ISO 8601 avec fuseau, ex. 2026-10-19T12:00:00+00:00"
+    },
+    "production_status": {
+      "enum": [
+        "draft",
+        "partial",
+        "complete",
+        "retracted"
+      ]
+    },
+    "simulated": {
+      "type": "boolean"
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_data_age_days": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "market",
+        "category",
+        "region"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "market": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "category": {
+          "enum": [
+            "tcg",
+            "toys",
+            "video_games",
+            "collectibles",
+            "other"
+          ]
+        },
+        "region": {
+          "type": "string",
+          "pattern": "^([A-Z]{2}|EU|GLOBAL)$"
+        },
+        "language": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "title",
+          "publisher",
+          "url",
+          "published_at",
+          "accessed_at",
+          "tier",
+          "simulated"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "pattern": "^src_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "publisher": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accessed_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "tier": {
+            "enum": [
+              "primary",
+              "secondary",
+              "unverified"
+            ]
+          },
+          "simulated": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "kind",
+          "statement",
+          "verification",
+          "source_ids",
+          "author",
+          "confidence"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "kind": {
+            "enum": [
+              "fact",
+              "hypothesis",
+              "uncertainty",
+              "limitation",
+              "invalidated",
+              "interpretation"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "verification": {
+            "enum": [
+              "verified",
+              "unverified",
+              "contradicted",
+              "simulated"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^src_[a-z0-9][a-z0-9_.-]{1,63}$"
+            }
+          },
+          "author": {
+            "enum": [
+              "human",
+              "agent",
+              "edge_engine",
+              "collector"
+            ]
+          },
+          "confidence": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "contradicting_source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^src_[a-z0-9][a-z0-9_.-]{1,63}$"
+            }
+          },
+          "invalidated_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invalidation_reason": {
+            "type": "string"
+          },
+          "verification_record": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "(1.1) Trace de verification : qui, quand, comment, sur quelle preuve. Facultatif ; sans elle un fait 'verified' n'atteint pas 'fully_verified'.",
+            "required": [
+              "verified_by",
+              "verified_at",
+              "method",
+              "procedure",
+              "evidence"
+            ],
+            "properties": {
+              "verified_by": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "role",
+                  "id"
+                ],
+                "properties": {
+                  "role": {
+                    "enum": [
+                      "human",
+                      "collector"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              },
+              "verified_at": {
+                "type": "string",
+                "minLength": 20
+              },
+              "method": {
+                "enum": [
+                  "primary_document_review",
+                  "official_api_record",
+                  "direct_observation",
+                  "cross_source_agreement"
+                ]
+              },
+              "procedure": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "source_id",
+                    "locator"
+                  ],
+                  "properties": {
+                    "source_id": {
+                      "type": "string",
+                      "pattern": "^src_[a-z0-9][a-z0-9_.-]{1,63}$"
+                    },
+                    "locator": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "excerpt_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  }
+                }
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000
+              }
+            }
+          },
+          "basis": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fact_claim_ids",
+              "computation_ids"
+            ],
+            "description": "(1.2) Fondement d'une interpretation : faits et calculs references.",
+            "properties": {
+              "fact_claim_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+                }
+              },
+              "computation_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^cmp_[a-z0-9][a-z0-9_.-]{1,63}$"
+                }
+              }
+            }
+          },
+          "source_claim_type": {
+            "enum": [
+              "fact",
+              "commercial_claim",
+              "estimate",
+              "opinion"
+            ],
+            "description": "(1.3) Nature de l'affirmation CHEZ LA SOURCE, reportee par EDGE depuis la collecte (jamais par l'agent)."
+          }
+        }
+      }
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dataset_id",
+          "title",
+          "unit",
+          "currency",
+          "measure",
+          "territory",
+          "period",
+          "frequency",
+          "provenance",
+          "simulated",
+          "points"
+        ],
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^ds_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "unit": {
+            "enum": [
+              "currency",
+              "count",
+              "percent",
+              "index",
+              "units"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[A-Z]{3}$"
+          },
+          "measure": {
+            "enum": [
+              "asking_price",
+              "sold_price",
+              "retail_price",
+              "market_trend",
+              "volume",
+              "search_interest",
+              "other"
+            ]
+          },
+          "territory": {
+            "type": "string",
+            "pattern": "^([A-Z]{2}|EU|GLOBAL)$"
+          },
+          "period": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "start",
+              "end"
+            ],
+            "properties": {
+              "start": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              },
+              "end": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+              }
+            }
+          },
+          "frequency": {
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly",
+              "quarterly",
+              "yearly",
+              "irregular"
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_ids",
+              "method",
+              "collected_by"
+            ],
+            "properties": {
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^src_[a-z0-9][a-z0-9_.-]{1,63}$"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "collected_by": {
+                "enum": [
+                  "human",
+                  "collector",
+                  "edge_engine"
+                ]
+              }
+            }
+          },
+          "simulated": {
+            "type": "boolean"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "t",
+                "value",
+                "status"
+              ],
+              "properties": {
+                "t": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "measured",
+                    "estimated",
+                    "simulated",
+                    "missing"
+                  ]
+                },
+                "missing_reason": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "charts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "chart_id",
+          "type",
+          "title",
+          "dataset_ids"
+        ],
+        "properties": {
+          "chart_id": {
+            "type": "string",
+            "pattern": "^cht_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "type": {
+            "enum": [
+              "line",
+              "bar"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "dataset_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^ds_[a-z0-9][a-z0-9_.-]{1,63}$"
+            }
+          }
+        }
+      }
+    },
+    "economics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "listed_price_dataset_ids",
+        "realized_sale_dataset_ids",
+        "availability",
+        "fees",
+        "liquidity",
+        "roi_hypotheses",
+        "supply_demand_claim_ids"
+      ],
+      "properties": {
+        "listed_price_dataset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ds_[a-z0-9][a-z0-9_.-]{1,63}$"
+          }
+        },
+        "realized_sale_dataset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ds_[a-z0-9][a-z0-9_.-]{1,63}$"
+          }
+        },
+        "availability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "buyable_verified",
+            "evidence_claim_ids"
+          ],
+          "properties": {
+            "buyable_verified": {
+              "type": "boolean"
+            },
+            "evidence_claim_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+              }
+            }
+          }
+        },
+        "fees": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_ids",
+            "verified"
+          ],
+          "properties": {
+            "claim_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+              }
+            },
+            "verified": {
+              "type": "boolean"
+            }
+          }
+        },
+        "liquidity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "claim_ids"
+          ],
+          "properties": {
+            "claim_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+              }
+            }
+          }
+        },
+        "roi_hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scenario",
+              "net_roi_pct",
+              "assumption_claim_ids",
+              "is_hypothesis"
+            ],
+            "properties": {
+              "scenario": {
+                "enum": [
+                  "favorable",
+                  "central",
+                  "unfavorable"
+                ]
+              },
+              "net_roi_pct": {
+                "type": "number"
+              },
+              "assumption_claim_ids": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+                }
+              },
+              "is_hypothesis": {
+                "const": true
+              }
+            }
+          }
+        },
+        "supply_demand_claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_opinion",
+        "edge_decision"
+      ],
+      "properties": {
+        "agent_opinion": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "stance",
+            "rationale",
+            "claim_ids",
+            "is_decision"
+          ],
+          "properties": {
+            "stance": {
+              "enum": [
+                "bullish",
+                "bearish",
+                "neutral",
+                "insufficient_evidence"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "claim_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^clm_[a-z0-9][a-z0-9_.-]{1,63}$"
+              }
+            },
+            "is_decision": {
+              "const": false
+            }
+          }
+        },
+        "edge_decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decision",
+            "decided_by",
+            "rules_applied",
+            "evidence_refs",
+            "decided_at"
+          ],
+          "properties": {
+            "decision": {
+              "enum": [
+                "STRONG_BUY",
+                "BUY",
+                "WAIT",
+                "WATCH",
+                "NO_DATA",
+                "ERROR",
+                "CASH",
+                "NOT_EVALUATED"
+              ]
+            },
+            "decided_by": {
+              "enum": [
+                "edge_engine",
+                "none"
+              ]
+            },
+            "engine_version": {
+              "type": "string"
+            },
+            "rules_applied": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "decided_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 20,
+                  "description": "ISO 8601 avec fuseau, ex. 2026-10-19T12:00:00+00:00"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "previous_versions",
+        "related_report_ids",
+        "changes",
+        "corrections",
+        "conclusion_changes"
+      ],
+      "properties": {
+        "previous_versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "report_version",
+              "content_sha256"
+            ],
+            "properties": {
+              "report_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "content_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "related_report_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^eir_[a-z0-9][a-z0-9_.-]{1,63}$"
+          }
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "reason"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "before": {},
+              "after": {}
+            }
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "correction_id",
+              "target",
+              "description",
+              "reason",
+              "corrected_at"
+            ],
+            "properties": {
+              "correction_id": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "corrected_at": {
+                "type": "string",
+                "minLength": 20,
+                "description": "ISO 8601 avec fuseau, ex. 2026-10-19T12:00:00+00:00"
+              }
+            }
+          }
+        },
+        "conclusion_changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "reason"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              }
+            }
+          }
+        }
+      }
+    },
+    "computations": {
+      "type": "array",
+      "description": "(1.2) Calculs deterministes EDGE, recalcules a la validation.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "computation_id",
+          "method",
+          "dataset_id",
+          "t_from",
+          "t_to",
+          "inputs",
+          "result",
+          "unit",
+          "currency",
+          "computed_by"
+        ],
+        "properties": {
+          "computation_id": {
+            "type": "string",
+            "pattern": "^cmp_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "method": {
+            "enum": [
+              "pct_change",
+              "difference",
+              "mean",
+              "min",
+              "max"
+            ]
+          },
+          "dataset_id": {
+            "type": "string",
+            "pattern": "^ds_[a-z0-9][a-z0-9_.-]{1,63}$"
+          },
+          "t_from": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "t_to": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "t",
+                "value"
+              ],
+              "properties": {
+                "t": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                },
+                "value": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "result": {
+            "type": "number"
+          },
+          "unit": {
+            "enum": [
+              "currency",
+              "count",
+              "percent",
+              "index",
+              "units"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "computed_by": {
+            "const": "edge_engine"
+          }
+        }
+      }
+    }
+  }
+}

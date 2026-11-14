@@ -1,0 +1,280 @@
+{
+ "batch_id": "pokemon-cn-sc-2026-10-19",
+ "collected_at": "2026-10-19T12:00:00+00:00",
+ "simulated": false,
+ "collection_method": "Collecte manuelle par Claude avec ses outils web (recherche et lecture de page) ; aucun collecteur EDGE automatise ; aucun service payant ; robots.txt respecte (api.tcgdex.net refuse, non contourne lors d'AI-001.1).",
+ "items": [
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "availability",
+   "relation": "supports",
+   "assertion_key": "first_sc_release",
+   "position": "2022",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://bulbapedia.bulbagarden.net/wiki/CSM1a",
+    "publisher": "Bulbapedia (wiki communautaire)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "page_fetch"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": "2026-09-18",
+   "verification": "unverified",
+   "reuse": {
+    "terms": "quote_only",
+    "license": null,
+    "notes": "citation courte ; licence de la source non verifiee"
+   },
+   "content": {
+    "text": "The set was released on October 28, 2022",
+    "language": "en",
+    "locator": "section Information, revision 4632139"
+   },
+   "claim_type": "fact",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "retail_prices",
+   "relation": "supports",
+   "assertion_key": "pack5_retail_price",
+   "position": "n/a",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://bulbagarden.net/threads/294654",
+    "publisher": "Bulbanews (Bulbagarden)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "quote_only",
+    "license": null,
+    "notes": "citation courte ; licence de la source non verifiee"
+   },
+   "content": {
+    "text": "a 5-card pack (priced at 10 yuan)",
+    "language": "en",
+    "locator": "article de lancement, paragraphe produits"
+   },
+   "claim_type": "fact",
+   "measurement": {
+    "kind": "retail_price",
+    "value": 10,
+    "unit": "currency",
+    "currency": "CNY",
+    "period": {
+     "start": "2022-10-28",
+     "end": "2022-10-28"
+    },
+    "territory": "CN",
+    "quantity": null,
+    "transaction_evidence": null
+   },
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "reprints",
+   "relation": "supports",
+   "assertion_key": "151c_reprints",
+   "position": "oui",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://snkrdunk.com/en/magazine/?p=389062",
+    "publisher": "SNKRDUNK Magazine (editeur lie a une place de marche)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "quote_only",
+    "license": null,
+    "notes": "citation courte ; licence de la source non verifiee"
+   },
+   "content": {
+    "text": "will be Simplified Chinese reprints of cards originally from Pokémon Card 151",
+    "language": "en",
+    "locator": "article 151C, composition du set"
+   },
+   "claim_type": "fact",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "exclusivities",
+   "relation": "supports",
+   "assertion_key": "151c_pikachu_exclusives",
+   "position": "oui",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://www.wargamer.com/pokemon-trading-card-game/simplified-chinese-151-pikachu",
+    "publisher": "Wargamer",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "quote_only",
+    "license": null,
+    "notes": "citation courte ; licence de la source non verifiee"
+   },
+   "content": {
+    "text": "four exclusive Art Rare variants of Pikachu",
+    "language": "en",
+    "locator": "article 151C, paragraphe exclusivites"
+   },
+   "claim_type": "fact",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "domestic_demand",
+   "relation": "supports",
+   "assertion_key": "sc_market_growth",
+   "position": "croissance",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://tcgbuyersclub.beehiiv.com/p/pokemon-isn-t-printing-enough-in-2025",
+    "publisher": "TCG Buyers Club (lettre d'information)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "quote_only",
+    "license": null,
+    "notes": "citation courte ; licence de la source non verifiee"
+   },
+   "content": {
+    "text": "The Simplified Chinese market grew considerably",
+    "language": "en",
+    "locator": "section production 2024-2025"
+   },
+   "claim_type": "opinion",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "availability",
+   "relation": "supports",
+   "assertion_key": "first_sc_release",
+   "position": "1999",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://r2.angelcam.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts",
+    "publisher": "Guide non signe (site de contenu)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "unknown",
+    "license": null,
+    "notes": "page de faible qualite, contredit les sources sur le lancement"
+   },
+   "content": {
+    "text": "The first Simplified Chinese Pokémon cards were introduced in 1999",
+    "language": "en",
+    "locator": "section History"
+   },
+   "claim_type": "fact",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "availability",
+   "relation": "supports",
+   "assertion_key": "first_sc_release",
+   "position": "1999",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://dr2.studiocalico.com/complete-guide-to-collecting-simplified-chinese-pokemon-cards-a-mustread-for-enthusiasts",
+    "publisher": "Guide non signe (miroir)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "unknown",
+    "license": null,
+    "notes": "texte identique sur un autre domaine"
+   },
+   "content": {
+    "text": "The first Simplified Chinese Pokémon cards were introduced in 1999",
+    "language": "en",
+    "locator": "section History"
+   },
+   "claim_type": "fact",
+   "measurement": null,
+   "simulated": false
+  },
+  {
+   "schema": "edge.evidence_item.v1",
+   "subject_id": "pokemon-cn-sc",
+   "topic_id": "intl_interest",
+   "relation": "supports",
+   "assertion_key": "listing_405981431480",
+   "position": "n/a",
+   "origin": {
+    "kind": "public_web",
+    "url": "https://www.ebay.de/itm/405981431480",
+    "publisher": "eBay (annonce d'un vendeur professionnel)",
+    "collector_id": "manual:claude-web-tools",
+    "method": "search_snippet"
+   },
+   "observed_at": "2026-10-19T12:00:00+00:00",
+   "published_at": null,
+   "verification": "unverified",
+   "reuse": {
+    "terms": "unknown",
+    "license": null,
+    "notes": "annonce terminee ; '2 verkauft' et 'oder Preisvorschlag' affiches : prix de transaction NON confirme, enregistre comme prix affiche ; nature exacte du produit inconnue"
+   },
+   "content": {
+    "text": "2025 Pokemon 151 Chinese's Simplified Pokemon",
+    "language": "en",
+    "locator": "titre de l'annonce (terminee)"
+   },
+   "claim_type": "commercial_claim",
+   "measurement": {
+    "kind": "asking_price",
+    "value": 28.75,
+    "unit": "currency",
+    "currency": "USD",
+    "period": {
+     "start": "2025-06-25",
+     "end": "2025-06-25"
+    },
+    "territory": "US",
+    "quantity": null,
+    "transaction_evidence": null
+   },
+   "simulated": false
+  }
+ ]
+}

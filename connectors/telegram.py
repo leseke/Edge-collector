@@ -47,10 +47,11 @@ def format_alert(item, prix_eur, niveau, snap):
     return "\n".join(lines)
 
 
-def send_daily_digest(watchlist_results):
-    if not watchlist_results:
-        print("[telegram] digest vide, rien a envoyer", flush=True)
-        return
+def format_digest(watchlist_results, summary=None):
+    """Construit le digest. summary (public) fixe la posture globale :
+    jamais "CASH" si la couverture est insuffisante ou si les sources
+    ont echoue. Aucune donnee de capital n'y figure.
+    """
     lines = ["<b>EDGE - Resume</b>", ""]
     for r in watchlist_results:
         emoji = "⏸"
@@ -58,14 +59,32 @@ def send_daily_digest(watchlist_results):
             emoji = "🔥🔥"
         elif r["niveau"] == "BUY":
             emoji = "🔥"
-        lines.append(
-            f"{emoji} {r['id']} : {r['prix_eur']:.0f} EUR ({r['source']})"
-        )
+        lines.append(f"{emoji} {r['id']} : {r['prix_eur']:.0f} EUR ({r['source']})")
     lines.append("")
-    n_buy = sum(1 for r in watchlist_results
-                if r["niveau"] in ("BUY", "STRONG_BUY"))
+    n_buy = sum(1 for r in watchlist_results if r["niveau"] in ("BUY", "STRONG_BUY"))
+    if summary is not None:
+        n_buy = summary.get("n_buy", n_buy)
+        posture = summary.get("posture")
+        if n_buy:
+            lines.append(f"<b>{n_buy} signal(aux) d'achat</b>")
+        elif posture == "CASH":
+            lines.append("<b>Decision : CASH / ATTENDRE</b>")
+        else:
+            lines.append(f"<b>Aucune conclusion : donnees {summary.get('data_status')} "
+                         f"(couverture {summary.get('coverage', 0):.0%})</b>")
+        if summary.get("n_nodata"):
+            lines.append(f"{summary['n_nodata']} produit(s) sans donnees exploitables")
+        return "\n".join(lines)
     if n_buy == 0:
         lines.append("<b>Decision : CASH / ATTENDRE</b>")
     else:
         lines.append(f"<b>{n_buy} signal(aux) d'achat</b>")
-    send_message("\n".join(lines))
+    return "\n".join(lines)
+
+
+def send_daily_digest(watchlist_results, summary=None):
+    if not watchlist_results and summary is None:
+        print("[telegram] digest vide, rien a envoyer", flush=True)
+        return
+    return send_message(format_digest(watchlist_results, summary))
+

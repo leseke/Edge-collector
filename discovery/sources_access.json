@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "_note": "Registre PUBLIC (aucun secret). Un adaptateur ne s'active que si status=VERIFIED (conditions/licence/quotas relus par l'utilisateur) ET si ses variables d'environnement sont presentes. Les quotas sont ceux observes dans la documentation et restent a confirmer sur le compte reel.",
+  "sources": {
+    "ebay_browse": {
+      "evidence": [
+        "ASKING_PRICE"
+      ],
+      "env": [
+        "EBAY_CLIENT_ID",
+        "EBAY_CLIENT_SECRET"
+      ],
+      "paid": false,
+      "license_required": "Buy APIs : licence / conditions specifiques a accepter ; eligibilite de l'application a confirmer",
+      "terms_url": "https://developer.ebay.com/api-docs/buy/browse/overview.html",
+      "documented_quota_per_day": 5000,
+      "quota_per_run": 50,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "bricklink": {
+      "evidence": [
+        "SOLD_AGGREGATE"
+      ],
+      "env": [
+        "BRICKLINK_CONSUMER_KEY",
+        "BRICKLINK_CONSUMER_SECRET",
+        "BRICKLINK_TOKEN",
+        "BRICKLINK_TOKEN_SECRET"
+      ],
+      "paid": false,
+      "license_required": "Conditions d'utilisation de l'API ; acces possiblement reserve aux comptes vendeurs (a confirmer) ; enregistrement de l'IP appelante",
+      "terms_url": "https://www.bricklink.com/v2/api/register_consumer.page",
+      "documented_quota_per_day": 5000,
+      "quota_per_run": 50,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "brickset": {
+      "evidence": [
+        "AVAILABILITY"
+      ],
+      "env": [
+        "BRICKSET_API_KEY"
+      ],
+      "paid": false,
+      "license_required": "Compte Brickset + cle API ; conditions d'usage a relire",
+      "terms_url": "https://brickset.com/article/52664/api-version-3-documentation",
+      "documented_quota_per_day": null,
+      "quota_per_run": 50,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "tcgdex": {
+      "evidence": [
+        "MARKET_TREND"
+      ],
+      "env": [],
+      "paid": false,
+      "license_required": "API ouverte sans cle ; usage raisonnable + cache ; cartes a l'unite uniquement, pas de produits scelles",
+      "terms_url": "https://tcgdex.dev/faq",
+      "documented_quota_per_day": null,
+      "quota_per_run": 1,
+      "status": "VERIFIED",
+      "verified_by": "claude (relecture documentation) - a confirmer par l'utilisateur",
+      "verified_at": "2026-10-18",
+      "scope": "pilote : 1 recherche, <= 2 requetes de detail par appel de campagne",
+      "max_detail_requests": 2,
+      "verification_notes": [
+        "FAQ officielle relue : API gratuite, sans cle ; aucune limite stricte publiee ; usage raisonnable et cache local demandes (https://tcgdex.dev/faq)",
+        "Schema tarifaire relu : pricing.cardmarket en EUR, mise a jour quotidienne, champs avg/low/trend/avg1/avg7/avg30 et variantes -holo ; fournisseur omis si carte non listee (https://tcgdex.dev/markets-prices)",
+        "Filtrage relu : name=<texte> en correspondance partielle ; pas de pagination par defaut -> pagination:itemsPerPage impose (https://tcgdex.dev/rest/filtering-sorting-pagination)",
+        "Avertissements de la source : prix parfois identiques entre raretes d'un meme Pokemon, identifiants Cardmarket parfois errones -> preuve indicative uniquement",
+        "robots.txt de api.tcgdex.net : acces automatise refuse a l'outil de lecture web de Claude (non contourne) ; la validation live doit etre faite par l'utilisateur via tools.tcgdex_probe"
+      ]
+    },
+    "ebay_sold": {
+      "evidence": [
+        "SOLD"
+      ],
+      "env": [
+        "APIFY_TOKEN"
+      ],
+      "paid": true,
+      "license_required": "Compte Apify ; acteur tiers payant a l'usage ; tarif a relire avant chaque campagne",
+      "terms_url": "https://apify.com/caffein.dev/ebay-sold-listings",
+      "documented_quota_per_day": null,
+      "quota_per_run": 5,
+      "estimated_usd_per_call": null,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "scavio_retail_fr": {
+      "evidence": [
+        "RETAIL_OFFER"
+      ],
+      "env": [
+        "SCAVIO_API_KEY"
+      ],
+      "paid": false,
+      "license_required": "Connecteur existant ; conditions et cout a confirmer",
+      "terms_url": null,
+      "documented_quota_per_day": null,
+      "quota_per_run": 20,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "openai": {
+      "evidence": [],
+      "env": [
+        "OPENAI_API_KEY",
+        "EDGE_OPENAI_ENABLED"
+      ],
+      "paid": true,
+      "license_required": "Compte API OpenAI facture a l'usage (distinct d'un abonnement ChatGPT) ; conditions d'utilisation, politique de donnees et tarifs du modele choisi a relire",
+      "terms_url": "https://openai.com/policies/",
+      "documented_quota_per_day": null,
+      "quota_per_run": 2,
+      "estimated_usd_per_call": null,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null,
+      "notes": "AI-002B : implemente mais desactive. Activation = EDGE_OPENAI_ENABLED=1 + cle + VERIFIED + SpendGuard autorise."
+    },
+    "web_search": {
+      "evidence": [
+        "ASKING_PRICE",
+        "RETAIL_OFFER",
+        "SOLD",
+        "MARKET_TREND",
+        "CULTURAL_SIGNAL"
+      ],
+      "env": [],
+      "paid": true,
+      "license_required": "Contrat seulement (edge.external_source.v1) ; aucun fournisseur choisi ni active",
+      "terms_url": null,
+      "documented_quota_per_day": null,
+      "quota_per_run": 0,
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null
+    },
+    "public_web": {
+      "evidence": [
+        "ASKING_PRICE",
+        "RETAIL_OFFER",
+        "SOLD",
+        "MARKET_TREND",
+        "CULTURAL_SIGNAL"
+      ],
+      "env": [],
+      "paid": false,
+      "license_required": "Collecte web publique : CGU et robots.txt de chaque domaine a relire ; domaines autorises un par un",
+      "terms_url": null,
+      "documented_quota_per_day": null,
+      "quota_per_run": 0,
+      "allowed_domains": [],
+      "status": "UNVERIFIED",
+      "verified_by": null,
+      "verified_at": null,
+      "notes": "AI-002C : prepare, non active. La collecte AI-002C a ete faite manuellement (import), pas par ce collecteur."
+    }
+  }
+}

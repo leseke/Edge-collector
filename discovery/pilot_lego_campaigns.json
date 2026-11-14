@@ -1,0 +1,50 @@
+{
+ "schema_version": 1,
+ "_note": "Pilote LEGO hors reseau (fixtures). EDGE reste generaliste : une campagne Pokemon est incluse pour verifier qu'aucune valorisation n'est inventee hors LEGO.",
+ "campaigns": [
+  {
+   "id": "pilot-lego-icons",
+   "family": "price_anomaly",
+   "queries": [
+    "LEGO Icons"
+   ],
+   "sources": [
+    "ebay_browse"
+   ],
+   "expansion_sources": [
+    "bricklink",
+    "brickset"
+   ],
+   "max_calls": 12,
+   "max_expansions": 5,
+   "limit_per_query": 50
+  },
+  {
+   "id": "pilot-pokemon-scelle",
+   "family": "emerging",
+   "queries": [
+    "Pokemon display scelle"
+   ],
+   "sources": [
+    "ebay_browse",
+    "ebay_sold"
+   ],
+   "max_calls": 3,
+   "max_expansions": 0,
+   "limit_per_query": 20
+  },
+  {
+   "id": "pilot-pokemon-cartes",
+   "family": "emerging",
+   "queries": [
+    "Dracaufeu Fictif"
+   ],
+   "sources": [
+    "tcgdex"
+   ],
+   "max_calls": 2,
+   "max_expansions": 0,
+   "limit_per_query": 5
+  }
+ ]
+}

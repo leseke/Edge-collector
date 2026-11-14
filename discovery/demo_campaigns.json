@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "_note": "Campagnes de DEMONSTRATION sur fixtures fictives (example.com). Ne constituent pas une collecte reelle.",
+  "campaigns": [
+    {"id": "demo-fin-production", "family": "end_of_life",
+     "queries": ["LEGO Icons fin de serie"], "sources": ["fixture"],
+     "max_calls": 6, "max_expansions": 3, "limit_per_query": 20},
+    {"id": "demo-catalyseur-pokemon", "family": "catalyst",
+     "queries": ["Pokemon coffret", "Pokemon coffret anniversaire", "Pokemon coffret anniversaire fictif"],
+     "sources": ["fixture"], "max_calls": 5, "max_expansions": 0, "limit_per_query": 20},
+    {"id": "revalidation", "family": "revalidation", "queries_from": "store_revalidation",
+     "sources": ["fixture"], "max_calls": 5, "max_expansions": 0, "limit_per_query": 20}
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "source": "demo",
+    "source_url": "https://example.com/items/sample",
+    "observed_at": "2026-10-18T09:00:00Z",
+    "external_id": "fictional-001",
+    "name": "Fictitious collector sample",
+    "price_eur": 35
+  }
+]

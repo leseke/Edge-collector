@@ -1,4 +1,7 @@
-.env
+scavio.env
 storage.db
 __pycache__/
 *.pyc
+config.private.json
+private/
+*.lock

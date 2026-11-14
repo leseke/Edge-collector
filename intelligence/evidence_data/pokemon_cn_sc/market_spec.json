@@ -1,0 +1,103 @@
+{
+ "corpus_id": "pokemon-cn-sc-real",
+ "subject": {
+  "title": "Cartes Pokemon en chinois simplifie — observations publiques collectees",
+  "market": "Pokemon TCG, chinois simplifie (Chine continentale)",
+  "category": "tcg",
+  "region": "CN",
+  "language": "fr",
+  "tags": [
+   "reel",
+   "ai-002c"
+  ]
+ },
+ "entities": [
+  "chinois simplifie",
+  "simplified chinese"
+ ],
+ "freshness": {
+  "max_data_age_days": 90
+ },
+ "topics": [
+  {
+   "topic_id": "domestic_demand",
+   "question": "Quelle est la demande interieure chinoise ?",
+   "keywords": [
+    "demande",
+    "demande interieure"
+   ]
+  },
+  {
+   "topic_id": "intl_interest",
+   "question": "Quel est l'interet international pour ces cartes ?",
+   "keywords": [
+    "interet international",
+    "international"
+   ]
+  },
+  {
+   "topic_id": "volumes",
+   "question": "Quels volumes de ventes sont documentes ?",
+   "keywords": [
+    "volumes",
+    "volume"
+   ]
+  },
+  {
+   "topic_id": "realized_prices",
+   "question": "Comment evoluent les prix realises ?",
+   "keywords": [
+    "prix realises",
+    "prix"
+   ]
+  },
+  {
+   "topic_id": "availability",
+   "question": "Depuis quand et comment ces cartes sont-elles disponibles ?",
+   "keywords": [
+    "disponibilite",
+    "lancement"
+   ]
+  },
+  {
+   "topic_id": "reprints",
+   "question": "Quelles reimpressions sont documentees ?",
+   "keywords": [
+    "reimpressions",
+    "reimpression"
+   ]
+  },
+  {
+   "topic_id": "cn_eu_comparison",
+   "question": "Comment la Chine se compare-t-elle a l'Europe ?",
+   "keywords": [
+    "europe",
+    "comparaison"
+   ]
+  },
+  {
+   "topic_id": "exclusivities",
+   "question": "Quelles exclusivites existent ?",
+   "keywords": [
+    "exclusivites",
+    "exclusivite"
+   ]
+  },
+  {
+   "topic_id": "anniversaries",
+   "question": "Quels anniversaires ou evenements sont prevus ?",
+   "keywords": [
+    "anniversaires",
+    "anniversaire"
+   ]
+  },
+  {
+   "topic_id": "retail_prices",
+   "question": "Quels sont les prix publics de detail ?",
+   "keywords": [
+    "prix publics",
+    "prix de detail"
+   ]
+  }
+ ]
+}
