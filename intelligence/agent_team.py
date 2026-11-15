@@ -109,3 +109,32 @@ def route_topics(subject, topics, include_synthesis=True):
         "execution": "not_started",
         "paid_calls": 0,
     }
+
+
+def build_team_plan(subject, subquestions):
+    """Construit un plan de delegation par sous-question, sans executer d'agent."""
+    require_tcg_scope(subject)
+    tasks = []
+    all_roles = []
+    for sq in subquestions or []:
+        routed = route_topics(subject, [sq], include_synthesis=False)
+        specialists = [agent_id for agent_id in routed["agent_ids"] if agent_id != "coordinator"]
+        for agent_id in specialists:
+            if agent_id not in all_roles:
+                all_roles.append(agent_id)
+        tasks.append({
+            "subquestion_id": sq.get("subquestion_id"),
+            "topic_id": sq.get("topic_id"),
+            "assigned_roles": specialists,
+            "status": "planned",
+        })
+    return {
+        "contract": TEAM_CONTRACT,
+        "scope": "tcg",
+        "coordinator": "coordinator",
+        "specialist_roles": all_roles,
+        "synthesis_role": "opportunity_detection",
+        "tasks": tasks,
+        "execution": "planned_only",
+        "paid_calls": 0,
+    }
