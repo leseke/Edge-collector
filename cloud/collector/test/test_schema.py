@@ -58,6 +58,22 @@ class CollectorSchemaTests(unittest.TestCase):
         with self.assertRaises(sqlite3.IntegrityError):
             self.observe("obs-1", "run-1")
 
+    def test_duplicate_target_in_same_run_is_rejected(self):
+        self.run_insert()
+        self.observe("obs-1", "run-1")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.observe("obs-2", "run-1")
+        self.run_insert("run-2")
+        self.observe("obs-3", "run-2")
+
+    def test_duplicate_failure_in_same_run_is_rejected(self):
+        self.run_insert()
+        values = ("err-1", "run-1", "card", "https://example.invalid", "2026-11-15T10:00:00Z", "upstream_503")
+        statement = "INSERT INTO collection_errors(error_id,run_id,product_id,source_url,occurred_at,reason_code) VALUES(?,?,?,?,?,?)"
+        self.db.execute(statement, values)
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute(statement, ("err-2", *values[1:]))
+
     def test_orphan_observation_is_rejected(self):
         with self.assertRaises(sqlite3.IntegrityError):
             self.observe("obs-orphan", "missing-run")
