@@ -46,8 +46,11 @@ class LocalServiceTests(unittest.TestCase):
             return exc.code, exc.headers, exc.read()
 
     def test_health_does_not_claim_model_is_ready_when_disabled(self):
-        status, _, raw = self.request("/health")
+        status, headers, raw = self.request(
+            "/health", headers={"Origin": "https://edge.example"}
+        )
         self.assertEqual(status, 200)
+        self.assertEqual(headers.get("Access-Control-Allow-Origin"), "https://edge.example")
         self.assertEqual(json.loads(raw)["status"], "model_disabled")
 
     def test_health_does_not_claim_configured_without_model_registry(self):
@@ -126,6 +129,7 @@ class LocalServiceTests(unittest.TestCase):
         self.assertEqual(status, 204)
         self.assertEqual(headers.get("Access-Control-Allow-Origin"), "https://edge.example")
         self.assertEqual(headers.get("Access-Control-Allow-Private-Network"), "true")
+        self.assertEqual(headers.get("Access-Control-Allow-Methods"), "GET, POST, OPTIONS")
 
     def test_unknown_origin_preflight_is_rejected(self):
         status, _, _ = self.request(
