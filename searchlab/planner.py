@@ -51,20 +51,21 @@ DEFAULT_UNIVERSE = [
 
 
 def detect(text):
-    t = fold(text)
+    # Fold punctuation as separators so "Yu-Gi-Oh!" and "Yu Gi Oh"
+    # resolve to the same game identity.
+    t = re.sub(r"[^a-z0-9]+", " ", fold(text)).strip()
     ents = []
     for key, value in ENTITIES.items():
-        if re.search(r"\b" + re.escape(key) + r"\b", t) and value not in ents:
+        normalized_key = re.sub(r"[^a-z0-9]+", " ", fold(key)).strip()
+        if re.search(r"(?<![a-z0-9])" + re.escape(normalized_key) + r"(?![a-z0-9])", t) and value not in ents:
             ents.append(value)
     intents = [family for family, tokens in INTENTS if any(token in t for token in tokens)]
-    # "30 ans de Pokemon" = anniversaire ; "sur cinq ans" = horizon.
-    if re.search(r"\b\d{1,3} ans (de|d')", t) and "catalyst" not in intents:
+    if re.search(r"\\b\\d{1,3} ans (de|d)", t) and "catalyst" not in intents:
         intents.insert(0, "catalyst")
-    sets = re.findall(r"(?<!\d)(\d{3,6})(?!\d)", t)
+    sets = re.findall(r"(?<!\\d)(\\d{3,6})(?!\\d)", t)
     sets = [number for number in sets if not 1950 <= int(number) <= 2040]
-    horizon = "FUTURE_CLASSIC" if re.search(r"(cinq|5|dix|10|plusieurs)\s*ans|long terme", t) else "FLIP"
+    horizon = "FUTURE_CLASSIC" if re.search(r"(cinq|5|dix|10|plusieurs)\\s*ans|long terme", t) else "FLIP"
     return ents, intents or ["price_anomaly", "rarity"], sets, horizon
-
 
 def _contains_out_of_scope(text):
     normalized = fold(text)
