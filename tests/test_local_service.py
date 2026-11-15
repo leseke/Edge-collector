@@ -170,10 +170,11 @@ class LocalServiceTests(unittest.TestCase):
         fake_store.root = str(self.root / "intelligence")
         fake_store.read.return_value = {"report_id": "eir_q-1", "report_version": 1}
         fake_store.load_index.return_value = {"reports": [{
-            "report_id": "eir_q-1", "report_version": 1,
+            "report_id": "eir_q-1", "report_version": 1, "content_sha256": "report-hash",
         }]}
         with patch("intelligence.local_service.ReportStore", return_value=fake_store):
-            status, _, raw = self.request(
+            with patch("intelligence.local_service.content_sha256", return_value="report-hash"):
+                status, _, raw = self.request(
                 "/v1/reports/eir_q-1?version=1",
                 headers={"Authorization": "Bearer " + self.token},
             )
