@@ -77,6 +77,10 @@ Toute conclusion doit répondre en français à quatre questions :
 - **Analyse :** thèse, acteurs, offre/demande, catalyseurs, liquidité, coûts et scénarios.
 - **Preuves :** sources originales, horodatages, observations brutes, méthode et journal des corrections.
 
+## Historique des rapports — première version
+
+La page `/local` conserve jusqu’à 20 résultats d’enquête dans le `localStorage` du navigateur. Elle n’enregistre ni le jeton d’accès ni le corpus importé. Un rapport peut être rouvert et comparé structurellement à un autre rapport (décision EDGE, nombre d’affirmations, sources et jeux de données). Cette comparaison ne prétend pas identifier les changements sémantiques entre affirmations : elle signale uniquement les écarts de structure. L’historique est propre au navigateur et n’est pas synchronisé entre appareils ; il ne remplace pas encore un journal serveur durable.
+
 ## État de réalisation
 
 Ce document définit le contrat produit visé. Le guide visuel des niveaux FACT / WEAK_SIGNAL / INFERENCE / BET est raccordé aux pages d'accueil et d'intelligence de réaction. Les rapports d'investigation complets, les pages de recherche/opportunités et leur liaison au moteur réel restent à implémenter. Ne pas présenter ce document comme une fonctionnalité déjà entièrement livrée.
