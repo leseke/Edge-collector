@@ -16,6 +16,10 @@ class InquiryAccessDenied(RuntimeError):
     pass
 
 
+class InquiryQuotaExceeded(InquiryAccessDenied):
+    pass
+
+
 def run_user_inquiry(
     question,
     corpora,
@@ -73,7 +77,7 @@ def run_user_inquiry(
             usage_store, user_id, period, "investigation", limit, request_id
         )
     except UsageLimitExceeded as exc:
-        raise InquiryAccessDenied("quota quotidien d'enquêtes EDGE atteint") from exc
+        raise InquiryQuotaExceeded("quota quotidien d'enquêtes EDGE atteint") from exc
 
     # Import lazily to keep this boundary independently testable.
     from intelligence.inquiry import run_inquiry
