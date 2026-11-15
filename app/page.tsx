@@ -1,2 +1,6 @@
-import { LegacyScreen } from "./components/LegacyScreen";
-export default function HomePage() { return <LegacyScreen src="/legacy/index.html" title="EDGE — Marché observé" />; }
+import { MarketDashboard } from "./components/MarketDashboard";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export default function HomePage() {
+  return <MarketDashboard />;
+}
