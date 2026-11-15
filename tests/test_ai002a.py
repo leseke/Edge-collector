@@ -201,6 +201,9 @@ class EndToEndTests(Base):
         self.assertTrue(a["valid"], a["errors"])
         self.assertEqual(a["verification_level"], "simulated")
         self.assertEqual(len(res["dossier"]["plan"]["subquestions"]), 3)
+        self.assertEqual(res["dossier"]["agent_team"]["execution"], "planned_only")
+        self.assertEqual(res["dossier"]["agent_team"]["paid_calls"], 0)
+        self.assertTrue(res["dossier"]["agent_team"]["tasks"])
         ext = {e["extract_id"]: e for e in raw()["extracts"]}
         for c in r["claims"]:
             if c["kind"] == "fact":
