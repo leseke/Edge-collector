@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 type Health = { reachable: boolean; status: string; provider?: string | null };
 type HistoryEntry = { id: string; saved_at: string; question: string; result: InquiryResult };
+type ArchiveEntry = { report_id: string; report_version: number; title?: string; market?: string; region?: string; created_at?: string; production_status?: string; edge_decision?: string; data_as_of?: string };
 const HISTORY_KEY = "edge.local.inquiry-history.v1";
 const HISTORY_LIMIT = 20;
 
@@ -104,6 +105,9 @@ export function LocalCompanion() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [compareId, setCompareId] = useState("");
   const [activeHistoryId, setActiveHistoryId] = useState("");
+  const [archive, setArchive] = useState<ArchiveEntry[]>([]);
+  const [archiveLoading, setArchiveLoading] = useState(false);
+  const [archiveError, setArchiveError] = useState("");
 
   const checkHealth = useCallback(async () => {
     setChecking(true);
@@ -156,6 +160,53 @@ export function LocalCompanion() {
   function removeHistory() {
     try { window.localStorage.removeItem(HISTORY_KEY); setHistory([]); setCompareId(""); setActiveHistoryId(""); }
     catch { setStatusMessage("Impossible d'effacer l'historique depuis ce navigateur."); }
+  }
+
+
+  async function refreshServerArchive() {
+    if (token.length < 32) { setArchiveError("Saisis le jeton local pour accéder à l'archive."); return; }
+    setArchiveLoading(true);
+    setArchiveError("");
+    try {
+      const response = await fetch(LOCAL_BASE + "/v1/reports", {
+        method: "GET", mode: "cors", credentials: "omit", cache: "no-store",
+        redirect: "error", referrerPolicy: "no-referrer",
+        headers: { Authorization: "Bearer " + token },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!response.ok) throw new Error(response.status === 401 ? "Jeton local incorrect." : "Archive locale indisponible.");
+      const body = await response.json() as { reports?: ArchiveEntry[] };
+      setArchive(Array.isArray(body.reports) ? body.reports : []);
+    } catch (caught) {
+      setArchiveError((caught as Error).message || "Impossible de charger l'archive locale.");
+    } finally { setArchiveLoading(false); }
+  }
+
+  async function openServerReport(entry: ArchiveEntry) {
+    if (token.length < 32) { setArchiveError("Saisis le jeton local pour ouvrir ce rapport."); return; }
+    setArchiveError("");
+    try {
+      const url = LOCAL_BASE + "/v1/reports/" + encodeURIComponent(entry.report_id) + "?version=" + entry.report_version;
+      const response = await fetch(url, {
+        method: "GET", mode: "cors", credentials: "omit", cache: "no-store",
+        redirect: "error", referrerPolicy: "no-referrer",
+        headers: { Authorization: "Bearer " + token },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!response.ok) throw new Error(response.status === 401 ? "Jeton local incorrect." : "Impossible de lire ce rapport archivé.");
+      const body = await response.json() as InquiryResult;
+      const id = entry.report_id + ":" + entry.report_version;
+      const historyEntry: HistoryEntry = { id, saved_at: entry.created_at || new Date().toISOString(), question: "Rapport restauré depuis l'archive EDGE", result: body };
+      const next = [historyEntry, ...history.filter(item => item.id !== id)].slice(0, HISTORY_LIMIT);
+      setResult(body);
+      setActiveHistoryId(id);
+      setCompareId(next.find(item => item.id !== id)?.id || "");
+      setHistory(next);
+      try { window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); }
+      catch { setArchiveError("Rapport ouvert depuis l'archive, mais copie locale du navigateur impossible."); }
+    } catch (caught) {
+      setArchiveError((caught as Error).message || "Impossible d'ouvrir ce rapport.");
+    }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -237,7 +288,14 @@ export function LocalCompanion() {
       </aside>
     </div>
     <section className="local-panel local-history">
-      <div className="history-heading"><div><p className="native-eyebrow">MÉMOIRE DES ENQUÊTES</p><h2>Historique des rapports</h2><p>Conservé dans ce navigateur uniquement. Le jeton et le corpus importé ne sont jamais enregistrés ici.</p></div><button type="button" className="local-secondary-button" onClick={removeHistory} disabled={history.length === 0}>Effacer l'historique</button></div>
+      <div className="history-heading"><div><p className="native-eyebrow">MÉMOIRE DES ENQUÊTES</p><h2>Historique des rapports</h2><p>Archive immuable sur le compagnon local, avec copie de confort dans ce navigateur. Le jeton et le corpus importé ne sont jamais enregistrés ici.</p></div><div className="history-heading-actions"><button type="button" className="local-secondary-button" onClick={() => void refreshServerArchive()} disabled={archiveLoading || token.length < 32}>{archiveLoading ? "Chargement…" : "Charger l'archive locale"}</button><button type="button" className="local-secondary-button" onClick={removeHistory} disabled={history.length === 0}>Effacer la copie navigateur</button></div></div>
+      {archiveError && <p className="local-error" role="alert">{archiveError}</p>}
+      <div className="server-archive"><strong>Archive persistante du moteur ({archive.length})</strong>
+        {archive.length === 0 ? <small>Charge l'archive pour retrouver les rapports conservés par le compagnon local.</small> : archive.map(entry => <article className="history-item" key={entry.report_id + ":" + entry.report_version}>
+          <div><strong>{entry.title || entry.report_id} · v{entry.report_version}</strong><span>{entry.created_at ? new Date(entry.created_at).toLocaleString("fr-FR") : "Date non renseignée"} · {entry.production_status || "Statut inconnu"} · {entry.edge_decision || "Décision non renseignée"}</span><small>{entry.market || "Marché non précisé"} · {entry.region || "Région non précisée"}</small></div>
+          <button type="button" className="local-secondary-button" onClick={() => void openServerReport(entry)}>Ouvrir</button>
+        </article>)}
+      </div>
       {history.length === 0 ? <p className="history-empty">Aucun rapport enregistré. Les prochaines enquêtes réussies apparaîtront ici.</p> : <>
         <div className="history-list">{history.map((entry, index) => <article key={entry.id} className="history-item">
           <div><strong>{entry.result.report?.subject?.title || "Investigation sans rapport"}</strong><span>{new Date(entry.saved_at).toLocaleString("fr-FR")} · {RESULT_STATUS_LABEL[entry.result.status || ""] || entry.result.status || "Statut inconnu"}</span><small>{entry.question}</small></div>
