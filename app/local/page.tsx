@@ -1,7 +1,2 @@
-export default function LocalInquiryPage() {
-  return (
-    <main className="legacy-shell">
-      <iframe className="legacy-frame" src="/legacy/local/index.html" title="EDGE — Enquête locale" />
-    </main>
-  );
-}
+import { LegacyScreen } from "../components/LegacyScreen";
+export default function LocalInquiryPage() { return <LegacyScreen src="/legacy/local/index.html" title="EDGE — Enquête locale" />; }
