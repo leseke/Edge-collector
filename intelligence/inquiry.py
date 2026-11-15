@@ -22,6 +22,7 @@ from intelligence.agent_team import TCGScopeError, build_team_plan
 from intelligence.store import PublishRefused, next_version
 from intelligence.validator import assess, content_sha256, timeliness
 from investigation.spend import SpendNotAuthorized
+from intelligence.subscription_entitlements import (resolve_entitlements, authorize_agent_provider, EntitlementError)
 
 EDGE_DECISION_NOT_EVALUATED = {"decision": "NOT_EVALUATED", "decided_by": "none", "rules_applied": [],
                                "evidence_refs": [], "decided_at": None}
@@ -39,8 +40,10 @@ def _result(status, **kw):
             "violations": [], **kw}
 
 
-def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=None, send=None, max_operations=1):
+def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=None, send=None, max_operations=1, subscription_claim=None):
+    """subscription_claim must be injected by trusted server-side billing code, never copied from client input."""
     now = now or datetime.now(timezone.utc)
+    entitlements = resolve_entitlements(subscription_claim, now=now)
     plan = plan_question(question, corpora)
     if plan["status"] != "OK":
         return _result(plan["status"], plan=plan)
@@ -124,6 +127,10 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
 
     # --- agent (gratuit : direct ; payant : activation + verrou R4.2 obligatoires)
     provider = provider or OfflineAgentProvider()
+    try:
+        authorize_agent_provider(entitlements, provider)
+    except EntitlementError as e:
+        return _result("REJECTED", plan=plan, violations=[f"abonnement EDGE : {e}"])
     if getattr(provider, "paid", False) and hasattr(provider, "enabled"):
         ok, why = provider.enabled()
         if not ok:
@@ -205,6 +212,8 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "agent": provider.name, "corpus": {"corpus_id": corpus.corpus_id, "sha256": corpus.sha256,
                                                   "simulated": corpus.simulated},
                "plan": plan,
+               "subscription": {"plan": entitlements["plan"], "status": entitlements["status"],
+                                "paid_provider_access": entitlements["paid_provider_access"]},
                "agent_team": {**team_plan, "execution_trace": team_execution},
                "inventory": {"sources": src_ids, "datasets": [{"dataset_id": i, "points_with_data": coverage[i]} for i in ds_ids],
                              "extracts_used": [e["extract_id"] for e in extracts], "excluded_extracts": excluded},
