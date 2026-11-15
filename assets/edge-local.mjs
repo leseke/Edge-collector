@@ -23,7 +23,7 @@ export async function checkLocalEdgeStatus() {
   const body = await response.json();
   return {
     reachable: true,
-    status: body.status === "ready" ? "ready" : "model_disabled",
+    status: body.status === "configured" ? "configured" : body.status,
     provider: body.provider === "ollama_local" ? body.provider : null
   };
 }
