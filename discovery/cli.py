@@ -20,14 +20,24 @@ from edge_engine import load_config
 
 
 def watchlist_keys():
+    """Clés TCG seulement. Les anciennes entrées LEGO restent dans collect.py
+    pour compatibilité historique, mais ne pilotent plus EDGE Discovery.
+    """
     from collect import WATCHLIST
+    from discovery.identity import identify
     keys = []
-    for it in WATCHLIST:
-        nums = [m for m in it.get("must_all", []) if m.isdigit()]
-        if nums and it["id"].startswith("lego_"):
-            keys.append(f"lego:{nums[0]}")
-    return keys
-
+    for item in WATCHLIST:
+        game = (item.get("game") or "").strip().lower()
+        if game not in {"pokemon", "one piece", "lorcana", "riftbound", "magic",
+                        "yu-gi-oh", "digimon", "flesh and blood", "weiss schwarz",
+                        "union arena", "dragon ball", "star wars unlimited"}:
+            continue
+        key = item.get("product_key")
+        if not key and item.get("name"):
+            key = identify(item["name"])[0]
+        if key:
+            keys.append(key)
+    return sorted(set(keys))
 
 def _official(http, environ, usd_to_eur, as_of=None):
     """as_of : date de reference d'un rejeu. Les observations sont alors
