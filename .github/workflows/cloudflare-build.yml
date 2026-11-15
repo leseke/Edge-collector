@@ -24,6 +24,8 @@ jobs:
           node-version: 24
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Offline collector parser tests
+        run: node --test cloud/collector/test/*.test.mjs
       - name: Type check
         run: npm run typecheck
       - name: Build for Cloudflare Workers
