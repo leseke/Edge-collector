@@ -3,17 +3,36 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 type Health = { reachable: boolean; status: string; provider?: string | null };
-type InquiryResult = {
-  status?: string;
-  reason?: string;
-  report?: {
-    subject?: { title?: string };
-    production_status?: string;
-    claims?: Array<{ statement?: string; verification?: string; kind?: string }>;
-  };
-  violations?: string[];
-  usage?: { limit?: number; period_utc?: string };
+type ReportSource = { source_id: string; title: string; publisher: string; url: string | null; published_at: string | null; accessed_at: string; tier: string; simulated: boolean };
+type ReportClaim = { claim_id: string; statement: string; kind: string; verification: string; confidence: string; author: string; source_ids: string[]; contradicting_source_ids?: string[]; basis?: { fact_claim_ids: string[]; computation_ids: string[] }; source_claim_type?: string };
+type ReportDataset = { dataset_id: string; title: string; measure: string; territory: string; currency: string | null; unit: string; period: { start: string; end: string }; points: Array<{ t: string; value: number | null; status: string }> };
+type InquiryReport = {
+  report_id?: string; report_version?: number; created_at?: string; data_as_of?: string;
+  production_status?: string; simulated?: boolean;
+  subject?: { title?: string; market?: string; category?: string; region?: string; language?: string };
+  sources?: ReportSource[]; claims?: ReportClaim[]; datasets?: ReportDataset[];
+  decisions?: { agent_opinion?: { stance?: string; rationale?: string; is_decision?: boolean } | null; edge_decision?: { decision?: string; decided_by?: string } };
+  economics?: { listed_price_dataset_ids?: string[]; realized_sale_dataset_ids?: string[]; availability?: { buyable_verified?: boolean }; fees?: { verified?: boolean }; liquidity?: { claim_ids?: string[] } };
+  computations?: Array<{ computation_id: string; method: string; dataset_id: string; t_from: string; t_to: string; result: number; unit: string }>;
 };
+type SpecialistTask = { agent_id: string; status: string; mode: string; findings?: Array<{ classification: string; statement: string }> ; limitations?: string[] };
+type InquiryDossier = {
+  contradictions?: Array<{ assertion_key: string; positions: Record<string, string[]> }>;
+  unknowns?: string[];
+  agent_team?: { tasks?: Array<{ agent_id: string }>; execution_trace?: { task_results?: SpecialistTask[]; contradictions?: unknown[]; paid_calls?: number } };
+};
+type InquiryResult = {
+  status?: string; reason?: string; report?: InquiryReport; dossier?: InquiryDossier;
+  violations?: string[]; usage?: { limit?: number; period_utc?: string };
+};
+const KIND_LABEL: Record<string, string> = { fact: "Fait", interpretation: "Interprétation", hypothesis: "Hypothèse", uncertainty: "Incertitude", limitation: "Limite", invalidated: "Invalidé" };
+const VERIFY_LABEL: Record<string, string> = { verified: "Vérifié", unverified: "Non vérifié", contradicted: "Contredit", simulated: "Simulé" };
+const CONFIDENCE_LABEL: Record<string, string> = { low: "Faible", medium: "Moyenne", high: "Élevée" };
+const MEASURE_LABEL: Record<string, string> = { asking_price: "Prix affiché", sold_price: "Vente conclue", retail_price: "Prix public", market_trend: "Tendance de marché", volume: "Volume", search_interest: "Intérêt de recherche", other: "Autre mesure" };
+function safeHttpUrl(value: string | null): string | null {
+  if (!value) return null;
+  try { const url = new URL(value); return url.protocol === "https:" ? url.href : null; } catch { return null; }
+}
 const LOCAL_BASE = "http://127.0.0.1:8765";
 
 export function LocalCompanion() {
@@ -129,11 +148,64 @@ export function LocalCompanion() {
       </aside>
     </div>
     {result && <section className="local-panel local-result">
-      <p className="native-eyebrow">RÉSULTAT DE L'ENQUÊTE</p><h2>{result.report?.subject?.title || "Rapport EDGE"}</h2>
-      <p>Statut EDGE : <strong>{result.status || "Non précisé"}</strong> · Production : <strong>{result.report?.production_status || "Non précisée"}</strong></p>
-      <h3>{result.report?.claims?.length ?? 0} affirmation(s) analysée(s)</h3>
-      {result.report?.claims?.length ? <ul>{result.report.claims.map((claim, i) => <li key={i}><p>{claim.statement || "Élément sans texte."}</p><small>Qualification : {claim.verification || "non précisée"} · Type : {claim.kind || "non précisé"}</small></li>)}</ul> : <p>{result.reason || "Aucune affirmation exploitable dans le rapport."}</p>}
-      {result.violations?.length ? <div><h3>Contrôles</h3><ul>{result.violations.map((item, i) => <li key={i}>{item}</li>)}</ul></div> : null}
+      <div className="report-heading">
+        <div><p className="native-eyebrow">RAPPORT D'INVESTIGATION EDGE</p><h2>{result.report?.subject?.title || "Rapport EDGE"}</h2><p className="report-subtitle">{result.report?.subject?.market || "Marché non précisé"} · {result.report?.subject?.region || "Région non précisée"}{result.report?.subject?.language ? ` · ${result.report.subject.language}` : ""}</p></div>
+        <span className="report-status">{result.report?.production_status === "partial" ? "Rapport partiel" : result.report?.production_status || result.status || "Statut inconnu"}</span>
+      </div>
+      <div className="report-overview-grid">
+        <div><small>Créé le</small><strong>{result.report?.created_at ? new Date(result.report.created_at).toLocaleString("fr-FR") : "Non renseigné"}</strong></div>
+        <div><small>Données arrêtées au</small><strong>{result.report?.data_as_of ? new Date(result.report.data_as_of).toLocaleString("fr-FR") : "Non renseigné"}</strong></div>
+        <div><small>Version</small><strong>{result.report?.report_version ?? "—"}</strong></div>
+        <div><small>Nature des données</small><strong>{result.report?.simulated ? "Simulation présente" : "Non simulées selon le rapport"}</strong></div>
+      </div>
+      <section className="report-section">
+        <p className="native-eyebrow">1 · CONCLUSION</p>
+        <h3>Ce que le moteur permet de conclure</h3>
+        <p>{result.report?.decisions?.edge_decision?.decision === "NOT_EVALUATED" ? "Aucune décision d'investissement EDGE n'a été évaluée. Le rapport présente une analyse, pas une recommandation d'achat." : `Décision EDGE : ${result.report?.decisions?.edge_decision?.decision || "Non renseignée"}.`}</p>
+        {result.report?.decisions?.agent_opinion && <div className="report-callout"><strong>Avis analytique du modèle : {result.report.decisions.agent_opinion.stance || "Non précisé"}</strong><p>{result.report.decisions.agent_opinion.rationale || "Aucune justification fournie."}</p><small>Cet avis n'est pas une décision EDGE et ne constitue pas une validation des faits.</small></div>}
+      </section>
+      <section className="report-section">
+        <p className="native-eyebrow">2 · AFFIRMATIONS & PREUVES</p><h3>{result.report?.claims?.length ?? 0} élément(s) analysé(s)</h3>
+        {result.report?.claims?.length ? <div className="report-claims">{result.report.claims.map((claim) => {
+          const sources = (result.report?.sources || []).filter(source => claim.source_ids?.includes(source.source_id));
+          const contradicting = (result.report?.sources || []).filter(source => claim.contradicting_source_ids?.includes(source.source_id));
+          return <article className="report-claim" key={claim.claim_id}>
+            <div className="report-claim-tags"><span>{KIND_LABEL[claim.kind] || claim.kind}</span><span>{VERIFY_LABEL[claim.verification] || claim.verification}</span><span>Confiance {CONFIDENCE_LABEL[claim.confidence] || claim.confidence}</span></div>
+            <p>{claim.statement}</p>
+            <small>Auteur : {claim.author === "agent" ? "Modèle IA" : claim.author === "edge_engine" ? "Moteur EDGE" : claim.author === "collector" ? "Collecteur" : "Humain"}{claim.source_claim_type ? ` · Nature chez la source : ${claim.source_claim_type}` : ""}</small>
+            {sources.length > 0 && <div className="report-source-links"><strong>Sources à l'appui</strong>{sources.map(source => <div key={source.source_id}><span>{source.publisher} · {source.tier === "primary" ? "Primaire" : source.tier === "secondary" ? "Secondaire" : "Non qualifiée"} · consultée le {source.accessed_at}</span>{safeHttpUrl(source.url) ? <a href={safeHttpUrl(source.url)!} target="_blank" rel="noreferrer">{source.title}</a> : <span>{source.title} · lien non disponible</span>}</div>)}</div>}
+            {contradicting.length > 0 && <div className="report-conflict"><strong>Sources contradictoires</strong>{contradicting.map(source => <span key={source.source_id}>{source.publisher} : {source.title}</span>)}</div>}
+            {claim.basis && <small>Fondement de l'interprétation : {claim.basis.fact_claim_ids.length} fait(s) · {claim.basis.computation_ids.length} calcul(s) EDGE.</small>}
+          </article>;
+        })}</div> : <p>{result.reason || "Aucune affirmation exploitable dans le rapport."}</p>}
+      </section>
+      <section className="report-section">
+        <p className="native-eyebrow">3 · DONNÉES DE MARCHÉ</p><h3>{result.report?.datasets?.length ?? 0} jeu(x) de données</h3>
+        {result.report?.datasets?.length ? <div className="report-datasets">{result.report.datasets.map(dataset => <article key={dataset.dataset_id}><strong>{dataset.title}</strong><span>{MEASURE_LABEL[dataset.measure] || dataset.measure} · {dataset.territory} · {dataset.period.start} → {dataset.period.end}</span><small>{dataset.points.filter(point => point.value !== null).length} point(s) renseigné(s) sur {dataset.points.length} · {dataset.currency || dataset.unit}</small></article>)}</div> : <p>Aucun jeu de données chiffré exploitable dans ce rapport.</p>}
+        <div className="report-callout"><strong>Prix affichés et ventes réalisées restent séparés.</strong><p>{result.report?.economics?.listed_price_dataset_ids?.length ?? 0} jeu(x) de prix affichés · {result.report?.economics?.realized_sale_dataset_ids?.length ?? 0} jeu(x) de ventes conclues. La présence d'un jeu de données ne prouve pas à elle seule la qualité de chaque transaction.</p></div>
+        {result.report?.computations?.length ? <div className="report-datasets">{result.report.computations.map(item => <article key={item.computation_id}><strong>{item.method === "pct_change" ? "Variation calculée" : item.method} · {item.result.toLocaleString("fr-FR")} {item.unit}</strong><span>{item.t_from} → {item.t_to}</span><small>Calcul exécuté par EDGE · {item.dataset_id}</small></article>)}</div> : null}
+      </section>
+      <section className="report-section">
+        <p className="native-eyebrow">4 · COUVERTURE DE L'ENQUÊTE</p><h3>Spécialistes et limites</h3>
+        {result.dossier?.agent_team?.execution_trace?.task_results?.length ? <div className="report-datasets">{result.dossier.agent_team.execution_trace.task_results.map((task, index) => <article key={task.agent_id + index}><strong>{task.agent_id}</strong><span>{task.status === "not_configured" ? "Spécialiste non connecté" : task.status === "completed" ? "Exécution terminée" : task.status}</span><small>{task.mode === "mock" ? "Simulation technique, aucun constat produit." : task.mode === "real" ? `${task.findings?.length ?? 0} constat(s) transmis` : "Aucun adaptateur réel disponible."}</small>{task.limitations?.map((limitation, i) => <small key={i}>{limitation}</small>)}</article>)}</div> : <p>Aucune trace de spécialiste disponible.</p>}
+        <div className="report-overview-grid"><div><small>Questions sans réponse</small><strong>{result.dossier?.unknowns?.length ?? 0}</strong></div><div><small>Contradictions recensées</small><strong>{(result.dossier?.contradictions?.length ?? 0) + (result.dossier?.agent_team?.execution_trace?.contradictions?.length ?? 0)}</strong></div></div>
+        {result.dossier?.unknowns?.length ? <p>À approfondir : {result.dossier.unknowns.join(", ")}</p> : null}
+      </section>
+      <section className="report-section">
+        <p className="native-eyebrow">5 · PROCHAINES ÉTAPES</p><h3>Ce qui manque avant une décision</h3>
+        <ul className="report-next-steps">
+          {!result.report?.sources?.length && <li>Ajouter des sources identifiables et datées.</li>}
+          {!result.report?.datasets?.length && <li>Collecter des données de marché horodatées.</li>}
+          {(result.report?.economics?.realized_sale_dataset_ids?.length ?? 0) === 0 && <li>Rechercher des ventes conclues comparables ; ne pas assimiler les annonces à des transactions.</li>}
+          {result.report?.economics?.availability?.buyable_verified !== true && <li>Vérifier la disponibilité réelle et le prix d'entrée exécutable.</li>}
+          {result.report?.economics?.fees?.verified !== true && <li>Établir les frais d'acquisition, de vente, d'expédition et de grading applicables.</li>}
+          {(result.report?.economics?.liquidity?.claim_ids?.length ?? 0) === 0 && <li>Documenter la liquidité avec des transactions et volumes comparables.</li>}
+          {(result.dossier?.unknowns?.length ?? 0) > 0 && <li>Compléter les sous-questions restées sans données.</li>}
+          {result.report?.production_status !== "complete" && <li>Le rapport est incomplet : approfondir et faire vérifier les éléments avant toute décision.</li>}
+        </ul>
+      </section>
+      {result.violations?.length ? <section className="report-section"><p className="native-eyebrow">CONTRÔLES</p><h3>Éléments rejetés ou refusés</h3><ul>{result.violations.map((item, i) => <li key={i}>{item}</li>)}</ul></section> : null}
+      <p className="report-final-note">Ce rapport décrit l'état des informations au moment de l'enquête. Les éléments non vérifiés restent des pistes d'analyse, pas des faits établis. Fiabilité non vérifiée lorsque les preuves sont insuffisantes.</p>
       {result.usage && <small>Quota : {result.usage.limit ?? "?"} tentatives / jour · {result.usage.period_utc || "période UTC"}</small>}
     </section>}
     <section className="dashboard-method"><p className="native-eyebrow">SÉCURITÉ & LIMITES</p><h2>Ce que cette page ne fait pas.</h2><div className="method-grid"><div><strong>Aucun accès distant</strong><p>Les requêtes sont limitées à 127.0.0.1:8765. Le jeton reste en mémoire et les requêtes n’envoient pas de cookies.</p></div><div><strong>Aucune donnée fabriquée</strong><p>Pas de prix synthétiques ni de ventes inventées. Le moteur doit référencer les éléments présents dans le corpus.</p></div><div><strong>Aucun paiement</strong><p>Cette passerelle ne crée ni compte cloud, ni abonnement Premium, ni facturation.</p></div></div></section>
