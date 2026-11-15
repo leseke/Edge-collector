@@ -79,6 +79,11 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
             "source_ids": task_source_ids,
         }
         task["evidence_status"] = "available" if task_source_ids else "no_data"
+
+    # Exécute le moteur local sans adaptateur : la trace expose explicitement
+    # les rôles non configurés, sans fabriquer de résultats ni appeler un fournisseur.
+    from intelligence.multi_agent_runtime import Coordinator
+    team_execution = Coordinator().run(team_plan)
     coverage = {d["dataset_id"]: sum(1 for p in d["points"] if p["value"] is not None) for d in datasets}
     answered = {t: bool([e for e in extracts if e["topic_id"] == t] or
                         [d for d in corpus.datasets_for(t) if coverage.get(d["dataset_id"])]) for t in topics}
@@ -200,7 +205,7 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "agent": provider.name, "corpus": {"corpus_id": corpus.corpus_id, "sha256": corpus.sha256,
                                                   "simulated": corpus.simulated},
                "plan": plan,
-               "agent_team": team_plan,
+               "agent_team": {**team_plan, "execution_trace": team_execution},
                "inventory": {"sources": src_ids, "datasets": [{"dataset_id": i, "points_with_data": coverage[i]} for i in ds_ids],
                              "extracts_used": [e["extract_id"] for e in extracts], "excluded_extracts": excluded},
                "contradictions": contradictions,
