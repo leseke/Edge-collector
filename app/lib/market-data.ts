@@ -69,6 +69,13 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
     if (sha256(reportText) !== reportEntry.sha256) throw new Error("Report integrity check failed");
     const report = JSON.parse(reportText) as Report;
     if (report.schema !== "edge.commercial.snapshot.v1" || report.observed_at !== pointer.observed_at || report.status !== pointer.status || !Array.isArray(report.observations)) throw new Error("Invalid report schema");
+    const mriEntry = pointer.files["mri_cases.json"];
+    if (!mriEntry || mriEntry.path !== `snapshots/${pointer.snapshot_id}/mri_cases.json` || !/^[a-f0-9]{64}$/.test(mriEntry.sha256)) throw new Error("Invalid MRI reference");
+    const mriText = await fetchText(DATA_BASE + mriEntry.path);
+    if (sha256(mriText) !== mriEntry.sha256) throw new Error("MRI integrity check failed");
+    const mri = JSON.parse(mriText) as { schema: string; cases: Array<{ product_id: string; publication_evidence?: unknown[] }> };
+    if (mri.schema !== "edge.mri.multi_source_cases.v1" || !Array.isArray(mri.cases)) throw new Error("Invalid MRI schema");
+    const tcgCases = mri.cases.filter((item) => item.product_id?.startsWith("pokemon_card_"));
     const observations = report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.raw_file && item.body_sha256);
     const cards = await Promise.all(observations.map(async (item): Promise<TcgCard | null> => {
       try {
@@ -96,6 +103,9 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       observationCount: observations.length, successfulCount: observations.filter((item) => item.status === "OK").length,
       failedCount: observations.filter((item) => item.status !== "OK").length,
       warning: report.status === "PARTIAL" ? "Collecte partielle : certaines sources n’ont pas répondu." : null,
+      reactionCaseCount: tcgCases.length,
+      publishedEventCount: tcgCases.reduce((total, item) => total + (item.publication_evidence?.length ?? 0), 0),
+      completedSales: report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.completed_sale === true).length,
     };
   } catch {
     return { observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel." };
