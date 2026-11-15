@@ -213,6 +213,8 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                     payload, data_dir=data_dir, environ=env
                 )
                 return self._send_json(200, result, cors=True)
+            except InquiryQuotaExceeded as exc:
+                return self._send_json(429, {"error": str(exc)}, cors=True)
             except (ValueError, InquiryAccessDenied) as exc:
                 return self._send_json(400, {"error": str(exc)}, cors=True)
             except LocalModelError:
