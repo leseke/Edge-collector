@@ -70,3 +70,13 @@ et /local, y compris les interactions et les iframes legacy.
 
 Aucun changement DNS, transfert de domaine, merge de PR ou suppression de
 projet Vercel n'est inclus dans la préparation du dépôt.
+
+## Diagnostic des builds GitHub → Cloudflare
+
+Si un ancien build Cloudflare indique `main` et installe `requirements.txt`
+avant d'échouer sur `package.json` introuvable, vérifier le nom de branche
+attaché **au build lui-même** : relancer cet ancien build peut reconstruire
+`main`, même lorsque la branche de production est désormais la branche de
+migration. Déclencher un nouveau build par un commit sur
+`edge/cloudflare-migration-001`, puis vérifier le commit et la branche dans
+les détails du nouveau build. Ne jamais fusionner `main` pour résoudre cela.
