@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from discovery.adapters import SourceUnavailable
 from investigation.spend import SpendNotAuthorized
 from discovery.engine import process
-from discovery.identity import fold, lego_set_numbers
+from discovery.identity import fold
 from edge_io import redact
 
 FAMILIES = {
@@ -25,7 +25,7 @@ FAMILIES = {
     "revalidation": "Revalidation des opportunites precedentes",
 }
 
-_STOP = set("""lego set neuf new sealed scelle boite box avec sans pour the and
+_STOP = set("""set neuf new sealed scelle boite box avec sans pour the and
 de la le les des du un une en edition officiel original pokemon one piece
 coffret display booster""".split())
 
@@ -48,7 +48,7 @@ def validate_campaign(c):
 
 TCG_TERMS = (
     "pokemon", "one piece", "lorcana", "riftbound", "magic the gathering",
-    "yu-gi-oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
+    "yu gi oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
     "union arena", "dragon ball", "star wars unlimited",
 )
 
@@ -67,7 +67,7 @@ def load_campaigns(path):
         if campaign.get("queries_from") == "store_revalidation":
             continue
         queries = campaign.get("queries", [])
-        if not queries or any(not any(term in fold(q) for term in TCG_TERMS) for q in queries):
+        if not queries or any(not any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()) for term in TCG_TERMS) for q in queries):
             errors.append(f"{campaign.get('id')}: requetes hors perimetre TCG ou sans jeu identifie")
     if errors:
         raise ValueError("registre de campagnes EDGE invalide : " + "; ".join(errors))
