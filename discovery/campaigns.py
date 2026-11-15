@@ -57,6 +57,10 @@ def load_campaigns(path):
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
     campaigns = data["campaigns"]
+    if data.get("scope_policy") != "TCG_ONLY":
+        # Les registres de démonstration historiques peuvent rester LEGO ;
+        # seul le registre de production déclare et impose le périmètre TCG.
+        return campaigns
     errors = []
     for campaign in campaigns:
         if not campaign.get("enabled", True):
