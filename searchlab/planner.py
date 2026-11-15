@@ -78,7 +78,7 @@ def plan(text, mode="discovery", horizon=None, max_queries=6, universe=None):
         raise ValueError("hors perimetre EDGE TCG : " + ", ".join(outside))
     ents, intents, sets, auto_horizon = detect(text)
     strategy = horizon or auto_horizon
-    selected_universe = list(universe or DEFAULT_UNIVERSE)
+    selected_universe = list(DEFAULT_UNIVERSE if universe is None else universe)
     allowed = {fold(name) for name in DEFAULT_UNIVERSE}
     if any(not isinstance(name, str) or fold(name) not in allowed for name in selected_universe):
         raise ValueError("l'univers de recherche doit rester limite aux jeux TCG EDGE")
