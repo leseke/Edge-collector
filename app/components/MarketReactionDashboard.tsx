@@ -10,10 +10,10 @@ export async function MarketReactionDashboard() {
       <div className="dashboard-stamp"><span className={snapshot.status === "OK" ? "status-dot good" : "status-dot warn"} />COUVERTURE {snapshot.status}</div>
     </section>
     <section className="dashboard-metrics" aria-label="Couverture de l'intelligence de marché">
-      <div className="dashboard-metric"><span>Cartes TCG observées</span><strong>{snapshot.cards.length}</strong></div>
-      <div className="dashboard-metric"><span>Dossiers de réaction TCG</span><strong>{snapshot.reactionCaseCount}</strong></div>
-      <div className="dashboard-metric"><span>Événements publiés reliés</span><strong>{snapshot.publishedEventCount}</strong></div>
-      <div className="dashboard-metric"><span>Ventes conclues enregistrées</span><strong>{snapshot.completedSales}</strong></div>
+      <div className="dashboard-metric"><span>Lignes de cartes observées</span><strong>{snapshot.cards.length}</strong><small>Présentes dans le relevé courant, pas nécessairement uniques.</small></div>
+      <div className="dashboard-metric"><span>Dossiers de réaction TCG</span><strong>{snapshot.reactionCaseCount}</strong><small>Cas référencés, pas forcément assez documentés pour conclure.</small></div>
+      <div className="dashboard-metric"><span>Éléments de publication reliés</span><strong>{snapshot.publishedEventCount}</strong><small>Références recensées, sans causalité démontrée.</small></div>
+      <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>{snapshot.completedSales}</strong><small>Déclarées dans les données, preuves à examiner au cas par cas.</small></div>
     </section>
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
     <section className="dashboard-section">
