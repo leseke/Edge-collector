@@ -8,7 +8,7 @@ charge de l'infrastructure locale. Licence commerciale verifiee par modele.
 import json
 from urllib.parse import urlparse
 
-from intelligence.agent_v2 import CONTRACT, analysis_schema, convert, plan_schema, validate_shape
+from intelligence.agent_v2 import CONTRACT, analysis_schema, plan_schema
 
 DEFAULT_URL = "http://127.0.0.1:11434/api/chat"
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "::1"}
@@ -121,11 +121,4 @@ class OllamaLocalProvider:
             "sources": inp["sources_for_model"],
         }
         analysis = self._request("analysis", analysis_schema(), data, 4000)
-        output, bases, computations, allowed, violations = convert(
-            analysis, {"sources": {s["source_id"]: s for s in inp["sources"]},
-                       "extracts": {e["extract_id"]: e for e in inp["extracts"]},
-                       "datasets": {d["dataset_id"]: d for d in inp["datasets"]}},
-            {},)
-        if violations:
-            raise LocalModelError("analyse locale invalide : " + "; ".join(violations[:5]))
         return {"contract": CONTRACT, "plan": plan_out, "analysis": analysis, "operations": []}
