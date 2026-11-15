@@ -75,6 +75,8 @@ def validate_specialist_result(result, task):
         raise SpecialistResultRejected("limitations invalides")
     if not isinstance(result["findings"], list):
         raise SpecialistResultRejected("findings doit être une liste")
+    if result["status"] in {"no_data", "failed"} and result["findings"]:
+        raise SpecialistResultRejected("un résultat no_data/failed ne peut contenir de findings")
     if result["mode"] == "mock" and (result["status"] != "simulated" or result["findings"]):
         raise SpecialistResultRejected("un mock doit rester simulé et ne peut produire aucun finding")
     if result["mode"] == "real" and result["status"] == "simulated":
