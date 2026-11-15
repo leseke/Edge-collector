@@ -23,6 +23,7 @@ type Observation = {
   market_language_verified?: boolean;
   raw_file?: string;
   body_sha256?: string;
+  completed_sale?: boolean;
 };
 type Report = { schema: string; observed_at: string; status: Pointer["status"]; observations: Observation[] };
 type CardRecord = {
@@ -40,7 +41,7 @@ export type TcgCard = {
 export type MarketSnapshot = {
   observedAt: string; status: string; cards: TcgCard[];
   observationCount: number; successfulCount: number; failedCount: number;
-  warning: string | null;
+  warning: string | null; reactionCaseCount: number; publishedEventCount: number; completedSales: number;
 };
 
 async function fetchText(url: string): Promise<string> {
