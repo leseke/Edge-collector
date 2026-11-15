@@ -6,7 +6,9 @@ server-side identity/billing code; never forward browser-supplied values.
 """
 from datetime import datetime, timezone
 
-from intelligence.subscription_entitlements import resolve_entitlements, authorize_agent_provider
+from intelligence.subscription_entitlements import (
+    FREE, resolve_entitlements, authorize_agent_provider,
+)
 from intelligence.usage_meter import reserve_usage, UsageLimitExceeded
 
 
@@ -32,8 +34,12 @@ def run_user_inquiry(
 ):
     """Reserve a daily investigation unit, then run the existing inquiry engine.
 
-    The reservation happens before model execution to prevent concurrent quota
-    oversubscription. A failed provider attempt still consumes one attempt.
+    EDGE Free is deliberately restricted to the locally validated Ollama
+    adapter. Paid providers remain Premium-only and are checked again by the
+    inquiry engine's SpendGuard path. The reservation happens before model
+    execution to prevent concurrent quota oversubscription. A failed provider
+    attempt still consumes one attempt.
+
     Reusing request_id is quota-idempotent, but callers should also deduplicate
     in-flight HTTP requests if they need response-level idempotency.
     """
@@ -53,6 +59,12 @@ def run_user_inquiry(
         authorize_agent_provider(entitlements, provider)
     except ValueError as exc:
         raise InquiryAccessDenied(str(exc)) from exc
+
+    if entitlements["plan"] == FREE:
+        if getattr(provider, "paid", None) is not False or getattr(provider, "name", None) != "ollama_local":
+            raise InquiryAccessDenied(
+                "EDGE Free est limité au fournisseur local Ollama vérifié"
+            )
 
     period = now.astimezone(timezone.utc).date().isoformat()
     limit = entitlements["limits"]["investigations_per_day"]
