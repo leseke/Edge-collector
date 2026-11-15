@@ -98,7 +98,7 @@ export function LocalCompanion() {
   function openHistory(entry: HistoryEntry) {
     setResult(entry.result);
     setQuestion(entry.question);
-    setCompareId(entry.id);
+    setCompareId(history.find(item => item.id !== entry.id)?.id || "");
     setError("");
   }
 
