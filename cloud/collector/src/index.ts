@@ -1,4 +1,5 @@
 import { parseIndicativePrice } from "./parse.mjs";
+import { readBoundedText } from "./bounded.mjs";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
@@ -22,8 +23,7 @@ async function fetchTarget(target: Target): Promise<{raw: string; price: number 
   try {
     const response = await fetch(target.url, { signal: controller.signal, headers: { Accept: "application/json" }, redirect: "error" });
     if (!response.ok) throw new Error("upstream_" + response.status);
-    const raw = await response.text();
-    if (new TextEncoder().encode(raw).byteLength > MAX_BYTES) throw new Error("oversize");
+    const raw = await readBoundedText(response, MAX_BYTES);
     const parsed = parseIndicativePrice(raw);
     return { raw, price: parsed.price, updated: parsed.updated };
   } finally { clearTimeout(timeout); }
