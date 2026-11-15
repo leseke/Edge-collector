@@ -21,6 +21,9 @@ from investigation.fees import load_fee_profiles
 from investigation.report import build_report, public_report, to_markdown
 
 
+TCG_EXCLUSIONS = ("lego", "funko")
+
+
 TCG_IDENTIFIERS = (
     "pokemon", "one piece", "lorcana", "riftbound", "magic the gathering",
     "yu gi oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
@@ -32,6 +35,8 @@ def _is_tcg_candidate(record):
     """Fail closed: a legacy candidate is revalidated only if its game is identifiable."""
     text = fold(f"{record.get('product_key', '')} {record.get('name', '')}")
     normalized = " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())
+    if any(term in normalized.split() for term in TCG_EXCLUSIONS):
+        return False
     return any(term in normalized for term in TCG_IDENTIFIERS)
 
 
