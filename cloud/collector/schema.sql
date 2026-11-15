@@ -50,3 +50,11 @@ CREATE TRIGGER IF NOT EXISTS collection_errors_no_update
 BEFORE UPDATE ON collection_errors BEGIN SELECT RAISE(ABORT, 'immutable_error'); END;
 CREATE TRIGGER IF NOT EXISTS collection_errors_no_delete
 BEFORE DELETE ON collection_errors BEGIN SELECT RAISE(ABORT, 'immutable_error'); END;
+
+-- At most one result of each kind per target per run.
+-- Prevents accidental duplicate writes during retries without deduplicating
+-- genuinely new observations from separate collection runs.
+CREATE UNIQUE INDEX IF NOT EXISTS observations_run_product_unique
+ON observations(run_id, product_id);
+CREATE UNIQUE INDEX IF NOT EXISTS collection_errors_run_product_unique
+ON collection_errors(run_id, product_id);
