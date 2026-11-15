@@ -75,7 +75,12 @@ def run_pipeline(campaigns, adapters, config, store_dir, public_path, private_di
             # Reprendre l'historique ne doit jamais relancer une ancienne
             # campagne LEGO/Funko : seuls les candidats TCG identifiables passent.
             historical = store.to_revalidate(limit=len(store.state.get("candidates", {})))
-            recs = [record for record in historical if _is_tcg_candidate(record)][:max_candidates]
+            if c.get("scope") == "TCG_ONLY":
+                recs = [record for record in historical if _is_tcg_candidate(record)][:max_candidates]
+            else:
+                # Les campagnes de démonstration historiques gardent leur
+                # comportement ; seul le registre TCG de production filtre.
+                recs = historical[:max_candidates]
             if not recs:
                 runs.append({"campaign_id": c["id"], "family": c["family"], "started_at": stamp,
                              "status": "SKIPPED_NOTHING_TO_REVALIDATE", "calls": [], "cost_units": 0})
