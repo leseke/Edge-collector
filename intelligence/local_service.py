@@ -7,10 +7,11 @@ a cloud-facing API. Browser origins are opt-in and exact-match only.
 import hmac
 import json
 import os
+import re
 import secrets
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 from intelligence.corpus import load_corpus_dict
 from intelligence.inquiry_gateway import (
@@ -139,6 +140,43 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
             host = urlparse("//" + self.headers.get("Host", "")).hostname
             return host in {"127.0.0.1", "localhost", "::1"}
 
+        def _authorized(self):
+            supplied = self.headers.get("Authorization", "")
+            return supplied.startswith("Bearer ") and hmac.compare_digest(
+                supplied[7:].encode("utf-8"), token.encode("utf-8")
+            )
+
+        def _report_store(self):
+            return ReportStore(str(root / "intelligence"))
+
+        def _report_entries(self):
+            entries = self._report_store().load_index().get("reports", [])
+            public_fields = (
+                "report_id", "report_version", "title", "market", "region",
+                "created_at", "production_status", "simulated",
+                "verification_level", "label", "edge_decision", "data_as_of",
+            )
+            return [{key: entry[key] for key in public_fields if key in entry}
+                    for entry in sorted(entries, key=lambda item: item.get("created_at", ""), reverse=True)]
+
+        def _read_report(self, report_id, version):
+            store = self._report_store()
+            report = store.read(report_id, version)
+            index_entries = [
+                entry for entry in store.load_index().get("reports", [])
+                if entry.get("report_id") == report_id
+                and entry.get("report_version") == report.get("report_version")
+            ]
+            dossier = None
+            if index_entries and index_entries[0].get("dossier_path"):
+                base = Path(store.root).resolve()
+                dossier_path = (base / index_entries[0]["dossier_path"]).resolve()
+                if base not in dossier_path.parents:
+                    raise ValueError("chemin de dossier invalide")
+                with dossier_path.open(encoding="utf-8") as handle:
+                    dossier = json.load(handle)
+            return {"status": "REPORT", "report": report, "dossier": dossier}
+
         def _send_json(self, status, body, cors=False):
             raw = json.dumps(body, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
             self.send_response(status)
@@ -174,7 +212,30 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
         def do_GET(self):
             if not self._host_allowed() or not self._origin_allowed():
                 return self._send_json(403, {"error": "origin_or_host_denied"})
-            if self.path != "/health":
+            parsed = urlparse(self.path)
+            if parsed.path == "/v1/reports" or parsed.path.startswith("/v1/reports/"):
+                if not self._authorized():
+                    return self._send_json(401, {"error": "unauthorized"}, cors=True)
+                try:
+                    if parsed.path == "/v1/reports":
+                        return self._send_json(200, {"reports": self._report_entries()}, cors=True)
+                    report_id = parsed.path[len("/v1/reports/"):]
+                    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", report_id):
+                        return self._send_json(400, {"error": "invalid_report_id"}, cors=True)
+                    query = parse_qs(parsed.query)
+                    version_values = query.get("version", [])
+                    version = None
+                    if version_values:
+                        if len(version_values) != 1 or not version_values[0].isdigit() or int(version_values[0]) < 1:
+                            return self._send_json(400, {"error": "invalid_report_version"}, cors=True)
+                        version = int(version_values[0])
+                    result = self._read_report(report_id, version)
+                    return self._send_json(200, result, cors=True)
+                except KeyError:
+                    return self._send_json(404, {"error": "report_not_found"}, cors=True)
+                except (ValueError, OSError, json.JSONDecodeError):
+                    return self._send_json(500, {"error": "report_read_failed"}, cors=True)
+            if parsed.path != "/health":
                 return self._send_json(404, {"error": "not_found"})
             if env.get("EDGE_LOCAL_LLM_ENABLED") != "1":
                 return self._send_json(200, {
@@ -195,9 +256,7 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                 return self._send_json(403, {"error": "origin_or_host_denied"})
             if urlparse(self.path).path != "/v1/inquiry":
                 return self._send_json(404, {"error": "not_found"})
-            supplied = self.headers.get("Authorization", "")
-            if not supplied.startswith("Bearer ") or not hmac.compare_digest(
-                    supplied[7:].encode("utf-8"), token.encode("utf-8")):
+            if not self._authorized():
                 return self._send_json(401, {"error": "unauthorized"})
             try:
                 length = int(self.headers.get("Content-Length", "0"))
