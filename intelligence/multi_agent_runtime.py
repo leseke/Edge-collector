@@ -139,16 +139,18 @@ class TaskExecutor:
         self.task_timeout_seconds = float(task_timeout_seconds)
         self.max_retries = max_retries
 
-    def _invoke(self, adapter, task, context):
+    def _invoke(self, adapter, task, context, deadline_epoch):
         started = datetime.now(timezone.utc).isoformat()
         attempts = 0
         while True:
             attempts += 1
             try:
+                if time.time() >= deadline_epoch:
+                    raise TimeoutError("deadline coopérative dépassée avant tentative")
                 raw = adapter.execute(
                     deepcopy(task),
                     {**deepcopy(context), "timeout_seconds": self.task_timeout_seconds,
-                     "deadline_epoch": time.time() + self.task_timeout_seconds},
+                     "deadline_epoch": deadline_epoch},
                 )
                 validated = validate_specialist_result(raw, task)
                 return validated, {
@@ -164,7 +166,7 @@ class TaskExecutor:
                     "reason": str(exc), "attempts": attempts}
             except Exception as exc:
                 retryable = bool(getattr(exc, "retryable", False))
-                if retryable and attempts <= self.max_retries:
+                if retryable and attempts <= self.max_retries and time.time() < deadline_epoch:
                     continue
                 return {
                     "task_id": task["task_id"], "agent_id": task["agent_id"], "status": "failed",
@@ -221,8 +223,9 @@ class TaskExecutor:
                     "paid_calls": 0, "max_workers": self.max_workers, "tasks": outputs, "audit": audit}
 
         pool = ThreadPoolExecutor(max_workers=self.max_workers, thread_name_prefix="edge-specialist")
+        deadline_epoch = time.time() + self.task_timeout_seconds
         futures = {
-            pool.submit(self._invoke, adapter, task, context): task
+            pool.submit(self._invoke, adapter, task, context, deadline_epoch): task
             for task, adapter in prepared
         }
         done, pending = wait(futures, timeout=self.task_timeout_seconds)
