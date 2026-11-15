@@ -32,6 +32,21 @@ class AgentTeamTests(unittest.TestCase):
         self.assertIn("opportunity_detection", result["agent_ids"])
         self.assertNotIn("restoration_preservation", result["agent_ids"])
 
+    def test_build_team_plan_assigns_roles_per_subquestion_without_execution(self):
+        from intelligence.agent_team import build_team_plan
+        plan = build_team_plan(
+            {"category": "tcg", "title": "Carte Pokemon"},
+            [{"subquestion_id": "sq1", "topic_id": "grading",
+              "question": "PSA population and turnaround"},
+             {"subquestion_id": "sq2", "topic_id": "realized_prices",
+              "question": "prix et ventes conclues"}],
+        )
+        self.assertEqual(plan["execution"], "planned_only")
+        self.assertEqual(plan["paid_calls"], 0)
+        self.assertEqual([t["subquestion_id"] for t in plan["tasks"]], ["sq1", "sq2"])
+        self.assertIn("grading_intelligence", plan["tasks"][0]["assigned_roles"])
+        self.assertIn("market_intelligence", plan["tasks"][1]["assigned_roles"])
+
     def test_router_can_skip_synthesis(self):
         result = route_topics({"category": "tcg"}, ["disponibilite"], include_synthesis=False)
         self.assertNotIn("opportunity_detection", result["agent_ids"])
