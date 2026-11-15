@@ -78,6 +78,18 @@ class CollectorSchemaTests(unittest.TestCase):
             self.db.execute("DELETE FROM observations WHERE observation_id='obs-1'")
         self.assertEqual(self.db.execute("SELECT price_cents FROM observations").fetchone(), (129,))
 
+    def test_failed_attempt_is_preserved_without_fake_price(self):
+        self.run_insert("failed-run")
+        self.db.execute(
+            "INSERT INTO collection_errors(error_id,run_id,product_id,source_url,occurred_at,reason_code) VALUES(?,?,?,?,?,?)",
+            ("error-1", "failed-run", "probe", "https://example.invalid/source", "2026-11-15T10:00:00Z", "upstream_503"),
+        )
+        self.db.execute("UPDATE collection_runs SET status='FAILED',attempted=1,failed=1 WHERE run_id='failed-run'")
+        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM observations").fetchone()[0], 0)
+        self.assertEqual(self.db.execute("SELECT reason_code FROM collection_errors").fetchone()[0], "upstream_503")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute("DELETE FROM collection_errors WHERE error_id='error-1'")
+
     def test_two_runs_keep_separate_observations(self):
         self.run_insert("run-1")
         self.run_insert("run-2")
