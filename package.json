@@ -15,7 +15,7 @@
     "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
-    "next": "16.4.3",
+    "next": "16.4.5",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
