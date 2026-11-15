@@ -71,3 +71,9 @@
 .history-diff-grid>div>b{color:#bdcbe0;font-size:10px}
 .history-diff-grid>div>small{overflow-wrap:anywhere}
 @media(max-width:600px){.history-diff-grid{grid-template-columns:1fr}}
+
+.history-heading-actions{display:flex;flex-wrap:wrap;gap:7px}
+.server-archive{display:grid;gap:8px;margin-top:16px;padding:12px;border:1px solid #344157;border-radius:7px;background:#101724}
+.server-archive>strong{color:#c7d4e7;font-size:10px}
+.server-archive>small{color:#8997ad;font-size:9px;line-height:1.6}
+.server-archive .history-item{margin-top:2px}
