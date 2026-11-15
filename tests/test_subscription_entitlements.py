@@ -2,7 +2,8 @@
 import unittest
 from datetime import datetime, timezone
 
-from intelligence.subscription_entitlements import resolve_entitlements, FREE, PREMIUM
+from intelligence.subscription_entitlements import (resolve_entitlements, authorize_agent_provider,
+                                                       EntitlementError, FREE, PREMIUM)
 from intelligence.provider_router import route_provider, ProviderRouteDenied
 from intelligence.usage_meter import InMemoryUsageStore, reserve_usage, UsageLimitExceeded
 
@@ -34,6 +35,15 @@ class SubscriptionEntitlementTests(unittest.TestCase):
                                   "period_end": "2026-12-15T00:00:00Z"}, now=NOW)
         self.assertEqual(e["plan"], PREMIUM)
         self.assertTrue(e["paid_provider_access"])
+
+    def test_paid_agent_requires_verified_premium_entitlement(self):
+        class PaidAgent:
+            paid = True
+        with self.assertRaises(EntitlementError):
+            authorize_agent_provider(resolve_entitlements(now=NOW), PaidAgent())
+        premium = resolve_entitlements({"verified": True, "plan": PREMIUM, "status": "active",
+                                        "period_end": "2026-12-15T00:00:00Z"}, now=NOW)
+        self.assertEqual(authorize_agent_provider(premium, PaidAgent()), "premium_paid_candidate")
 
     def test_expired_subscription_falls_back_to_free(self):
         e = resolve_entitlements({"verified": True, "plan": PREMIUM, "status": "active",
