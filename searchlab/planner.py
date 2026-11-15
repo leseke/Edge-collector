@@ -60,11 +60,11 @@ def detect(text):
         if re.search(r"(?<![a-z0-9])" + re.escape(normalized_key) + r"(?![a-z0-9])", t) and value not in ents:
             ents.append(value)
     intents = [family for family, tokens in INTENTS if any(token in t for token in tokens)]
-    if re.search(r"\\b\\d{1,3} ans (de|d)", t) and "catalyst" not in intents:
+    if re.search(r"\b\d{1,3} ans (de|d)", t) and "catalyst" not in intents:
         intents.insert(0, "catalyst")
-    sets = re.findall(r"(?<!\\d)(\\d{3,6})(?!\\d)", t)
+    sets = re.findall(r"(?<!\d)(\d{3,6})(?!\d)", t)
     sets = [number for number in sets if not 1950 <= int(number) <= 2040]
-    horizon = "FUTURE_CLASSIC" if re.search(r"(cinq|5|dix|10|plusieurs)\\s*ans|long terme", t) else "FLIP"
+    horizon = "FUTURE_CLASSIC" if re.search(r"(cinq|5|dix|10|plusieurs)\s*ans|long terme", t) else "FLIP"
     return ents, intents or ["price_anomaly", "rarity"], sets, horizon
 
 def _contains_out_of_scope(text):
