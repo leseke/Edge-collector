@@ -13,6 +13,7 @@ ENTITIES = {
     "lorcana": "Lorcana",
     "riftbound": "Riftbound",
     "magic": "Magic The Gathering",
+    "yu-gi-oh!": "Yu-Gi-Oh!",
     "yu gi oh": "Yu-Gi-Oh!",
     "yugioh": "Yu-Gi-Oh!",
     "digimon": "Digimon Card Game",
