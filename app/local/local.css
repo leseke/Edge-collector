@@ -37,3 +37,9 @@
 .report-final-note{margin-top:20px;padding:13px;border:1px solid #5a4a32;border-radius:7px;background:#211d17;color:#d4c29d;font-size:10px;line-height:1.7}
 @media(max-width:700px){.report-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-heading{flex-direction:column}}
 @media(max-width:420px){.report-overview-grid{grid-template-columns:1fr 1fr}.report-heading h2{font-size:19px}}
+
+.report-result-status{margin-bottom:17px;padding:11px 13px;border:1px solid #355849;border-radius:7px;background:#14201d;color:#b7d8c6}
+.report-result-status strong{font-size:11px}
+.report-result-status p{margin:5px 0 0;color:#a5b9b1;font-size:10px;line-height:1.65}
+.report-result-warning{border-color:#66513a;background:#211d17;color:#e3c891}
+.report-result-warning p{color:#c9b794}
