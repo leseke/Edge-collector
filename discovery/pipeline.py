@@ -6,6 +6,7 @@ Sorties :
 - prive   : private/discovery/<run>/ (rapports avec financement)
 """
 import os
+import re
 from datetime import date, datetime, timezone
 
 from discovery.campaigns import run_campaign
@@ -30,7 +31,7 @@ TCG_IDENTIFIERS = (
 def _is_tcg_candidate(record):
     """Fail closed: a legacy candidate is revalidated only if its game is identifiable."""
     text = fold(f"{record.get('product_key', '')} {record.get('name', '')}")
-    normalized = " ".join(__import__("re").sub(r"[^a-z0-9]+", " ", text).split())
+    normalized = " ".join(re.sub(r"[^a-z0-9]+", " ", text).split())
     return any(term in normalized for term in TCG_IDENTIFIERS)
 
 
