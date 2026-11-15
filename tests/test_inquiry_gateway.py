@@ -4,14 +4,19 @@ from datetime import datetime, timezone
 from unittest.mock import patch
 
 from intelligence.inquiry_gateway import run_user_inquiry, InquiryAccessDenied
-from intelligence.usage_meter import InMemoryUsageStore, UsageLimitExceeded
+from intelligence.usage_meter import InMemoryUsageStore
 
 
 NOW = datetime(2026, 11, 15, 12, tzinfo=timezone.utc)
 
 
 class FreeProvider:
-    name = "offline-test"
+    name = "ollama_local"
+    paid = False
+
+
+class UnverifiedFreeProvider:
+    name = "unverified_remote_free_api"
     paid = False
 
 
@@ -60,15 +65,20 @@ class InquiryGatewayTests(unittest.TestCase):
         usage = InMemoryUsageStore()
         self.invoke(usage)
         self.invoke(usage)
-        # The usage store reserves one unit for the same idempotency key.
         self.assertEqual(len(usage._reservations), 1)
-        # Execution deduplication is intentionally left to the HTTP caller.
+        # Response-level deduplication remains the HTTP caller's responsibility.
         self.assertEqual(run.call_count, 2)
 
     def test_paid_provider_cannot_be_used_by_free_user(self):
         usage = InMemoryUsageStore()
         with self.assertRaises(InquiryAccessDenied):
             self.invoke(usage, provider=PaidProvider())
+        self.assertEqual(len(usage._reservations), 0)
+
+    def test_unverified_remote_free_provider_is_rejected(self):
+        usage = InMemoryUsageStore()
+        with self.assertRaises(InquiryAccessDenied):
+            self.invoke(usage, provider=UnverifiedFreeProvider())
         self.assertEqual(len(usage._reservations), 0)
 
     def test_test_only_store_is_rejected_unless_explicitly_enabled(self):
