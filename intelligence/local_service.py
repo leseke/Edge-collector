@@ -13,7 +13,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from intelligence.corpus import load_corpus_dict
-from intelligence.inquiry_gateway import (run_user_inquiry, InquiryAccessDenied,\n                                             InquiryQuotaExceeded)
+from intelligence.inquiry_gateway import (
+    run_user_inquiry, InquiryAccessDenied, InquiryQuotaExceeded,
+)
 from intelligence.store import ReportStore
 from intelligence.usage_meter import SQLiteUsageStore
 from intelligence.providers.ollama_local import OllamaLocalProvider, LocalModelError
@@ -134,7 +136,7 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
             return origin.rstrip("/") in allowed_origins
 
         def _host_allowed(self):
-            host = self.headers.get("Host", "").split(":", 1)[0].strip("[]").lower()
+            host = urlparse("//" + self.headers.get("Host", "")).hostname
             return host in {"127.0.0.1", "localhost", "::1"}
 
         def _send_json(self, status, body, cors=False):
@@ -156,7 +158,10 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                 return self._send_json(403, {"error": "origin_or_host_denied"})
             origin = self.headers.get("Origin")
             if not origin:
-                return self._send_json(204, {})
+                self.send_response(204)
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
             self.send_response(204)
             self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Vary", "Origin")
