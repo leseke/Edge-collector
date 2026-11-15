@@ -29,6 +29,56 @@ type InquiryResult = {
   status?: string; reason?: string; report?: InquiryReport; dossier?: InquiryDossier;
   violations?: string[]; usage?: { limit?: number; period_utc?: string };
 };
+type ClaimChange = { before: ReportClaim; after: ReportClaim; changes: string[] };
+type ReportDiff = {
+  addedClaims: ReportClaim[]; removedClaims: ReportClaim[]; changedClaims: ClaimChange[];
+  addedSources: ReportSource[]; removedSources: ReportSource[];
+  addedDatasets: ReportDataset[]; removedDatasets: ReportDataset[]; changedDatasets: string[];
+  addedUnknowns: string[]; resolvedUnknowns: string[];
+};
+function compareReportSnapshots(previous: InquiryResult, current: InquiryResult): ReportDiff {
+  const before = previous.report;
+  const after = current.report;
+  const beforeClaims = new Map((before?.claims || []).map(item => [item.claim_id, item]));
+  const afterClaims = new Map((after?.claims || []).map(item => [item.claim_id, item]));
+  const addedClaims = (after?.claims || []).filter(item => !beforeClaims.has(item.claim_id));
+  const removedClaims = (before?.claims || []).filter(item => !afterClaims.has(item.claim_id));
+  const changedClaims: ClaimChange[] = [];
+  for (const [id, oldClaim] of beforeClaims) {
+    const next = afterClaims.get(id);
+    if (!next) continue;
+    const changes: string[] = [];
+    if (oldClaim.statement !== next.statement) changes.push("formulation modifiée");
+    if (oldClaim.verification !== next.verification) changes.push(`vérification : ${oldClaim.verification} → ${next.verification}`);
+    if (oldClaim.confidence !== next.confidence) changes.push(`confiance : ${oldClaim.confidence} → ${next.confidence}`);
+    if (oldClaim.kind !== next.kind) changes.push(`qualification : ${oldClaim.kind} → ${next.kind}`);
+    if ([...(oldClaim.source_ids || [])].sort().join("|") !== [...(next.source_ids || [])].sort().join("|")) changes.push("sources à l'appui modifiées");
+    if ([...(oldClaim.contradicting_source_ids || [])].sort().join("|") !== [...(next.contradicting_source_ids || [])].sort().join("|")) changes.push("sources contradictoires modifiées");
+    if (changes.length) changedClaims.push({ before: oldClaim, after: next, changes });
+  }
+  const beforeSources = new Map((before?.sources || []).map(item => [item.source_id, item]));
+  const afterSources = new Map((after?.sources || []).map(item => [item.source_id, item]));
+  const addedSources = (after?.sources || []).filter(item => !beforeSources.has(item.source_id));
+  const removedSources = (before?.sources || []).filter(item => !afterSources.has(item.source_id));
+  const beforeDatasets = new Map((before?.datasets || []).map(item => [item.dataset_id, item]));
+  const afterDatasets = new Map((after?.datasets || []).map(item => [item.dataset_id, item]));
+  const addedDatasets = (after?.datasets || []).filter(item => !beforeDatasets.has(item.dataset_id));
+  const removedDatasets = (before?.datasets || []).filter(item => !afterDatasets.has(item.dataset_id));
+  const changedDatasets: string[] = [];
+  for (const [id, oldDataset] of beforeDatasets) {
+    const next = afterDatasets.get(id);
+    if (next && JSON.stringify(oldDataset) !== JSON.stringify(next)) changedDatasets.push(next.title || id);
+  }
+  const oldUnknowns = new Set(previous.dossier?.unknowns || []);
+  const newUnknowns = new Set(current.dossier?.unknowns || []);
+  return {
+    addedClaims, removedClaims, changedClaims, addedSources, removedSources,
+    addedDatasets, removedDatasets, changedDatasets,
+    addedUnknowns: [...newUnknowns].filter(item => !oldUnknowns.has(item)),
+    resolvedUnknowns: [...oldUnknowns].filter(item => !newUnknowns.has(item)),
+  };
+}
+
 const KIND_LABEL: Record<string, string> = { fact: "Fait", interpretation: "Interprétation", hypothesis: "Hypothèse", uncertainty: "Incertitude", limitation: "Limite", invalidated: "Invalidé" };
 const VERIFY_LABEL: Record<string, string> = { verified: "Vérifié", unverified: "Non vérifié", contradicted: "Contredit", simulated: "Simulé" };
 const CONFIDENCE_LABEL: Record<string, string> = { low: "Faible", medium: "Moyenne", high: "Élevée" };
@@ -202,20 +252,23 @@ export function LocalCompanion() {
             const older = history.find(entry => entry.id === compareId);
             if (!older || !result) return null;
             const oldReport = older.result.report;
-            const currentReport = result.report;
+            const currentReport = result;
+            const diff = compareReportSnapshots(older.result, currentReport);
             const oldDecision = oldReport?.decisions?.edge_decision?.decision || "Non renseignée";
-            const currentDecision = currentReport?.decisions?.edge_decision?.decision || "Non renseignée";
-            const oldClaims = oldReport?.claims?.length || 0;
-            const currentClaims = currentReport?.claims?.length || 0;
-            const oldSources = oldReport?.sources?.length || 0;
-            const currentSources = currentReport?.sources?.length || 0;
-            const oldDatasets = oldReport?.datasets?.length || 0;
-            const currentDatasets = currentReport?.datasets?.length || 0;
+            const currentDecision = currentReport.report?.decisions?.edge_decision?.decision || "Non renseignée";
+            const changed = diff.addedClaims.length + diff.removedClaims.length + diff.changedClaims.length + diff.addedSources.length + diff.removedSources.length + diff.addedDatasets.length + diff.removedDatasets.length + diff.changedDatasets.length + diff.addedUnknowns.length + diff.resolvedUnknowns.length;
             return <div className="history-diff"><strong>Évolution entre les deux rapports</strong>
               <p>Décision EDGE : <b>{oldDecision}</b> → <b>{currentDecision}</b> {oldDecision === currentDecision ? "(inchangée)" : "(modifiée)"}</p>
-              <p>Affirmations : {oldClaims} → {currentClaims} ({currentClaims - oldClaims >= 0 ? "+" : ""}{currentClaims - oldClaims}) · Sources : {oldSources} → {currentSources} ({currentSources - oldSources >= 0 ? "+" : ""}{currentSources - oldSources})</p>
-              <p>Jeux de données : {oldDatasets} → {currentDatasets} ({currentDatasets - oldDatasets >= 0 ? "+" : ""}{currentDatasets - oldDatasets})</p>
-              <small>Comparaison structurelle uniquement. Une hausse du nombre d'éléments ne signifie pas automatiquement une meilleure fiabilité ; les affirmations doivent être comparées individuellement.</small>
+              <p>{changed} changement(s) détecté(s) dans les éléments suivis.</p>
+              <div className="history-diff-grid">
+                <div><b>Affirmations ajoutées ({diff.addedClaims.length})</b>{diff.addedClaims.map(item => <small key={item.claim_id}>+ {item.statement}</small>)}</div>
+                <div><b>Affirmations retirées ({diff.removedClaims.length})</b>{diff.removedClaims.map(item => <small key={item.claim_id}>− {item.statement}</small>)}</div>
+                <div><b>Affirmations modifiées ({diff.changedClaims.length})</b>{diff.changedClaims.map(item => <small key={item.after.claim_id}>{item.after.statement} — {item.changes.join(" ; ")}</small>)}</div>
+                <div><b>Sources nouvelles / retirées</b><small>+ {diff.addedSources.length} · − {diff.removedSources.length}</small>{diff.addedSources.map(item => <small key={item.source_id}>+ {item.publisher} — {item.title}</small>)}{diff.removedSources.map(item => <small key={item.source_id}>− {item.publisher} — {item.title}</small>)}</div>
+                <div><b>Données de marché</b><small>+ {diff.addedDatasets.length} jeu(x) · − {diff.removedDatasets.length} · {diff.changedDatasets.length} modifié(s)</small>{diff.addedDatasets.map(item => <small key={item.dataset_id}>+ {item.title}</small>)}{diff.changedDatasets.map(item => <small key={item}>↻ {item} : points ou période modifiés</small>)}</div>
+                <div><b>Questions ouvertes</b><small>{diff.addedUnknowns.length} nouvelle(s) · {diff.resolvedUnknowns.length} résolue(s)</small>{diff.addedUnknowns.map(item => <small key={item}>+ {item}</small>)}{diff.resolvedUnknowns.map(item => <small key={item}>✓ {item}</small>)}</div>
+              </div>
+              <small>Comparaison basée sur les identifiants stables des rapports. Une affirmation avec un nouvel identifiant apparaît comme ajoutée, même si sa formulation ressemble à une ancienne. Le changement détecté n'implique pas qu'une preuve soit plus fiable.</small>
             </div>;
           })()}
         </div>}
