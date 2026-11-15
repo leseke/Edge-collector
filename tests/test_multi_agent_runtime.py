@@ -1,5 +1,7 @@
 """Tests du moteur d'exécution multi-agents EDGE, 100% locaux."""
 import unittest
+import threading
+import time
 
 from intelligence.multi_agent_runtime import (
     CONTRACT, Coordinator, MockSpecialistAdapter, SpecialistAdapter,
@@ -99,6 +101,80 @@ class RuntimeTests(unittest.TestCase):
         out = self.result(task, mode="mock", status="simulated")
         with self.assertRaises(SpecialistResultRejected):
             validate_specialist_result(out, task)
+
+    def test_parallel_execution_respects_worker_limit(self):
+        lock = threading.Lock()
+        active = {"count": 0, "maximum": 0}
+
+        class Concurrent(StaticAdapter):
+            def execute(self, task, context):
+                with lock:
+                    active["count"] += 1
+                    active["maximum"] = max(active["maximum"], active["count"])
+                time.sleep(0.04)
+                with lock:
+                    active["count"] -= 1
+                return RuntimeTests().result(task)
+
+        p = plan()
+        p["tasks"][0]["assigned_roles"] = ["a", "b"]
+        result = TaskExecutor({"a": Concurrent(None), "b": Concurrent(None)},
+                              max_workers=2, task_timeout_seconds=1).execute(p)
+        self.assertEqual([x["status"] for x in result["tasks"]], ["completed", "completed"])
+        self.assertEqual(active["maximum"], 2)
+        self.assertEqual(result["max_workers"], 2)
+
+    def test_slow_adapter_is_marked_timed_out(self):
+        class Slow(StaticAdapter):
+            def execute(self, task, context):
+                time.sleep(0.12)
+                return RuntimeTests().result(task)
+
+        result = TaskExecutor({"market_intelligence": Slow(None)},
+                              task_timeout_seconds=0.02).execute(plan())
+        task = next(x for x in result["tasks"] if x["agent_id"] == "market_intelligence")
+        self.assertEqual(task["status"], "timed_out")
+        self.assertIn("coopératif", " ".join(task["limitations"]))
+
+    def test_retry_only_occurs_for_explicit_retryable_exception(self):
+        class TemporaryError(Exception):
+            retryable = True
+
+        class Flaky(StaticAdapter):
+            def __init__(self):
+                self.calls = 0
+            def execute(self, task, context):
+                self.calls += 1
+                if self.calls == 1:
+                    raise TemporaryError()
+                return RuntimeTests().result(task)
+
+        adapter = Flaky()
+        result = TaskExecutor({"market_intelligence": adapter}, max_retries=1).execute(plan())
+        self.assertEqual(adapter.calls, 2)
+        audit = next(x for x in result["audit"] if x["task_id"].endswith("market_intelligence"))
+        self.assertEqual(audit["attempts"], 2)
+
+    def test_non_retryable_exception_is_not_retried(self):
+        class Broken(StaticAdapter):
+            def __init__(self):
+                self.calls = 0
+            def execute(self, task, context):
+                self.calls += 1
+                raise RuntimeError("permanent")
+
+        adapter = Broken()
+        result = TaskExecutor({"market_intelligence": adapter}, max_retries=2).execute(plan())
+        self.assertEqual(adapter.calls, 1)
+        task = next(x for x in result["tasks"] if x["agent_id"] == "market_intelligence")
+        self.assertEqual(task["status"], "failed")
+
+    def test_executor_limits_are_validated(self):
+        for kwargs in ({"max_workers": 0}, {"max_workers": 17},
+                       {"task_timeout_seconds": 0}, {"max_retries": 3}):
+            with self.subTest(kwargs=kwargs):
+                with self.assertRaises(ValueError):
+                    TaskExecutor(**kwargs)
 
     def test_contradictions_are_preserved_not_arbitrarily_resolved(self):
         def opposite(task):
