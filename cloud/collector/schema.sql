@@ -25,3 +25,13 @@ CREATE TABLE IF NOT EXISTS observations (
 );
 CREATE INDEX IF NOT EXISTS observations_product_time ON observations(product_id, observed_at DESC);
 CREATE INDEX IF NOT EXISTS observations_run ON observations(run_id);
+
+-- Protect historical observations from accidental updates or deletion.
+CREATE TRIGGER IF NOT EXISTS observations_no_update
+BEFORE UPDATE ON observations BEGIN
+  SELECT RAISE(ABORT, 'immutable_observation');
+END;
+CREATE TRIGGER IF NOT EXISTS observations_no_delete
+BEFORE DELETE ON observations BEGIN
+  SELECT RAISE(ABORT, 'immutable_observation');
+END;
