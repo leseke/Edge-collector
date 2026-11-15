@@ -165,30 +165,30 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
             self.send_response(204)
             self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Vary", "Origin")
-            self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
             self.send_header("Access-Control-Max-Age", "300")
             self.send_header("Access-Control-Allow-Private-Network", "true")
             self.end_headers()
 
         def do_GET(self):
-            if not self._host_allowed():
-                return self._send_json(403, {"error": "host_denied"})
+            if not self._host_allowed() or not self._origin_allowed():
+                return self._send_json(403, {"error": "origin_or_host_denied"})
             if self.path != "/health":
                 return self._send_json(404, {"error": "not_found"})
             if env.get("EDGE_LOCAL_LLM_ENABLED") != "1":
                 return self._send_json(200, {
                     "service": "edge-local", "status": "model_disabled", "provider": None,
-                })
+                }, cors=True)
             try:
                 build_local_provider(env)
             except LocalModelError:
                 return self._send_json(200, {
                     "service": "edge-local", "status": "model_not_configured", "provider": None,
-                })
+                }, cors=True)
             return self._send_json(200, {
                 "service": "edge-local", "status": "configured", "provider": "ollama_local",
-            })
+            }, cors=True)
 
         def do_POST(self):
             if not self._host_allowed() or not self._origin_allowed():
