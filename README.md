@@ -3,6 +3,19 @@
 EDGE is a market-intelligence and decision-support project focused on trading
 card games and their direct ecosystem.
 
+## Web application hosting
+
+The Next.js application is being prepared for Cloudflare Workers through the
+OpenNext adapter. See [the Cloudflare migration guide](docs/cloudflare-migration.md)
+for build, preview, deployment and runtime-boundary details.
+
+Commands:
+
+- `npm run typecheck`
+- `npm run cf:build`
+- `npm run cf:preview`
+- `npm run cf:deploy` (requires an authenticated Cloudflare account)
+
 ## Local AI companion
 
 The static web interface includes an experimental local inquiry page at
