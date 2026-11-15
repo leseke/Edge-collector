@@ -122,6 +122,8 @@ in-flight requests if they require response-level idempotence.
 
 Back up the data directory securely. Do not place it in a public web root.
 SQLite is suitable here only for this single local installation. This
-companion does not implement cloud identity, Stripe/webhooks, multi-instance
-quota coordination, Premium billing, or browser UI integration. Those require
-a separate trusted server backend and must not be simulated in client code.
+The browser transport helper `assets/edge-local.mjs` is available, but it is
+not yet connected to a visible UI flow and does not persist the bearer token.
+This companion does not implement cloud identity, Stripe/webhooks,
+multi-instance quota coordination, Premium billing, or a complete browser UI.
+Those require a separate trusted server backend and must not be simulated in client code.
