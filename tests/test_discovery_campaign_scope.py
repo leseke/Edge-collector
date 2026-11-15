@@ -23,7 +23,7 @@ class ActiveCampaignScopeTests(unittest.TestCase):
 
     def test_active_legacy_campaign_is_rejected(self):
         with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".json", delete=False) as f:
-            json.dump({"campaigns": [{
+            json.dump({"scope_policy": "TCG_ONLY", "campaigns": [{
                 "id": "lego-retail", "enabled": True, "scope": "TCG_ONLY",
                 "queries": ["LEGO promo"], "sources": ["scavio_retail_fr"]
             }]}, f)
