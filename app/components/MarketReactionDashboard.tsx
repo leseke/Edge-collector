@@ -1,4 +1,5 @@
 import { getTcgMarketSnapshot } from "../lib/market-data";
+import { DataLimit, EvidenceGuide } from "./EvidenceGuide";
 
 export async function MarketReactionDashboard() {
   const snapshot = await getTcgMarketSnapshot();
@@ -31,9 +32,10 @@ export async function MarketReactionDashboard() {
         <div><strong>3 · Réaction après l'événement</strong><p>Mesures à plusieurs horizons, comparaisons indépendantes et séparation stricte entre corrélation et causalité.</p></div>
       </div>
     </section>
+    <EvidenceGuide compact />
     <section className="dashboard-method">
       <p className="native-eyebrow">LIMITES ACTUELLES</p><h2>Ne pas surinterpréter deux prix.</h2>
-      <p className="mri-limit-copy">Les relevés TCG présents sont des indications agrégées, sans preuve de transaction, avec disponibilité et langue non confirmées. Aucun score de hype, de liquidité ou de probabilité de hausse ne doit être calculé à partir de ce seul échantillon.</p>
+      <DataLimit>Les relevés TCG présents sont des indications agrégées, sans preuve de transaction, avec disponibilité et langue non confirmées. Aucun score de hype, de liquidité ou de probabilité de hausse ne doit être calculé à partir de ce seul échantillon.</DataLimit>
     </section>
     <footer className="native-footer">EDGE · Les faits, signaux faibles, inférences et paris doivent rester distincts. Fiabilité non vérifiée lorsque les preuves sont insuffisantes.</footer>
   </div>;
