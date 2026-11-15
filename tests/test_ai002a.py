@@ -204,6 +204,11 @@ class EndToEndTests(Base):
         self.assertEqual(res["dossier"]["agent_team"]["execution"], "planned_only")
         self.assertEqual(res["dossier"]["agent_team"]["paid_calls"], 0)
         self.assertTrue(res["dossier"]["agent_team"]["tasks"])
+        for task in res["dossier"]["agent_team"]["tasks"]:
+            self.assertIn("evidence_refs", task)
+            self.assertIn("extract_ids", task["evidence_refs"])
+            self.assertIn("dataset_ids", task["evidence_refs"])
+            self.assertIn("source_ids", task["evidence_refs"])
         ext = {e["extract_id"]: e for e in raw()["extracts"]}
         for c in r["claims"]:
             if c["kind"] == "fact":
