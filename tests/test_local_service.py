@@ -13,6 +13,7 @@ from unittest.mock import patch
 from intelligence.local_service import (
     LocalServiceError, _read_or_create_secret, create_handler, serve,
 )
+from intelligence.inquiry_gateway import InquiryQuotaExceeded
 
 
 class LocalServiceTests(unittest.TestCase):
