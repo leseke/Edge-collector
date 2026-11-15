@@ -171,11 +171,18 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                 return self._send_json(403, {"error": "host_denied"})
             if self.path != "/health":
                 return self._send_json(404, {"error": "not_found"})
-            enabled = env.get("EDGE_LOCAL_LLM_ENABLED") == "1"
+            if env.get("EDGE_LOCAL_LLM_ENABLED") != "1":
+                return self._send_json(200, {
+                    "service": "edge-local", "status": "model_disabled", "provider": None,
+                })
+            try:
+                build_local_provider(env)
+            except LocalModelError:
+                return self._send_json(200, {
+                    "service": "edge-local", "status": "model_not_configured", "provider": None,
+                })
             return self._send_json(200, {
-                "service": "edge-local",
-                "status": "ready" if enabled else "model_disabled",
-                "provider": "ollama_local" if enabled else None,
+                "service": "edge-local", "status": "configured", "provider": "ollama_local",
             })
 
         def do_POST(self):
