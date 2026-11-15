@@ -138,7 +138,7 @@ class SearchLabTests(unittest.TestCase):
             plan("Consoles sous-évaluées")
 
     def test_set_number_triggers_sold_source(self):
-        p = plan("LEGO 10316")
+        p = plan("Pokemon 151")
         self.assertIn("ebay_sold", p["sources"])
         self.assertIn("Pokemon 151", p["queries"])
 
