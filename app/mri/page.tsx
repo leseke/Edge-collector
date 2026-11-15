@@ -1,2 +1,7 @@
-import { LegacyScreen } from "../components/LegacyScreen";
-export default function MarketReactionPage() { return <LegacyScreen src="/legacy/mri/index.html" title="EDGE — Analyses de marché" />; }
+import { MarketReactionDashboard } from "../components/MarketReactionDashboard";
+import "./mri.css";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export default function MarketReactionPage() {
+  return <MarketReactionDashboard />;
+}
