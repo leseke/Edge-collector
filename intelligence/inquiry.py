@@ -18,6 +18,7 @@ from intelligence.agent_v2 import CONTRACT as V2, analysis_schema, convert, plan
 from intelligence.compliance import check_agent_output, suspicious
 from intelligence.offline_agent import OfflineAgentProvider
 from intelligence.planner import norm, plan_question
+from intelligence.agent_team import TCGScopeError, build_team_plan
 from intelligence.store import PublishRefused, next_version
 from intelligence.validator import assess, content_sha256, timeliness
 from investigation.spend import SpendNotAuthorized
@@ -44,6 +45,10 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
     if plan["status"] != "OK":
         return _result(plan["status"], plan=plan)
     corpus = next(c for c in corpora if c.corpus_id == plan["corpus_id"])
+    try:
+        team_plan = build_team_plan(corpus.subject, plan["subquestions"])
+    except TCGScopeError as e:
+        return _result("OUT_OF_SCOPE", plan=plan, reason=str(e))
 
     # --- inventaire : uniquement le corpus autorise, extraits suspects ecartes
     topics = [sq["topic_id"] for sq in plan["subquestions"]]
@@ -80,7 +85,8 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "data_as_of": corpus.data_as_of, "economics": economics,
                "edge_decision": copy.deepcopy(EDGE_DECISION_NOT_EVALUATED)}
     agent_input = build_agent_input(context)
-    agent_input.update({"question": question, "plan": plan, "simulated": corpus.simulated,
+    agent_input.update({"question": question, "plan": plan, "agent_team": copy.deepcopy(team_plan),
+                        "simulated": corpus.simulated,
                         "dataset_topics": corpus.dataset_topics, "dataset_coverage": coverage,
                         "timeliness": {"status": tl["status"]}, "excluded_count": len(excluded),
                         "extracts": [{"extract_id": e["extract_id"], "source_id": e["source_id"],
@@ -178,6 +184,7 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "agent": provider.name, "corpus": {"corpus_id": corpus.corpus_id, "sha256": corpus.sha256,
                                                   "simulated": corpus.simulated},
                "plan": plan,
+               "agent_team": team_plan,
                "inventory": {"sources": src_ids, "datasets": [{"dataset_id": i, "points_with_data": coverage[i]} for i in ds_ids],
                              "extracts_used": [e["extract_id"] for e in extracts], "excluded_extracts": excluded},
                "contradictions": contradictions,
