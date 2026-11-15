@@ -35,3 +35,18 @@ CREATE TRIGGER IF NOT EXISTS observations_no_delete
 BEFORE DELETE ON observations BEGIN
   SELECT RAISE(ABORT, 'immutable_observation');
 END;
+
+-- Every failed source attempt is retained, including runs with no successful prices.
+CREATE TABLE IF NOT EXISTS collection_errors (
+  error_id TEXT PRIMARY KEY,
+  run_id TEXT NOT NULL REFERENCES collection_runs(run_id),
+  product_id TEXT NOT NULL,
+  source_url TEXT NOT NULL,
+  occurred_at TEXT NOT NULL,
+  reason_code TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS collection_errors_run ON collection_errors(run_id);
+CREATE TRIGGER IF NOT EXISTS collection_errors_no_update
+BEFORE UPDATE ON collection_errors BEGIN SELECT RAISE(ABORT, 'immutable_error'); END;
+CREATE TRIGGER IF NOT EXISTS collection_errors_no_delete
+BEFORE DELETE ON collection_errors BEGIN SELECT RAISE(ABORT, 'immutable_error'); END;
