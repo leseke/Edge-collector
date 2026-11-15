@@ -157,7 +157,7 @@ class SearchLabTests(unittest.TestCase):
         from searchlab.__main__ import main
         fix = os.path.join(os.path.dirname(__file__), "..", "discovery", "fixtures", "demo_observations.json")
         with tempfile.TemporaryDirectory() as d:
-            main(["Pokemon 151", "--mode", "investigation", "--fixtures", fix,
+            main(["Pokemon coffret", "--mode", "investigation", "--fixtures", fix,
                   "--as-of", "2026-10-18T09:00:00+00:00", "--out-dir", d,
                   "--store-dir", os.path.join(d, "s"), "--private-dir", os.path.join(d, "p")])
             import json
