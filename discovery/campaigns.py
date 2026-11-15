@@ -46,6 +46,9 @@ def validate_campaign(c):
     return errors
 
 
+NON_TCG_TERMS = ("lego", "funko", "console", "nintendo", "playstation", "game boy")
+
+
 TCG_TERMS = (
     "pokemon", "one piece", "lorcana", "riftbound", "magic the gathering",
     "yu gi oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
@@ -71,7 +74,11 @@ def load_campaigns(path):
         if campaign.get("queries_from") == "store_revalidation":
             continue
         queries = campaign.get("queries", [])
-        if not queries or any(not any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()) for term in TCG_TERMS) for q in queries):
+        if not queries or any(
+            not any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()) for term in TCG_TERMS)
+            or any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()).split() for term in NON_TCG_TERMS)
+            for q in queries
+        ):
             errors.append(f"{campaign.get('id')}: requetes hors perimetre TCG ou sans jeu identifie")
     if errors:
         raise ValueError("registre de campagnes EDGE invalide : " + "; ".join(errors))
