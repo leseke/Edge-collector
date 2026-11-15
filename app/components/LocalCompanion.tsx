@@ -3,6 +3,10 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 type Health = { reachable: boolean; status: string; provider?: string | null };
+type HistoryEntry = { id: string; saved_at: string; question: string; result: InquiryResult };
+const HISTORY_KEY = "edge.local.inquiry-history.v1";
+const HISTORY_LIMIT = 20;
+
 type ReportSource = { source_id: string; title: string; publisher: string; url: string | null; published_at: string | null; accessed_at: string; tier: string; simulated: boolean };
 type ReportClaim = { claim_id: string; statement: string; kind: string; verification: string; confidence: string; author: string; source_ids: string[]; contradicting_source_ids?: string[]; basis?: { fact_claim_ids: string[]; computation_ids: string[] }; source_claim_type?: string };
 type ReportDataset = { dataset_id: string; title: string; measure: string; territory: string; currency: string | null; unit: string; period: { start: string; end: string }; points: Array<{ t: string; value: number | null; status: string }> };
@@ -46,6 +50,8 @@ export function LocalCompanion() {
   const [statusMessage, setStatusMessage] = useState("Vérification du service local…");
   const [result, setResult] = useState<InquiryResult | null>(null);
   const [error, setError] = useState("");
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [compareId, setCompareId] = useState("");
 
   const checkHealth = useCallback(async () => {
     setChecking(true);
@@ -69,6 +75,36 @@ export function LocalCompanion() {
   }, []);
 
   useEffect(() => { void checkHealth(); }, [checkHealth]);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(HISTORY_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) setHistory(parsed.filter((item): item is HistoryEntry => Boolean(item && typeof item === "object" && typeof item.id === "string" && typeof item.saved_at === "string" && typeof item.question === "string" && item.result && typeof item.result === "object")).slice(0, HISTORY_LIMIT));
+    } catch { setStatusMessage("Historique local illisible : les nouvelles enquêtes pourront toujours être enregistrées."); }
+  }, []);
+
+  function persistHistory(next: HistoryEntry[]) {
+    try {
+      window.localStorage.setItem(HISTORY_KEY, JSON.stringify(next.slice(0, HISTORY_LIMIT)));
+      setHistory(next.slice(0, HISTORY_LIMIT));
+    } catch {
+      setStatusMessage("Rapport reçu, mais stockage local saturé ou indisponible. L'historique précédent est conservé.");
+    }
+  }
+
+  function openHistory(entry: HistoryEntry) {
+    setResult(entry.result);
+    setQuestion(entry.question);
+    setCompareId(entry.id);
+    setError("");
+  }
+
+  function removeHistory() {
+    try { window.localStorage.removeItem(HISTORY_KEY); setHistory([]); setCompareId(""); }
+    catch { setStatusMessage("Impossible d'effacer l'historique depuis ce navigateur."); }
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -148,6 +184,42 @@ export function LocalCompanion() {
         <div><strong>Prérequis navigateur</strong><p>Le serveur doit autoriser l’origine HTTPS exacte de cette prévisualisation. Le navigateur peut également demander l’accès au réseau local.</p></div>
       </aside>
     </div>
+    <section className="local-panel local-history">
+      <div className="history-heading"><div><p className="native-eyebrow">MÉMOIRE DES ENQUÊTES</p><h2>Historique des rapports</h2><p>Conservé dans ce navigateur uniquement. Le jeton et le corpus importé ne sont jamais enregistrés ici.</p></div><button type="button" className="local-secondary-button" onClick={removeHistory} disabled={history.length === 0}>Effacer l'historique</button></div>
+      {history.length === 0 ? <p className="history-empty">Aucun rapport enregistré. Les prochaines enquêtes réussies apparaîtront ici.</p> : <>
+        <div className="history-list">{history.map((entry, index) => <article key={entry.id} className="history-item">
+          <div><strong>{entry.result.report?.subject?.title || "Investigation sans rapport"}</strong><span>{new Date(entry.saved_at).toLocaleString("fr-FR")} · {RESULT_STATUS_LABEL[entry.result.status || ""] || entry.result.status || "Statut inconnu"}</span><small>{entry.question}</small></div>
+          <button type="button" className="local-secondary-button" onClick={() => openHistory(entry)}>Ouvrir</button>
+        </article>)}</div>
+        {history.length > 1 && <div className="history-compare">
+          <label htmlFor="history-compare">Comparer le rapport affiché avec</label>
+          <select id="history-compare" value={compareId} onChange={event => setCompareId(event.target.value)}>
+            <option value="">Choisir un ancien rapport</option>
+            {history.filter(entry => entry.id !== (result?.report?.report_id || "")).map(entry => <option key={entry.id} value={entry.id}>{new Date(entry.saved_at).toLocaleString("fr-FR")} · {entry.result.report?.subject?.title || "Rapport"}</option>)}
+          </select>
+          {(() => {
+            const older = history.find(entry => entry.id === compareId);
+            if (!older || !result) return null;
+            const oldReport = older.result.report;
+            const currentReport = result.report;
+            const oldDecision = oldReport?.decisions?.edge_decision?.decision || "Non renseignée";
+            const currentDecision = currentReport?.decisions?.edge_decision?.decision || "Non renseignée";
+            const oldClaims = oldReport?.claims?.length || 0;
+            const currentClaims = currentReport?.claims?.length || 0;
+            const oldSources = oldReport?.sources?.length || 0;
+            const currentSources = currentReport?.sources?.length || 0;
+            const oldDatasets = oldReport?.datasets?.length || 0;
+            const currentDatasets = currentReport?.datasets?.length || 0;
+            return <div className="history-diff"><strong>Évolution entre les deux rapports</strong>
+              <p>Décision EDGE : <b>{oldDecision}</b> → <b>{currentDecision}</b> {oldDecision === currentDecision ? "(inchangée)" : "(modifiée)"}</p>
+              <p>Affirmations : {oldClaims} → {currentClaims} ({currentClaims - oldClaims >= 0 ? "+" : ""}{currentClaims - oldClaims}) · Sources : {oldSources} → {currentSources} ({currentSources - oldSources >= 0 ? "+" : ""}{currentSources - oldSources})</p>
+              <p>Jeux de données : {oldDatasets} → {currentDatasets} ({currentDatasets - oldDatasets >= 0 ? "+" : ""}{currentDatasets - oldDatasets})</p>
+              <small>Comparaison structurelle uniquement. Une hausse du nombre d'éléments ne signifie pas automatiquement une meilleure fiabilité ; les affirmations doivent être comparées individuellement.</small>
+            </div>;
+          })()}
+        </div>}
+      </>}
+    </section>
     {result && <section className="local-panel local-result">
       <div className="report-heading">
         <div><p className="native-eyebrow">RAPPORT D'INVESTIGATION EDGE</p><h2>{result.report?.subject?.title || "Rapport EDGE"}</h2><p className="report-subtitle">{result.report?.subject?.market || "Marché non précisé"} · {result.report?.subject?.region || "Région non précisée"}{result.report?.subject?.language ? ` · ${result.report.subject.language}` : ""}</p></div>
