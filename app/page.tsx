@@ -1,13 +1,2 @@
-export default function HomePage() {
-  return (
-    <main className="legacy-shell">
-      <iframe
-        className="legacy-frame"
-        src="/legacy/index.html"
-        title="EDGE — Marché observé"
-        loading="eager"
-        allow="clipboard-read; clipboard-write"
-      />
-    </main>
-  );
-}
+import { LegacyScreen } from "./components/LegacyScreen";
+export default function HomePage() { return <LegacyScreen src="/legacy/index.html" title="EDGE — Marché observé" />; }
