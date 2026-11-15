@@ -109,6 +109,6 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       completedSales: report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.completed_sale === true).length,
     };
   } catch {
-    return { observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel." };
+    return { observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel.", reactionCaseCount: 0, publishedEventCount: 0, completedSales: 0 };
   }
 }
