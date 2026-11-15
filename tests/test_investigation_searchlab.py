@@ -150,6 +150,14 @@ class SearchLabTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 plan(bad)
 
+    def test_tcg_catalogue_and_custom_universe_guard(self):
+        yugioh = plan("Yu-Gi-Oh! cartes rares")
+        self.assertIn("Yu-Gi-Oh!", yugioh["queries"][0])
+        with self.assertRaisesRegex(ValueError, "univers de recherche"):
+            plan("cartes rares", universe=["LEGO"])
+        with self.assertRaisesRegex(ValueError, "univers TCG vide"):
+            plan("cartes rares", universe=[])
+
     def test_query_cap(self):
         self.assertLessEqual(len(plan("collection rare promo nouveau fin de serie")["queries"]), 6)
 
