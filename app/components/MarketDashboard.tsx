@@ -1,4 +1,5 @@
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
+import { EvidenceGuide } from "./EvidenceGuide";
 
 function date(value: string): string {
   if (!value) return "Date non disponible";
@@ -49,6 +50,7 @@ export async function MarketDashboard() {
       {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
       {snapshot.cards.length ? <div className="tcg-card-grid">{snapshot.cards.map((card) => <CardTile key={card.productId} card={card} />)}</div> : <div className="dashboard-empty">Aucune observation TCG vérifiable n’est disponible dans le dernier relevé.</div>}
     </section>
+    <EvidenceGuide />
     <section className="dashboard-method">
       <p className="native-eyebrow">CADRE DE LECTURE</p><h2>Ce que ces données disent — et ne disent pas.</h2>
       <div className="method-grid">
