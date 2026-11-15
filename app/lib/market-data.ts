@@ -62,7 +62,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
   try {
     const pointerText = await fetchText(DATA_BASE + "latest.json");
     const pointer = JSON.parse(pointerText) as Pointer;
-    if (pointer.schema !== "edge.public.live_capture.v1" || !/^\\d+-\\d+$/.test(pointer.snapshot_id) || !Array.isArray(Object.keys(pointer.files ?? {}))) throw new Error("Invalid snapshot pointer");
+    if (pointer.schema !== "edge.public.live_capture.v1" || !/^\d+-\d+$/.test(pointer.snapshot_id) || !pointer.files || typeof pointer.files !== "object") throw new Error("Invalid snapshot pointer");
     const reportEntry = pointer.files["report.json"];
     if (!reportEntry || reportEntry.path !== `snapshots/${pointer.snapshot_id}/report.json` || !/^[a-f0-9]{64}$/.test(reportEntry.sha256)) throw new Error("Invalid report reference");
     const reportText = await fetchText(DATA_BASE + reportEntry.path);
@@ -72,7 +72,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
     const observations = report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.raw_file && item.body_sha256);
     const cards = await Promise.all(observations.map(async (item): Promise<TcgCard | null> => {
       try {
-        if (!/^[a-zA-Z0-9_.-]+\\.json$/.test(item.raw_file!)) return null;
+        if (!/^[a-zA-Z0-9_.-]+\.json$/.test(item.raw_file!)) return null;
         const rawText = await fetchText(DATA_BASE + `snapshots/${pointer.snapshot_id}/${item.raw_file}`);
         if (sha256(rawText) !== item.body_sha256) return null;
         const card = JSON.parse(rawText) as CardRecord;
