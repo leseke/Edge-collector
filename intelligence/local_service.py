@@ -4,6 +4,7 @@ Runs only on loopback. It accepts validated corpus JSON, uses a verified
 Ollama model, persists reports and Free-tier usage locally, and never exposes
 a cloud-facing API. Browser origins are opt-in and exact-match only.
 """
+import hashlib
 import hmac
 import json
 import os
@@ -18,6 +19,7 @@ from intelligence.inquiry_gateway import (
     run_user_inquiry, InquiryAccessDenied, InquiryQuotaExceeded,
 )
 from intelligence.store import ReportStore
+from intelligence.validator import content_sha256
 from intelligence.usage_meter import SQLiteUsageStore
 from intelligence.providers.ollama_local import OllamaLocalProvider, LocalModelError
 
@@ -167,14 +169,23 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                 if entry.get("report_id") == report_id
                 and entry.get("report_version") == report.get("report_version")
             ]
+            if not index_entries:
+                raise KeyError(report_id)
+            entry = index_entries[0]
+            if content_sha256(report) != entry.get("content_sha256"):
+                raise ValueError("empreinte du rapport invalide")
             dossier = None
-            if index_entries and index_entries[0].get("dossier_path"):
+            if entry.get("dossier_path"):
                 base = Path(store.root).resolve()
-                dossier_path = (base / index_entries[0]["dossier_path"]).resolve()
+                dossier_path = (base / entry["dossier_path"]).resolve()
                 if base not in dossier_path.parents:
                     raise ValueError("chemin de dossier invalide")
-                with dossier_path.open(encoding="utf-8") as handle:
-                    dossier = json.load(handle)
+                dossier_bytes = dossier_path.read_bytes()
+                if hashlib.sha256(dossier_bytes).hexdigest() != entry.get("dossier_sha256"):
+                    raise ValueError("empreinte du dossier invalide")
+                dossier = json.loads(dossier_bytes.decode("utf-8"))
+                if dossier.get("report_sha256") != entry.get("content_sha256"):
+                    raise ValueError("dossier incoherent avec le rapport")
             return {"status": "REPORT", "report": report, "dossier": dossier}
 
         def _send_json(self, status, body, cors=False):
@@ -233,7 +244,7 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                     return self._send_json(200, result, cors=True)
                 except (KeyError, StopIteration):
                     return self._send_json(404, {"error": "report_not_found"}, cors=True)
-                except (ValueError, OSError, json.JSONDecodeError):
+                except (TypeError, ValueError, OSError, json.JSONDecodeError):
                     return self._send_json(500, {"error": "report_read_failed"}, cors=True)
             if parsed.path != "/health":
                 return self._send_json(404, {"error": "not_found"})
