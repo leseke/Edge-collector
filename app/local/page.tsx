@@ -1,2 +1,5 @@
-import { LegacyScreen } from "../components/LegacyScreen";
-export default function LocalInquiryPage() { return <LegacyScreen src="/legacy/local/index.html" title="EDGE — Enquête locale" />; }
+import { LocalCompanion } from "../components/LocalCompanion";
+import "./local.css";
+export default function LocalPage() {
+  return <LocalCompanion />;
+}
