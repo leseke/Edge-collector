@@ -45,8 +45,9 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(c["execution"], "local_offline")
         self.assertEqual(c["paid_calls"], 0)
         self.assertEqual(c["facts"], [])
-        self.assertEqual(c["task_results"][0]["mode"], "mock")
-        self.assertEqual(c["task_results"][0]["status"], "simulated")
+        mock_result = next(x for x in c["task_results"] if x["agent_id"] == "market_intelligence")
+        self.assertEqual(mock_result["mode"], "mock")
+        self.assertEqual(mock_result["status"], "simulated")
 
     def test_unconfigured_specialists_are_not_faked(self):
         c = Coordinator().run(plan())
@@ -73,7 +74,8 @@ class RuntimeTests(unittest.TestCase):
             out["findings"][0]["evidence_refs"]["source_ids"] = ["src-invented"]
             return out
         c = Coordinator(TaskExecutor({"market_intelligence": StaticAdapter(forged)})).run(plan())
-        self.assertEqual(c["task_results"][0]["status"], "rejected")
+        rejected = next(x for x in c["task_results"] if x["agent_id"] == "market_intelligence")
+        self.assertEqual(rejected["status"], "rejected")
         self.assertEqual(c["facts"], [])
 
     def test_fact_without_source_and_extract_or_dataset_is_rejected(self):
@@ -168,6 +170,30 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(adapter.calls, 1)
         task = next(x for x in result["tasks"] if x["agent_id"] == "market_intelligence")
         self.assertEqual(task["status"], "failed")
+
+    def test_total_specialist_task_count_is_bounded(self):
+        p = {"scope": "tcg", "tasks": [
+            {"subquestion_id": f"sq-{i}", "assigned_roles": ["a", "b"],
+             "evidence_refs": {"extract_ids": [], "dataset_ids": [], "source_ids": []}}
+            for i in range(3)
+        ]}
+        with self.assertRaises(ValueError):
+            TaskExecutor(max_tasks=5).execute(p)
+
+    def test_invalid_evidence_is_rejected_before_adapter_invocation(self):
+        class MustNotRun(StaticAdapter):
+            def execute(self, task, context):
+                raise AssertionError("adapter must not be called")
+        p = plan()
+        p["tasks"][0]["evidence_refs"]["source_ids"] = "not-a-list"
+        with self.assertRaises(SpecialistResultRejected):
+            TaskExecutor({"market_intelligence": MustNotRun(None)}).execute(p)
+
+    def test_duplicate_specialist_task_ids_are_rejected(self):
+        p = plan()
+        p["tasks"].append(dict(p["tasks"][0]))
+        with self.assertRaises(ValueError):
+            TaskExecutor().execute(p)
 
     def test_executor_limits_are_validated(self):
         for kwargs in ({"max_workers": 0}, {"max_workers": 17},
