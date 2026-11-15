@@ -124,8 +124,10 @@ in-flight requests if they require response-level idempotence.
 
 Back up the data directory securely. Do not place it in a public web root.
 SQLite is suitable here only for this single local installation. This
-The browser transport helper `assets/edge-local.mjs` is available, but it is
-not yet connected to a visible UI flow and does not persist the bearer token.
-This companion does not implement cloud identity, Stripe/webhooks,
-multi-instance quota coordination, Premium billing, or a complete browser UI.
-Those require a separate trusted server backend and must not be simulated in client code.
+The static page `/local/` provides a manual inquiry form, corpus JSON upload,
+local health check and result display. The transport helper
+`assets/edge-local.mjs` does not persist the bearer token. Corpus discovery and
+automatic collection-to-corpus conversion are not yet connected. This
+companion does not implement cloud identity, Stripe/webhooks, multi-instance
+quota coordination or Premium billing; those require a separate trusted server
+backend and must not be simulated in client code.
