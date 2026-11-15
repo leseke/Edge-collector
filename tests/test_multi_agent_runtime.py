@@ -83,6 +83,15 @@ class RuntimeTests(unittest.TestCase):
         with self.assertRaises(SpecialistResultRejected):
             validate_specialist_result(out, task)
 
+    def test_failed_or_no_data_task_cannot_return_findings(self):
+        p = plan()
+        task = {"task_id": "sq-market::market_intelligence", "agent_id": "market_intelligence",
+                "evidence_refs": p["tasks"][0]["evidence_refs"]}
+        for status in ("failed", "no_data"):
+            with self.subTest(status=status):
+                with self.assertRaises(SpecialistResultRejected):
+                    validate_specialist_result(self.result(task, status=status), task)
+
     def test_mock_cannot_claim_real_or_return_findings(self):
         p = plan()
         task = {"task_id": "sq-market::market_intelligence", "agent_id": "market_intelligence",
