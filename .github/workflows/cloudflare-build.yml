@@ -28,6 +28,8 @@ jobs:
         run: python3 -m unittest discover -s cloud/collector/test -p 'test_*.py' -v
       - name: Offline collector parser tests
         run: node --test cloud/collector/test/*.test.mjs
+      - name: Typecheck isolated Cloudflare collector
+        run: npx tsc --project cloud/collector/tsconfig.json
       - name: Type check
         run: npm run typecheck
       - name: Build for Cloudflare Workers
