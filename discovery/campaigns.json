@@ -56,5 +56,6 @@
       "schedule": "0 10 * * 5",
       "scope": "TCG_ONLY"
     }
-  ]
+  ],
+  "scope_policy": "TCG_ONLY"
 }
