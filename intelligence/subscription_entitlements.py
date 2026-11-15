@@ -79,3 +79,14 @@ def check_feature(entitlements, feature):
     if not isinstance(entitlements, dict) or entitlements.get("contract") != CONTRACT:
         return False
     return bool(entitlements.get("limits", {}).get(feature, False))
+
+
+def authorize_agent_provider(entitlements, provider):
+    """Paywall gate for run_inquiry; paid agents require verified Premium."""
+    if not isinstance(entitlements, dict) or entitlements.get("contract") != CONTRACT:
+        raise EntitlementError("droits d'abonnement absents ou invalides")
+    if getattr(provider, "paid", False) is True:
+        if entitlements.get("plan") != PREMIUM or entitlements.get("status") != "active":
+            raise EntitlementError("un agent payant exige un abonnement EDGE Premium actif et verifie")
+        return "premium_paid_candidate"
+    return "non_paid_candidate"
