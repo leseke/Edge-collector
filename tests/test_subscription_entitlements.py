@@ -1,11 +1,15 @@
 """Offline tests for EDGE Free/Premium routing and usage limits."""
 import unittest
+import os
+import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
 from intelligence.subscription_entitlements import (resolve_entitlements, authorize_agent_provider,
                                                        EntitlementError, FREE, PREMIUM)
 from intelligence.provider_router import route_provider, ProviderRouteDenied
-from intelligence.usage_meter import InMemoryUsageStore, reserve_usage, UsageLimitExceeded
+from intelligence.usage_meter import (InMemoryUsageStore, SQLiteUsageStore, reserve_usage,
+                                        UsageLimitExceeded)
 
 
 NOW = datetime(2026, 11, 15, tzinfo=timezone.utc)
@@ -99,6 +103,33 @@ class SubscriptionEntitlementTests(unittest.TestCase):
         self.assertEqual(first, again)
         with self.assertRaises(UsageLimitExceeded):
             reserve_usage(store, "u1", "2026-11-15", "search", 1, "req-2")
+
+    def test_sqlite_usage_store_persists_across_instances(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "usage.sqlite")
+            first = SQLiteUsageStore(path)
+            reserve_usage(first, "u1", "2026-11-15", "search", 1, "req-1")
+            second = SQLiteUsageStore(path)
+            with self.assertRaises(UsageLimitExceeded):
+                reserve_usage(second, "u1", "2026-11-15", "search", 1, "req-2")
+
+    def test_sqlite_usage_store_concurrent_quota_is_atomic(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "usage.sqlite")
+            def reserve(i):
+                try:
+                    reserve_usage(SQLiteUsageStore(path), "u1", "2026-11-15",
+                                  "investigation", 3, f"req-{i}")
+                    return "ok"
+                except UsageLimitExceeded:
+                    return "limited"
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                outcomes = list(pool.map(reserve, range(8)))
+            self.assertEqual(outcomes.count("ok"), 3)
+            self.assertEqual(outcomes.count("limited"), 5)
+
+    def test_sqlite_store_is_not_marked_test_only(self):
+        self.assertFalse(SQLiteUsageStore.test_only)
 
     def test_usage_store_is_explicitly_test_only(self):
         self.assertTrue(InMemoryUsageStore.test_only)
