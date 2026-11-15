@@ -245,7 +245,17 @@ export function LocalCompanion() {
         throw new Error(messages[response.status] || "Échec du service EDGE local.");
       }
       setResult(body);
-      setStatusMessage("Réponse reçue du moteur local. Les conclusions restent soumises aux validations EDGE.");
+      const savedAt = new Date().toISOString();
+      const entryId = (body.report?.report_id || "inquiry") + ":" + (body.report?.report_version ?? savedAt) + ":" + savedAt;
+      const entry: HistoryEntry = { id: entryId, saved_at: savedAt, question: question.trim(), result: body };
+      const nextHistory = [entry, ...history].slice(0, HISTORY_LIMIT);
+      setHistory(nextHistory);
+      setActiveHistoryId(entry.id);
+      setCompareId(nextHistory[1]?.id || "");
+      try { window.localStorage.setItem(HISTORY_KEY, JSON.stringify(nextHistory)); }
+      catch { setArchiveError("Rapport reçu et archivé par EDGE, mais copie navigateur impossible (stockage indisponible ou saturé)."); }
+      setStatusMessage("Réponse reçue et archivée par le moteur EDGE local.");
+      void refreshServerArchive();
     } catch (caught) {
       const err = caught as Error;
       setError(err.name === "TimeoutError" || err.name === "AbortError" ? "L’enquête a dépassé le délai de deux minutes." : err.message || "Le service local est inaccessible.");
@@ -282,7 +292,7 @@ export function LocalCompanion() {
         <p className="native-eyebrow">PÉRIMÈTRE ACTUEL</p><h2>Un compagnon local, pas encore le cloud EDGE.</h2>
         <div><strong>Fournisseur</strong><p>Ollama local uniquement, modèle et licence explicitement configurés.</p></div>
         <div><strong>Quota</strong><p>3 tentatives par jour, enregistrées localement dans SQLite.</p></div>
-        <div><strong>Persistance</strong><p>Historique des rapports conservé dans ce navigateur, 20 rapports maximum. Jeton et corpus exclus.</p></div>
+        <div><strong>Persistance</strong><p>Rapports versionnés conservés par le compagnon local ; copie navigateur limitée à 20 entrées. Jeton et corpus exclus.</p></div>
         <div><strong>Preuves</strong><p>Une sortie IA ne transforme jamais une affirmation en fait vérifié.</p></div>
         <div><strong>Prérequis navigateur</strong><p>Le serveur doit autoriser l’origine HTTPS exacte de cette prévisualisation. Le navigateur peut également demander l’accès au réseau local.</p></div>
       </aside>
