@@ -40,10 +40,10 @@ export async function MarketDashboard() {
       <div className="dashboard-stamp"><span className={snapshot.status === "OK" ? "status-dot good" : "status-dot warn"} />RELEVÉ {snapshot.status === "UNAVAILABLE" ? "INDISPONIBLE" : snapshot.status}</div>
     </section>
     <section className="dashboard-metrics" aria-label="État des données">
-      <div className="dashboard-metric"><span>Cartes TCG suivies dans ce relevé</span><strong>{snapshot.cards.length}</strong></div>
-      <div className="dashboard-metric"><span>Sources TCG reçues</span><strong>{snapshot.successfulCount}</strong></div>
-      <div className="dashboard-metric"><span>Sources TCG en échec</span><strong>{snapshot.failedCount}</strong></div>
-      <div className="dashboard-metric"><span>Ventes conclues vérifiées</span><strong>0</strong></div>
+      <div className="dashboard-metric"><span>Lignes de cartes dans ce relevé</span><strong>{snapshot.cards.length}</strong><small>Observations affichables après contrôle d’intégrité.</small></div>
+      <div className="dashboard-metric"><span>Observations reçues</span><strong>{snapshot.successfulCount}</strong><small>Réponses de collecte avec statut OK, pas des ventes.</small></div>
+      <div className="dashboard-metric"><span>Observations en échec</span><strong>{snapshot.failedCount}</strong><small>Collectes non concluantes ou données non exploitables.</small></div>
+      <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>0</strong><small>Aucune transaction vérifiée dans cet écran.</small></div>
     </section>
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">OBSERVATIONS SOURCÉES</p><h2>Cartes suivies</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
