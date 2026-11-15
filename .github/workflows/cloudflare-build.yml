@@ -24,6 +24,8 @@ jobs:
           node-version: 24
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Offline D1 schema compatibility tests
+        run: python3 -m unittest discover -s cloud/collector/test -p 'test_*.py' -v
       - name: Offline collector parser tests
         run: node --test cloud/collector/test/*.test.mjs
       - name: Type check
