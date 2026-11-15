@@ -185,7 +185,7 @@ class RiskTests(Base):
             def generate(self, inp, transport):
                 Paid.called.append(1)
                 return transport.request({})
-        res = self.run_q(provider=Paid())
+        res = self.run_q(provider=Paid(), subscription_claim={"verified": True, "plan": "premium", "status": "active", "period_end": "2026-12-31T00:00:00Z"})
         self.assertEqual(res["status"], "REJECTED")
         self.assertTrue(any("depense" in v.lower() or "garde" in v.lower() for v in res["violations"]))
         self.assertEqual(Paid.called, [])
