@@ -60,7 +60,9 @@ class Base(unittest.TestCase):
         prov = OpenAIResponsesProvider(model="model-under-test", environ=env,
                                        registry={"openai": {"status": "VERIFIED", "env": [], "paid": True}})
         res = run_inquiry(question, cs, self.store, now=NOW, provider=prov, spend_guard=g,
-                          send=api.send, max_operations=max_operations,\n                          subscription_claim={"verified": True, "plan": "premium", "status": "active",\n                                              "period_end": "2026-12-31T00:00:00Z"})
+                          send=api.send, max_operations=max_operations,
+                          subscription_claim={"verified": True, "plan": "premium", "status": "active",
+                                              "period_end": "2026-12-31T00:00:00Z"})
         return res, api
 
 
