@@ -4,6 +4,7 @@ import os
 import tempfile
 import threading
 import unittest
+from unittest.mock import Mock
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -137,6 +138,58 @@ class LocalServiceTests(unittest.TestCase):
             headers={"Origin": "https://evil.example"},
         )
         self.assertEqual(status, 403)
+
+
+    def test_report_archive_requires_bearer_token(self):
+        status, _, raw = self.request("/v1/reports")
+        self.assertEqual(status, 401)
+        self.assertEqual(json.loads(raw)["error"], "unauthorized")
+
+    def test_report_archive_lists_metadata_without_internal_paths(self):
+        fake_store = Mock()
+        fake_store.load_index.return_value = {"reports": [{
+            "report_id": "eir_q-1", "report_version": 1, "title": "Carte test",
+            "market": "Pokémon", "region": "FR", "created_at": "2026-11-15T10:00:00Z",
+            "production_status": "partial", "path": "reports/private/v0001.json",
+            "dossier_path": "dossiers/private/v0001.json", "content_sha256": "secret-hash",
+        }]}
+        with patch("intelligence.local_service.ReportStore", return_value=fake_store):
+            status, _, raw = self.request(
+                "/v1/reports",
+                headers={"Authorization": "Bearer " + self.token},
+            )
+        self.assertEqual(status, 200)
+        entry = json.loads(raw)["reports"][0]
+        self.assertEqual(entry["report_id"], "eir_q-1")
+        self.assertNotIn("path", entry)
+        self.assertNotIn("dossier_path", entry)
+        self.assertNotIn("content_sha256", entry)
+
+    def test_report_archive_reads_exact_version(self):
+        fake_store = Mock()
+        fake_store.root = str(self.root / "intelligence")
+        fake_store.read.return_value = {"report_id": "eir_q-1", "report_version": 1}
+        fake_store.load_index.return_value = {"reports": [{
+            "report_id": "eir_q-1", "report_version": 1,
+        }]}
+        with patch("intelligence.local_service.ReportStore", return_value=fake_store):
+            status, _, raw = self.request(
+                "/v1/reports/eir_q-1?version=1",
+                headers={"Authorization": "Bearer " + self.token},
+            )
+        self.assertEqual(status, 200)
+        body = json.loads(raw)
+        self.assertEqual(body["report"]["report_id"], "eir_q-1")
+        self.assertIsNone(body["dossier"])
+        fake_store.read.assert_called_once_with("eir_q-1", 1)
+
+    def test_report_archive_rejects_path_traversal(self):
+        status, _, raw = self.request(
+            "/v1/reports/..%2F..%2Fetc%2Fpasswd",
+            headers={"Authorization": "Bearer " + self.token},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(json.loads(raw)["error"], "invalid_report_id")
 
     def test_unknown_route_is_not_found(self):
         status, _, _ = self.request("/admin")
