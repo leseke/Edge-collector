@@ -79,7 +79,7 @@ Toute conclusion doit répondre en français à quatre questions :
 
 ## Historique des rapports — première version
 
-La page `/local` conserve jusqu’à 20 résultats d’enquête dans le `localStorage` du navigateur. Elle n’enregistre ni le jeton d’accès ni le corpus importé. Un rapport peut être rouvert et comparé structurellement à un autre rapport (décision EDGE, nombre d’affirmations, sources et jeux de données). Cette comparaison ne prétend pas identifier les changements sémantiques entre affirmations : elle signale uniquement les écarts de structure. L’historique est propre au navigateur et n’est pas synchronisé entre appareils ; il ne remplace pas encore un journal serveur durable.
+La page `/local` conserve jusqu’à 20 résultats d’enquête dans le `localStorage` du navigateur. Elle n’enregistre ni le jeton d’accès ni le corpus importé. Un rapport peut être rouvert et comparé structurellement à un autre rapport (décision EDGE, nombre d’affirmations, sources et jeux de données). La comparaison repère les affirmations ajoutées/retirées et les changements de formulation, qualification, vérification, confiance et références sources ; elle repère aussi les sources et jeux de données ajoutés/retirés/modifiés ainsi que les questions ouvertes apparues ou résolues. Les rapprochements reposent sur les identifiants stables : un identifiant renouvelé est signalé comme un ajout/retrait, pas automatiquement rapproché par similarité de texte. Elle ne juge pas elle-même la qualité ou la véracité d’une nouvelle preuve. L’historique est propre au navigateur et n’est pas synchronisé entre appareils ; il ne remplace pas encore un journal serveur durable.
 
 ## État de réalisation
 
