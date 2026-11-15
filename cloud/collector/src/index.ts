@@ -48,7 +48,7 @@ export async function collect(env: Env): Promise<void> {
     } catch (error) {
       failed++;
       const rawReason = error instanceof Error ? error.message : "unknown";
-      const reasonCode = /^(upstream_\\d{3}|oversize|invalid_[a-z_]+|no_cardmarket_pricing|AbortError)$/.test(rawReason) ? rawReason : "unexpected_failure";
+      const reasonCode = /^(upstream_[0-9]{3}|oversize|invalid_[a-z_]+|no_cardmarket_pricing|AbortError)$/.test(rawReason) ? rawReason : "unexpected_failure";
       await env.DB.prepare("INSERT INTO collection_errors(error_id,run_id,product_id,source_url,occurred_at,reason_code) VALUES (?,?,?,?,?,?)")
         .bind(crypto.randomUUID(),runId,target.productId,target.url,ISO(),reasonCode).run();
       console.error("collector_target_failed", { runId, productId: target.productId, reason: reasonCode });
