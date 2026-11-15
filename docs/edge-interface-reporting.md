@@ -81,6 +81,19 @@ Toute conclusion doit répondre en français à quatre questions :
 
 La page `/local` conserve jusqu’à 20 résultats d’enquête dans le `localStorage` du navigateur. Elle n’enregistre ni le jeton d’accès ni le corpus importé. Un rapport peut être rouvert et comparé structurellement à un autre rapport (décision EDGE, nombre d’affirmations, sources et jeux de données). La comparaison repère les affirmations ajoutées/retirées et les changements de formulation, qualification, vérification, confiance et références sources ; elle repère aussi les sources et jeux de données ajoutés/retirés/modifiés ainsi que les questions ouvertes apparues ou résolues. Les rapprochements reposent sur les identifiants stables : un identifiant renouvelé est signalé comme un ajout/retrait, pas automatiquement rapproché par similarité de texte. Elle ne juge pas elle-même la qualité ou la véracité d’une nouvelle preuve. L’historique est propre au navigateur et n’est pas synchronisé entre appareils ; il ne remplace pas encore un journal serveur durable.
 
+
+### Archive locale persistante
+
+Le compagnon Python expose aussi une archive authentifiée :
+- GET /v1/reports renvoie les métadonnées publiques des rapports versionnés, sans chemin interne ni empreinte de stockage.
+- GET /v1/reports/{report_id}?version={n} relit une version immuable et son dossier d'enquête associé.
+- Les deux routes exigent le jeton Bearer local, les mêmes contrôles loopback et l'origine autorisée que l'enquête.
+- L'identifiant de rapport est validé avant lecture ; le chemin du dossier est résolu et borné au répertoire d'archive.
+- L'interface peut charger l'archive du compagnon, rouvrir une version et la recopier dans l'historique du navigateur pour la comparer.
+- Effacer la copie du navigateur ne supprime jamais l'archive persistante du moteur.
+
+La persistance serveur reste locale à l'installation EDGE ; elle n'est pas synchronisée dans le cloud ni entre plusieurs ordinateurs.
+
 ## État de réalisation
 
 Ce document définit le contrat produit visé. Le guide visuel des niveaux FACT / WEAK_SIGNAL / INFERENCE / BET est raccordé aux pages d'accueil et d'intelligence de réaction. Les rapports d'investigation complets, les pages de recherche/opportunités et leur liaison au moteur réel restent à implémenter. Ne pas présenter ce document comme une fonctionnalité déjà entièrement livrée.
