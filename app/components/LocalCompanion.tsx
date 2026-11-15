@@ -34,13 +34,13 @@ type ReportDiff = {
   addedClaims: ReportClaim[]; removedClaims: ReportClaim[]; changedClaims: ClaimChange[];
   addedSources: ReportSource[]; removedSources: ReportSource[];
   addedDatasets: ReportDataset[]; removedDatasets: ReportDataset[]; changedDatasets: string[];
-  addedUnknowns: string[]; resolvedUnknowns: string[];
+  addedUnknowns: string[]; resolvedUnknowns: string[]; decisionChanged: boolean;
 };
 function compareReportSnapshots(previous: InquiryResult, current: InquiryResult): ReportDiff {
   const before = previous.report;
   const after = current.report;
-  const beforeClaims = new Map((before?.claims || []).map(item => [item.claim_id, item]));
-  const afterClaims = new Map((after?.claims || []).map(item => [item.claim_id, item]));
+  const beforeClaims = new Map<string, ReportClaim>((before?.claims || []).map(item => [item.claim_id, item] as const));
+  const afterClaims = new Map<string, ReportClaim>((after?.claims || []).map(item => [item.claim_id, item] as const));
   const addedClaims = (after?.claims || []).filter(item => !beforeClaims.has(item.claim_id));
   const removedClaims = (before?.claims || []).filter(item => !afterClaims.has(item.claim_id));
   const changedClaims: ClaimChange[] = [];
@@ -56,12 +56,12 @@ function compareReportSnapshots(previous: InquiryResult, current: InquiryResult)
     if ([...(oldClaim.contradicting_source_ids || [])].sort().join("|") !== [...(next.contradicting_source_ids || [])].sort().join("|")) changes.push("sources contradictoires modifiées");
     if (changes.length) changedClaims.push({ before: oldClaim, after: next, changes });
   }
-  const beforeSources = new Map((before?.sources || []).map(item => [item.source_id, item]));
-  const afterSources = new Map((after?.sources || []).map(item => [item.source_id, item]));
+  const beforeSources = new Map<string, ReportSource>((before?.sources || []).map(item => [item.source_id, item] as const));
+  const afterSources = new Map<string, ReportSource>((after?.sources || []).map(item => [item.source_id, item] as const));
   const addedSources = (after?.sources || []).filter(item => !beforeSources.has(item.source_id));
   const removedSources = (before?.sources || []).filter(item => !afterSources.has(item.source_id));
-  const beforeDatasets = new Map((before?.datasets || []).map(item => [item.dataset_id, item]));
-  const afterDatasets = new Map((after?.datasets || []).map(item => [item.dataset_id, item]));
+  const beforeDatasets = new Map<string, ReportDataset>((before?.datasets || []).map(item => [item.dataset_id, item] as const));
+  const afterDatasets = new Map<string, ReportDataset>((after?.datasets || []).map(item => [item.dataset_id, item] as const));
   const addedDatasets = (after?.datasets || []).filter(item => !beforeDatasets.has(item.dataset_id));
   const removedDatasets = (before?.datasets || []).filter(item => !afterDatasets.has(item.dataset_id));
   const changedDatasets: string[] = [];
@@ -76,6 +76,7 @@ function compareReportSnapshots(previous: InquiryResult, current: InquiryResult)
     addedDatasets, removedDatasets, changedDatasets,
     addedUnknowns: [...newUnknowns].filter(item => !oldUnknowns.has(item)),
     resolvedUnknowns: [...oldUnknowns].filter(item => !newUnknowns.has(item)),
+    decisionChanged: (before?.decisions?.edge_decision?.decision || "Non renseignée") !== (after?.decisions?.edge_decision?.decision || "Non renseignée"),
   };
 }
 
@@ -256,9 +257,9 @@ export function LocalCompanion() {
             const diff = compareReportSnapshots(older.result, currentReport);
             const oldDecision = oldReport?.decisions?.edge_decision?.decision || "Non renseignée";
             const currentDecision = currentReport.report?.decisions?.edge_decision?.decision || "Non renseignée";
-            const changed = diff.addedClaims.length + diff.removedClaims.length + diff.changedClaims.length + diff.addedSources.length + diff.removedSources.length + diff.addedDatasets.length + diff.removedDatasets.length + diff.changedDatasets.length + diff.addedUnknowns.length + diff.resolvedUnknowns.length;
+            const changed = Number(diff.decisionChanged) + diff.addedClaims.length + diff.removedClaims.length + diff.changedClaims.length + diff.addedSources.length + diff.removedSources.length + diff.addedDatasets.length + diff.removedDatasets.length + diff.changedDatasets.length + diff.addedUnknowns.length + diff.resolvedUnknowns.length;
             return <div className="history-diff"><strong>Évolution entre les deux rapports</strong>
-              <p>Décision EDGE : <b>{oldDecision}</b> → <b>{currentDecision}</b> {oldDecision === currentDecision ? "(inchangée)" : "(modifiée)"}</p>
+              <p>Décision EDGE : <b>{oldDecision}</b> → <b>{currentDecision}</b> {diff.decisionChanged ? "(modifiée)" : "(inchangée)"}</p>
               <p>{changed} changement(s) détecté(s) dans les éléments suivis.</p>
               <div className="history-diff-grid">
                 <div><b>Affirmations ajoutées ({diff.addedClaims.length})</b>{diff.addedClaims.map(item => <small key={item.claim_id}>+ {item.statement}</small>)}</div>
