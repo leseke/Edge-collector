@@ -231,7 +231,7 @@ def create_handler(*, data_dir=DEFAULT_DATA_DIR, environ=None):
                         version = int(version_values[0])
                     result = self._read_report(report_id, version)
                     return self._send_json(200, result, cors=True)
-                except KeyError:
+                except (KeyError, StopIteration):
                     return self._send_json(404, {"error": "report_not_found"}, cors=True)
                 except (ValueError, OSError, json.JSONDecodeError):
                     return self._send_json(500, {"error": "report_read_failed"}, cors=True)
