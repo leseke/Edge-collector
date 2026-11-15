@@ -92,7 +92,9 @@ to work around a browser permission prompt.
 
 ## API
 
-- `GET /health`: local service status only; reports `model_disabled` until\n  enabled, then `configured` only when the exact model has a valid local\n  licence-registry entry. It does not prove that the Ollama daemon is running.
+- `GET /health`: local service status only; reports `model_disabled` until
+  enabled, then `configured` only when the exact model has a valid local
+  licence-registry entry. It does not prove that the Ollama daemon is running.
 - `POST /v1/inquiry`: requires `Authorization: Bearer <token>` and
   `Content-Type: application/json`.
 
