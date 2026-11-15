@@ -96,7 +96,8 @@ def _expansion_queries(observations, base_queries, already, max_n):
             if not 1950 <= int(number) <= 2040:
                 keys[number] += 1
     for number, _ in keys.most_common():
-        query = f"LEGO {number}" if "lego" in fold(base_queries[0]) else f"{base_queries[0]} {number}"
+        legacy_lego = "lego" in fold(observation.get("name", "")) and "lego" not in fold(base_queries[0])
+        query = f"LEGO {number}" if legacy_lego or "lego" in fold(base_queries[0]) else f"{base_queries[0]} {number}"
         if query not in already and query not in out:
             out.append(query)
     base_tokens = set(fold(" ".join(base_queries)).split())
