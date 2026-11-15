@@ -152,6 +152,7 @@ class SearchLabTests(unittest.TestCase):
 
     def test_tcg_catalogue_and_custom_universe_guard(self):
         yugioh = plan("Yu-Gi-Oh! cartes rares")
+        self.assertIn("Yu-Gi-Oh!", yugioh["detected"]["entities"])
         self.assertIn("Yu-Gi-Oh!", yugioh["queries"][0])
         with self.assertRaisesRegex(ValueError, "univers de recherche"):
             plan("cartes rares", universe=["LEGO"])
