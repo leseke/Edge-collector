@@ -1,3 +1,4 @@
+import { parseIndicativePrice } from "./parse.mjs";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
@@ -23,11 +24,8 @@ async function fetchTarget(target: Target): Promise<{raw: string; price: number 
     if (!response.ok) throw new Error("upstream_" + response.status);
     const raw = await response.text();
     if (new TextEncoder().encode(raw).byteLength > MAX_BYTES) throw new Error("oversize");
-    const record = JSON.parse(raw) as { pricing?: { cardmarket?: { low?: unknown; updated?: unknown } } };
-    const value = record.pricing?.cardmarket?.low;
-    const price = typeof value === "number" && Number.isFinite(value) && value >= 0 ? Math.round(value * 100) : null;
-    const updated = record.pricing?.cardmarket?.updated;
-    return { raw, price, updated: typeof updated === "string" ? updated : null };
+    const parsed = parseIndicativePrice(raw);
+    return { raw, price: parsed.price, updated: parsed.updated };
   } finally { clearTimeout(timeout); }
 }
 export async function collect(env: Env): Promise<void> {
