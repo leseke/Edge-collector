@@ -52,6 +52,7 @@ export function LocalCompanion() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [compareId, setCompareId] = useState("");
+  const [activeHistoryId, setActiveHistoryId] = useState("");
 
   const checkHealth = useCallback(async () => {
     setChecking(true);
@@ -81,7 +82,7 @@ export function LocalCompanion() {
       const raw = window.localStorage.getItem(HISTORY_KEY);
       if (!raw) return;
       const parsed = JSON.parse(raw) as unknown;
-      if (Array.isArray(parsed)) setHistory(parsed.filter((item): item is HistoryEntry => Boolean(item && typeof item === "object" && typeof item.id === "string" && typeof item.saved_at === "string" && typeof item.question === "string" && item.result && typeof item.result === "object")).slice(0, HISTORY_LIMIT));
+      if (Array.isArray(parsed)) { const entries = parsed.filter((item): item is HistoryEntry => Boolean(item && typeof item === "object" && typeof item.id === "string" && typeof item.saved_at === "string" && typeof item.question === "string" && item.result && typeof item.result === "object")).slice(0, HISTORY_LIMIT); setHistory(entries); setCompareId(entries[1]?.id || ""); }
     } catch { setStatusMessage("Historique local illisible : les nouvelles enquêtes pourront toujours être enregistrées."); }
   }, []);
 
@@ -102,7 +103,7 @@ export function LocalCompanion() {
   }
 
   function removeHistory() {
-    try { window.localStorage.removeItem(HISTORY_KEY); setHistory([]); setCompareId(""); }
+    try { window.localStorage.removeItem(HISTORY_KEY); setHistory([]); setCompareId(""); setActiveHistoryId(""); }
     catch { setStatusMessage("Impossible d'effacer l'historique depuis ce navigateur."); }
   }
 
@@ -179,7 +180,7 @@ export function LocalCompanion() {
         <p className="native-eyebrow">PÉRIMÈTRE ACTUEL</p><h2>Un compagnon local, pas encore le cloud EDGE.</h2>
         <div><strong>Fournisseur</strong><p>Ollama local uniquement, modèle et licence explicitement configurés.</p></div>
         <div><strong>Quota</strong><p>3 tentatives par jour, enregistrées localement dans SQLite.</p></div>
-        <div><strong>Persistance</strong><p>Rapports et historique conservés sur cet ordinateur.</p></div>
+        <div><strong>Persistance</strong><p>Historique des rapports conservé dans ce navigateur, 20 rapports maximum. Jeton et corpus exclus.</p></div>
         <div><strong>Preuves</strong><p>Une sortie IA ne transforme jamais une affirmation en fait vérifié.</p></div>
         <div><strong>Prérequis navigateur</strong><p>Le serveur doit autoriser l’origine HTTPS exacte de cette prévisualisation. Le navigateur peut également demander l’accès au réseau local.</p></div>
       </aside>
@@ -195,7 +196,7 @@ export function LocalCompanion() {
           <label htmlFor="history-compare">Comparer le rapport affiché avec</label>
           <select id="history-compare" value={compareId} onChange={event => setCompareId(event.target.value)}>
             <option value="">Choisir un ancien rapport</option>
-            {history.filter(entry => entry.id !== (result?.report?.report_id || "")).map(entry => <option key={entry.id} value={entry.id}>{new Date(entry.saved_at).toLocaleString("fr-FR")} · {entry.result.report?.subject?.title || "Rapport"}</option>)}
+            {history.filter(entry => entry.id !== activeHistoryId).map(entry => <option key={entry.id} value={entry.id}>{new Date(entry.saved_at).toLocaleString("fr-FR")} · {entry.result.report?.subject?.title || "Rapport"}</option>)}
           </select>
           {(() => {
             const older = history.find(entry => entry.id === compareId);
