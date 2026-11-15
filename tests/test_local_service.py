@@ -49,6 +49,25 @@ class LocalServiceTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(json.loads(raw)["status"], "model_disabled")
 
+    def test_health_does_not_claim_configured_without_model_registry(self):
+        handler = create_handler(
+            data_dir=self.root / "enabled",
+            environ={"EDGE_LOCAL_LLM_ENABLED": "1", "EDGE_LOCAL_MODEL": "missing-model",
+                     "EDGE_LOCAL_MODEL_REGISTRY": str(self.root / "missing.json")},
+        )
+        server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            req = Request(f"http://127.0.0.1:{server.server_port}/health")
+            with urlopen(req, timeout=3) as response:
+                body = json.loads(response.read())
+            self.assertEqual(body["status"], "model_not_configured")
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+
     def test_inquiry_requires_bearer_token(self):
         status, _, raw = self.request(
             "/v1/inquiry", method="POST",
@@ -71,6 +90,19 @@ class LocalServiceTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(json.loads(raw)["status"], "NO_DATA")
         execute.assert_called_once()
+
+    @patch("intelligence.local_service.execute_local_inquiry", side_effect=InquiryQuotaExceeded("quota atteint"))
+    def test_quota_exhaustion_returns_http_429(self, execute):
+        status, _, raw = self.request(
+            "/v1/inquiry", method="POST",
+            body={"question": "Pokémon", "request_id": "r1", "corpus": {}},
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + self.token,
+            },
+        )
+        self.assertEqual(status, 429)
+        self.assertEqual(json.loads(raw)["error"], "quota atteint")
 
     def test_unlisted_browser_origin_is_rejected(self):
         status, _, raw = self.request(
