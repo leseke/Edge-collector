@@ -80,3 +80,22 @@ attaché **au build lui-même** : relancer cet ancien build peut reconstruire
 migration. Déclencher un nouveau build par un commit sur
 `edge/cloudflare-migration-001`, puis vérifier le commit et la branche dans
 les détails du nouveau build. Ne jamais fusionner `main` pour résoudre cela.
+
+## Cloud Intelligence — premier jalon vérifiable
+
+L'endpoint public `GET /api/cloud/status` expose uniquement l'état du relevé
+TCG actuellement vérifiable, son ancienneté (FRESH ≤ 24 h, AGING ≤ 48 h,
+STALE > 48 h), le nombre de cartes et les limites réelles de l'infrastructure.
+Il retourne HTTP 503 si le relevé source est indisponible, sans inventer de prix.
+Les résultats sont en lecture seule, sans cache et sans jeton d'accès exposé.
+
+Ce jalon **ne** constitue **pas** une collecte planifiée : les relevés proviennent
+encore du dépôt GitHub historique, contrôlé par SHA-256. Aucun stockage D1/R2,
+aucun moteur Python cloud et aucun cron Cloudflare ne sont installés.
+
+Étapes suivantes, après validation de l'endpoint déployé : sélectionner et
+provisionner un stockage persistant gratuit avec contrôle des quotas ; écrire
+un collecteur incrémental avec allowlist de sources, limites réseau et preuve
+d'horodatage ; exécuter une collecte planifiée en mode observation ; mesurer
+fraîcheur, erreurs, couverture et historique avant d'activer des thèses preshot.
+Ne pas activer d'API payante ni de dépenses automatiques.
