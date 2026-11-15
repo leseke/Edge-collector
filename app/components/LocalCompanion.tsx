@@ -29,6 +29,7 @@ const KIND_LABEL: Record<string, string> = { fact: "Fait", interpretation: "Inte
 const VERIFY_LABEL: Record<string, string> = { verified: "Vérifié", unverified: "Non vérifié", contradicted: "Contredit", simulated: "Simulé" };
 const CONFIDENCE_LABEL: Record<string, string> = { low: "Faible", medium: "Moyenne", high: "Élevée" };
 const MEASURE_LABEL: Record<string, string> = { asking_price: "Prix affiché", sold_price: "Vente conclue", retail_price: "Prix public", market_trend: "Tendance de marché", volume: "Volume", search_interest: "Intérêt de recherche", other: "Autre mesure" };
+const RESULT_STATUS_LABEL: Record<string, string> = { REPORT: "Rapport généré", NO_DATA: "Données insuffisantes", AMBIGUOUS: "Question à préciser", INVALID: "Corpus invalide", REJECTED: "Résultat refusé par les contrôles EDGE", OUT_OF_SCOPE: "Hors périmètre TCG" };
 function safeHttpUrl(value: string | null): string | null {
   if (!value) return null;
   try { const url = new URL(value); return url.protocol === "https:" ? url.href : null; } catch { return null; }
