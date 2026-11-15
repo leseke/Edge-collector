@@ -63,6 +63,22 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
             extracts.append(e)
     ds_ids = sorted({i for t in topics for i in (d["dataset_id"] for d in corpus.datasets_for(t))})
     datasets = [corpus.datasets[i] for i in ds_ids]
+    # Le plan d'equipe ne transporte pas les donnees : il reference les pieces
+    # du dossier partage, sous-question par sous-question.
+    for task in team_plan["tasks"]:
+        topic_id = task["topic_id"]
+        task_extracts = [e for e in extracts if e["topic_id"] == topic_id]
+        task_datasets = corpus.datasets_for(topic_id)
+        task_source_ids = sorted(
+            {e["source_id"] for e in task_extracts}
+            | {source_id for d in task_datasets for source_id in d["provenance"]["source_ids"]}
+        )
+        task["evidence_refs"] = {
+            "extract_ids": sorted(e["extract_id"] for e in task_extracts),
+            "dataset_ids": sorted(d["dataset_id"] for d in task_datasets),
+            "source_ids": task_source_ids,
+        }
+        task["evidence_status"] = "available" if task_source_ids else "no_data"
     coverage = {d["dataset_id"]: sum(1 for p in d["points"] if p["value"] is not None) for d in datasets}
     answered = {t: bool([e for e in extracts if e["topic_id"] == t] or
                         [d for d in corpus.datasets_for(t) if coverage.get(d["dataset_id"])]) for t in topics}
