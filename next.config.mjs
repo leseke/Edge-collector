@@ -1,12 +1,10 @@
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-import type { NextConfig } from "next";
 
-// Enables the OpenNext Cloudflare development bindings when running locally.
-// The standard Next.js dev server remains the default development workflow.
+// Enables OpenNext Cloudflare bindings when running the app with Next.js dev.
 initOpenNextCloudflareForDev();
 
-/** @type {NextConfig} */
-const nextConfig: NextConfig = {
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
 };
