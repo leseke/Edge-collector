@@ -13,7 +13,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from intelligence.corpus import load_corpus_dict
-from intelligence.inquiry_gateway import run_user_inquiry, InquiryAccessDenied
+from intelligence.inquiry_gateway import (run_user_inquiry, InquiryAccessDenied,\n                                             InquiryQuotaExceeded)
 from intelligence.store import ReportStore
 from intelligence.usage_meter import SQLiteUsageStore
 from intelligence.providers.ollama_local import OllamaLocalProvider, LocalModelError
