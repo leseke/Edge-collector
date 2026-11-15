@@ -178,9 +178,13 @@ class TaskExecutor:
             raise ValueError("plan d'équipe TCG requis")
         tasks = team_plan.get("tasks")
         if not isinstance(tasks, list) or len(tasks) > self.max_tasks:
-            raise ValueError("nombre de tâches invalide ou supérieur au plafond")
+            raise ValueError("nombre de sous-questions invalide ou supérieur au plafond")
+        total_roles = sum(len(p.get("assigned_roles", [])) for p in tasks if isinstance(p, dict) and isinstance(p.get("assigned_roles", []), list))
+        if total_roles > self.max_tasks:
+            raise ValueError("nombre total de tâches spécialistes supérieur au plafond")
         context = deepcopy(context or {})
         prepared, outputs, audit = [], [], []
+        seen_task_ids = set()
         for index, planned in enumerate(tasks):
             if not isinstance(planned, dict):
                 raise ValueError("sous-tâche invalide")
@@ -191,11 +195,15 @@ class TaskExecutor:
                 raise ValueError("liste de spécialistes invalide ou supérieure au plafond")
             for role in roles:
                 task_id = f"{planned.get('subquestion_id') or 'task-' + str(index + 1)}::{role}"
+                if task_id in seen_task_ids:
+                    raise ValueError("identifiant de tâche spécialiste dupliqué")
+                seen_task_ids.add(task_id)
                 task = {
                     "task_id": task_id, "agent_id": role,
                     "subquestion_id": planned.get("subquestion_id"), "topic_id": planned.get("topic_id"),
                     "evidence_refs": deepcopy(planned.get("evidence_refs", {})),
                 }
+                _task_evidence(task)  # valide les références avant tout lancement d’adaptateur
                 adapter = self.adapters.get(role)
                 if adapter is None:
                     outputs.append({"task_id": task_id, "agent_id": role, "status": "not_configured",
