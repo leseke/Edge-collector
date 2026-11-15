@@ -203,6 +203,11 @@ class EndToEndTests(Base):
         self.assertEqual(len(res["dossier"]["plan"]["subquestions"]), 3)
         self.assertEqual(res["dossier"]["agent_team"]["execution"], "planned_only")
         self.assertEqual(res["dossier"]["agent_team"]["paid_calls"], 0)
+        trace = res["dossier"]["agent_team"]["execution_trace"]
+        self.assertEqual(trace["execution"], "local_offline")
+        self.assertEqual(trace["paid_calls"], 0)
+        self.assertTrue(all(t["status"] == "not_configured" for t in trace["task_results"]))
+        self.assertEqual(trace["facts"], [])
         self.assertTrue(res["dossier"]["agent_team"]["tasks"])
         for task in res["dossier"]["agent_team"]["tasks"]:
             self.assertIn("evidence_refs", task)
