@@ -9,6 +9,7 @@ import os
 from datetime import date, datetime, timezone
 
 from discovery.campaigns import run_campaign
+from discovery.identity import fold
 from discovery.signals import analyze
 from discovery.store import CandidateStore
 from edge_engine import assert_no_private_leak
@@ -17,6 +18,20 @@ from investigation.analysis import investigate
 from investigation.catalysts import evaluate_chain, load_catalysts, match
 from investigation.fees import load_fee_profiles
 from investigation.report import build_report, public_report, to_markdown
+
+
+TCG_IDENTIFIERS = (
+    "pokemon", "one piece", "lorcana", "riftbound", "magic the gathering",
+    "yu gi oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
+    "union arena", "dragon ball", "star wars unlimited",
+)
+
+
+def _is_tcg_candidate(record):
+    """Fail closed: a legacy candidate is revalidated only if its game is identifiable."""
+    text = fold(f"{record.get('product_key', '')} {record.get('name', '')}")
+    normalized = " ".join(__import__("re").sub(r"[^a-z0-9]+", " ", text).split())
+    return any(term in normalized for term in TCG_IDENTIFIERS)
 
 
 def _obs_for(rec):
@@ -50,7 +65,11 @@ def run_pipeline(campaigns, adapters, config, store_dir, public_path, private_di
             # Autant de candidats que le plafond permet d'interroger sur
             # TOUTES les sources : pas de travail planifie puis saute.
             per_query = max(1, len(c["sources"]))
-            recs = store.to_revalidate(max(1, c.get("max_calls", 10) // per_query))
+            max_candidates = max(1, c.get("max_calls", 10) // per_query)
+            # Reprendre l'historique ne doit jamais relancer une ancienne
+            # campagne LEGO/Funko : seuls les candidats TCG identifiables passent.
+            historical = store.to_revalidate(limit=len(store.state.get("candidates", {})))
+            recs = [record for record in historical if _is_tcg_candidate(record)][:max_candidates]
             if not recs:
                 runs.append({"campaign_id": c["id"], "family": c["family"], "started_at": stamp,
                              "status": "SKIPPED_NOTHING_TO_REVALIDATE", "calls": [], "cost_units": 0})
