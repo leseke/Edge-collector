@@ -69,6 +69,15 @@ class CollectorSchemaTests(unittest.TestCase):
         with self.assertRaises(sqlite3.IntegrityError):
             self.observe("obs-negative", "run-1", -1)
 
+    def test_observations_are_append_only(self):
+        self.run_insert()
+        self.observe("obs-1", "run-1")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute("UPDATE observations SET price_cents=999 WHERE observation_id='obs-1'")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute("DELETE FROM observations WHERE observation_id='obs-1'")
+        self.assertEqual(self.db.execute("SELECT price_cents FROM observations").fetchone(), (129,))
+
     def test_two_runs_keep_separate_observations(self):
         self.run_insert("run-1")
         self.run_insert("run-2")
