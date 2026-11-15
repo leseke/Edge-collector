@@ -214,12 +214,11 @@ class EndToEndTests(Base):
         from tools.check_public_files import main as check
         self.assertEqual(check([self.store.root]), 0)
 
-    def test_second_domain_is_generic(self):
+    def test_non_tcg_domain_is_rejected(self):
         res = self.run_q("Comment évoluent les prix et l'offre de vélos cargo d'occasion ?")
-        self.assertEqual(res["status"], "REPORT")
-        self.assertEqual(res["report"]["subject"]["region"], "NL")
-        self.assertEqual(sorted(ch["dataset_ids"][0] for ch in res["report"]["charts"]), ["ds_nl-annonces", "ds_nl-prix"])
-        self.assertTrue(assess(res["report"], now=NOW)["valid"])
+        self.assertEqual(res["status"], "OUT_OF_SCOPE")
+        self.assertIsNone(res["report"])
+        self.assertIn("lien direct", res["reason"])
 
     def test_rerun_creates_new_version_and_keeps_old(self):
         r1 = self.run_q()["report"]
