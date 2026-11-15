@@ -14,6 +14,8 @@ class ActiveCampaignScopeTests(unittest.TestCase):
     def test_production_registry_is_tcg_only(self):
         campaigns = load_campaigns(os.path.join(ROOT, "discovery", "campaigns.json"))
         self.assertTrue(campaigns)
+        self.assertTrue(all(campaign.get("scope") == "TCG_ONLY" for campaign in campaigns))
+        static = [campaign for campaign in campaigns if campaign.get("queries")]
         self.assertTrue(all(
             any(game in query.lower() for game in ("pokemon", "one piece", "riftbound", "lorcana"))
             for campaign in static for query in campaign["queries"]
