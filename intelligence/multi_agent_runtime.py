@@ -7,6 +7,8 @@ Mock output is explicitly marked simulated and is never promoted to evidence.
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor, wait
+import time
 
 CONTRACT = "edge.specialist_result.v1"
 CLASSIFICATIONS = {"FACT", "WEAK_SIGNAL", "INFERENCE", "BET"}
@@ -116,11 +118,60 @@ def validate_specialist_result(result, task):
 
 
 class TaskExecutor:
-    """Runs only assigned, configured, free adapters; no implicit retries."""
-    def __init__(self, adapters=None, max_tasks=100, max_specialists_per_task=9):
+    """Bounded local executor. Adapters must honor the supplied cooperative deadline.
+
+    Timed-out Python threads cannot be forcibly stopped. Pending futures are
+    cancelled; already-running adapters must implement their own timeout.
+    Retries are opt-in, bounded, and only for exceptions marked retryable=True.
+    """
+    def __init__(self, adapters=None, max_tasks=100, max_specialists_per_task=9,
+                 max_workers=4, task_timeout_seconds=30, max_retries=0):
+        if not isinstance(max_workers, int) or not 1 <= max_workers <= 16:
+            raise ValueError("max_workers doit être compris entre 1 et 16")
+        if not isinstance(task_timeout_seconds, (int, float)) or task_timeout_seconds <= 0:
+            raise ValueError("task_timeout_seconds doit être positif")
+        if not isinstance(max_retries, int) or not 0 <= max_retries <= 2:
+            raise ValueError("max_retries doit être compris entre 0 et 2")
         self.adapters = dict(adapters or {})
         self.max_tasks = max_tasks
         self.max_specialists_per_task = max_specialists_per_task
+        self.max_workers = max_workers
+        self.task_timeout_seconds = float(task_timeout_seconds)
+        self.max_retries = max_retries
+
+    def _invoke(self, adapter, task, context):
+        started = datetime.now(timezone.utc).isoformat()
+        attempts = 0
+        while True:
+            attempts += 1
+            try:
+                raw = adapter.execute(
+                    deepcopy(task),
+                    {**deepcopy(context), "timeout_seconds": self.task_timeout_seconds,
+                     "deadline_epoch": time.time() + self.task_timeout_seconds},
+                )
+                validated = validate_specialist_result(raw, task)
+                return validated, {
+                    "task_id": task["task_id"], "event": "completed",
+                    "started_at": started, "finished_at": datetime.now(timezone.utc).isoformat(),
+                    "mode": validated["mode"], "status": validated["status"], "attempts": attempts,
+                }
+            except SpecialistResultRejected as exc:
+                return {
+                    "task_id": task["task_id"], "agent_id": task["agent_id"], "status": "rejected",
+                    "mode": "none", "findings": [], "limitations": [str(exc)],
+                }, {"task_id": task["task_id"], "event": "rejected",
+                    "reason": str(exc), "attempts": attempts}
+            except Exception as exc:
+                retryable = bool(getattr(exc, "retryable", False))
+                if retryable and attempts <= self.max_retries:
+                    continue
+                return {
+                    "task_id": task["task_id"], "agent_id": task["agent_id"], "status": "failed",
+                    "mode": "none", "findings": [],
+                    "limitations": [type(exc).__name__, "retryable" if retryable else "non_retryable"],
+                }, {"task_id": task["task_id"], "event": "failed",
+                    "reason": type(exc).__name__, "attempts": attempts}
 
     def execute(self, team_plan, context=None):
         if not isinstance(team_plan, dict) or team_plan.get("scope") != "tcg":
@@ -129,11 +180,15 @@ class TaskExecutor:
         if not isinstance(tasks, list) or len(tasks) > self.max_tasks:
             raise ValueError("nombre de tâches invalide ou supérieur au plafond")
         context = deepcopy(context or {})
-        outputs, audit = [], []
+        prepared, outputs, audit = [], [], []
         for index, planned in enumerate(tasks):
+            if not isinstance(planned, dict):
+                raise ValueError("sous-tâche invalide")
             roles = planned.get("assigned_roles", [])
-            if not isinstance(roles, list) or len(roles) > self.max_specialists_per_task:
-                raise ValueError("nombre de spécialistes invalide ou supérieur au plafond")
+            if (not isinstance(roles, list) or len(roles) > self.max_specialists_per_task
+                    or any(not isinstance(role, str) or not role for role in roles)
+                    or len(roles) != len(set(roles))):
+                raise ValueError("liste de spécialistes invalide ou supérieure au plafond")
             for role in roles:
                 task_id = f"{planned.get('subquestion_id') or 'task-' + str(index + 1)}::{role}"
                 task = {
@@ -146,30 +201,56 @@ class TaskExecutor:
                     outputs.append({"task_id": task_id, "agent_id": role, "status": "not_configured",
                                     "mode": "none", "findings": [], "limitations": ["Aucun adaptateur configuré."]})
                     audit.append({"task_id": task_id, "event": "skipped", "reason": "adapter_unavailable"})
-                    continue
-                if getattr(adapter, "paid", False):
+                elif getattr(adapter, "paid", False):
                     outputs.append({"task_id": task_id, "agent_id": role, "status": "blocked",
                                     "mode": "none", "findings": [], "limitations": ["Adaptateur payant bloqué hors SpendGuard."]})
                     audit.append({"task_id": task_id, "event": "blocked", "reason": "paid_adapter_requires_spendguard"})
-                    continue
-                started = datetime.now(timezone.utc).isoformat()
-                try:
-                    raw = adapter.execute(deepcopy(task), deepcopy(context))
-                    validated = validate_specialist_result(raw, task)
-                    outputs.append(validated)
-                    audit.append({"task_id": task_id, "event": "completed", "started_at": started,
-                                  "finished_at": datetime.now(timezone.utc).isoformat(),
-                                  "mode": validated["mode"], "status": validated["status"]})
-                except SpecialistResultRejected as exc:
-                    outputs.append({"task_id": task_id, "agent_id": role, "status": "rejected",
-                                    "mode": "none", "findings": [], "limitations": [str(exc)]})
-                    audit.append({"task_id": task_id, "event": "rejected", "reason": str(exc)})
-                except Exception as exc:
-                    outputs.append({"task_id": task_id, "agent_id": role, "status": "failed",
-                                    "mode": "none", "findings": [], "limitations": [type(exc).__name__]})
-                    audit.append({"task_id": task_id, "event": "failed", "reason": type(exc).__name__})
+                else:
+                    prepared.append((task, adapter))
+
+        if not prepared:
+            return {"contract": "edge.task_execution.v1", "execution": "local_offline",
+                    "paid_calls": 0, "max_workers": self.max_workers, "tasks": outputs, "audit": audit}
+
+        pool = ThreadPoolExecutor(max_workers=self.max_workers, thread_name_prefix="edge-specialist")
+        futures = {
+            pool.submit(self._invoke, adapter, task, context): task
+            for task, adapter in prepared
+        }
+        done, pending = wait(futures, timeout=self.task_timeout_seconds)
+        resolved = {}
+        for future in done:
+            task = futures[future]
+            try:
+                resolved[task["task_id"]] = future.result()
+            except Exception as exc:
+                resolved[task["task_id"]] = ({
+                    "task_id": task["task_id"], "agent_id": task["agent_id"], "status": "failed",
+                    "mode": "none", "findings": [], "limitations": [type(exc).__name__],
+                }, {"task_id": task["task_id"], "event": "failed", "reason": type(exc).__name__})
+        for future in pending:
+            task = futures[future]
+            future.cancel()
+            resolved[task["task_id"]] = ({
+                "task_id": task["task_id"], "agent_id": task["agent_id"], "status": "timed_out",
+                "mode": "none", "findings": [],
+                "limitations": ["Délai dépassé ; tâche en attente annulée si elle n'avait pas commencé.",
+                                "Un adaptateur déjà lancé doit respecter son délai coopératif."],
+            }, {"task_id": task["task_id"], "event": "timed_out",
+                "timeout_seconds": self.task_timeout_seconds,
+                "running_thread_may_continue": not future.cancelled()})
+        # Do not block the request on a non-cooperative adapter. Running threads
+        # may finish later; adapters are required to use context['deadline_epoch'].
+        pool.shutdown(wait=False, cancel_futures=True)
+
+        for task, _adapter in prepared:
+            result, record = resolved[task["task_id"]]
+            outputs.append(result)
+            audit.append(record)
         return {"contract": "edge.task_execution.v1", "execution": "local_offline",
-                "paid_calls": 0, "tasks": outputs, "audit": audit}
+                "paid_calls": 0, "max_workers": self.max_workers,
+                "timeout_seconds": self.task_timeout_seconds, "max_retries": self.max_retries,
+                "tasks": outputs, "audit": audit}
 
 
 class Coordinator:
