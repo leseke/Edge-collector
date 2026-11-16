@@ -55,3 +55,41 @@ jobs:
         run: npm run typecheck
       - name: Build for Cloudflare Workers
         run: npm run cf:build
+
+  verify-cloudflare-access:
+    name: Verify Cloudflare token (no changes)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify token is active without disclosing credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is missing from Actions repository secrets"
+            exit 1
+          fi
+          status=$(curl --silent --show-error --max-time 20 --output "$RUNNER_TEMP/cf-verify.json" --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          python3 - "$status" "$RUNNER_TEMP/cf-verify.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              response = json.loads(Path(sys.argv[2]).read_text())
+          except (OSError, ValueError):
+              print("::error::Cloudflare verification returned an unreadable response")
+              raise SystemExit(1)
+          result = response.get("result") or {}
+          if sys.argv[1] == "200" and response.get("success") is True and result.get("status") == "active":
+              print("Cloudflare API token is ACTIVE. No Cloudflare resource was modified.")
+          else:
+              print("::error::Cloudflare token verification failed (HTTP " + sys.argv[1] + ").")
+              raise SystemExit(1)
+          PY
+          rm -f "$RUNNER_TEMP/cf-verify.json"
