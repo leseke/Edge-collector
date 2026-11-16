@@ -3,7 +3,7 @@
 export async function readBoundedText(response, maxBytes = 128000) {
   if (!Number.isSafeInteger(maxBytes) || maxBytes < 1) throw new Error("invalid_max_bytes");
   const declared = response.headers.get("content-length");
-  if (declared !== null && /^\\d+$/.test(declared) && Number(declared) > maxBytes) throw new Error("oversize");
+  if (declared !== null && /^[0-9]+$/.test(declared) && Number(declared) > maxBytes) throw new Error("oversize");
   if (!response.body) throw new Error("invalid_empty_body");
   const reader = response.body.getReader();
   const chunks = [];
