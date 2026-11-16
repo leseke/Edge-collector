@@ -93,3 +93,28 @@ jobs:
               raise SystemExit(1)
           PY
           rm -f "$RUNNER_TEMP/cf-verify.json"
+      - name: Verify D1 account visibility without mutation
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          status=$(curl --silent --show-error --max-time 20 --output "$RUNNER_TEMP/cf-accounts.json" --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/accounts)
+          python3 - "$status" "$RUNNER_TEMP/cf-accounts.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              data = json.loads(Path(sys.argv[2]).read_text())
+          except (OSError, ValueError):
+              print("::error::Cloudflare accounts response unreadable")
+              raise SystemExit(1)
+          accounts = data.get("result")
+          if sys.argv[1] != "200" or data.get("success") is not True or not isinstance(accounts, list) or not accounts:
+              print("::error::Cloudflare account discovery unavailable; HTTP " + sys.argv[1])
+              raise SystemExit(1)
+          print("Cloudflare account discovery: OK; visible accounts:", len(accounts))
+          PY
+          rm -f "$RUNNER_TEMP/cf-accounts.json"
