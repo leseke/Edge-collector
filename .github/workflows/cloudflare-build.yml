@@ -58,7 +58,7 @@ jobs:
 
   verify-cloudflare-access:
     name: Verify Cloudflare token (no changes)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'edge/cloudflare-migration-001')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
