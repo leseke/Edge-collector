@@ -1,0 +1,56 @@
+/* Native TCG dashboard */
+.topbar-right{display:flex;align-items:center;gap:12px}
+.native-dashboard{max-width:1440px;margin:0 auto;padding:34px 38px 28px}
+.dashboard-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;padding:18px 0 30px;border-bottom:1px solid var(--line)}
+.native-eyebrow{margin:0 0 11px;color:var(--accent);font:9px "DM Mono",monospace;letter-spacing:1.8px}
+.dashboard-hero h1{max-width:700px;margin:0;color:#f1f4fc;font-size:clamp(30px,4vw,48px);line-height:1.08;letter-spacing:-1.8px}
+.dashboard-subtitle{max-width:590px;margin:15px 0 0;color:#8f9bb0;font-size:13px;line-height:1.8}
+.dashboard-stamp{display:flex;align-items:center;gap:9px;flex-shrink:0;padding:9px 12px;border:1px solid var(--line);border-radius:6px;color:#a5b1c5;font:9px "DM Mono",monospace;letter-spacing:1px}
+.status-dot{width:7px;height:7px;border-radius:50%}.status-dot.good{background:#83d7a9}.status-dot.warn{background:#e7b86f}
+.dashboard-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:23px 0 40px}
+.dashboard-metric{display:flex;flex-direction:column;gap:13px;min-height:92px;padding:17px 18px;background:#10141f;border:1px solid #252d3c;border-radius:9px}
+.dashboard-metric span{color:#8794aa;font-size:10px;line-height:1.5}.dashboard-metric strong{color:#eaf0fb;font:500 25px "DM Mono",monospace}
+.dashboard-section{margin-top:34px}.dashboard-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:17px}
+.dashboard-section-heading .native-eyebrow{margin-bottom:7px}.dashboard-section-heading h2,.dashboard-method h2{margin:0;color:#e8edf8;font-size:20px;letter-spacing:-.4px}
+.dashboard-date{color:#78869d;font:9px "DM Mono",monospace}
+.dashboard-warning{margin:0 0 16px;padding:12px 15px;border:1px solid #604a2d;border-left:2px solid #d8ad65;border-radius:7px;background:#1c1a17;color:#d7c5a4;font-size:11px}
+.tcg-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.tcg-card{display:grid;grid-template-columns:145px minmax(0,1fr);gap:19px;padding:18px;background:linear-gradient(145deg,#141a27,#10141e);border:1px solid #293244;border-radius:11px;min-width:0}
+.tcg-card-visual{display:grid;place-items:center;min-height:195px;overflow:hidden;border:1px solid #2a3447;border-radius:8px;background:radial-gradient(ellipse at 50% 35%,#28314a,#111722 70%);color:#66758f;font:12px "DM Mono",monospace}
+.tcg-card-visual img{display:block;width:100%;height:100%;max-height:220px;object-fit:contain}
+.tcg-card-body{min-width:0}.tcg-card-meta{display:flex;justify-content:space-between;gap:8px;color:#9badd0;font:9px "DM Mono",monospace;letter-spacing:.5px}.tcg-card-body h3{margin:9px 0 3px;color:#f0f3fa;font-size:18px}.tcg-rarity{margin:0 0 18px;color:#8d9ab0;font-size:10px}
+.tcg-price-label{color:#8e9ab0;font-size:9px;line-height:1.5}.tcg-price{margin:3px 0 11px;color:#a6e5eb;font:500 28px "DM Mono",monospace}
+.tcg-price-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 0;border-top:1px solid #293244;border-bottom:1px solid #293244}
+.tcg-price-details span{display:flex;flex-direction:column;gap:4px;color:#7f8ba0;font-size:9px}.tcg-price-details strong{color:#c4ccda;font:11px "DM Mono",monospace}
+.tcg-source-row{display:flex;justify-content:space-between;gap:8px;margin-top:9px;color:#7f8ba0;font-size:9px;line-height:1.5}.tcg-caveat{margin:13px 0 0;padding-top:10px;border-top:1px solid #293244;color:#8d9ab0;font-size:9px;line-height:1.6}
+.dashboard-empty{padding:24px;border:1px dashed #30394b;border-radius:8px;color:#98a4b8;font-size:12px}
+.dashboard-method{margin:37px 0 28px;padding:22px;border:1px solid #293244;border-radius:10px;background:#10141e}
+.dashboard-method .native-eyebrow{margin-bottom:8px}.method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:22px}
+.method-grid strong{color:#cbd4e3;font-size:11px}.method-grid p{margin:7px 0 0;color:#8592a8;font-size:10px;line-height:1.7}
+.native-footer{margin-top:30px;padding:16px 0;border-top:1px solid #252c3b;color:#69768d;font:9px "DM Mono",monospace;line-height:1.8}
+@media(max-width:1050px){.tcg-card-grid{grid-template-columns:1fr}.native-dashboard{padding:26px 25px}.tcg-card{grid-template-columns:130px minmax(0,1fr)}}
+@media(max-width:760px){.native-dashboard{padding:23px 17px}.dashboard-hero{align-items:flex-start;flex-direction:column}.dashboard-stamp{align-self:flex-start}.dashboard-metrics{grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 30px}.dashboard-metric{min-height:82px;padding:13px}.dashboard-metric strong{font-size:22px}.dashboard-section-heading{align-items:flex-start;flex-direction:column}.tcg-card{grid-template-columns:96px minmax(0,1fr);gap:12px;padding:12px}.tcg-card-visual{min-height:145px}.tcg-card-body h3{font-size:15px}.tcg-price{font-size:23px}.tcg-price-details{grid-template-columns:1fr}.tcg-source-row{flex-direction:column;gap:2px}.method-grid{grid-template-columns:1fr;gap:15px}.dashboard-method{padding:17px}}
+
+
+/* Shared evidence language and report explanations */
+.evidence-guide{margin:34px 0 28px;padding:23px;border:1px solid #293244;border-radius:10px;background:#10141e}
+.evidence-guide-heading h2{margin:0;color:#e8edf8;font-size:20px;letter-spacing:-.4px}
+.evidence-guide-heading>p:last-child{max-width:760px;margin:9px 0 0;color:#929eb2;font-size:11px;line-height:1.7}
+.evidence-guide-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
+.evidence-guide-item{min-width:0;padding:13px;border:1px solid #293244;border-radius:8px;background:#131a27}
+.evidence-guide-item p{margin:10px 0 0;color:#929eb2;font-size:10px;line-height:1.65}
+.evidence-chip{display:inline-flex;align-items:center;padding:5px 8px;border:1px solid #39445a;border-radius:5px;font:9px "DM Mono",monospace;letter-spacing:.35px}
+.evidence-fact{color:#a9d9c0;border-color:#355b4a;background:#17251f}
+.evidence-signal{color:#e5ca91;border-color:#675536;background:#282216}
+.evidence-inference{color:#b9c8ed;border-color:#455477;background:#1a2233}
+.evidence-bet{color:#e0b0b5;border-color:#69434a;background:#291d22}
+.evidence-guide-footnote{margin:17px 0 0;padding-top:13px;border-top:1px solid #293244;color:#7f8ba0;font-size:9px;line-height:1.7}
+.report-principle{margin-top:18px;padding:15px;border-left:2px solid #7184a7;background:#131a27}
+.report-principle h3{margin:0 0 7px;color:#dce4f2;font-size:12px}
+.report-principle>div{color:#929eb2;font-size:10px;line-height:1.7}
+.data-limit{margin:16px 0 0;padding:12px 14px;border:1px solid #51432f;border-radius:7px;background:#1b1916;color:#c5b493;font-size:10px;line-height:1.7}
+.data-limit strong{color:#e4c98f}
+@media(max-width:900px){.evidence-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.evidence-guide{padding:17px}.evidence-guide-grid{grid-template-columns:1fr}.evidence-guide-item{padding:11px}}
+
+.dashboard-metric small{margin-top:-7px;color:#748198;font-size:9px;line-height:1.55}

@@ -185,7 +185,7 @@ class RiskTests(Base):
             def generate(self, inp, transport):
                 Paid.called.append(1)
                 return transport.request({})
-        res = self.run_q(provider=Paid())
+        res = self.run_q(provider=Paid(), subscription_claim={"verified": True, "plan": "premium", "status": "active", "period_end": "2026-12-31T00:00:00Z"})
         self.assertEqual(res["status"], "REJECTED")
         self.assertTrue(any("depense" in v.lower() or "garde" in v.lower() for v in res["violations"]))
         self.assertEqual(Paid.called, [])
@@ -201,6 +201,19 @@ class EndToEndTests(Base):
         self.assertTrue(a["valid"], a["errors"])
         self.assertEqual(a["verification_level"], "simulated")
         self.assertEqual(len(res["dossier"]["plan"]["subquestions"]), 3)
+        self.assertEqual(res["dossier"]["agent_team"]["execution"], "planned_only")
+        self.assertEqual(res["dossier"]["agent_team"]["paid_calls"], 0)
+        trace = res["dossier"]["agent_team"]["execution_trace"]
+        self.assertEqual(trace["execution"], "local_offline")
+        self.assertEqual(trace["paid_calls"], 0)
+        self.assertTrue(all(t["status"] == "not_configured" for t in trace["task_results"]))
+        self.assertEqual(trace["facts"], [])
+        self.assertTrue(res["dossier"]["agent_team"]["tasks"])
+        for task in res["dossier"]["agent_team"]["tasks"]:
+            self.assertIn("evidence_refs", task)
+            self.assertIn("extract_ids", task["evidence_refs"])
+            self.assertIn("dataset_ids", task["evidence_refs"])
+            self.assertIn("source_ids", task["evidence_refs"])
         ext = {e["extract_id"]: e for e in raw()["extracts"]}
         for c in r["claims"]:
             if c["kind"] == "fact":
@@ -214,12 +227,11 @@ class EndToEndTests(Base):
         from tools.check_public_files import main as check
         self.assertEqual(check([self.store.root]), 0)
 
-    def test_second_domain_is_generic(self):
+    def test_non_tcg_domain_is_rejected(self):
         res = self.run_q("Comment évoluent les prix et l'offre de vélos cargo d'occasion ?")
-        self.assertEqual(res["status"], "REPORT")
-        self.assertEqual(res["report"]["subject"]["region"], "NL")
-        self.assertEqual(sorted(ch["dataset_ids"][0] for ch in res["report"]["charts"]), ["ds_nl-annonces", "ds_nl-prix"])
-        self.assertTrue(assess(res["report"], now=NOW)["valid"])
+        self.assertEqual(res["status"], "OUT_OF_SCOPE")
+        self.assertIsNone(res["report"])
+        self.assertIn("lien direct", res["reason"])
 
     def test_rerun_creates_new_version_and_keeps_old(self):
         r1 = self.run_q()["report"]
