@@ -1,1 +1,11 @@
 .mri-empty-state{display:grid;justify-items:start;gap:10px;min-height:190px;padding:27px;border:1px dashed #39445a;border-radius:10px;background:linear-gradient(120deg,#131a27,#10141e)}.mri-empty-symbol{display:grid;place-items:center;width:36px;height:36px;border:1px solid #34445b;border-radius:9px;color:#9cdce4;font:20px "DM Mono",monospace}.mri-empty-state h3{margin:4px 0 0;color:#e7edf8;font-size:16px}.mri-empty-state p,.mri-limit-copy{max-width:760px;margin:0;color:#8d9ab0;font-size:11px;line-height:1.8}.mri-limit-copy{margin-top:13px}
+
+.edge-mri-cases{display:grid;gap:12px;margin:15px 0 24px}
+.edge-mri-case{padding:18px;border:1px solid #383753;border-radius:13px;background:linear-gradient(125deg,#1c1b32,#121622)}
+.edge-mri-case h3{margin:7px 0;color:#f0f0ff;font-size:16px}
+.edge-mri-case p{color:#abb6c9;font-size:11px;line-height:1.7;overflow-wrap:anywhere}
+.edge-mri-case details{margin-top:12px;border-top:1px solid #34354d;padding-top:12px}
+.edge-mri-case summary{cursor:pointer;color:#c8c3ff;font-size:11px}
+.edge-mri-case ul{padding-left:18px}.edge-mri-case li{margin:10px 0;font-size:11px;line-height:1.5}
+.edge-mri-case a{color:#b4e4ec;text-decoration:underline;text-underline-offset:3px}
+.edge-mri-case small{display:block;color:#929eb3;margin-top:4px;overflow-wrap:anywhere}
