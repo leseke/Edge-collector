@@ -69,3 +69,9 @@ const reviewed = await runInvestigations(trustedD1Export, generate, { cursor: 0 
 ```
 
 Do not add the key to repository files, GitHub logs or a public browser bundle. This module does not enable model calls in CI or production.
+
+## Explicit opt-in model runner
+
+`run-model-investigations.mjs` is a private operator-only entrypoint; CI and production never invoke it. It requires **both** `EDGE_ENABLE_PAID_MODEL=YES` and `EDGE_ALLOW_MODEL_DATA_TRANSFER=YES`, plus `DEEPSEEK_API_KEY`. The second gate acknowledges that the scoped market observations and references will be sent to the external model provider. `EDGE_MAX_MODEL_CALLS` defaults to **1** and is hard-capped at **5** per invocation; `EDGE_MODEL_CURSOR` resumes later products. No secret, proposal body, observation price, or source URL is logged. The runner prints status counts only and does not persist model outputs. Tests use no paid calls.
+
+The generator remains a direct API adapter, **not** a full DeepSeek Harness agent. Do not enable this in GitHub Actions with Cloudflare credentials or expose it as an unauthenticated public endpoint. There is no financial spending authorization.
