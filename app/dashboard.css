@@ -122,3 +122,28 @@
 .edge-ai-link{margin-left:54px}
 }
 @media(max-width:380px){.edge-home-heading{flex-direction:column}.edge-home-action{max-width:none}.edge-asset-card{grid-template-columns:38% 62%}.edge-asset-value strong{font-size:20px}}
+
+
+/* Explorer V1: verified observed cards only */
+.edge-home-section-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.edge-explore-link{color:#c9c3ff;font-size:11px;font-weight:700}
+.edge-explorer h1{margin:0;color:#f4f4ff;font-size:clamp(29px,4vw,43px);letter-spacing:-1.2px}
+.edge-explorer h1 span{color:#a5a0ff}
+.edge-explorer-intro{max-width:680px;color:#9da9be;font-size:12px;line-height:1.7}
+.edge-explorer-filters{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:24px 0 15px}
+.edge-explorer-filters label{display:flex;flex-direction:column;gap:7px;color:#a9b4c8;font-size:10px}
+.edge-explorer-filters input,.edge-explorer-filters select{width:100%;min-height:44px;border:1px solid #41415f;border-radius:10px;background:#191a2c;color:#eef0ff;padding:10px 12px;font:12px "Manrope",sans-serif}
+.edge-explorer-count{margin:15px 0;color:#b5b1e9;font-size:11px}
+.edge-explorer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.edge-explorer-tile{min-width:0;overflow:hidden;border:1px solid #353550;border-radius:14px;background:#151727}
+.edge-explorer-image{display:grid;place-items:center;min-height:230px;padding:15px;background:radial-gradient(ellipse at 50% 40%,#343359,#181b2b 75%)}
+.edge-explorer-image img{display:block;max-width:100%;max-height:215px;object-fit:contain}
+.edge-explorer-body{padding:14px}
+.edge-explorer-body>span{color:#b8b3ed;font-size:10px}
+.edge-explorer-body h2{margin:6px 0 2px;color:#f1f2ff;font-size:17px}
+.edge-explorer-body p{margin:0 0 13px;color:#8e9bb0;font-size:10px}
+.edge-explorer-body strong{display:block;color:#b0e8ec;font-size:19px}
+.edge-explorer-body small{display:block;margin-top:9px;color:#a6a6bb;font-size:9px;line-height:1.5}
+@media(max-width:1000px){.edge-explorer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.edge-explorer-filters{grid-template-columns:1fr}.edge-explorer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.edge-explorer-image{min-height:175px;padding:8px}.edge-explorer-image img{max-height:160px}.edge-explorer-body{padding:10px}.edge-explorer-body h2{font-size:14px}.edge-explorer-body strong{font-size:16px}.edge-home-section-actions{justify-content:space-between;width:100%}}
+@media(max-width:370px){.edge-explorer-grid{grid-template-columns:1fr}}
