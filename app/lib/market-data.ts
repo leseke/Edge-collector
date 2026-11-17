@@ -38,8 +38,9 @@ export type TcgCard = {
   observedAt: string; sourceUpdatedAt: string | null; source: string;
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
 };
+export type ReactionCaseSummary = { productId: string; publicationCount: number; reactionStatus: string; financialDecision: string; publications: { title: string; url: string; publishedAt: string; relationship: string }[] };
 export type MarketSnapshot = {
-  observedAt: string; status: string; cards: TcgCard[];
+  observedAt: string; status: string; cards: TcgCard[]; reactionCases: ReactionCaseSummary[];
   observationCount: number; successfulCount: number; failedCount: number;
   warning: string | null; reactionCaseCount: number; publishedEventCount: number; completedSales: number;
 };
@@ -74,9 +75,14 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
     if (!mriEntry || mriEntry.path !== `snapshots/${pointer.snapshot_id}/mri_cases.json` || !/^[a-f0-9]{64}$/.test(mriEntry.sha256)) throw new Error("Invalid MRI reference");
     const mriText = await fetchText(DATA_BASE + mriEntry.path);
     if (sha256(mriText) !== mriEntry.sha256) throw new Error("MRI integrity check failed");
-    const mri = JSON.parse(mriText) as { schema: string; cases: Array<{ product_id: string; publication_evidence?: unknown[] }> };
+    const mri = JSON.parse(mriText) as { schema: string; cases: Array<{ product_id: string; reaction_status?: string; financial_decision?: string; publication_evidence?: Array<{ title?: string; source_url?: string; published_at?: string; relationship?: string }> }> };
     if (mri.schema !== "edge.mri.multi_source_cases.v1" || !Array.isArray(mri.cases)) throw new Error("Invalid MRI schema");
     const tcgCases = mri.cases.filter((item) => item.product_id?.startsWith("pokemon_card_"));
+    const reactionCases: ReactionCaseSummary[] = mri.cases.filter(item => typeof item.product_id === "string" && /^[a-z0-9_-]{3,110}$/.test(item.product_id)).map(item => ({
+      productId: item.product_id, publicationCount: Array.isArray(item.publication_evidence) ? item.publication_evidence.length : 0,
+      reactionStatus: item.reaction_status || "NON_DOCUMENTÉ", financialDecision: item.financial_decision || "NOT_ESTABLISHED",
+      publications: (Array.isArray(item.publication_evidence) ? item.publication_evidence : []).filter(e => typeof e.title === "string" && typeof e.source_url === "string" && /^https:\/\//.test(e.source_url)).slice(0, 5).map(e => ({ title: e.title!, url: e.source_url!, publishedAt: e.published_at || "", relationship: e.relationship || "LIEN_NON_VÉRIFIÉ" }))
+    }));
     const observations = report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.raw_file && item.body_sha256);
     const cards = await Promise.all(observations.map(async (item): Promise<TcgCard | null> => {
       try {
@@ -100,7 +106,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       } catch { return null; }
     }));
     return {
-      observedAt: report.observed_at, status: report.status, cards: cards.filter((card): card is TcgCard => card !== null),
+      observedAt: report.observed_at, status: report.status, reactionCases, cards: cards.filter((card): card is TcgCard => card !== null),
       observationCount: observations.length, successfulCount: observations.filter((item) => item.status === "OK").length,
       failedCount: observations.filter((item) => item.status !== "OK").length,
       warning: report.status === "PARTIAL" ? "Collecte partielle : certaines sources n’ont pas répondu." : null,
@@ -109,6 +115,6 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       completedSales: report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.completed_sale === true).length,
     };
   } catch {
-    return { observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel.", reactionCaseCount: 0, publishedEventCount: 0, completedSales: 0 };
+    return { observedAt: "", status: "UNAVAILABLE", cards: [], reactionCases: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel.", reactionCaseCount: 0, publishedEventCount: 0, completedSales: 0 };
   }
 }
