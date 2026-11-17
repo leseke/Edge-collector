@@ -35,10 +35,13 @@ export async function collect(env: Env): Promise<void> {
   await env.DB.prepare("INSERT INTO collection_runs (run_id,started_at,status) VALUES (?,?,?)").bind(runId,started,"RUNNING").run();
   let succeeded = 0, failed = 0;
   for (const target of TARGETS) {
+    let stage = "fetch";
     try {
       const result = await fetchTarget(target);
       const observedAt = ISO();
+      stage = "digest";
       const digest = await sha256(result.raw);
+      stage = "persist";
       // Aggregated price != completed sale. No claim of stock availability.
       await env.DB.prepare(`INSERT INTO observations
         (observation_id,run_id,product_id,source,observed_at,price_cents,currency,availability,price_kind,source_url,payload_sha256,source_updated_at)
@@ -49,7 +52,7 @@ export async function collect(env: Env): Promise<void> {
     } catch (error) {
       failed++;
       const rawReason = error instanceof Error ? error.message : "unknown";
-      const reasonCode = /^(upstream_[0-9]{3}|oversize|invalid_[a-z_]+|no_cardmarket_pricing|AbortError)$/.test(rawReason) ? rawReason : "unexpected_failure";
+      const reasonCode = /^(upstream_[0-9]{3}|oversize|invalid_[a-z_]+|no_cardmarket_pricing|AbortError)$/.test(rawReason) ? rawReason : "unexpected_" + stage;
       await env.DB.prepare("INSERT INTO collection_errors(error_id,run_id,product_id,source_url,occurred_at,reason_code) VALUES (?,?,?,?,?,?)")
         .bind(crypto.randomUUID(),runId,target.productId,target.url,ISO(),reasonCode).run();
       console.error("collector_target_failed", { runId, productId: target.productId, reason: reasonCode });
