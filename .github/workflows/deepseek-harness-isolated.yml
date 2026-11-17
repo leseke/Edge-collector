@@ -1,0 +1,35 @@
+name: DeepSeek Harness isolated compatibility probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [edge/cloudflare-migration-001]
+    paths:
+      - 'agent-harness/**'
+      - '.github/workflows/deepseek-harness-isolated.yml'
+permissions: {}
+jobs:
+  harness-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify EDGE read-only adapter
+        run: node --test agent-harness/test/*.test.mjs
+      - name: Probe upstream dsh CLI in a disposable environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dsh-home"
+          export DSH_HOME="$RUNNER_TEMP/dsh-home"
+          # No EDGE/Cloudflare/GitHub secrets, no persistent state, no model invocation.
+          timeout 120s npx --yes @deepseek-ai/dsh --help > "$RUNNER_TEMP/dsh-help.txt" 2>&1
+          if ! grep -qiE 'profile|plugin|web|headless' "$RUNNER_TEMP/dsh-help.txt"; then
+            echo "::error::Unexpected DeepSeek Harness CLI interface"
+            exit 1
+          fi
+          echo "DeepSeek Harness CLI started successfully in disposable runner."

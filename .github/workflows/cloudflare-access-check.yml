@@ -1,0 +1,44 @@
+name: EDGE Cloudflare access verification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-cloudflare-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify API token without printing it
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::Missing repository Actions secret CLOUDFLARE_API_TOKEN"
+            exit 1
+          fi
+          status=$(curl --silent --show-error --max-time 20 --output /tmp/edge-cf-verify.json --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          python3 - "$status" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              data = json.loads(Path("/tmp/edge-cf-verify.json").read_text())
+          except (ValueError, OSError):
+              print("Cloudflare returned an unreadable verification response")
+              raise SystemExit(1)
+          result = data.get("result") or {}
+          verified = sys.argv[1] == "200" and data.get("success") is True and result.get("status") == "active"
+          if verified:
+              print("Cloudflare API token: ACTIVE (read-only verification successful)")
+          else:
+              print("Cloudflare API token verification failed; HTTP status:", sys.argv[1])
+              raise SystemExit(1)
+          PY
+          rm -f /tmp/edge-cf-verify.json

@@ -1,0 +1,10 @@
+import { readFile, writeFile } from "node:fs/promises";
+import { buildMarketDossiers } from "./market-dossier.mjs";
+const [input, output] = process.argv.slice(2);
+if (!input || !output) throw new Error("input_and_output_required");
+const raw = await readFile(input, "utf8");
+if (raw.length > 2_000_000) throw new Error("export_too_large");
+const report = buildMarketDossiers(JSON.parse(raw), new Date().toISOString(), "AUTHENTIC_REMOTE_D1");
+await writeFile(output, JSON.stringify(report, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+console.log("Dossiers generated from authenticated D1 SELECT; products=" + report.dossiers.length + ", observations=" + report.totalObservations);
+console.log("Every dossier is INVESTIGATE, no order is authorized; no prices are printed.");

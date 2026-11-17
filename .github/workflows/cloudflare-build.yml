@@ -1,0 +1,401 @@
+name: Cloudflare Workers build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - edge/cloudflare-migration-001
+
+permissions:
+  contents: read
+
+jobs:
+  cloudflare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Offline D1 schema compatibility tests
+        run: python3 -m unittest discover -s cloud/collector/test -p 'test_*.py' -v
+      - name: Offline collector parser tests
+        run: node --test cloud/collector/test/*.test.mjs
+      - name: Validate isolated agent proposals (no network or model cost)
+        run: node --test agent-harness/test/*.test.mjs
+      - name: Real Wrangler D1 local schema smoke test
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          config = {
+            "name": "edge-tcg-collector-ci",
+            "main": "src/index.ts",
+            "compatibility_date": "2026-11-15",
+            "d1_databases": [{
+              "binding": "DB",
+              "database_name": "edge-tcg-history-ci",
+              "database_id": "00000000-0000-4000-8000-000000000001"
+            }]
+          }
+          Path("cloud/collector/wrangler.ci.json").write_text(json.dumps(config))
+          PY
+          cd cloud/collector
+          npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --file schema.sql
+          npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --command "INSERT INTO collection_runs(run_id,started_at,status) VALUES ('ci-run','2026-11-16T00:00:00Z','RUNNING'); INSERT INTO observations(observation_id,run_id,product_id,source,observed_at,price_cents,currency,availability,price_kind,source_url,payload_sha256) VALUES ('ci-observation','ci-run','ci-target','CI','2026-11-16T00:00:00Z',1234,'EUR','UNKNOWN','AGGREGATE','https://example.com','ci-digest');"
+          npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --command "SELECT run_id,product_id,price_cents,price_kind FROM observations WHERE run_id='ci-run';"
+      - name: Typecheck isolated Cloudflare collector
+        run: npx tsc --project cloud/collector/tsconfig.json
+      - name: Type check
+        run: npm run typecheck
+      - name: Build for Cloudflare Workers
+        run: npm run cf:build
+
+  dsh-plugin-runtime:
+    name: DeepSeek Harness native tool runtime smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install published plugin runtime in disposable runner
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Execute actual Cordis plugin registration and read-only tool
+        run: node --import tsx agent-harness/test/plugin-runtime-smoke.mts
+
+  dsh-local-d1-e2e:
+    name: DeepSeek plugin through real D1 schema (synthetic fixtures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Create D1-compatible SQLite fixture with immutable schema
+        run: python3 agent-harness/test/local-d1-fixture.py > "$RUNNER_TEMP/edge-local-fixture.json"
+      - name: Install published tool runtime without scripts
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Verify full export-normalize-native-tool pipeline
+        env:
+          EDGE_DATA_MODE: FIXTURE
+        run: node --import tsx agent-harness/test/live-d1-plugin.mts < "$RUNNER_TEMP/edge-local-fixture.json"
+      - name: Remove synthetic fixture
+        if: always()
+        run: rm -f "$RUNNER_TEMP/edge-local-fixture.json"
+
+  dsh-real-d1-readonly:
+    name: DeepSeek tool with real D1 data (read-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check read-only export eligibility
+        id: eligibility
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Cloudflare token unavailable: real-data test not executed."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Export real observations using bounded SELECT only
+        if: steps.eligibility.outputs.available == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node agent-harness/cloudflare-readonly-export.mjs "$RUNNER_TEMP/edge-d1-private.json"
+      - name: Install published tool runtime without scripts
+        if: steps.eligibility.outputs.available == 'true'
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Validate real data through native Cordis plugin without credentials
+        if: steps.eligibility.outputs.available == 'true'
+        run: node --import tsx agent-harness/test/live-d1-plugin.mts < "$RUNNER_TEMP/edge-d1-private.json"
+      - name: Generate evidence-constrained dossiers from real D1
+        if: steps.eligibility.outputs.available == 'true'
+        run: node agent-harness/run-dossiers.mjs "$RUNNER_TEMP/edge-d1-private.json" "$RUNNER_TEMP/edge-dossiers-private.json"
+      - name: Verify scoped model investigation briefs against real D1
+        if: steps.eligibility.outputs.available == 'true'
+        run: node agent-harness/verify-briefs.mjs "$RUNNER_TEMP/edge-d1-private.json"
+      - name: End-to-end investigation pipeline (deterministic adapter, real D1)
+        if: steps.eligibility.outputs.available == 'true'
+        run: node agent-harness/test/pipeline-d1-smoke.mjs "$RUNNER_TEMP/edge-d1-private.json"
+      - name: Erase temporary D1 exports and dossiers
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/edge-d1-private.json" "$RUNNER_TEMP/edge-dossiers-private.json"
+
+  verify-cloudflare-access:
+    name: Verify Cloudflare token (no changes)
+    if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify token is active without disclosing credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${CLOUDFLARE_API_TOKEN:-}" ]]; then
+            echo "::error::CLOUDFLARE_API_TOKEN is missing from Actions repository secrets"
+            exit 1
+          fi
+          status=$(curl --silent --show-error --max-time 20 --output "$RUNNER_TEMP/cf-verify.json" --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          python3 - "$status" "$RUNNER_TEMP/cf-verify.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              response = json.loads(Path(sys.argv[2]).read_text())
+          except (OSError, ValueError):
+              print("::error::Cloudflare verification returned an unreadable response")
+              raise SystemExit(1)
+          result = response.get("result") or {}
+          if sys.argv[1] == "200" and response.get("success") is True and result.get("status") == "active":
+              print("Cloudflare API token is ACTIVE. No Cloudflare resource was modified.")
+          else:
+              print("::error::Cloudflare token verification failed (HTTP " + sys.argv[1] + ").")
+              raise SystemExit(1)
+          PY
+          rm -f "$RUNNER_TEMP/cf-verify.json"
+      - name: Verify D1 account visibility without mutation
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          status=$(curl --silent --show-error --max-time 20 --output "$RUNNER_TEMP/cf-accounts.json" --write-out '%{http_code}' \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/accounts)
+          python3 - "$status" "$RUNNER_TEMP/cf-accounts.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          try:
+              data = json.loads(Path(sys.argv[2]).read_text())
+          except (OSError, ValueError):
+              print("::error::Cloudflare accounts response unreadable")
+              raise SystemExit(1)
+          accounts = data.get("result")
+          if sys.argv[1] != "200" or data.get("success") is not True or not isinstance(accounts, list) or not accounts:
+              print("::error::Cloudflare account discovery unavailable; HTTP " + sys.argv[1])
+              raise SystemExit(1)
+          print("Cloudflare account discovery: OK; visible accounts:", len(accounts))
+          PY
+          rm -f "$RUNNER_TEMP/cf-accounts.json"
+
+  provision-d1:
+    concurrency:
+      group: edge-cloudflare-d1-deployment
+      cancel-in-progress: false
+    needs: cloudflare
+    if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify Cloudflare credentials and account scope
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::Missing CLOUDFLARE_API_TOKEN"
+            exit 1
+          fi
+          curl --fail --silent --show-error --max-time 20 \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Accept: application/json" \
+            https://api.cloudflare.com/client/v4/accounts > "$RUNNER_TEMP/accounts.json"
+          python3 - "$RUNNER_TEMP/accounts.json" >> "$GITHUB_ENV" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          accounts=data.get("result") or []
+          if not data.get("success") or len(accounts)!=1:
+              raise SystemExit("Expected exactly one accessible Cloudflare account; refusing to guess")
+          account_id=accounts[0].get("id","")
+          if not isinstance(account_id,str) or len(account_id)!=32 or any(c not in "0123456789abcdef" for c in account_id.lower()):
+              raise SystemExit("Invalid Cloudflare account identifier")
+          print("CLOUDFLARE_ACCOUNT_ID="+account_id)
+          print("Verified exactly one Cloudflare account",file=sys.stderr)
+          PY
+      - name: Check whether D1 already exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 20 \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Accept: application/json" \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/d1/database?per_page=100" > "$RUNNER_TEMP/d1.json"
+          python3 - "$RUNNER_TEMP/d1.json" >> "$GITHUB_ENV" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          if not data.get("success"):
+              raise SystemExit("D1 database listing unsuccessful")
+          matches=[d for d in (data.get("result") or []) if d.get("name")=="edge-tcg-history"]
+          if len(matches)>1:
+              raise SystemExit("Ambiguous D1 databases with the same name")
+          if matches:
+              print("EDGE_D1_DATABASE_ID="+matches[0]["uuid"])
+              print("EDGE_D1_EXISTS=true")
+          else:
+              print("EDGE_D1_EXISTS=false")
+          PY
+      - name: Create D1 database if absent
+        if: env.EDGE_D1_EXISTS == 'false'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          code=$(curl --silent --show-error --max-time 30 --output "$RUNNER_TEMP/d1-created.json" --write-out '%{http_code}' \
+            -X POST -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"edge-tcg-history"}' \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/d1/database")
+          python3 - "$code" "$RUNNER_TEMP/d1-created.json" >> "$GITHUB_ENV" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[2]))
+          if sys.argv[1] not in ("200","201") or not data.get("success") or not (data.get("result") or {}).get("uuid"):
+              print("::error::D1 creation failed (HTTP "+sys.argv[1]+")",file=sys.stderr)
+              raise SystemExit(1)
+          print("EDGE_D1_DATABASE_ID="+data["result"]["uuid"])
+          print("EDGE_D1_CREATED=true")
+          PY
+      - name: Report provisioned database (no credentials)
+        run: |
+          echo "D1 database edge-tcg-history is available in the scoped Cloudflare account."
+          echo "Database UUID is intentionally omitted from logs."
+          echo "Schema migration and Worker deployment are separate, subsequent steps."
+
+      - name: Checkout schema and collector
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node for Wrangler
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Wrangler dependencies
+        run: npm install --no-audit --no-fund
+      - name: Apply schema and verify D1 remotely
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          config={
+            "name":"edge-tcg-collector",
+            "main":"src/index.ts",
+            "compatibility_date":"2026-11-15",
+            "d1_databases":[{
+              "binding":"DB",
+              "database_name":"edge-tcg-history",
+              "database_id":os.environ["EDGE_D1_DATABASE_ID"]
+            }]
+          }
+          config["triggers"]={"crons":["17 9 * * *"]}
+          Path("cloud/collector/wrangler.remote-ci.json").write_text(json.dumps(config))
+          PY
+          cd cloud/collector
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file schema.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('collection_runs','observations','collection_errors') ORDER BY name;" --yes
+
+      - name: Probe real TCGdex sources before deployment
+        run: node cloud/collector/test/live-source-probe.mjs
+      - name: Deploy isolated collector Worker (daily cron)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd cloud/collector
+          npx wrangler deploy --config wrangler.remote-ci.json
+          echo "Deployed isolated Worker with one daily scheduled collection at 09:17 UTC; public HTTP endpoint cannot initiate collection."
+
+      - name: Configure protected trigger and collect real data now
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          trigger_secret=$(openssl rand -hex 32)
+          echo "::add-mask::${trigger_secret}"
+          cd cloud/collector
+          printf '%s' "${trigger_secret}" | npx wrangler secret put TRIGGER_SECRET --name edge-tcg-collector
+          http_code="000"
+          for attempt in 1 2 3 4 5 6 7 8; do
+            http_code=$(curl --silent --show-error --max-time 40 --output "$RUNNER_TEMP/collection-response.json" --write-out '%{http_code}' \
+              --request POST \
+              --header "Authorization: Bearer ${trigger_secret}" \
+              https://edge-tcg-collector.ylan-seke.workers.dev/internal/collect)
+            if [[ "$http_code" == "200" ]]; then break; fi
+            echo "Collection endpoint not ready yet (HTTP ${http_code}), retry ${attempt}/8"
+            sleep 5
+          done
+          if [[ "$http_code" != "200" ]]; then
+            echo "::error::Real collection trigger failed after retries (HTTP ${http_code})"
+            exit 1
+          fi
+          echo "Authenticated collection request completed against the deployed Cloudflare Worker."
+          unset trigger_secret
+      - name: Read remote collection health
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd cloud/collector
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT COUNT(*) AS runs, COALESCE(SUM(succeeded),0) AS successful_targets, COALESCE(SUM(failed),0) AS failed_targets FROM collection_runs;" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT price_kind,COUNT(*) AS observations FROM observations GROUP BY price_kind;" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT product_id,reason_code,COUNT(*) AS failures FROM collection_errors GROUP BY product_id,reason_code ORDER BY product_id,reason_code;" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "WITH ranked AS (SELECT product_id, observed_at, price_cents, price_kind, ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY observed_at DESC, observation_id DESC) AS rn FROM observations WHERE price_kind='AGGREGATE' AND price_cents IS NOT NULL) SELECT current.product_id, current.observed_at AS latest_at, current.price_cents AS latest_cents, previous.price_cents AS previous_cents, ROUND(100.0*(current.price_cents-previous.price_cents)/NULLIF(previous.price_cents,0),2) AS change_pct, 'INDICATIVE_AGGREGATE_NOT_COMPLETED_SALE' AS provenance FROM ranked current LEFT JOIN ranked previous ON current.product_id=previous.product_id AND previous.rn=2 WHERE current.rn=1 ORDER BY current.product_id;" --yes
+          echo "Read-only remote D1 collection health checked; no synthetic market observations inserted."
+
+      - name: Assert latest real collection persisted both targets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 20 \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"sql":"SELECT r.run_id,r.status,r.attempted,r.succeeded,r.failed,(SELECT COUNT(*) FROM observations o WHERE o.run_id=r.run_id AND o.price_kind=\u0027AGGREGATE\u0027) AS observations FROM collection_runs r ORDER BY r.started_at DESC LIMIT 1"}' \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/d1/database/${EDGE_D1_DATABASE_ID}/query" > "$RUNNER_TEMP/latest-collection.json"
+          python3 - "$RUNNER_TEMP/latest-collection.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          batches=data.get("result") or []
+          rows=batches[0].get("results",[]) if batches else []
+          if not data.get("success") or not rows:
+              raise SystemExit("::error::No real collection run in remote D1")
+          row=rows[0]
+          if row.get("status")!="OK" or row.get("attempted")!=2 or row.get("succeeded")!=2 or row.get("failed")!=0 or row.get("observations")!=2:
+              raise SystemExit("::error::Latest real collection did not persist both aggregate observations")
+          print("PASS: latest remote D1 run OK, 2/2 targets and 2 immutable aggregate observations")
+          PY

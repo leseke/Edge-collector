@@ -1,5 +1,4 @@
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
-import { EvidenceGuide } from "./EvidenceGuide";
 
 function date(value: string): string {
   if (!value) return "Date non disponible";
@@ -36,28 +35,29 @@ export async function MarketDashboard() {
   const freshDate = snapshot.observedAt ? date(snapshot.observedAt) : "Non disponible";
   return <div className="native-dashboard">
     <section className="dashboard-hero">
-      <div><p className="native-eyebrow">EDGE / TCG MARKET INTELLIGENCE</p><h1>Lire le marché avant le consensus.</h1><p className="dashboard-subtitle">Prix indicatifs, disponibilité, signaux et preuves — sans confondre annonces et transactions.</p></div>
-      <div className="dashboard-stamp"><span className={snapshot.status === "OK" ? "status-dot good" : "status-dot warn"} />RELEVÉ {snapshot.status === "UNAVAILABLE" ? "INDISPONIBLE" : snapshot.status}</div>
+      <div><p className="native-eyebrow">EDGE / VOTRE ESPACE</p><h1>Repérer les opportunités avant le consensus.</h1><p className="dashboard-subtitle">Un point de départ pour explorer les produits suivis, leurs prix observés et les informations qui restent à vérifier.</p></div>
+      <div className="dashboard-stamp"><span className={snapshot.status === "OK" ? "status-dot good" : "status-dot warn"} />DONNÉES {snapshot.status === "OK" ? "DISPONIBLES" : snapshot.status === "PARTIAL" ? "PARTIELLES" : "LIMITÉES"}</div>
     </section>
     <section className="dashboard-metrics" aria-label="État des données">
-      <div className="dashboard-metric"><span>Lignes de cartes dans ce relevé</span><strong>{snapshot.cards.length}</strong><small>Observations affichables après contrôle d’intégrité.</small></div>
-      <div className="dashboard-metric"><span>Observations reçues</span><strong>{snapshot.successfulCount}</strong><small>Réponses de collecte avec statut OK, pas des ventes.</small></div>
-      <div className="dashboard-metric"><span>Observations en échec</span><strong>{snapshot.failedCount}</strong><small>Collectes non concluantes ou données non exploitables.</small></div>
-      <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>0</strong><small>Aucune transaction vérifiée dans cet écran.</small></div>
+      <div className="dashboard-metric"><span>Produits observés</span><strong>{snapshot.cards.length}</strong><small>Produits actuellement visibles dans EDGE.</small></div>
+      <div className="dashboard-metric"><span>Relevés exploitables</span><strong>{snapshot.successfulCount}</strong><small>Données reçues et utilisables.</small></div>
+      <div className="dashboard-metric"><span>Relevés incomplets</span><strong>{snapshot.failedCount}</strong><small>Informations indisponibles ou incomplètes.</small></div>
+      <div className="dashboard-metric"><span>Ventes documentées</span><strong>0</strong><small>Transactions identifiées dans les données.</small></div>
     </section>
     <section className="dashboard-section">
-      <div className="dashboard-section-heading"><div><p className="native-eyebrow">OBSERVATIONS SOURCÉES</p><h2>Cartes suivies</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
+      <div className="dashboard-section-heading"><div><p className="native-eyebrow">PRODUITS À EXPLORER</p><h2>Marché observé</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
       {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
-      {snapshot.cards.length ? <div className="tcg-card-grid">{snapshot.cards.map((card) => <CardTile key={card.productId} card={card} />)}</div> : <div className="dashboard-empty">Aucune observation TCG vérifiable n’est disponible dans le dernier relevé.</div>}
+      {snapshot.cards.length ? <div className="tcg-card-grid">{snapshot.cards.map((card) => <CardTile key={card.productId} card={card} />)}</div> : <div className="dashboard-empty">Aucun produit vérifiable pour le moment. Les prochaines observations apparaîtront ici.</div>}
     </section>
-    <EvidenceGuide />
     <section className="dashboard-method">
-      <p className="native-eyebrow">CADRE DE LECTURE</p><h2>Ce que ces données disent — et ne disent pas.</h2>
+      <p className="native-eyebrow">COMMENT LIRE CES PRIX</p>
+      <h2>Observer n'est pas acheter.</h2>
       <div className="method-grid">
-        <div><strong>Prix indicatifs</strong><p>Les valeurs issues d’agrégateurs ne sont ni des prix de vente réalisés, ni une preuve de liquidité.</p></div>
-        <div><strong>Variantes à confirmer</strong><p>Langue, édition, finition, état et version exacte doivent être confirmés avant toute comparaison.</p></div>
-        <div><strong>Pas de recommandation automatique</strong><p>Deux observations ne suffisent pas à établir une tendance, une rareté ou une asymétrie d’investissement.</p></div>
+        <div><strong>Prix affiché ≠ prix vendu</strong><p>Une annonce ou une moyenne indicative ne prouve pas qu'un acheteur a payé ce montant.</p></div>
+        <div><strong>Produit exact à confirmer</strong><p>Langue, édition, état et disponibilité peuvent modifier fortement la valeur réelle.</p></div>
+        <div><strong>Une piste n'est pas une certitude</strong><p>EDGE peut signaler un pari précoce, mais conserve les risques et les preuves manquantes.</p></div>
       </div>
+      <a className="edge-analysis-link" href="/mri">Comprendre les signaux de marché →</a>
     </section>
     <footer className="native-footer">EDGE · Données observées séparées des estimations · Aucun achat ni rendement futur n’est validé par cette interface.</footer>
   </div>;
