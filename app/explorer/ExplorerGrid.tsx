@@ -26,7 +26,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
   const [catalogueStatus, setCatalogueStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [catalogueMode, setCatalogueMode] = useState<"search" | "sets">("search");
   const [catalogueSets, setCatalogueSets] = useState<CatalogueSet[]>([]);
-  const [setQuery, setSetQuery] = useState("");
+  const [extensionFilter, setExtensionFilter] = useState("");
   const [selectedSet, setSelectedSet] = useState<CatalogueSet | null>(null);
   const [setCards, setSetCards] = useState<CatalogueCard[]>([]);
   const [setsStatus, setSetsStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -53,7 +53,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
       .catch(() => { if (!controller.signal.aborted) setSetsStatus("error"); });
     return () => controller.abort();
   }, [catalogueMode, catalogueLanguage, selectedSet]);
-  const filteredCatalogueSets = useMemo(() => catalogueSets.filter(set => set.name.toLocaleLowerCase("fr").includes(setQuery.trim().toLocaleLowerCase("fr"))).slice(0, 80), [catalogueSets, setQuery]);
+  const filteredCatalogueSets = useMemo(() => catalogueSets.filter(set => set.name.toLocaleLowerCase("fr").includes(extensionFilter.trim().toLocaleLowerCase("fr"))).slice(0, 80), [catalogueSets, extensionFilter]);
   useEffect(() => {
     const term = catalogueQuery.trim();
     if (term.length < 2) { setCatalogueCards([]); setCatalogueStatus("idle"); return; }
@@ -124,7 +124,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
         <label className="edge-catalogue-language"><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => setCatalogueLanguage(event.target.value)}><option value="fr">Français</option><option value="en">Anglais</option><option value="ja">Japonais</option></select></label>
         {catalogueMode === "sets" ? <div className="edge-catalogue-sets">
           {selectedSet ? <><button type="button" className="edge-catalogue-back" onClick={() => { setSelectedSet(null); setSetCards([]); setSetsStatus("ready"); }}>← Toutes les extensions</button><h3>{selectedSet.name}</h3><p role="status">{setsStatus === "loading" ? "Chargement des cartes…" : setsStatus === "error" ? "Cartes indisponibles pour cette extension." : setCards.length + " carte(s) renvoyée(s) · Prix non collectés"}</p><div className="edge-catalogue-results">{setCards.map(card => <article key={card.language + ":" + card.id} className="edge-catalogue-card"><div className="edge-catalogue-image"><AssetImage src={card.image} name={card.name}/></div><strong>{card.name}</strong><small>{card.id} · {card.language.toUpperCase()} · TCGdex</small><span>Prix non collecté</span></article>)}</div></> :
-          <><label className="edge-catalogue-set-filter"><span>Filtrer les extensions</span><input type="search" value={setQuery} onChange={event => setSetQuery(event.target.value)} placeholder="Nom d'extension…" /></label><p role="status">{setsStatus === "loading" ? "Chargement des extensions…" : setsStatus === "error" ? "Extensions indisponibles. Réessaie plus tard." : filteredCatalogueSets.length + " extension(s) affichée(s) · Liste partielle"}</p><div className="edge-catalogue-set-grid">{filteredCatalogueSets.map(set => <button key={set.id} type="button" className="edge-catalogue-set-tile" onClick={() => setSelectedSet(set)}><span className="edge-catalogue-set-art">{set.logo ? <AssetImage src={set.logo} name={set.name}/> : <span>Extension</span>}</span><strong>{set.name}</strong><small>{set.cardCount === null ? "Nombre de cartes inconnu" : set.cardCount + " cartes répertoriées"}</small></button>)}</div></>}
+          <><label className="edge-catalogue-set-filter"><span>Filtrer les extensions</span><input type="search" value={extensionFilter} onChange={event => setExtensionFilter(event.target.value)} placeholder="Nom d'extension…" /></label><p role="status">{setsStatus === "loading" ? "Chargement des extensions…" : setsStatus === "error" ? "Extensions indisponibles. Réessaie plus tard." : filteredCatalogueSets.length + " extension(s) affichée(s) · Liste partielle"}</p><div className="edge-catalogue-set-grid">{filteredCatalogueSets.map(set => <button key={set.id} type="button" className="edge-catalogue-set-tile" onClick={() => setSelectedSet(set)}><span className="edge-catalogue-set-art">{set.logo ? <AssetImage src={set.logo} name={set.name}/> : <span>Extension</span>}</span><strong>{set.name}</strong><small>{set.cardCount === null ? "Nombre de cartes inconnu" : set.cardCount + " cartes répertoriées"}</small></button>)}</div></>}
         </div> : <>
         <div className="edge-catalogue-controls"><label><span>Nom de carte (2 caractères minimum)</span><input type="search" value={catalogueQuery} onChange={event => setCatalogueQuery(event.target.value)} placeholder="Ex. Pikachu, Dracaufeu…" /></label></div>
         <p role="status">{catalogueStatus === "loading" ? "Recherche en cours…" : catalogueStatus === "error" ? "Catalogue indisponible. Réessaie plus tard." : catalogueStatus === "ready" ? catalogueCards.length + " résultat(s) renvoyé(s) · 60 maximum" : "Saisis un nom pour interroger le catalogue."}</p>
