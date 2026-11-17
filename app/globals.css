@@ -24,3 +24,39 @@
   .side-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
   .edge-admin-link{font-size:10px;padding:6px 8px}
 }
+
+
+/* EDGE Pokémon-inspired visual identity — no layout or route changes to existing pages */
+:root{--app-bg:#061b3d;--sidebar-bg:#06234b;--line:#274977;--text:#f5f8ff;--muted:#aebfd7;--accent:#ffcf21}
+html,body{background:var(--app-bg)}
+.app-shell{background:linear-gradient(135deg,#092d60 0%,#061b3d 52%,#071a36 100%)}
+.app-topbar{position:sticky;min-height:84px;padding-top:12px;padding-bottom:12px;background:rgba(5,29,65,.94);border-bottom:1px solid rgba(125,166,220,.2);backdrop-filter:blur(18px)}
+.edge-top-brand{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;flex-direction:column;gap:3px;white-space:nowrap;text-align:center}
+.edge-top-brand strong{font-family:"Manrope",sans-serif;font-size:clamp(22px,2.8vw,33px);font-style:normal;font-weight:800;letter-spacing:.09em;line-height:1;color:#fff}
+.edge-top-brand small{font:600 8px "Manrope",sans-serif;letter-spacing:.23em;color:#c7d6ed}
+.breadcrumb{position:relative;z-index:1}.breadcrumb>span:first-child{color:#ffcf21}.breadcrumb strong{color:#edf4ff}
+.topbar-right{position:relative;z-index:1}
+.edge-admin-link{border-color:#416c9f;background:#0b315f;color:#eaf2ff}
+.edge-top-tabs{position:sticky;top:84px;z-index:9;display:flex;align-items:center;justify-content:center;gap:5px;width:min(680px,calc(100% - 32px));min-height:39px;margin:8px auto 0;padding:4px;border:0;border-radius:22px;background:rgba(12,55,110,.86);box-shadow:0 6px 18px rgba(0,9,30,.13);backdrop-filter:blur(12px)}
+.edge-top-tab{display:flex;align-items:center;justify-content:center;gap:7px;flex:1;min-height:31px;padding:5px 12px;border-radius:18px;color:#dce8fb;font-size:11px;font-weight:700;white-space:nowrap}
+.edge-top-tab>span{font-size:17px;line-height:1}
+.edge-top-tab:hover{background:rgba(255,255,255,.08)}
+.edge-top-tab.is-active{background:#ffcf21;color:#09234c;box-shadow:0 2px 7px rgba(0,0,0,.14)}
+.side-link.active{background:#ffcf21;border-color:#ffcf21;color:#08224a}
+.side-link.active .active-indicator{background:#ffe16c}
+.side-link:hover{color:#ffcf21}
+.brand-mark{background:#ffcf21;color:#08224a}
+.brand-copy strong{font-style:normal}
+@media(max-width:760px){
+  .app-topbar{min-height:81px;padding:10px 14px 9px;align-items:flex-end}
+  .edge-top-brand{top:13px;transform:translateX(-50%);gap:1px}
+  .edge-top-brand strong{font-size:23px}
+  .edge-top-brand small{font-size:6px;letter-spacing:.14em}
+  .breadcrumb{font-size:9px}
+  .edge-admin-link{min-height:30px;font-size:9px;padding:5px 8px}
+  .edge-top-tabs{top:81px;width:calc(100% - 24px);margin-top:6px;min-height:36px;padding:3px}
+  .edge-top-tab{min-height:30px;font-size:10px;padding:4px 7px;gap:5px}
+  .edge-top-tab>span{font-size:15px}
+  .sidebar{background:#061c3e;border-top-color:#315583}
+  .side-link.active{background:#ffcf21;color:#08224a;border-radius:12px}
+}
