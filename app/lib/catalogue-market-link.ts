@@ -1,9 +1,9 @@
+import { catalogueVariant, marketVariant, compareVariants } from "./product-variant";
 import type { TcgCard } from "./market-data";
 
 export type CatalogueMarketLink =
   | { status: "NO_MATCH"; productId: null; card: null }
-  | { status: "CANDIDATE_UNVERIFIED"; productId: string; card: TcgCard }
-  | { status: "LANGUAGE_VERIFIED_VARIANT_UNKNOWN"; productId: string; card: TcgCard };
+  | { status: "CANDIDATE_UNVERIFIED"; productId: string; card: TcgCard };
 
 /**
  * Exact catalogue ID -> EDGE legacy ID. This is an identity candidate,
@@ -26,7 +26,6 @@ export function linkCatalogueToMarket(
   // Fail closed if the market snapshot contains ambiguous duplicate identities.
   if (matches.length !== 1) return { status: "NO_MATCH", productId: null, card: null };
   const card = matches[0];
-  return card.languageVerified && language === "fr"
-    ? { status: "LANGUAGE_VERIFIED_VARIANT_UNKNOWN", productId, card }
-    : { status: "CANDIDATE_UNVERIFIED", productId, card };
+  if (compareVariants(catalogueVariant(language), marketVariant(card.languageVerified)) === "CONFLICT") return { status: "NO_MATCH", productId: null, card: null };
+  return { status: "CANDIDATE_UNVERIFIED", productId, card };
 }
