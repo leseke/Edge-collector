@@ -15,5 +15,8 @@ test("image component retries only trusted TCGdex host and exposes an honest fal
   assert.match(image, /low\.webp/);
   assert.match(image, /high\.png/);
   assert.match(image, /onError/);
-  assert.match(image, /Image indisponible/);
+  assert.match(image, /Image non référencée/);
+  assert.match(image, /Image inaccessible/);
+  assert.match(image, /IMAGE_VARIANTS/);
+  assert.match(image, /url\.search \|\| url\.hash/);
 });
