@@ -7,9 +7,10 @@ const proposal={productId:"card_a",thesis:"Possible preshot with unconfirmed dem
 test("verified source provenance does not become verified demand",()=>{
  const result=reviewInvestigation(proposal,exportData,"2026-11-17T11:00:00Z");
  assert.equal(result.status,"PROPOSAL_REQUIRES_HUMAN_REVIEW");
- assert.equal(result.evidence.facts.length,1);
+ assert.equal(result.evidence.factsWithMatchingCitation.length,1);
  assert.equal(result.evidence.bets.length,1);
- assert.equal(result.modelClaimsVerified,true);
+ assert.equal(result.citationMetadataMatched,true);
+ assert.equal(result.claimSemanticsVerified,false);
  assert.equal(result.demandConfirmed,false);
  assert.equal(result.purchaseAuthorized,false);
 });
@@ -17,7 +18,7 @@ test("model cannot invent an external factual citation",()=>{
  const forged={...proposal,evidence:[{kind:"FACT",claim:"Unverified sold listing",sourceUrl:"https://example.com/sale",observedAt:row.observed_at}]};
  const result=reviewInvestigation(forged,exportData,"2026-11-17T11:00:00Z");
  assert.equal(result.status,"NEEDS_EVIDENCE_CORRECTION");
- assert.equal(result.modelClaimsVerified,false);
+ assert.equal(result.citationMetadataMatched,false);
  assert.equal(result.evidence.unsupportedFacts.length,1);
 });
 test("model cannot use a product absent from trusted D1",()=>{
