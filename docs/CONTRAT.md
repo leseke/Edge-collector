@@ -39,3 +39,21 @@ File: `cloud/collector/migrations/002_investigation_review.sql` (ADR 002). Three
 - `review_decisions(decision_id PK, investigation_id UNIQUE FK, reviewer_id, decision APPROVE|REJECT, rationale, decided_at, idempotency_key UNIQUE, purchase_authorized=0)`.
 - `investigation_audit_events(event_id PK, investigation_id FK, actor_id, event_type INVESTIGATION_CREATED|REVIEW_APPROVED|REVIEW_REJECTED, occurred_at, payload_hash [64 lowercase hex])`.
 All three tables reject UPDATE and DELETE. No remote D1 schema application, routes or authenticated write service is included. SQL enforces at most one final decision per investigation; a repeated idempotency key currently fails with a uniqueness error, not a successful replay. The future service must atomically write decision plus audit event, authenticate reviewer and check replay payloads.
+
+## PRODUCT-002C — Provenance des variantes marché
+
+Pour `edge.commercial.snapshot.v1`, le lecteur accepte un champ facultatif
+`observations[].variant_evidence` sur un relevé `OK`. Il contient les clés
+`language`, `edition`, `condition`, `grading` et `grade`, chacune facultative.
+Chaque entrée contient `value` et `source` (URL HTTPS sans identifiants).
+Le producteur ne renseigne ces éléments que pour le relevé de prix auquel
+ils s'appliquent. La langue de l'URL catalogue et l'ancien booléen ne
+permettent pas d'établir la langue du relevé. Une valeur absente ou invalide
+reste inconnue. Une note nécessite un gradeur explicite et est incompatible
+avec `RAW`. D1 et les routes conservent leurs contrats existants.
+
+Le rapprochement requiert un identifiant exact extension-numéro et un
+seul relevé candidat. Il accepte les deux séparateurs historiques des
+identifiants EDGE. Un conflit sur une dimension vérifiée des deux côtés
+écarte le relevé. Une correspondance candidate conserve sa provenance et
+ne donne lieu à aucune attribution de prix ni à aucun conseil d'achat.

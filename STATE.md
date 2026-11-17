@@ -62,3 +62,9 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - Updated existing image-fallback test and added TCGdex URL regression test.
 - Network image retrieval, CI and iPhone visual result **not yet verified**. No guarantee the external host will serve images in every network.
 - No paid API, database write, purchase or manual production deployment.
+
+## PRODUCT-002C — Evidence from market observations
+
+- Explorer accepts both exact snapshot and legacy Pokémon IDs. A candidate displays the available language, edition, condition, grader and grade evidence with its source. Explicit conflicts reject the match.
+- The published TCGdex/Cardmarket observations inspected on 2026-11-17 are indicative aggregates without variant-level evidence. Their variant fields remain unknown and the catalogue page assigns no price to the candidate.
+- Verified locally with Node 24: four targeted catalogue bridge tests and strict TypeScript checking of the three changed library modules. Full CI and live UI verification are pending.

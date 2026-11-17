@@ -3,7 +3,7 @@ import type { TcgCard } from "./market-data";
 
 export type CatalogueMarketLink =
   | { status: "NO_MATCH"; productId: null; card: null }
-  | { status: "CANDIDATE_UNVERIFIED"; productId: string; card: TcgCard };
+  | { status: "CANDIDATE_UNVERIFIED"; productId: string; card: TcgCard; variant: ReturnType<typeof marketVariant> };
 
 /**
  * Exact catalogue ID -> EDGE legacy ID. This is an identity candidate,
@@ -22,10 +22,11 @@ export function linkCatalogueToMarket(
 ): CatalogueMarketLink {
   const productId = legacyPokemonProductId(cardId);
   if (!productId || !["fr", "en", "ja"].includes(language)) return { status: "NO_MATCH", productId: null, card: null };
-  const matches = cards.filter(card => card.productId === productId);
+  const matches = cards.filter(card => card.productId === productId || card.productId === `pokemon_card_${cardId}`);
   // Fail closed if the market snapshot contains ambiguous duplicate identities.
   if (matches.length !== 1) return { status: "NO_MATCH", productId: null, card: null };
   const card = matches[0];
-  if (compareVariants(catalogueVariant(language), marketVariant(card.languageVerified)) === "CONFLICT") return { status: "NO_MATCH", productId: null, card: null };
-  return { status: "CANDIDATE_UNVERIFIED", productId, card };
+  const variant = card.variant ?? marketVariant();
+  if (compareVariants(catalogueVariant(language), variant) === "CONFLICT") return { status: "NO_MATCH", productId: null, card: null };
+  return { status: "CANDIDATE_UNVERIFIED", productId: card.productId, card, variant };
 }

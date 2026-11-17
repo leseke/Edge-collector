@@ -49,7 +49,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · SUIVI EDGE NON ÉTABLI</span>
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
-        <div className="edge-product-primary"><span>Prix de marché</span><strong>{marketLink.status === "NO_MATCH" ? "Non collecté" : "Correspondance à vérifier"}</strong><small>{marketLink.status === "NO_MATCH" ? "TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée." : "Un relevé EDGE existe pour cet identifiant. La variante, l’état et le grading ne sont pas confirmés : aucun prix n’est attribué automatiquement à cette fiche."}</small></div>
+        <div className="edge-product-primary"><span>Prix de marché</span><strong>{marketLink.status === "NO_MATCH" ? "Non collecté" : "Correspondance à vérifier"}</strong><small>{marketLink.status === "NO_MATCH" ? "TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée." : "Un relevé EDGE existe pour cet identifiant. Le rapprochement reste à vérifier. Pour cette fiche, aucun prix n’est attribué automatiquement."}</small></div>
       </div>
     </div>
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
@@ -71,6 +71,34 @@ export default async function CatalogueCardPage({ params, searchParams }: {
       <p>Prix réalisés, liquidité, catalyseurs, risques et analyse IA ne sont pas disponibles pour cette fiche. Aucun signal BUY ou STRONG BUY n'est généré sans dossier associé et données traçables.</p>
       <Link href={back}>Revenir à l'exploration</Link>
     </section>
-    <section className="edge-product-panel"><h2>Provenance et statut</h2><p>Source : TCGdex · Identifiant : {cardId} · Langue : {language.toUpperCase()}</p>{marketLink.status === "NO_MATCH" ? <p>Aucun dossier EDGE ni correspondance avec les produits suivis n'est établi pour cette fiche.</p> : <><p>Correspondance candidate : {marketLink.productId} · {"Langue et variante du relevé non vérifiées pour cette fiche"}.</p><p>Type de relevé : {marketLink.card.priceKind} · Source : {marketLink.card.source} · Date : {marketLink.card.observedAt}.</p><p>Aucun prix ni conseil d’achat n’est déduit de cette correspondance.</p><Link href={`/explorer/${encodeURIComponent(marketLink.productId)}`}>Consulter le relevé EDGE et ses limites</Link></>}</section>
+    <section className="edge-product-panel">
+      <h2>Provenance et statut</h2>
+      <p>Source TCGdex · Identifiant {cardId} · Langue {language.toUpperCase()}</p>
+      {marketLink.status === "NO_MATCH" ? (
+        <p>Aucun dossier EDGE ni correspondance avec les produits suivis n'est établi pour cette fiche.</p>
+      ) : (
+        <>
+          <p>Correspondance candidate · {marketLink.productId}</p>
+          <p>Type de relevé · {marketLink.card.priceKind} · {marketLink.card.source} · {marketLink.card.observedAt}</p>
+          <h3>Variante du relevé marché</h3>
+          <dl>
+            {([
+              ["Langue", marketLink.variant.language],
+              ["Édition", marketLink.variant.edition],
+              ["État", marketLink.variant.condition],
+              ["Gradeur", marketLink.variant.grading],
+              ["Note", marketLink.variant.grade],
+            ] as const).map(([label, evidence]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{evidence.status === "VERIFIED" ? <a href={evidence.source}>{evidence.value}</a> : "Non vérifié"}</dd>
+              </div>
+            ))}
+          </dl>
+          <p>Aucun prix ni conseil d’achat n’est déduit de cette correspondance.</p>
+          <Link href={`/explorer/${encodeURIComponent(marketLink.productId)}`}>Consulter le relevé EDGE et ses limites</Link>
+        </>
+      )}
+    </section>
   </main>;
 }

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { marketVariant, type ProductVariant } from "./product-variant";
 
 const DATA_BASE = "https://raw.githubusercontent.com/leseke/Edge-collector/edge/commercial-history/";
 const encoder = new TextEncoder();
@@ -21,6 +22,7 @@ type Observation = {
   observed_at: string;
   source_updated_at?: string;
   market_language_verified?: boolean;
+  variant_evidence?: unknown;
   raw_file?: string;
   body_sha256?: string;
   completed_sale?: boolean;
@@ -37,6 +39,7 @@ export type TcgCard = {
   low: number | null; average: number | null; trend: number | null; currency: string;
   observedAt: string; sourceUpdatedAt: string | null; source: string;
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
+  variant?: ProductVariant;
 };
 export type ReactionCaseSummary = { productId: string; publicationCount: number; reactionStatus: string; financialDecision: string; publications: { title: string; url: string; publishedAt: string; relationship: string }[] };
 export type MarketSnapshot = {
@@ -102,6 +105,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
           sourceUpdatedAt: item.source_updated_at || pricing?.updated || null, source: item.seller,
           availability: item.availability, languageVerified: item.market_language_verified === true,
           priceKind: item.price_kind, image: safeImage(card.image),
+          variant: marketVariant(item.status === "OK" ? item.variant_evidence : undefined),
         };
       } catch { return null; }
     }));

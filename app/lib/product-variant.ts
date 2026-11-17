@@ -26,12 +26,39 @@ export function catalogueVariant(language: string): ProductVariant {
   };
 }
 
-export function marketVariant(_languageVerified: boolean): ProductVariant {
-  // The legacy flag says verification happened, but does not encode WHICH language.
-  // Never infer FR from the flag alone.
+function readEvidence<T extends string>(
+  input: unknown,
+  isValue: (value: string) => value is T,
+): EvidenceValue<T> {
+  if (!input || typeof input !== "object") return unknown();
+  const { value, source } = input as { value?: unknown; source?: unknown };
+  if (typeof value !== "string" || !isValue(value) || typeof source !== "string") return unknown();
+  try {
+    const url = new URL(source);
+    if (url.protocol === "https:" && !url.username && !url.password) {
+      return { status: "VERIFIED", value, source: url.href };
+    }
+  } catch {
+    return unknown();
+  }
+  return unknown();
+}
+
+export function marketVariant(input?: unknown): ProductVariant {
+  // The legacy market_language_verified flag does not identify a language.
+  const evidence = input && typeof input === "object" ? input as Record<string, unknown> : {};
+  const grading = readEvidence(evidence.grading, (value): value is "RAW" | "PSA" | "BGS" | "CGC" | "OTHER" =>
+    /^(RAW|PSA|BGS|CGC|OTHER)$/.test(value));
   return {
-    language: unknown(),
-    edition: unknown(), condition: unknown(), grading: unknown(), grade: unknown(),
+    language: readEvidence(evidence.language, (value): value is "fr" | "en" | "ja" => /^(fr|en|ja)$/.test(value)),
+    edition: readEvidence(evidence.edition, (value): value is "FIRST_EDITION" | "UNLIMITED" | "OTHER" =>
+      /^(FIRST_EDITION|UNLIMITED|OTHER)$/.test(value)),
+    condition: readEvidence(evidence.condition, (value): value is "NM" | "EX" | "GD" | "PL" | "PO" =>
+      /^(NM|EX|GD|PL|PO)$/.test(value)),
+    grading,
+    grade: grading.status === "VERIFIED" && grading.value !== "RAW"
+      ? readEvidence(evidence.grade, (value): value is string => /^(?:[1-9](?:\.5)?|10)$/.test(value))
+      : unknown(),
   };
 }
 
