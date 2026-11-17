@@ -6,6 +6,7 @@ import { AssetImage } from "../components/AssetImage";
 
 type Category = "cards" | "sealed";
 type Sort = "series" | "name" | "price-low" | "price-high";
+type CatalogueSet = { id: string; name: string; logo: string | null; cardCount: number | null };
 type CatalogueCard = { id: string; name: string; number: string; image: string | null; language: string; source: string; price: null };
 
 function formatPrice(card: TcgCard): string {
@@ -23,6 +24,36 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
   const [catalogueLanguage, setCatalogueLanguage] = useState("fr");
   const [catalogueCards, setCatalogueCards] = useState<CatalogueCard[]>([]);
   const [catalogueStatus, setCatalogueStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [catalogueMode, setCatalogueMode] = useState<"search" | "sets">("search");
+  const [catalogueSets, setCatalogueSets] = useState<CatalogueSet[]>([]);
+  const [setQuery, setSetQuery] = useState("");
+  const [selectedSet, setSelectedSet] = useState<CatalogueSet | null>(null);
+  const [setCards, setSetCards] = useState<CatalogueCard[]>([]);
+  const [setsStatus, setSetsStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  useEffect(() => {
+    if (catalogueMode !== "sets") return;
+    const controller = new AbortController();
+    setSetsStatus("loading");
+    setSelectedSet(null);
+    setSetCards([]);
+    fetch("/api/catalog/sets?lang=" + catalogueLanguage, { signal: controller.signal })
+      .then(async response => { if (!response.ok) throw new Error("Sets unavailable"); return response.json(); })
+      .then((payload: { sets?: CatalogueSet[] }) => { if (!controller.signal.aborted) { setCatalogueSets(Array.isArray(payload.sets) ? payload.sets : []); setSetsStatus("ready"); } })
+      .catch(() => { if (!controller.signal.aborted) setSetsStatus("error"); });
+    return () => controller.abort();
+  }, [catalogueMode, catalogueLanguage]);
+  useEffect(() => {
+    if (catalogueMode !== "sets" || !selectedSet) return;
+    const controller = new AbortController();
+    setSetsStatus("loading");
+    setSetCards([]);
+    fetch("/api/catalog/sets?lang=" + catalogueLanguage + "&set=" + encodeURIComponent(selectedSet.id), { signal: controller.signal })
+      .then(async response => { if (!response.ok) throw new Error("Set unavailable"); return response.json(); })
+      .then((payload: { cards?: CatalogueCard[] }) => { if (!controller.signal.aborted) { setSetCards(Array.isArray(payload.cards) ? payload.cards : []); setSetsStatus("ready"); } })
+      .catch(() => { if (!controller.signal.aborted) setSetsStatus("error"); });
+    return () => controller.abort();
+  }, [catalogueMode, catalogueLanguage, selectedSet]);
+  const filteredCatalogueSets = useMemo(() => catalogueSets.filter(set => set.name.toLocaleLowerCase("fr").includes(setQuery.trim().toLocaleLowerCase("fr"))).slice(0, 80), [catalogueSets, setQuery]);
   useEffect(() => {
     const term = catalogueQuery.trim();
     if (term.length < 2) { setCatalogueCards([]); setCatalogueStatus("idle"); return; }
@@ -89,9 +120,16 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
       <section className="edge-catalogue-search" aria-label="Catalogue de cartes TCGdex">
         <div className="edge-explorer-section-title"><h2>Catalogue étendu · TCGdex</h2><span>Sans prix de marché</span></div>
         <p>Recherche indépendante des relevés EDGE. Une carte trouvée ici n'est pas une opportunité validée.</p>
+        <div className="edge-catalogue-mode" role="group" aria-label="Parcours du catalogue"><button type="button" aria-pressed={catalogueMode === "search"} onClick={() => setCatalogueMode("search")}>Rechercher une carte</button><button type="button" aria-pressed={catalogueMode === "sets"} onClick={() => setCatalogueMode("sets")}>Parcourir les extensions</button></div>
+        <label className="edge-catalogue-language"><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => setCatalogueLanguage(event.target.value)}><option value="fr">Français</option><option value="en">Anglais</option><option value="ja">Japonais</option></select></label>
+        {catalogueMode === "sets" ? <div className="edge-catalogue-sets">
+          {selectedSet ? <><button type="button" className="edge-catalogue-back" onClick={() => { setSelectedSet(null); setSetCards([]); setSetsStatus("ready"); }}>← Toutes les extensions</button><h3>{selectedSet.name}</h3><p role="status">{setsStatus === "loading" ? "Chargement des cartes…" : setsStatus === "error" ? "Cartes indisponibles pour cette extension." : setCards.length + " carte(s) renvoyée(s) · Prix non collectés"}</p><div className="edge-catalogue-results">{setCards.map(card => <article key={card.language + ":" + card.id} className="edge-catalogue-card"><div className="edge-catalogue-image"><AssetImage src={card.image} name={card.name}/></div><strong>{card.name}</strong><small>{card.id} · {card.language.toUpperCase()} · TCGdex</small><span>Prix non collecté</span></article>)}</div></> :
+          <><label className="edge-catalogue-set-filter"><span>Filtrer les extensions</span><input type="search" value={setQuery} onChange={event => setSetQuery(event.target.value)} placeholder="Nom d'extension…" /></label><p role="status">{setsStatus === "loading" ? "Chargement des extensions…" : setsStatus === "error" ? "Extensions indisponibles. Réessaie plus tard." : filteredCatalogueSets.length + " extension(s) affichée(s) · Liste partielle"}</p><div className="edge-catalogue-set-grid">{filteredCatalogueSets.map(set => <button key={set.id} type="button" className="edge-catalogue-set-tile" onClick={() => setSelectedSet(set)}><span className="edge-catalogue-set-art">{set.logo ? <AssetImage src={set.logo} name={set.name}/> : <span>Extension</span>}</span><strong>{set.name}</strong><small>{set.cardCount === null ? "Nombre de cartes inconnu" : set.cardCount + " cartes répertoriées"}</small></button>)}</div></>}
+        </div> : <>
         <div className="edge-catalogue-controls"><label><span>Nom de carte (2 caractères minimum)</span><input type="search" value={catalogueQuery} onChange={event => setCatalogueQuery(event.target.value)} placeholder="Ex. Pikachu, Dracaufeu…" /></label><label><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => setCatalogueLanguage(event.target.value)}><option value="fr">Français</option><option value="en">Anglais</option><option value="ja">Japonais</option></select></label></div>
         <p role="status">{catalogueStatus === "loading" ? "Recherche en cours…" : catalogueStatus === "error" ? "Catalogue indisponible. Réessaie plus tard." : catalogueStatus === "ready" ? catalogueCards.length + " résultat(s) renvoyé(s) · 60 maximum" : "Saisis un nom pour interroger le catalogue."}</p>
         {catalogueStatus === "ready" && <div className="edge-catalogue-results">{catalogueCards.map(card => <article key={card.language + ":" + card.id} className="edge-catalogue-card"><div className="edge-catalogue-image"><AssetImage src={card.image} name={card.name}/></div><strong>{card.name}</strong><small>{card.id} · {card.language.toUpperCase()} · TCGdex</small><span>Prix non collecté</span></article>)}</div>}
+        </>}
       </section>
       <div className="edge-explorer-section-title edge-explorer-results-heading"><h2>Cartes suivies</h2><span>{visible.length} résultat{visible.length > 1 ? "s" : ""}</span></div>
       {warning && <p className="dashboard-warning">{warning}</p>}
