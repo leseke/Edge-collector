@@ -26,11 +26,11 @@ export function catalogueVariant(language: string): ProductVariant {
   };
 }
 
-export function marketVariant(languageVerified: boolean): ProductVariant {
+export function marketVariant(_languageVerified: boolean): ProductVariant {
+  // The legacy flag says verification happened, but does not encode WHICH language.
+  // Never infer FR from the flag alone.
   return {
-    language: languageVerified
-      ? { status: "VERIFIED", value: "fr", source: "EDGE market observation language flag" }
-      : unknown(),
+    language: unknown(),
     edition: unknown(), condition: unknown(), grading: unknown(), grade: unknown(),
   };
 }
