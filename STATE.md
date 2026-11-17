@@ -24,3 +24,11 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - ADR: `docs/adr/002-immutable-human-review.md`.
 - Remote migration **not applied**. No authenticated review API or atomic write service implemented.
 - CI run #292 (44133553861) was in progress when this snapshot was written; results **not verified**. Do not promote this work without checking its final status.
+
+## Investor home UX V1 — 2026-11-17
+- `app/components/MarketDashboard.tsx`: product-first home, progressive price/source disclosure, explicit inactive AI status; reuses existing trusted snapshot.
+- `app/dashboard.css`: compact mobile-first card hierarchy and accent styling.
+- `agent-harness/test/investor-home-contract.test.mjs`: structural tests; execution **not verified** at time of writing.
+- ADR 003: `docs/adr/003-product-first-investor-home.md`.
+- No new agent API, paid model call, D1 write, or explicit production deployment was performed by this change.
+- CI and real mobile rendering must be verified before promotion.
