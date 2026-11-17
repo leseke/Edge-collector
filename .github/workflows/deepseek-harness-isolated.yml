@@ -22,7 +22,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/dsh-home"
           export DSH_HOME="$RUNNER_TEMP/dsh-home"
           # No EDGE/Cloudflare/GitHub secrets, no persistent state, no model invocation.
-          timeout 120s npx --yes --package @deepseek-ai/dsh dsh --help > "$RUNNER_TEMP/dsh-help.txt" 2>&1
+          timeout 120s npx --yes @deepseek-ai/dsh --help > "$RUNNER_TEMP/dsh-help.txt" 2>&1
           if ! grep -qiE 'profile|plugin|web|headless' "$RUNNER_TEMP/dsh-help.txt"; then
             echo "::error::Unexpected DeepSeek Harness CLI interface"
             exit 1
