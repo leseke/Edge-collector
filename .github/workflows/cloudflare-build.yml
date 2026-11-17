@@ -244,6 +244,25 @@ jobs:
           npx wrangler deploy --config wrangler.remote-ci.json
           echo "Deployed isolated Worker with one daily scheduled collection at 09:17 UTC; public HTTP endpoint cannot initiate collection."
 
+      - name: Configure protected trigger and collect real data now
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          trigger_secret=$(openssl rand -hex 32)
+          echo "::add-mask::${trigger_secret}"
+          cd cloud/collector
+          printf '%s' "${trigger_secret}" | npx wrangler secret put TRIGGER_SECRET --name edge-tcg-collector
+          http_code=$(curl --silent --show-error --max-time 40 --output "$RUNNER_TEMP/collection-response.json" --write-out '%{http_code}' \
+            --request POST \
+            --header "Authorization: Bearer ${trigger_secret}" \
+            https://edge-tcg-collector.ylan-seke.workers.dev/internal/collect)
+          if [[ "$http_code" != "200" ]]; then
+            echo "::error::Real collection trigger failed (HTTP ${http_code})"
+            exit 1
+          fi
+          echo "Authenticated collection request completed against the deployed Cloudflare Worker."
+          unset trigger_secret
       - name: Read remote collection health
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
