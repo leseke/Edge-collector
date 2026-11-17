@@ -14,7 +14,7 @@ test("collection navigation and filters use observed card data", () => {
   assert.match(explorer, /setSeries\(name\)/);
   assert.match(explorer, /cards\.filter/);
   assert.match(explorer, /setSort/);
-  assert.match(explorer, /Voir le dossier/);
+  assert.match(explorer, /Voir la fiche/);
 });
 test("visual explorer retains responsive layouts and keyboard focus", () => {
   assert.match(css, /edge-series-strip/);
