@@ -5,7 +5,7 @@ import { buildMarketDossiers } from "./market-dossier.mjs";
  * This does not call a model or grant it any tools or credentials.
  */
 export function prepareInvestigationBrief(trustedExport, productId, now = new Date().toISOString()) {
-  const market = buildMarketDossiers(trustedExport, now, "AUTHENTIC_REMOTE_D1");
+  const market = buildMarketDossiers(trustedExport, now, "UNVERIFIED_INPUT");
   const dossier = market.dossiers.find(d => d.productId === productId);
   if (!dossier) throw new Error("unknown_product");
   const sourceRows = trustedExport[0].results.filter(r => r.product_id === productId);
