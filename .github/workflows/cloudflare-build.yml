@@ -75,6 +75,47 @@ jobs:
       - name: Execute actual Cordis plugin registration and read-only tool
         run: node --import tsx agent-harness/test/plugin-runtime-smoke.mts
 
+  dsh-real-d1-readonly:
+    name: DeepSeek tool with real D1 data (read-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check read-only export eligibility
+        id: eligibility
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Cloudflare token unavailable: real-data test not executed."
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Export real observations using bounded SELECT only
+        if: steps.eligibility.outputs.available == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node agent-harness/cloudflare-readonly-export.mjs "$RUNNER_TEMP/edge-d1-private.json"
+      - name: Install published tool runtime without scripts
+        if: steps.eligibility.outputs.available == 'true'
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Validate real data through native Cordis plugin without credentials
+        if: steps.eligibility.outputs.available == 'true'
+        run: node --import tsx agent-harness/test/live-d1-plugin.mts < "$RUNNER_TEMP/edge-d1-private.json"
+      - name: Erase temporary D1 export
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/edge-d1-private.json"
+
   verify-cloudflare-access:
     name: Verify Cloudflare token (no changes)
     if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
