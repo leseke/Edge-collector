@@ -137,6 +137,9 @@ jobs:
       - name: Generate evidence-constrained dossiers from real D1
         if: steps.eligibility.outputs.available == 'true'
         run: node agent-harness/run-dossiers.mjs "$RUNNER_TEMP/edge-d1-private.json" "$RUNNER_TEMP/edge-dossiers-private.json"
+      - name: Verify scoped model investigation briefs against real D1
+        if: steps.eligibility.outputs.available == 'true'
+        run: node agent-harness/verify-briefs.mjs "$RUNNER_TEMP/edge-d1-private.json"
       - name: Erase temporary D1 exports and dossiers
         if: always()
         shell: bash
