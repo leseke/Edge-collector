@@ -16,7 +16,7 @@ test("Explorer filters observed snapshot products only", () => {
   assert.doesNotMatch(explorer, /Math\.random|mockProducts|demoCards/);
 });
 test("Broken image is replaced by a visible fallback", () => {
-  assert.match(image, /onError=\{\(\) => setFailed\(true\)\}/);
+  assert.match(image, /onError=\{\(\) => setIndex\(previous => previous \+ 1\)\}/);
   assert.match(image, /Image indisponible/);
   assert.match(home, /<AssetImage/);
   assert.match(explorer, /<AssetImage/);
