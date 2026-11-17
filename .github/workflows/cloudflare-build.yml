@@ -57,6 +57,35 @@ jobs:
         run: npm run typecheck
       - name: Build for Cloudflare Workers
         run: npm run cf:build
+      - name: Publish the authorized isolated preview
+        if: >-
+          github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001' && github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          set -euo pipefail
+          test -n "${CLOUDFLARE_API_TOKEN:-}" || { echo "::error::Cloudflare Actions token unavailable"; exit 1; }
+          curl --fail --silent --show-error --max-time 20 \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            https://api.cloudflare.com/client/v4/accounts > "$RUNNER_TEMP/edge-preview-accounts.json"
+          CLOUDFLARE_ACCOUNT_ID=$(python3 - "$RUNNER_TEMP/edge-preview-accounts.json" <<'PY'
+          import json, re, sys
+          with open(sys.argv[1]) as source:
+              response = json.load(source)
+          accounts = response.get("result") or []
+          if not response.get("success") or len(accounts) != 1 or not re.fullmatch(r"[a-f0-9]{32}", accounts[0].get("id", "")):
+              raise SystemExit("Expected one accessible Cloudflare account")
+          print(accounts[0]["id"])
+          PY
+          )
+          export CLOUDFLARE_ACCOUNT_ID
+          npm exec -- wrangler deploy --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
+          preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
+          curl --fail --silent --show-error --max-time 30 --retry 3 --retry-all-errors \
+            "$preview_url/api/catalog/price?lang=fr&id=ecard1-20" | python3 -c 'import json,sys; p=json.load(sys.stdin).get("price"); assert p and p["low"] > 0 and p["updatedAt"], "Expected a dated TCGdex price"'
+          curl --fail --silent --show-error --max-time 30 "$preview_url/explorer?catalogue=Mewtwo&lang=fr" -o /dev/null
+          echo "Verified Cloudflare preview: $preview_url/explorer?catalogue=Mewtwo&lang=fr"
 
   dsh-plugin-runtime:
     name: DeepSeek Harness native tool runtime smoke

@@ -12,7 +12,8 @@ test("catalogue cards open a language-scoped detail and preserve search term", (
   assert.match(wrapper, /<Suspense/);
 });
 test("catalogue details cannot invent prices or an EDGE investment decision", () => {
-  assert.match(page, /Non collecté/);
+  assert.match(page, /readCatalogueQuote\(card\.pricing\)/);
+  assert.match(page, /Indication de prix indisponible/);
   assert.match(page, /SUIVI EDGE NON ÉTABLI/);
   assert.match(page, /Aucun dossier EDGE ni correspondance/);
   assert.match(page, /assets\.tcgdex\.net/);

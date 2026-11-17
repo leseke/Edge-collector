@@ -18,7 +18,7 @@ test("catalogue API is read-only, bounded, allowlisted and price-free", () => {
 test("catalogue search is separate from observed prices and handles unavailable upstream", () => {
   assert.match(explorer, /\/api\/catalog\/cards\?q=/);
   assert.match(explorer, /Catalogue indisponible/);
-  assert.match(explorer, /Prix non collecté/);
+  assert.match(explorer, /<CatalogueTilePrice language={card.language} cardId={card.id}/);
   assert.match(explorer, /catalogueLanguage/);
   assert.match(explorer, /controller.abort\(\)/);
 });

@@ -17,6 +17,6 @@ test("mobile Explorer supports extension drilldown without pretending to have pr
   assert.match(explorer, /Parcourir les extensions/);
   assert.match(explorer, /\/api\/catalog\/sets\?lang=/);
   assert.match(explorer, /Toutes les extensions/);
-  assert.match(explorer, /Prix non collecté/);
+  assert.match(explorer, /<CatalogueTilePrice language={card.language} cardId={card.id}/);
   assert.match(explorer, /controller.abort\(\)/);
 });
