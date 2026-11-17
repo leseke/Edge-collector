@@ -249,3 +249,15 @@
 .edge-catalogue-intelligence{border-color:#4a4263;background:linear-gradient(135deg,#25213d,#151b2d)}
 .edge-catalogue-intelligence>a{display:inline-flex;margin-top:8px;padding:10px 13px;border:1px solid #66618c;border-radius:9px;color:#dcd5ff;text-decoration:none;font-size:12px}
 @media(max-width:750px){.edge-catalogue-facts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.edge-catalogue-facts,.edge-catalogue-intelligence{padding:15px}.edge-catalogue-facts-heading h2,.edge-catalogue-intelligence h2{font-size:18px}}
+
+
+/* Visual-only Pokémon palette for catalogue detail; sourced data and geometry unchanged */
+.edge-product-detail .native-eyebrow,.edge-product-detail .edge-product-kicker{color:#ffdb58}
+.edge-product-detail .edge-product-visual{background:radial-gradient(ellipse at 50% 35%,#164b8b,#0a214b 76%);border-color:#456da6}
+.edge-product-detail .edge-product-overview h1{font-family:"Manrope",sans-serif;font-weight:800;font-style:normal;letter-spacing:-.045em;color:#fff}
+.edge-product-detail .edge-product-primary strong{color:#ffcf21;font-family:"Manrope",sans-serif;font-style:normal;font-weight:800;letter-spacing:-.035em}
+.edge-product-detail .edge-product-primary small{color:#d6b66d}
+.edge-product-detail .edge-catalogue-facts,.edge-product-detail .edge-catalogue-intelligence,.edge-product-detail .edge-product-panel{border-color:#355e94;background:linear-gradient(145deg,#0b2c5a,#0b2148)}
+.edge-product-detail .edge-catalogue-facts-grid>div{background:#10325f;border-color:#355e94}
+.edge-product-detail .edge-catalogue-facts-heading>span{color:#ffcf21}
+.edge-product-detail .edge-catalogue-intelligence>a{border-color:#5577a7;color:#ffdc69}
