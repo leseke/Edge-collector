@@ -58,6 +58,23 @@ jobs:
       - name: Build for Cloudflare Workers
         run: npm run cf:build
 
+  dsh-plugin-runtime:
+    name: DeepSeek Harness native tool runtime smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install published plugin runtime in disposable runner
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Execute actual Cordis plugin registration and read-only tool
+        run: node --import tsx agent-harness/test/plugin-runtime-smoke.mts
+
   verify-cloudflare-access:
     name: Verify Cloudflare token (no changes)
     if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
