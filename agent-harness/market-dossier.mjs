@@ -3,14 +3,16 @@
 import { normalizeD1Export } from "./export-d1.mjs";
 import { assessMarket } from "./market-assessment.mjs";
 
-export function buildMarketDossiers(payload, now = new Date().toISOString()) {
+export function buildMarketDossiers(payload, now = new Date().toISOString(), sourceContext = "UNVERIFIED_INPUT") {
+  if (!["UNVERIFIED_INPUT", "AUTHENTIC_REMOTE_D1", "SYNTHETIC_FIXTURE"].includes(sourceContext)) throw new Error("invalid_source_context");
   const rows = normalizeD1Export(payload);
   const productIds = [...new Set(rows.map(r => r.product_id))].sort();
   return {
     schemaVersion: 1,
     generatedAt: now,
     provenance: "D1_TCGDEX_INDICATIVE_AGGREGATE_NOT_COMPLETED_SALE",
-    dataIsSynthetic: false,
+    sourceContext,
+    dataIsSynthetic: sourceContext === "SYNTHETIC_FIXTURE" ? true : sourceContext === "AUTHENTIC_REMOTE_D1" ? false : null,
     totalObservations: rows.length,
     dossiers: productIds.map(productId => {
       const assessment = assessMarket(rows, productId, now);
