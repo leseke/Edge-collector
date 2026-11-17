@@ -4,6 +4,7 @@ import { readBoundedText } from "./bounded.mjs";
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
   DB: D1Database;
+  TRIGGER_SECRET?: string;
 }
 type Target = { productId: string; url: string };
 const TARGETS: readonly Target[] = [
@@ -59,7 +60,16 @@ export async function collect(env: Env): Promise<void> {
     .bind(ISO(),status,TARGETS.length,succeeded,failed,runId).run();
 }
 export default {
-  async fetch(): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    if (request.method === "POST" && url.pathname === "/internal/collect") {
+      const supplied = request.headers.get("Authorization")?.replace(/^Bearer /, "") ?? "";
+      if (!env.TRIGGER_SECRET || !supplied || (await sha256(supplied)) !== (await sha256(env.TRIGGER_SECRET))) {
+        return Response.json({ error: "not_found" }, { status: 404 });
+      }
+      await collect(env);
+      return Response.json({ service: "edge-tcg-collector", collection: "completed" });
+    }
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
