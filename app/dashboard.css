@@ -217,3 +217,21 @@
 .edge-catalogue-card small{color:#a7acc9;font-size:10px;overflow-wrap:anywhere}
 .edge-catalogue-card>span{margin-top:auto;color:#b6e4e6;font-size:10px}
 @media(max-width:650px){.edge-catalogue-search{padding:13px}.edge-catalogue-controls{grid-template-columns:1fr}.edge-catalogue-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
+
+
+/* Explorer V4: browse extensions without inventing market prices */
+.edge-catalogue-mode{display:flex;gap:8px;margin:15px 0}
+.edge-catalogue-mode button,.edge-catalogue-back{padding:10px 13px;border:1px solid #555273;border-radius:9px;background:#202139;color:#d9d6f4;font:600 11px "Manrope",sans-serif;cursor:pointer}
+.edge-catalogue-mode button[aria-pressed="true"]{border-color:#93dfe8;background:#263746;color:#b6f1f5}
+.edge-catalogue-mode button:focus-visible,.edge-catalogue-back:focus-visible,.edge-catalogue-set-tile:focus-visible{outline:2px solid #b6f1f5;outline-offset:3px}
+.edge-catalogue-language,.edge-catalogue-set-filter{display:flex;flex-direction:column;gap:7px;margin:12px 0;color:#b6b8d5;font-size:11px}
+.edge-catalogue-language select,.edge-catalogue-set-filter input{max-width:100%;padding:12px;border:1px solid #46445f;border-radius:9px;background:#101321;color:#f3f3ff;font:inherit}
+.edge-catalogue-sets h3{margin:16px 0;color:#f1f2ff;font-size:19px}
+.edge-catalogue-sets p{color:#aeb8cf;font-size:12px}
+.edge-catalogue-set-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;margin-top:14px}
+.edge-catalogue-set-tile{display:flex;flex-direction:column;gap:8px;min-width:0;padding:12px;text-align:left;border:1px solid #3c3a58;border-radius:12px;background:#1a1b30;color:#f2f2ff;cursor:pointer}
+.edge-catalogue-set-art{display:grid;place-items:center;height:90px;overflow:hidden;border-radius:8px;background:#26263d;color:#aaa6c6;font-size:11px}
+.edge-catalogue-set-art img{max-width:100%;max-height:85px;object-fit:contain}
+.edge-catalogue-set-tile strong{font-size:12px}
+.edge-catalogue-set-tile small{font-size:10px;color:#a8b3c8}
+@media(max-width:650px){.edge-catalogue-mode button{flex:1;padding:10px 8px}.edge-catalogue-set-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
