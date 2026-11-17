@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-main">
       <header className="app-topbar">
         <div className="breadcrumb"><span>EDGE</span><span className="breadcrumb-sep">/</span><strong>{current?.short ?? "Accueil"}</strong></div>
-        <div className="topbar-right"><PwaInstall /></div>
+        <div className="topbar-right"><Link className="edge-admin-link" href="/local" aria-label="Ouvrir le laboratoire technique">Réglages</Link><PwaInstall /></div>
       </header>
       <main className="workspace">{children}</main>
     </div>
