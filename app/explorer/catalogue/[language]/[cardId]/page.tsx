@@ -5,7 +5,7 @@ import "../../../../dashboard.css";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-type Card = { id?: unknown; name?: unknown; localId?: unknown; image?: unknown; set?: { name?: unknown } };
+type Card = { id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown } };
 function imageUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
@@ -33,6 +33,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
     const value: unknown = JSON.parse(body);
     if (value && typeof value === "object" && !Array.isArray(value)) card = value as Card;
   } catch { /* A catalogue outage is not a missing market observation. */ }
+  const field = (value: unknown): string => typeof value === "string" && value.trim() ? value : "Non renseigné";
   const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
   return <main className="native-dashboard edge-product-detail">
@@ -47,6 +48,25 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <div className="edge-product-primary"><span>Prix de marché</span><strong>Non collecté</strong><small>TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée.</small></div>
       </div>
     </div>
+    <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
+      <div className="edge-catalogue-facts-heading"><span>IDENTITÉ DU PRODUIT</span><h2>Caractéristiques vérifiables</h2><p>Informations descriptives transmises par TCGdex, sans estimation financière.</p></div>
+      <dl className="edge-catalogue-facts-grid">
+        <div><dt>Extension</dt><dd>{field(card.set?.name)}</dd></div>
+        <div><dt>Numéro</dt><dd>{field(card.localId)}</dd></div>
+        <div><dt>Langue</dt><dd>{language.toUpperCase()}</dd></div>
+        <div><dt>Rareté</dt><dd>{field(card.rarity)}</dd></div>
+        <div><dt>Catégorie</dt><dd>{field(card.category)}</dd></div>
+        <div><dt>Illustrateur</dt><dd>{field(card.illustrator)}</dd></div>
+        <div><dt>PV</dt><dd>{typeof card.hp === "number" && Number.isFinite(card.hp) ? card.hp : "Non renseigné"}</dd></div>
+        <div><dt>Type</dt><dd>{Array.isArray(card.types) ? card.types.filter((type): type is string => typeof type === "string").slice(0, 3).join(", ") || "Non renseigné" : "Non renseigné"}</dd></div>
+      </dl>
+    </section>
+    <section className="edge-catalogue-intelligence" aria-label="Investigation EDGE">
+      <span className="edge-product-kicker">INTELLIGENCE EDGE · À CONNECTER</span>
+      <h2>Du catalogue à l'investigation</h2>
+      <p>Prix réalisés, liquidité, catalyseurs, risques et analyse IA ne sont pas disponibles pour cette fiche. Aucun signal BUY ou STRONG BUY n'est généré sans dossier associé et données traçables.</p>
+      <Link href={back}>Revenir à l'exploration</Link>
+    </section>
     <section className="edge-product-panel"><h2>Provenance et statut</h2><p>Source : TCGdex · Identifiant : {cardId} · Langue : {language.toUpperCase()}</p><p>Aucun dossier EDGE ni correspondance avec les produits suivis n'est établi pour cette fiche.</p></section>
   </main>;
 }
