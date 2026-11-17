@@ -32,3 +32,10 @@ Request/response JSON, authorization policy, schema migrations and error codes a
 
 ## Critical edge cases before API coding
 Duplicate decision submissions; reviewer identity spoofing; stale snapshots; malformed dates/currencies; evidence from another product; synthetic source contamination; request replay; oversized payload; unavailable model; rate limits; schema migration compatibility; immutable history.
+
+## Additive review migration — development-only, NOT applied remotely
+File: `cloud/collector/migrations/002_investigation_review.sql` (ADR 002). Three tables:
+- `investigations(investigation_id PK, product_id, created_at, evidence_snapshot_hash [64 lowercase hex], proposal_json [valid JSON object], status=PENDING_REVIEW, purchase_authorized=0)`.
+- `review_decisions(decision_id PK, investigation_id UNIQUE FK, reviewer_id, decision APPROVE|REJECT, rationale, decided_at, idempotency_key UNIQUE, purchase_authorized=0)`.
+- `investigation_audit_events(event_id PK, investigation_id FK, actor_id, event_type INVESTIGATION_CREATED|REVIEW_APPROVED|REVIEW_REJECTED, occurred_at, payload_hash [64 lowercase hex])`.
+All three tables reject UPDATE and DELETE. No remote D1 schema application, routes or authenticated write service is included. SQL enforces at most one final decision per investigation; a repeated idempotency key currently fails with a uniqueness error, not a successful replay. The future service must atomically write decision plus audit event, authenticate reviewer and check replay payloads.
