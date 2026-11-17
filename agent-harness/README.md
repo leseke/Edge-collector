@@ -39,3 +39,11 @@ node --test agent-harness/test/*.test.mjs
 ```
 
 Never include Cloudflare credentials in the agent runtime. The empty snapshot shipped with the repository is intentional. Do not commit a real observation export without reviewing the data and provenance. This export step has **not** yet been executed against remote D1.
+
+## Verified milestone — 2026-11-17
+
+GitHub Actions run #217 validated an authenticated **read-only remote D1 query**: 48 observations across 2 product identifiers were consumed by the native Cordis tool. The CI job also generated two evidence-constrained investigation dossiers in its disposable runner. No prices, source URLs, credentials or snapshots were printed. Temporary exports and dossiers were erased after the job.
+
+The native tool package integration and local SQLite/D1 schema fixture also pass independently. This is not yet a complete DeepSeek Harness agent session or model inference; the pilot has not been deployed to the public EDGE app.
+
+Remaining gates: pin the upstream runtime version, review isolation and cost limits, enable an agent profile in a disposable environment, and verify an actual model-generated proposal against the typed human-review boundary. Never authorize purchases from model output alone.
