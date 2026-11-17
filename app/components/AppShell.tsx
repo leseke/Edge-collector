@@ -1,5 +1,5 @@
-import { PwaInstall } from "./PwaInstall";
 "use client";
+import { PwaInstall } from "./PwaInstall";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
