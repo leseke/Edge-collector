@@ -41,3 +41,10 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - ADR 004 documents alternative options, limitations and reversibility.
 - CI execution, Cloudflare deployment, image success, and iPhone rendering **not yet verified** for this lot.
 - No model call, paid service, D1 write, purchase or production deployment performed by these changes.
+
+## Product Intelligence V1 — 2026-11-17
+- Added read-only dynamic `/explorer/[productId]` detail page with existing integrity-checked market snapshot, product identification, source, observation date, price kind, indicative values, and limitations.
+- Explorer tiles link to detail; mobile-first product detail styling added.
+- DeepSeek explicitly marked inactive; no AI API, paid request, D1 mutation, purchase or deployment.
+- ADR 005 and structural contract tests added.
+- CI, build and real mobile rendering **pending verification**.
