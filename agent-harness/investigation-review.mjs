@@ -8,7 +8,7 @@ import { buildMarketDossiers } from "./market-dossier.mjs";
  */
 export function reviewInvestigation(rawProposal, trustedExport, now = new Date().toISOString()) {
   const proposal = validateProposal(rawProposal);
-  const market = buildMarketDossiers(trustedExport, now, "AUTHENTIC_REMOTE_D1");
+  const market = buildMarketDossiers(trustedExport, now, "UNVERIFIED_INPUT");
   const dossier = market.dossiers.find(d => d.productId === proposal.productId);
   if (!dossier) throw new Error("product_not_in_trusted_snapshot");
   const rows = trustedExport[0].results.filter(r => r.product_id === proposal.productId);
@@ -40,6 +40,7 @@ export function reviewInvestigation(rawProposal, trustedExport, now = new Date()
     observedMarket: dossier.facts,
     evidenceGaps: dossier.evidenceGaps,
     provenance: market.provenance,
+    sourceContext: market.sourceContext,
     citationMetadataMatched: unsupportedFacts.length === 0 && supportedFacts.length > 0,
     claimSemanticsVerified: false,
     demandConfirmed: false,
