@@ -21,7 +21,7 @@ export function reviewInvestigation(rawProposal, trustedExport, now = new Date()
   }
   const hypotheses = proposal.evidence.filter(e => e.kind !== "FACT");
   const claims = {
-    facts: supportedFacts,
+    factsWithMatchingCitation: supportedFacts,
     unsupportedFacts,
     weakSignals: hypotheses.filter(e => e.kind === "WEAK_SIGNAL"),
     inferences: hypotheses.filter(e => e.kind === "INFERENCE"),
@@ -40,7 +40,8 @@ export function reviewInvestigation(rawProposal, trustedExport, now = new Date()
     observedMarket: dossier.facts,
     evidenceGaps: dossier.evidenceGaps,
     provenance: market.provenance,
-    modelClaimsVerified: unsupportedFacts.length === 0 && supportedFacts.length > 0,
+    citationMetadataMatched: unsupportedFacts.length === 0 && supportedFacts.length > 0,
+    claimSemanticsVerified: false,
     demandConfirmed: false,
     completedSalesConfirmed: false,
     purchaseAuthorized: false,
