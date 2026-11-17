@@ -17,7 +17,9 @@ export async function runInvestigations(trustedExport, generate, options = {}) {
   const allProductIds = [...new Set(rows.map(r => r.product_id))].sort();
   const cursor = options.cursor ?? 0;
   if (!Number.isSafeInteger(cursor) || cursor < 0 || cursor > allProductIds.length) throw new Error("invalid_cursor");
-  const productIds = allProductIds.slice(cursor, cursor + MAX_PRODUCTS);
+  const maxProducts = options.maxProducts ?? MAX_PRODUCTS;
+  if (!Number.isSafeInteger(maxProducts) || maxProducts < 1 || maxProducts > MAX_PRODUCTS) throw new Error("invalid_product_limit");
+  const productIds = allProductIds.slice(cursor, cursor + maxProducts);
   const results = [];
   for (const productId of productIds) {
     try {
