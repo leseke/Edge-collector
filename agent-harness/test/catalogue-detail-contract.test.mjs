@@ -18,3 +18,13 @@ test("catalogue details cannot invent prices or an EDGE investment decision", ()
   assert.match(page, /assets\.tcgdex\.net/);
   assert.match(page, /2000000/);
 });
+
+test("PRODUCT-001 displays only sourced attributes and no invented investment conclusion", () => {
+  assert.match(page, /Caractéristiques vérifiables/);
+  assert.match(page, /field\(card\.rarity\)/);
+  assert.match(page, /field\(card\.illustrator\)/);
+  assert.match(page, /field\(card\.category\)/);
+  assert.match(page, /Non renseigné/);
+  assert.match(page, /INTELLIGENCE EDGE · À CONNECTER/);
+  assert.match(page, /aucun signal BUY|Aucun signal BUY/);
+});
