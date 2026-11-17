@@ -24,7 +24,7 @@ export async function main({ argv = process.argv, env = process.env, log = conso
     calls++;
     return generate(brief);
   };
-  const result = await runInvestigations(payload, budgetedGenerate, {cursor});
+  const result = await runInvestigations(payload, budgetedGenerate, {cursor, maxProducts:maxCalls});
   const counts = {};
   for (const entry of result.results) counts[entry.status] = (counts[entry.status] ?? 0) + 1;
   log(JSON.stringify({modelCallsAttempted:calls,processedProducts:result.processedProducts,remainingProducts:result.remainingProducts,nextCursor:result.nextCursor,statusCounts:counts,purchaseAuthorized:false}));
