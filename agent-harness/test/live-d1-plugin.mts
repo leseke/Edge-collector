@@ -23,7 +23,8 @@ try {
     assert.equal(result.provenance, "INDICATIVE_AGGREGATE_NOT_COMPLETED_SALE");
     assert.ok(result.observations > 0);
   }
-  console.log("PASS: native EDGE Cordis tool consumed verified D1 rows; products=" + ids.length + ", observations=" + rows.length);
+  const fixtureMode = process.env.EDGE_DATA_MODE === "FIXTURE";
+  console.log("PASS: native EDGE Cordis tool consumed " + (fixtureMode ? "SYNTHETIC LOCAL D1 fixture" : "authentic remote D1") + " rows; products=" + ids.length + ", observations=" + rows.length);
   console.log("No prices, source URLs, Cloudflare credentials or snapshots printed.");
 } finally {
   await writeFile(snapshotPath, original);
