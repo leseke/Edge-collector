@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
 import { DataLimit, EvidenceGuide } from "./EvidenceGuide";
 
@@ -18,7 +19,15 @@ export async function MarketReactionDashboard() {
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">ÉTAT DES PREUVES</p><h2>Réactions TCG documentées</h2></div><span className="dashboard-date">Dernier relevé : {formatDate(snapshot.observedAt)}</span></div>
-      {snapshot.reactionCaseCount > 0 ? <div className="dashboard-empty">Des dossiers TCG sont disponibles. Leur détail sera affiché après validation des événements et des fenêtres de comparaison.</div> : <div className="mri-empty-state">
+      {snapshot.reactionCases.length > 0 && <div className="edge-mri-cases">
+        <p className="native-eyebrow">DOSSIERS MRI · SOURCES RÉFÉRENCÉES</p>
+        {snapshot.reactionCases.map(item => <article className="edge-mri-case" key={item.productId}>
+          <div><span className="edge-product-kicker">{item.productId.replaceAll("_", " ").toUpperCase()}</span><h3>{item.publicationCount} publication{item.publicationCount === 1 ? "" : "s"} référencée{item.publicationCount === 1 ? "" : "s"}</h3><p>Réaction : {item.reactionStatus} · Décision financière : {item.financialDecision}</p></div>
+          {item.publications.length > 0 && <details><summary>Voir les publications ({item.publications.length})</summary><ul>{item.publications.map((publication, index) => <li key={index}><a href={publication.url} target="_blank" rel="noopener noreferrer">{publication.title}</a><small> {publication.publishedAt ? publication.publishedAt.slice(0,10) : "Date inconnue"} · Relation : {publication.relationship}</small></li>)}</ul></details>}
+          {item.productId.startsWith("pokemon_card_") && snapshot.cards.some(card => card.productId === item.productId) && <Link href={`/explorer/${encodeURIComponent(item.productId)}`} className="edge-product-open">Voir la fiche produit →</Link>}
+        </article>)}
+      </div>}
+      {snapshot.reactionCaseCount > 0 ? <div className="dashboard-empty">Des dossiers Pokémon sont référencés. Les publications ci-dessus sont des références documentaires, pas des preuves de causalité ou d'achat.</div> : <div className="mri-empty-state">
         <span className="mri-empty-symbol">⌁</span>
         <h3>Aucun dossier de réaction TCG vérifiable dans le dernier relevé.</h3>
         <p>Les données disponibles permettent de relever quelques prix indicatifs, mais pas encore de relier un événement à une réaction mesurée sur le marché TCG.</p>
