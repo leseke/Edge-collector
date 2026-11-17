@@ -5,6 +5,7 @@ import { defineTool } from "@deepseek-ai/dsh-tools";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { inspectObservations } from "../edge-readonly-tool.mjs";
+import { assessMarket } from "../market-assessment.mjs";
 
 export const name = "edge-market-readonly";
 export const inject = ["tools"];
@@ -22,7 +23,7 @@ export function apply(ctx: Context) {
       const raw = await readFile(snapshotFile, "utf8");
       if (raw.length > 1_000_000) throw new Error("snapshot_too_large");
       const rows: unknown = JSON.parse(raw);
-      return JSON.stringify(inspectObservations(rows, args.productId));
+      return JSON.stringify({ ...inspectObservations(rows, args.productId), assessment: assessMarket(rows, args.productId) });
     },
   }));
 }
