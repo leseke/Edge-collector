@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AssetImage } from "./AssetImage";
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
 
 function date(value: string): string {
@@ -14,7 +15,7 @@ function money(value: number | null, currency: string): string {
 function CardTile({ card }: { card: TcgCard }) {
   return <article className="edge-asset-card">
     <div className="edge-asset-art">
-      {card.image ? <img src={card.image} alt={`Visuel référencé de ${card.name}`} loading="lazy" /> : <div className="edge-asset-placeholder"><span>◇</span><small>Visuel indisponible</small></div>}
+      <AssetImage src={card.image} name={card.name} />
       <span className="edge-asset-category">POKÉMON · CARTE</span>
     </div>
     <div className="edge-asset-content">
@@ -47,7 +48,7 @@ export async function MarketDashboard() {
       <Link href="/mri" className="edge-home-action">Voir les analyses <span aria-hidden="true">↗</span></Link>
     </section>
     <section className="edge-home-market" aria-labelledby="edge-market-title">
-      <div className="edge-home-section-head"><div><p className="native-eyebrow">01 / EXPLORER</p><h2 id="edge-market-title">Produits observés <span>{snapshot.cards.length}</span></h2></div><span className="edge-home-updated">Relevé : {freshDate}</span></div>
+      <div className="edge-home-section-head"><div><p className="native-eyebrow">01 / EXPLORER</p><h2 id="edge-market-title">Produits observés <span>{snapshot.cards.length}</span></h2></div><div className="edge-home-section-actions"><span className="edge-home-updated">Relevé : {freshDate}</span><Link href="/explorer" className="edge-explore-link">Tout explorer →</Link></div></div>
       {snapshot.cards.length ? <div className="edge-asset-grid">{snapshot.cards.map(card => <CardTile key={card.productId} card={card}/>)}</div> : <div className="edge-home-empty"><strong>Aucun produit disponible actuellement</strong><p>Les produits apparaîtront ici lorsqu'un relevé vérifiable sera accessible. Aucun prix n'est simulé.</p></div>}
       {snapshot.warning && <details className="edge-home-data-note"><summary>État des données</summary><p>{snapshot.warning}</p></details>}
     </section>
