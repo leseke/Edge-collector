@@ -134,10 +134,13 @@ jobs:
       - name: Validate real data through native Cordis plugin without credentials
         if: steps.eligibility.outputs.available == 'true'
         run: node --import tsx agent-harness/test/live-d1-plugin.mts < "$RUNNER_TEMP/edge-d1-private.json"
-      - name: Erase temporary D1 export
+      - name: Generate evidence-constrained dossiers from real D1
+        if: steps.eligibility.outputs.available == 'true'
+        run: node agent-harness/run-dossiers.mjs "$RUNNER_TEMP/edge-d1-private.json" "$RUNNER_TEMP/edge-dossiers-private.json"
+      - name: Erase temporary D1 exports and dossiers
         if: always()
         shell: bash
-        run: rm -f "$RUNNER_TEMP/edge-d1-private.json"
+        run: rm -f "$RUNNER_TEMP/edge-d1-private.json" "$RUNNER_TEMP/edge-dossiers-private.json"
 
   verify-cloudflare-access:
     name: Verify Cloudflare token (no changes)
