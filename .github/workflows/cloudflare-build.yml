@@ -253,12 +253,18 @@ jobs:
           echo "::add-mask::${trigger_secret}"
           cd cloud/collector
           printf '%s' "${trigger_secret}" | npx wrangler secret put TRIGGER_SECRET --name edge-tcg-collector
-          http_code=$(curl --silent --show-error --max-time 40 --output "$RUNNER_TEMP/collection-response.json" --write-out '%{http_code}' \
-            --request POST \
-            --header "Authorization: Bearer ${trigger_secret}" \
-            https://edge-tcg-collector.ylan-seke.workers.dev/internal/collect)
+          http_code="000"
+          for attempt in 1 2 3 4 5 6 7 8; do
+            http_code=$(curl --silent --show-error --max-time 40 --output "$RUNNER_TEMP/collection-response.json" --write-out '%{http_code}' \
+              --request POST \
+              --header "Authorization: Bearer ${trigger_secret}" \
+              https://edge-tcg-collector.ylan-seke.workers.dev/internal/collect)
+            if [[ "$http_code" == "200" ]]; then break; fi
+            echo "Collection endpoint not ready yet (HTTP ${http_code}), retry ${attempt}/8"
+            sleep 5
+          done
           if [[ "$http_code" != "200" ]]; then
-            echo "::error::Real collection trigger failed (HTTP ${http_code})"
+            echo "::error::Real collection trigger failed after retries (HTTP ${http_code})"
             exit 1
           fi
           echo "Authenticated collection request completed against the deployed Cloudflare Worker."
