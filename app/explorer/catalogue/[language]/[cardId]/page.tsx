@@ -41,7 +41,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
     <div className="edge-product-hero">
       <div className="edge-product-visual"><AssetImage src={imageUrl(card.image)} name={card.name}/></div>
       <div className="edge-product-overview">
-        <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · NON SUIVIE PAR EDGE</span>
+        <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · SUIVI EDGE NON ÉTABLI</span>
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
         <div className="edge-product-primary"><span>Prix de marché</span><strong>Non collecté</strong><small>TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée.</small></div>
