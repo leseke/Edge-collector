@@ -53,3 +53,19 @@ Remaining gates: pin the upstream runtime version, review isolation and cost lim
 `investigation-pipeline.mjs` implements the complete **in-process** boundary from validated D1 exports to a product-scoped brief, an injected model adapter, and an independent proposal review. Each product fails closed independently. Inputs are capped and the first 20 products are processed per run; the remainder is counted rather than silently dropped.
 
 `investigation-review.mjs` only matches factual **citation metadata** against the provided observations; it explicitly does **not** verify the semantic truth of model claims. It strips unsolicited purchase flags and never authorizes a transaction. The new end-to-end CI smoke uses a **deterministic stand-in adapter**, not a live LLM. Running a real model requires separate provider credentials, cost controls, sandboxing and a reviewed deployment profile. No such call is implied by passing CI.
+
+## Optional DeepSeek API adapter (not enabled)
+
+`deepseek-adapter.mjs` implements an allowlisted HTTPS chat-completions transport, strict token/timeout limits, JSON response handling, and sanitized failures. It is disabled by default and cannot run without an explicitly supplied API key and `enabled: true`. The adapter is separate from DeepSeek Harness/Cordis; it does **not** establish a running Harness agent. Tests use an injected mock transport, incur zero API cost, and verify the complete review boundary.
+
+Example for a private operator-controlled environment only:
+
+```js
+import { createDeepSeekAdapter } from "./agent-harness/deepseek-adapter.mjs";
+import { runInvestigations } from "./agent-harness/investigation-pipeline.mjs";
+const generate = createDeepSeekAdapter({ enabled: true, apiKey: process.env.DEEPSEEK_API_KEY });
+const reviewed = await runInvestigations(trustedD1Export, generate, { cursor: 0 });
+// Never auto-publish or authorize orders from reviewed output.
+```
+
+Do not add the key to repository files, GitHub logs or a public browser bundle. This module does not enable model calls in CI or production.
