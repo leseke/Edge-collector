@@ -80,3 +80,7 @@ The agent harness can select sourced Pokémon price changes from commercial even
 ## Automatic price changes without model calls
 
 Tracked Pokémon detail pages can display a deterministic comparison from published commercial events. The input is hash-checked and matched to the current observation; invalid or unavailable events leave the price display available. Older snapshots are supported through their capture manifest. No D1 changes, new routes, model call or scheduled job are required.
+
+## Expanded Pokémon commercial collection
+
+The development configuration increases the fixed Pokémon targets from two to six by adding Mewtwo, Tortank, Noctali VMAX and Ectoplasma VMAX. The total bound rises from 16 to 20 to retain five discovery slots. The collector fetched all six live TCGdex prices successfully and 26 commercial tests passed locally. These local observations have not been published. Scheduled collection still runs from the default branch and must adopt this configuration before it builds history for the new cards.
