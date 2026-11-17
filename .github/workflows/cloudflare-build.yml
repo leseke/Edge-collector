@@ -147,7 +147,7 @@ jobs:
           if not isinstance(account_id,str) or len(account_id)!=32 or any(c not in "0123456789abcdef" for c in account_id.lower()):
               raise SystemExit("Invalid Cloudflare account identifier")
           print("CLOUDFLARE_ACCOUNT_ID="+account_id)
-          print("Verified exactly one Cloudflare account")
+          print("Verified exactly one Cloudflare account",file=sys.stderr)
           PY
       - name: Check whether D1 already exists
         env:
