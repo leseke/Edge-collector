@@ -174,3 +174,30 @@
 .edge-product-ai-panel{background:radial-gradient(ellipse at 0 0,#292340,#161827 75%)}
 .edge-product-ai-status{display:inline-block;margin:16px 0 21px;padding:8px 10px;border:1px solid #62543e;border-radius:7px;color:#e7c38e;font-size:10px}
 @media(max-width:760px){.edge-product-hero,.edge-product-sections{grid-template-columns:1fr;gap:13px}.edge-product-visual{min-height:270px;padding:18px}.edge-product-visual img{max-height:280px}.edge-product-overview{padding:12px 2px}.edge-product-overview h1{font-size:31px}.edge-product-primary{margin-top:20px}.edge-product-sections{margin-top:10px}.edge-product-panel{padding:18px}.edge-product-tags{margin-top:16px}}
+
+
+/* Explorer V3 — category navigation, observed collections and truthful sealed empty state */
+.edge-explorer-tabs{display:flex;gap:8px;margin:25px 0 18px;padding:5px;border:1px solid #33354e;border-radius:13px;background:#141626;width:max-content;max-width:100%}
+.edge-explorer-tabs button{display:flex;align-items:center;gap:9px;min-height:43px;padding:10px 17px;border:0;border-radius:9px;background:transparent;color:#a3aec5;font:600 12px "Manrope",sans-serif;cursor:pointer}
+.edge-explorer-tabs button.active{background:#302b4e;color:#f3efff;box-shadow:inset 0 0 0 1px #6860a6}
+.edge-explorer-tabs button span{padding:2px 7px;border-radius:6px;background:#1b1d31;color:#b9b6dd;font:10px "DM Mono",monospace}
+.edge-explorer-filters-v3{grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr);margin:17px 0 25px}
+.edge-explorer-section-title{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:13px}
+.edge-explorer-section-title h2{margin:0;color:#f1f2ff;font-size:19px;letter-spacing:-.5px}
+.edge-explorer-section-title>span{color:#99a6c0;font-size:10px}
+.edge-series-section{margin:22px 0 30px}
+.edge-series-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.edge-series-card{display:flex;flex-direction:column;align-items:stretch;min-width:0;padding:12px;text-align:left;border:1px solid #373650;border-radius:13px;background:linear-gradient(145deg,#25243c,#161827);cursor:pointer}
+.edge-series-card:focus-visible,.edge-explorer-tabs button:focus-visible,.edge-reset-filters:focus-visible{outline:2px solid #b2e9ef;outline-offset:3px}
+.edge-series-art{display:grid;place-items:center;height:115px;margin-bottom:12px;overflow:hidden;border-radius:9px;background:radial-gradient(ellipse,#37335b,#1b1c30)}
+.edge-series-art img{display:block;max-height:108px;max-width:95%;object-fit:contain}
+.edge-series-card strong{color:#f2efff;font-size:12px}
+.edge-series-card small{margin-top:5px;color:#a6a7c3;font-size:10px}
+.edge-explorer-results-heading{margin-top:8px}
+.edge-sealed-empty{max-width:650px;margin:24px auto 40px;padding:35px 28px;border:1px dashed #46425f;border-radius:17px;background:radial-gradient(ellipse at 50% 0,#25233d,#131624 70%);text-align:center}
+.edge-sealed-symbol{display:block;color:#bcb7ed;font-size:42px}
+.edge-sealed-empty h2{margin:12px 0;color:#f3f3ff;font-size:23px}
+.edge-sealed-empty p{color:#aeb6ca;font-size:12px;line-height:1.8}
+.edge-sealed-empty .edge-sealed-note{color:#c9b9a1;font-size:11px}
+.edge-reset-filters{margin-top:12px;padding:10px 15px;border:1px solid #6660ad;border-radius:9px;background:#24203c;color:#dcd6ff;font-size:11px;cursor:pointer}
+@media(max-width:760px){.edge-explorer-tabs{width:100%}.edge-explorer-tabs button{flex:1;justify-content:center;padding:10px 8px;font-size:11px}.edge-explorer-filters-v3{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.edge-explorer-filters-v3 label:first-child{grid-column:1/-1}.edge-series-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.edge-series-card{padding:9px}.edge-series-art{height:108px}.edge-sealed-empty{padding:26px 16px}}
