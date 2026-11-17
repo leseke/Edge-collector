@@ -65,7 +65,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
       {warning && <p className="dashboard-warning">{warning}</p>}
       {visible.length ? <div className="edge-explorer-grid">{visible.map(card => <article key={card.productId} className="edge-explorer-tile">
         <Link href={`/explorer/${encodeURIComponent(card.productId)}`} className="edge-explorer-image" aria-label={`Voir la fiche de ${card.name}`}><AssetImage src={card.image} name={card.name}/></Link>
-        <div className="edge-explorer-body"><span>{card.setName} · #{card.number}</span><h2>{card.name}</h2><p>{card.rarity}</p><strong>{formatPrice(card)}</strong><small>Prix indicatif · Langue et état à confirmer · Pas une vente conclue</small><Link href={`/explorer/${encodeURIComponent(card.productId)}`} className="edge-product-open">Voir le dossier →</Link></div>
+        <div className="edge-explorer-body"><span>{card.setName} · #{card.number}</span><h2>{card.name}</h2><p>{card.rarity}</p><strong>{formatPrice(card)}</strong><small>Prix indicatif · Langue et état à confirmer · Pas une vente conclue</small><Link href={`/explorer/${encodeURIComponent(card.productId)}`} className="edge-product-open">Voir la fiche →</Link></div>
       </article>)}</div> : <div className="edge-home-empty"><strong>Aucune carte correspondante</strong><p>Modifie les filtres pour consulter les cartes réellement observées.</p><button type="button" className="edge-reset-filters" onClick={() => { setQuery(""); setSeries("ALL"); }}>Effacer les filtres</button></div>}
     </> : <section className="edge-sealed-empty" aria-live="polite">
       <span className="edge-sealed-symbol" aria-hidden="true">▣</span>
