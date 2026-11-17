@@ -48,3 +48,21 @@ test("fabricated citation is isolated for correction, not silently accepted",asy
  assert.ok(result.results.every(r=>r.status==="NEEDS_EVIDENCE_CORRECTION"));
  assert.ok(result.results.every(r=>r.review.claimSemanticsVerified===false));
 });
+
+test("bounded product pages can be resumed without skipping products",async()=>{
+ const many=[{success:true,results:Array.from({length:23},(_,i)=>row("card_"+String(i).padStart(2,"0")))}];
+ const first=await runInvestigations(many,async brief=>draft(brief),{cursor:0,now:"2026-11-17T11:00:00Z"});
+ assert.equal(first.processedProducts,20);
+ assert.equal(first.remainingProducts,3);
+ assert.equal(first.nextCursor,20);
+ const second=await runInvestigations(many,async brief=>draft(brief),{cursor:first.nextCursor,now:"2026-11-17T11:00:00Z"});
+ assert.equal(second.processedProducts,3);
+ assert.equal(second.remainingProducts,0);
+ assert.equal(second.nextCursor,null);
+ assert.equal(new Set([...first.results,...second.results].map(x=>x.productId)).size,23);
+});
+test("invalid cursors fail before invoking any adapter",async()=>{
+ let invoked=false;
+ await assert.rejects(runInvestigations(data,async()=>{invoked=true;},{cursor:-1}),/invalid_cursor/);
+ assert.equal(invoked,false);
+});
