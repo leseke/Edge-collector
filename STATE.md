@@ -72,3 +72,7 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 ## Catalogue price coverage
 
 Card detail reads the dated EUR low-price indication from the Cardmarket block of its existing TCGdex response, independently of the tracked-card feed. Prices older than 48 hours carry a freshness warning. The indicator is not a completed sale or variant-level evidence. Existing routes and D1 schema are unchanged. Card IDs with dots can be opened from catalogue search and set browsing.
+
+## DeepSeek price analysis preparation
+
+The agent harness can select sourced Pokémon price changes from commercial events. It defaults to a no-network dry run and can be tested with an injected DeepSeek transport. Three targeted tests passed. Published snapshot 44194865602-1 yielded no price events. No recurring job, paid call, or publication of model commentary is active in this step.

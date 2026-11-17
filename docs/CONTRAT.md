@@ -57,3 +57,15 @@ seul relevé candidat. Il accepte les deux séparateurs historiques des
 identifiants EDGE. Un conflit sur une dimension vérifiée des deux côtés
 écarte le relevé. Une correspondance candidate conserve sa provenance et
 ne donne lieu à aucune attribution de prix ni à aucun conseil d'achat.
+
+## Analyse DeepSeek des variations de prix
+
+Entrée `edge.commercial.events.v1` issue du collecteur existant. Chaque
+candidat conserve les deux montants, la fenêtre temporelle, la source
+et les deux empreintes. Par défaut, cinq variations maximum par lot,
+avec un écart absolu d'au moins 10 %. Sans adaptateur, le résultat est
+`DRY_RUN`. Avec adaptateur, la réponse JSON doit contenir exclusivement
+`eventId` et `commentary`. Une réponse invalide échoue pour cet événement
+et les autres restent traités. Le commentaire est `UNREVIEWED`, sans
+effet sur les montants affichés. Aucune route, table D1 ou tâche planifiée
+n'est ajoutée par ce lot.
