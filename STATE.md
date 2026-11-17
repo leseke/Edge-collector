@@ -55,3 +55,10 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - The inspected public snapshot contained LEGO MRI cases but no `pokemon_card_` case. No AI-generated thesis or financial recommendation was fabricated.
 - ADR 006 and structural tests added. CI, build and mobile rendering remain **unverified** for this lot.
 - No paid AI calls, purchases, D1 writes or production deployment.
+
+## TCGdex image URL repair — 2026-11-17
+- Root cause found in verified raw snapshot: `image` values are extensionless TCGdex image bases (`https://assets.tcgdex.net/fr/base/base1/4`), not direct browser image files.
+- Market snapshot now maps trusted extensionless image bases to `/high.webp`; the client tries trusted alternate resolutions before a final fallback.
+- Updated existing image-fallback test and added TCGdex URL regression test.
+- Network image retrieval, CI and iPhone visual result **not yet verified**. No guarantee the external host will serve images in every network.
+- No paid API, database write, purchase or manual production deployment.
