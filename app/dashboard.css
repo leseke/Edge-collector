@@ -235,3 +235,17 @@
 .edge-catalogue-set-tile strong{font-size:12px}
 .edge-catalogue-set-tile small{font-size:10px;color:#a8b3c8}
 @media(max-width:650px){.edge-catalogue-mode button{flex:1;padding:10px 8px}.edge-catalogue-set-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
+
+
+/* PRODUCT-001 — sourced catalogue detail, responsive and price-free */
+.edge-catalogue-facts,.edge-catalogue-intelligence{margin:18px 0;padding:22px;border:1px solid #373d58;border-radius:17px;background:linear-gradient(145deg,#1d2134,#141826)}
+.edge-catalogue-facts-heading>span{font-size:10px;letter-spacing:.13em;color:#92d9e1;font-weight:700}
+.edge-catalogue-facts-heading h2,.edge-catalogue-intelligence h2{margin:8px 0;color:#f1f2fc;font-size:21px}
+.edge-catalogue-facts-heading p,.edge-catalogue-intelligence p{color:#aeb9d0;font-size:12px;line-height:1.8}
+.edge-catalogue-facts-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:20px 0 0}
+.edge-catalogue-facts-grid>div{min-width:0;padding:14px;border:1px solid #363b53;border-radius:11px;background:#20253a}
+.edge-catalogue-facts-grid dt{margin-bottom:7px;color:#a8b4cc;font-size:10px}
+.edge-catalogue-facts-grid dd{margin:0;color:#f0f1fa;font-size:13px;font-weight:650;overflow-wrap:anywhere}
+.edge-catalogue-intelligence{border-color:#4a4263;background:linear-gradient(135deg,#25213d,#151b2d)}
+.edge-catalogue-intelligence>a{display:inline-flex;margin-top:8px;padding:10px 13px;border:1px solid #66618c;border-radius:9px;color:#dcd5ff;text-decoration:none;font-size:12px}
+@media(max-width:750px){.edge-catalogue-facts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.edge-catalogue-facts,.edge-catalogue-intelligence{padding:15px}.edge-catalogue-facts-heading h2,.edge-catalogue-intelligence h2{font-size:18px}}
