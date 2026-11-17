@@ -197,3 +197,37 @@ jobs:
           echo "D1 database edge-tcg-history is available in the scoped Cloudflare account."
           echo "Database UUID is intentionally omitted from logs."
           echo "Schema migration and Worker deployment are separate, subsequent steps."
+
+      - name: Checkout schema and collector
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node for Wrangler
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Wrangler dependencies
+        run: npm install --no-audit --no-fund
+      - name: Apply schema and verify D1 remotely
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          config={
+            "name":"edge-tcg-collector",
+            "main":"src/index.ts",
+            "compatibility_date":"2026-11-15",
+            "d1_databases":[{
+              "binding":"DB",
+              "database_name":"edge-tcg-history",
+              "database_id":os.environ["EDGE_D1_DATABASE_ID"]
+            }]
+          }
+          Path("cloud/collector/wrangler.remote-ci.json").write_text(json.dumps(config))
+          PY
+          cd cloud/collector
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file schema.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('collection_runs','observations','collection_errors') ORDER BY name;" --yes
