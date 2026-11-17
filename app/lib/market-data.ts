@@ -12,6 +12,8 @@ type Pointer = {
   files: Record<string, { path: string; sha256: string }>;
 };
 type Observation = {
+  id?: string;
+  url?: string;
   product_id: string;
   seller: string;
   status: string;
@@ -40,6 +42,7 @@ export type TcgCard = {
   observedAt: string; sourceUpdatedAt: string | null; source: string;
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
   variant?: ProductVariant;
+  priceChange?: PriceChange;
 };
 export type ReactionCaseSummary = { productId: string; publicationCount: number; reactionStatus: string; financialDecision: string; publications: { title: string; url: string; publishedAt: string; relationship: string }[] };
 export type MarketSnapshot = {
@@ -63,6 +66,48 @@ function safeImage(value: unknown): string | null {
   try { const url = new URL(value); if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash) return null; const path = url.pathname.replace(/\/$/, ""); if (!/^\/(?:fr|en|ja|zh|de|es|it|pt|nl|ko|univ)\/[a-zA-Z0-9_/-]+$/.test(path)) return null; return /\/(?:high|low)\.(?:webp|png|jpg)$/.test(path) ? url.href : `${url.origin}${path}/high.webp`; }
   catch { return null; }
 }
+export type PriceChange = { before: number; after: number; percent: number; from: string; to: string; source: string };
+
+export function readPriceChange(events: unknown[], observation: Observation): PriceChange | undefined {
+  if (observation.status !== "OK" || !observation.id || !observation.url || !observation.body_sha256) return;
+  for (const value of events) {
+    if (!value || typeof value !== "object") continue;
+    const event = value as Record<string, unknown>;
+    if (event.kind !== "INDICATIVE_PRICE_CHANGE" || observation.price_kind !== "AGGREGATED_INDICATIVE_LOW" ||
+        event.field !== "price" || event.observation_id !== observation.id ||
+        event.product_id !== observation.product_id || event.source_url !== observation.url ||
+        event.evidence_sha256 !== observation.body_sha256 || event.window_end !== observation.observed_at ||
+        typeof event.previous_evidence_sha256 !== "string" || !/^[a-f0-9]{64}$/.test(event.previous_evidence_sha256) ||
+        typeof event.window_start !== "string" || !(Date.parse(event.window_start) < Date.parse(observation.observed_at)) ||
+        typeof event.before !== "string" || typeof event.after !== "string" || event.after !== observation.price ||
+        !/^\d{1,9}(?:\.\d{1,2})?$/.test(event.before) || !/^\d{1,9}(?:\.\d{1,2})?$/.test(event.after)) continue;
+    const before = Number(event.before);
+    const after = Number(event.after);
+    if (before <= 0 || after <= 0 || before === after) continue;
+    try {
+      const source = new URL(observation.url);
+      if (source.protocol === "https:" && !source.username && !source.password) {
+        return { before, after, percent: (after - before) / before, from: event.window_start, to: observation.observed_at, source: source.href };
+      }
+    } catch { return; }
+  }
+}
+
+async function readSnapshotEvents(pointer: Pointer): Promise<unknown[]> {
+  try {
+    const path = `snapshots/${pointer.snapshot_id}/events.json`;
+    const entry = pointer.files["events.json"];
+    if (entry && entry.path !== path) return [];
+    const legacyManifest = entry ? null : JSON.parse(await fetchText(DATA_BASE + `snapshots/${pointer.snapshot_id}/manifest.json`));
+    const expected = entry ? entry.sha256 : legacyManifest?.["events.json"];
+    if (typeof expected !== "string" || !/^[a-f0-9]{64}$/.test(expected)) return [];
+    const raw = await fetchText(DATA_BASE + path);
+    if (sha256(raw) !== expected) return [];
+    const doc = JSON.parse(raw);
+    return doc?.schema === "edge.commercial.events.v1" && Array.isArray(doc.events) ? doc.events : [];
+  } catch { return []; }
+}
+
 export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
   try {
     const pointerText = await fetchText(DATA_BASE + "latest.json");
@@ -87,6 +132,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       publications: (Array.isArray(item.publication_evidence) ? item.publication_evidence : []).filter(e => typeof e.title === "string" && typeof e.source_url === "string" && /^https:\/\//.test(e.source_url)).slice(0, 5).map(e => ({ title: e.title!, url: e.source_url!, publishedAt: e.published_at || "", relationship: e.relationship || "LIEN_NON_VÉRIFIÉ" }))
     }));
     const observations = report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.raw_file && item.body_sha256);
+    const eventsPromise = readSnapshotEvents(pointer);
     const cards = await Promise.all(observations.map(async (item): Promise<TcgCard | null> => {
       try {
         if (!/^[a-zA-Z0-9_.-]+\.json$/.test(item.raw_file!)) return null;
@@ -105,6 +151,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
           sourceUpdatedAt: item.source_updated_at || pricing?.updated || null, source: item.seller,
           availability: item.availability, languageVerified: item.market_language_verified === true,
           priceKind: item.price_kind, image: safeImage(card.image),
+          priceChange: readPriceChange(await eventsPromise, item),
           variant: marketVariant(item.status === "OK" ? item.variant_evidence : undefined),
         };
       } catch { return null; }

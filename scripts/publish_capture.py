@@ -7,7 +7,7 @@ from pathlib import Path
 from commercial_history import now
 
 PUBLIC_FILES = ('report.json','retail_source_context.json','mri_cases.json','collection_coverage.json','forecast_evaluations.json')
-SCHEMAS = {'report.json':'edge.commercial.snapshot.v1',
+SCHEMAS = {'events.json':'edge.commercial.events.v1', 'report.json':'edge.commercial.snapshot.v1',
     'retail_source_context.json':'edge.mri.retail_source_context.v1',
     'mri_cases.json':'edge.mri.multi_source_cases.v1',
     'collection_coverage.json':'edge.mri.collection_coverage.v1',
@@ -19,7 +19,8 @@ def build_pointer(out, snapshot_id):
         raise ValueError('Invalid immutable snapshot identifier')
     manifest=json.loads((out/'manifest.json').read_text())
     documents={};files={}
-    for name in PUBLIC_FILES:
+    public_files = (*PUBLIC_FILES, 'events.json') if (out/'events.json').is_file() else PUBLIC_FILES
+    for name in public_files:
         raw=(out/name).read_bytes();sha=hashlib.sha256(raw).hexdigest()
         if manifest.get(name)!=sha:raise ValueError('Snapshot integrity mismatch: '+name)
         doc=json.loads(raw)

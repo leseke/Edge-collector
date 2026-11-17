@@ -14,7 +14,7 @@ function price(value: number | null, currency: string): string {
 }
 function observed(value: string): string {
   const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? "Non renseigné" : new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(d);
+  return Number.isNaN(d.getTime()) ? "Non renseigné" : new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(d);
 }
 export default async function ProductPage({ params }: { params: Promise<{ productId: string }> }) {
   const { productId } = await params;
@@ -22,6 +22,8 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
   const snapshot = await getTcgMarketSnapshot();
   const card = snapshot.cards.find(item => item.productId === productId);
   if (!card) notFound();
+  const change = card.priceChange;
+  const percentage = new Intl.NumberFormat("fr-FR", { style: "percent", signDisplay: "exceptZero", maximumFractionDigits: 2 });
   const investigation = snapshot.reactionCases.find(item => item.productId === productId);
   return <div className="native-dashboard edge-product-detail">
     <Link href="/explorer" className="edge-product-back">← Retour à l'Explorateur</Link>
@@ -32,7 +34,14 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
         <span className="edge-product-kicker">POKÉMON · CARTE · {card.setName}</span>
         <h1>{card.name}</h1>
         <p>Numéro {card.number} · {card.rarity}</p>
-        <div className="edge-product-primary"><span>Prix indicatif bas observé</span><strong>{price(card.low, card.currency)}</strong><small>Il ne s'agit pas d'une vente conclue vérifiée.</small></div>
+        <div className="edge-product-primary"><span>Prix indicatif bas observé</span><strong>{price(card.low, card.currency)}</strong><small>Il ne s'agit pas d'une vente conclue vérifiée.</small>
+          {change && (
+            <small>
+              Prix indicatif passé de {price(change.before, card.currency)} à {price(change.after, card.currency)} ({percentage.format(change.percent)}).
+              {" "}Du {observed(change.from)} au {observed(change.to)} · <a href={change.source}>Source du relevé</a>
+            </small>
+          )}
+        </div>
         <div className="edge-product-tags"><span>Langue {card.languageVerified ? "vérifiée" : "non vérifiée"}</span><span>État non vérifié</span><span>Disponibilité {card.availability === "UNKNOWN" ? "inconnue" : card.availability}</span></div>
       </div>
     </div>

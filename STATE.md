@@ -76,3 +76,7 @@ Card detail reads the dated EUR low-price indication from the Cardmarket block o
 ## DeepSeek price analysis preparation
 
 The agent harness can select sourced Pokémon price changes from commercial events. It defaults to a no-network dry run and can be tested with an injected DeepSeek transport. Three targeted tests passed. Published snapshot 44194865602-1 yielded no price events. No recurring job, paid call, or publication of model commentary is active in this step.
+
+## Automatic price changes without model calls
+
+Tracked Pokémon detail pages can display a deterministic comparison from published commercial events. The input is hash-checked and matched to the current observation; invalid or unavailable events leave the price display available. Older snapshots are supported through their capture manifest. No D1 changes, new routes, model call or scheduled job are required.
