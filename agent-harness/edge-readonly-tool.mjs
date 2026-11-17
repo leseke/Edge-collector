@@ -11,8 +11,11 @@ export function inspectObservations(rows, productId) {
   const matched = rows.filter(row => row && row.product_id === productId)
     .map(row => {
       if (row.price_kind !== "AGGREGATE" || row.currency !== "EUR") throw new Error("unsupported_provenance");
-      if (typeof row.source_url !== "string" || !row.source_url.startsWith("https://api.tcgdex.net/")) throw new Error("untrusted_source");
-      if (typeof row.observed_at !== "string" || Number.isNaN(Date.parse(row.observed_at))) throw new Error("invalid_time");
+      if (typeof row.source_url !== "string") throw new Error("untrusted_source");
+      let source;
+      try { source = new URL(row.source_url); } catch { throw new Error("untrusted_source"); }
+      if (source.protocol !== "https:" || source.hostname !== "api.tcgdex.net" || source.username || source.password || source.port) throw new Error("untrusted_source");
+      if (typeof row.observed_at !== "string" || !/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$/.test(row.observed_at) || Number.isNaN(Date.parse(row.observed_at))) throw new Error("invalid_time");
       if (row.price_cents !== null && (!Number.isSafeInteger(row.price_cents) || row.price_cents < 0)) throw new Error("invalid_price");
       return { productId, observedAt: row.observed_at, priceCents: row.price_cents, currency: "EUR", priceKind: "AGGREGATE", sourceUrl: row.source_url };
     })
