@@ -1,6 +1,11 @@
 name: DeepSeek Harness isolated compatibility probe
 on:
   workflow_dispatch:
+  push:
+    branches: [edge/cloudflare-migration-001]
+    paths:
+      - 'agent-harness/**'
+      - '.github/workflows/deepseek-harness-isolated.yml'
 permissions: {}
 jobs:
   harness-probe:
