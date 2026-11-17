@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getTcgMarketSnapshot } from "../../../../lib/market-data";
+import { linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
 import { notFound } from "next/navigation";
 import { AssetImage } from "../../../../components/AssetImage";
 import "../../../../dashboard.css";
@@ -36,6 +38,8 @@ export default async function CatalogueCardPage({ params, searchParams }: {
   const field = (value: unknown): string => typeof value === "string" && value.trim() ? value : "Non renseigné";
   const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
+  const snapshot = await getTcgMarketSnapshot();
+  const marketLink = linkCatalogueToMarket(cardId, language, snapshot.cards);
   return <main className="native-dashboard edge-product-detail">
     <Link href={back} className="edge-product-back">← Retour au catalogue</Link>
     <p className="native-eyebrow">EDGE / CATALOGUE EXTERNE · TCGDEX</p>
@@ -45,7 +49,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · SUIVI EDGE NON ÉTABLI</span>
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
-        <div className="edge-product-primary"><span>Prix de marché</span><strong>Non collecté</strong><small>TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée.</small></div>
+        <div className="edge-product-primary"><span>Prix de marché</span><strong>{marketLink.status === "NO_MATCH" ? "Non collecté" : "Correspondance à vérifier"}</strong><small>{marketLink.status === "NO_MATCH" ? "TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée." : "Un relevé EDGE existe pour cet identifiant. La variante, l’état et le grading ne sont pas confirmés : aucun prix n’est attribué automatiquement à cette fiche."}</small></div>
       </div>
     </div>
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
