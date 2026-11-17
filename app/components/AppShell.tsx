@@ -37,9 +37,16 @@ export function AppShell({ children }: { children: ReactNode }) {
     </aside>
     <div className="app-main">
       <header className="app-topbar">
+        <Link className="edge-top-brand" href="/" aria-label="EDGE, accueil"><strong>EDGE</strong><small>COLLECTIBLES INTELLIGENCE</small></Link>
         <div className="breadcrumb"><span>EDGE</span><span className="breadcrumb-sep">/</span><strong>{current?.short ?? "Accueil"}</strong></div>
         <div className="topbar-right"><Link className="edge-admin-link" href="/local" aria-label="Ouvrir le laboratoire technique">Réglages</Link><PwaInstall /></div>
       </header>
+      <nav className="edge-top-tabs" aria-label="Navigation supérieure EDGE">
+        {navigation.map(item => {
+          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          return <Link key={item.href} href={item.href} className={active ? "edge-top-tab is-active" : "edge-top-tab"} aria-current={active ? "page" : undefined}><span aria-hidden="true">{item.icon}</span>{item.label}</Link>;
+        })}
+      </nav>
       <main className="workspace">{children}</main>
     </div>
   </div>;
