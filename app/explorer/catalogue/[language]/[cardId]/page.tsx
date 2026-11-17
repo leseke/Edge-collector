@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { readCataloguePrice } from "../../../../lib/catalogue-price";
 import { getTcgMarketSnapshot } from "../../../../lib/market-data";
 import { linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
 import { notFound } from "next/navigation";
@@ -7,12 +8,15 @@ import "../../../../dashboard.css";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-type Card = { id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown } };
+type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown } };
+const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+const sourceDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" });
+
 function imageUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
-    if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash || !/^\/(fr|en|ja)\/[a-zA-Z0-9_/-]+$/.test(url.pathname)) return null;
+    if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash || !/^\/(fr|en|ja)\/[a-zA-Z0-9_./-]+$/.test(url.pathname)) return null;
     const path = url.pathname.replace(/\/$/, "");
     return /\/(high|low)\.(webp|png|jpg)$/.test(path) ? url.href : url.origin + path + "/high.webp";
   } catch { return null; }
@@ -23,10 +27,11 @@ export default async function CatalogueCardPage({ params, searchParams }: {
 }) {
   const { language, cardId } = await params;
   const { q } = await searchParams;
-  if (!["fr", "en", "ja"].includes(language) || !/^[a-zA-Z0-9-]{2,50}$/.test(cardId)) notFound();
+  if (!["fr", "en", "ja"].includes(language) || !/^(?=.{2,50}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(cardId)) notFound();
+  const sourceUrl = "https://api.tcgdex.net/v2/" + language + "/cards/" + encodeURIComponent(cardId);
   let card: Card | null = null;
   try {
-    const response = await fetch("https://api.tcgdex.net/v2/" + language + "/cards/" + encodeURIComponent(cardId), {
+    const response = await fetch(sourceUrl, {
       signal: AbortSignal.timeout(7000), next: { revalidate: 3600 }
     });
     if (!response.ok || Number(response.headers.get("content-length") ?? 0) > 2000000) throw new Error("unavailable");
@@ -39,6 +44,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
   const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
   const snapshot = await getTcgMarketSnapshot();
+  const indicativePrice = readCataloguePrice(card.pricing);
   const marketLink = linkCatalogueToMarket(cardId, language, snapshot.cards);
   return <main className="native-dashboard edge-product-detail">
     <Link href={back} className="edge-product-back">← Retour au catalogue</Link>
@@ -49,7 +55,19 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · SUIVI EDGE NON ÉTABLI</span>
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
-        <div className="edge-product-primary"><span>Prix de marché</span><strong>{marketLink.status === "NO_MATCH" ? "Non collecté" : "Correspondance à vérifier"}</strong><small>{marketLink.status === "NO_MATCH" ? "TCGdex fournit ici une identité de catalogue, pas une observation de prix ni une opportunité validée." : "Un relevé EDGE existe pour cet identifiant. Le rapprochement reste à vérifier. Pour cette fiche, aucun prix n’est attribué automatiquement."}</small></div>
+        <div className="edge-product-primary">
+          <span>Indication de marché · Cardmarket via TCGdex</span>
+          {indicativePrice ? (
+            <>
+              <strong>{euros.format(indicativePrice.low)}</strong>
+              <small>
+                Prix bas indicatif · <a href={sourceUrl}>Source mise à jour le {sourceDate.format(new Date(indicativePrice.updatedAt))}</a>
+                {indicativePrice.stale ? " · Donnée de plus de 48 h" : ""}
+              </small>
+              <small>Vente conclue, langue, édition et état de l’exemplaire non établis par cet indicateur.</small>
+            </>
+          ) : <strong>Indication de prix indisponible</strong>}
+        </div>
       </div>
     </div>
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
@@ -78,7 +96,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <p>Aucun dossier EDGE ni correspondance avec les produits suivis n'est établi pour cette fiche.</p>
       ) : (
         <>
-          <p>Correspondance candidate · {marketLink.productId}</p>
+          <p>Correspondance à vérifier · {marketLink.productId}. Pour ce relevé de suivi, aucun prix n’est attribué automatiquement.</p>
           <p>Type de relevé · {marketLink.card.priceKind} · {marketLink.card.source} · {marketLink.card.observedAt}</p>
           <h3>Variante du relevé marché</h3>
           <dl>

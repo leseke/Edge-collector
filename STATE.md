@@ -68,3 +68,7 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - Explorer accepts both exact snapshot and legacy Pokémon IDs. A candidate displays the available language, edition, condition, grader and grade evidence with its source. Explicit conflicts reject the match.
 - The published TCGdex/Cardmarket observations inspected on 2026-11-17 are indicative aggregates without variant-level evidence. Their variant fields remain unknown and the catalogue page assigns no price to the candidate.
 - Verified locally with Node 24: four targeted catalogue bridge tests and strict TypeScript checking of the three changed library modules. Full CI and live UI verification are pending.
+
+## Catalogue price coverage
+
+Card detail reads the dated EUR low-price indication from the Cardmarket block of its existing TCGdex response, independently of the tracked-card feed. Prices older than 48 hours carry a freshness warning. The indicator is not a completed sale or variant-level evidence. Existing routes and D1 schema are unchanged. Card IDs with dots can be opened from catalogue search and set browsing.

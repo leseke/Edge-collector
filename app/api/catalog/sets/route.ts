@@ -10,7 +10,7 @@ function imageUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
-    if (url.protocol !== "https:" || url.hostname !== IMAGE_HOST || url.search || url.hash || !/^\/[a-zA-Z0-9_/-]+$/.test(url.pathname)) return null;
+    if (url.protocol !== "https:" || url.hostname !== IMAGE_HOST || url.search || url.hash || !/^\/[a-zA-Z0-9_./-]+$/.test(url.pathname)) return null;
     return url.href;
   } catch { return null; }
 }
@@ -25,7 +25,7 @@ async function upstream(url: string): Promise<unknown> {
 export async function GET(request: NextRequest) {
   const language = request.nextUrl.searchParams.get("lang") ?? "fr";
   const setId = request.nextUrl.searchParams.get("set");
-  if (!LANGUAGES.has(language) || (setId !== null && !/^[a-zA-Z0-9-]{2,40}$/.test(setId))) {
+  if (!LANGUAGES.has(language) || (setId !== null && !/^(?=.{2,40}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(setId))) {
     return NextResponse.json({ error: "Paramètres invalides" }, { status: 400 });
   }
   try {
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     }
     const data = await upstream(base);
     if (!Array.isArray(data)) throw new Error("Invalid sets");
-    const sets = data.slice(0, 500).filter(object).filter(set => typeof set.id === "string" && /^[a-zA-Z0-9-]{2,40}$/.test(set.id) && typeof set.name === "string")
+    const sets = data.slice(0, 500).filter(object).filter(set => typeof set.id === "string" && /^(?=.{2,40}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(set.id) && typeof set.name === "string")
       .map(set => ({ id: set.id, name: set.name, logo: imageUrl(set.logo), cardCount: object(set.cardCount) && typeof set.cardCount.total === "number" ? set.cardCount.total : null }));
     return NextResponse.json({ sets, language, source: "TCGdex", marketPricesIncluded: false });
   } catch {

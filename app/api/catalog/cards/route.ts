@@ -13,7 +13,7 @@ function safeImage(value: unknown): string | null {
     const url = new URL(value);
     if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash) return null;
     const path = url.pathname.replace(/\/$/, "");
-    if (!/^\/(fr|en|ja)\/[a-zA-Z0-9_/-]+$/.test(path)) return null;
+    if (!/^\/(fr|en|ja)\/[a-zA-Z0-9_./-]+$/.test(path)) return null;
     return /\/(high|low)\.(webp|png|jpg)$/.test(path) ? url.href : `${url.origin}${path}/high.webp`;
   } catch { return null; }
 }
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     const records: unknown = JSON.parse(body);
     if (!Array.isArray(records)) throw new Error("Invalid response");
     const cards = records.slice(0, 60).filter((item): item is TcgDexCard => item !== null && typeof item === "object" && !Array.isArray(item))
-      .filter(item => typeof item.id === "string" && /^[a-zA-Z0-9-]{2,50}$/.test(item.id) && typeof item.name === "string" && item.name.length <= 150)
+      .filter(item => typeof item.id === "string" && /^(?=.{2,50}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(item.id) && typeof item.name === "string" && item.name.length <= 150)
       .map(item => ({ id: item.id as string, name: item.name as string, number: typeof item.localId === "string" ? item.localId : "", image: safeImage(item.image), language, source: "TCGdex", price: null }));
     return NextResponse.json({ cards, language, source: "TCGdex", marketPricesIncluded: false }, { headers: { "Cache-Control": "public, max-age=60, s-maxage=3600" } });
   } catch {
