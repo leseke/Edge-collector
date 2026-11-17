@@ -60,3 +60,32 @@ html,body{background:var(--app-bg)}
   .sidebar{background:#061c3e;border-top-color:#315583}
   .side-link.active{background:#ffcf21;color:#08224a;border-radius:12px}
 }
+
+
+/* HEADER-002 — approved logo treatment; breadcrumb and settings share one baseline. */
+.app-topbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(170px,auto) minmax(0,1fr);align-items:center;column-gap:12px;min-height:92px;padding-top:12px;padding-bottom:12px}
+.edge-top-brand{position:relative;top:auto;left:auto;transform:none;grid-column:2;grid-row:1;justify-self:center;align-self:center;gap:4px;padding-top:13px}
+.edge-top-brand::before{content:"";position:absolute;top:0;left:50%;width:23px;height:12px;transform:translateX(-50%);background:#ed3344;border-radius:23px 23px 0 0;border-bottom:2px solid #f5f8ff}
+.edge-top-brand::after{content:"";position:absolute;top:8px;left:50%;width:8px;height:8px;transform:translateX(-50%);border:2px solid #08234c;border-radius:50%;background:#fff}
+.edge-top-brand strong{font-family:"Arial Black","Manrope",system-ui,sans-serif;font-size:clamp(27px,3vw,38px);font-weight:900;font-style:normal;letter-spacing:-.055em;line-height:1.03;transform:scaleX(1.06)}
+.edge-top-brand small{font-size:8px;font-weight:700;letter-spacing:.2em}
+.breadcrumb{grid-column:1;grid-row:1;align-self:center;justify-self:start;white-space:nowrap}
+.topbar-right{grid-column:3;grid-row:1;align-self:center;justify-self:end}
+.edge-top-tabs{top:92px}
+@media(max-width:760px){
+ .app-topbar{grid-template-columns:minmax(0,1fr) minmax(145px,auto) minmax(0,1fr);column-gap:5px;min-height:86px;padding:8px 12px;align-items:center}
+ .edge-top-brand{top:auto;left:auto;transform:none;padding-top:14px;gap:3px}
+ .edge-top-brand strong{font-size:clamp(23px,6vw,30px);letter-spacing:-.06em}
+ .edge-top-brand small{font-size:5.8px;letter-spacing:.11em}
+ .breadcrumb{font-size:9px;gap:5px;letter-spacing:0}
+ .topbar-right{gap:5px}
+ .edge-admin-link{padding:5px 7px;font-size:9px;min-height:29px}
+ .edge-top-tabs{top:86px}
+}
+@media(max-width:370px){
+ .app-topbar{grid-template-columns:minmax(0,1fr) 130px minmax(0,1fr);padding-inline:8px}
+ .edge-top-brand strong{font-size:23px}
+ .edge-top-brand small{font-size:5px}
+ .breadcrumb{font-size:8px}
+ .edge-admin-link{font-size:8px;padding-inline:5px}
+}
