@@ -57,7 +57,7 @@ function sha256(value: string): string {
 }
 function safeImage(value: unknown): string | null {
   if (typeof value !== "string") return null;
-  try { const url = new URL(value); return url.protocol === "https:" && url.hostname === "assets.tcgdex.net" ? url.href : null; }
+  try { const url = new URL(value); if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash) return null; const path = url.pathname.replace(/\/$/, ""); if (!/^\/(?:fr|en|ja|zh|de|es|it|pt|nl|ko|univ)\/[a-zA-Z0-9_/-]+$/.test(path)) return null; return /\/(?:high|low)\.(?:webp|png|jpg)$/.test(path) ? url.href : `${url.origin}${path}/high.webp`; }
   catch { return null; }
 }
 export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
