@@ -1,11 +1,12 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { TcgCard } from "../lib/market-data";
 import { AssetImage } from "../components/AssetImage";
 
 type Category = "cards" | "sealed";
 type Sort = "series" | "name" | "price-low" | "price-high";
+type CatalogueCard = { id: string; name: string; number: string; image: string | null; language: string; source: string; price: null };
 
 function formatPrice(card: TcgCard): string {
   if (card.low === null || !Number.isFinite(card.low)) return "Prix indisponible";
@@ -18,6 +19,30 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
   const [query, setQuery] = useState("");
   const [series, setSeries] = useState("ALL");
   const [sort, setSort] = useState<Sort>("series");
+  const [catalogueQuery, setCatalogueQuery] = useState("");
+  const [catalogueLanguage, setCatalogueLanguage] = useState("fr");
+  const [catalogueCards, setCatalogueCards] = useState<CatalogueCard[]>([]);
+  const [catalogueStatus, setCatalogueStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  useEffect(() => {
+    const term = catalogueQuery.trim();
+    if (term.length < 2) { setCatalogueCards([]); setCatalogueStatus("idle"); return; }
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      setCatalogueStatus("loading");
+      try {
+        const response = await fetch("/api/catalog/cards?q=" + encodeURIComponent(term) + "&lang=" + catalogueLanguage, { signal: controller.signal });
+        if (!response.ok) throw new Error("Catalogue indisponible");
+        const payload: unknown = await response.json();
+        if (!payload || typeof payload !== "object" || !("cards" in payload) || !Array.isArray(payload.cards)) throw new Error("Réponse invalide");
+        setCatalogueCards(payload.cards as CatalogueCard[]);
+        setCatalogueStatus("ready");
+      } catch {
+        if (!controller.signal.aborted) { setCatalogueCards([]); setCatalogueStatus("error"); }
+      }
+    }, 400);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [catalogueQuery, catalogueLanguage]);
+
   const seriesGroups = useMemo(() => {
     const groups = new Map<string, TcgCard[]>();
     for (const card of cards) groups.set(card.setName, [...(groups.get(card.setName) ?? []), card]);
@@ -61,6 +86,13 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
         </button>)}</div>
       </section>}
 
+      <section className="edge-catalogue-search" aria-label="Catalogue de cartes TCGdex">
+        <div className="edge-explorer-section-title"><h2>Catalogue étendu · TCGdex</h2><span>Sans prix de marché</span></div>
+        <p>Recherche indépendante des relevés EDGE. Une carte trouvée ici n'est pas une opportunité validée.</p>
+        <div className="edge-catalogue-controls"><label><span>Nom de carte (2 caractères minimum)</span><input type="search" value={catalogueQuery} onChange={event => setCatalogueQuery(event.target.value)} placeholder="Ex. Pikachu, Dracaufeu…" /></label><label><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => setCatalogueLanguage(event.target.value)}><option value="fr">Français</option><option value="en">Anglais</option><option value="ja">Japonais</option></select></label></div>
+        <p role="status">{catalogueStatus === "loading" ? "Recherche en cours…" : catalogueStatus === "error" ? "Catalogue indisponible. Réessaie plus tard." : catalogueStatus === "ready" ? catalogueCards.length + " résultat(s) renvoyé(s) · 60 maximum" : "Saisis un nom pour interroger le catalogue."}</p>
+        {catalogueStatus === "ready" && <div className="edge-catalogue-results">{catalogueCards.map(card => <article key={card.language + ":" + card.id} className="edge-catalogue-card"><div className="edge-catalogue-image"><AssetImage src={card.image} name={card.name}/></div><strong>{card.name}</strong><small>{card.id} · {card.language.toUpperCase()} · TCGdex</small><span>Prix non collecté</span></article>)}</div>}
+      </section>
       <div className="edge-explorer-section-title edge-explorer-results-heading"><h2>Cartes suivies</h2><span>{visible.length} résultat{visible.length > 1 ? "s" : ""}</span></div>
       {warning && <p className="dashboard-warning">{warning}</p>}
       {visible.length ? <div className="edge-explorer-grid">{visible.map(card => <article key={card.productId} className="edge-explorer-tile">
