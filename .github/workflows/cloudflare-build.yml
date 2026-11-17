@@ -279,3 +279,26 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT price_kind,COUNT(*) AS observations FROM observations GROUP BY price_kind;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT product_id,reason_code,COUNT(*) AS failures FROM collection_errors GROUP BY product_id,reason_code ORDER BY product_id,reason_code;" --yes
           echo "Read-only remote D1 collection health checked; no synthetic market observations inserted."
+
+      - name: Assert latest real collection persisted both targets
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 20 \
+            --header "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"sql":"SELECT r.run_id,r.status,r.attempted,r.succeeded,r.failed,(SELECT COUNT(*) FROM observations o WHERE o.run_id=r.run_id AND o.price_kind=\u0027AGGREGATE\u0027) AS observations FROM collection_runs r ORDER BY r.started_at DESC LIMIT 1"}' \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/d1/database/${EDGE_D1_DATABASE_ID}/query" > "$RUNNER_TEMP/latest-collection.json"
+          python3 - "$RUNNER_TEMP/latest-collection.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          batches=data.get("result") or []
+          rows=batches[0].get("results",[]) if batches else []
+          if not data.get("success") or not rows:
+              raise SystemExit("::error::No real collection run in remote D1")
+          row=rows[0]
+          if row.get("status")!="OK" or row.get("attempted")!=2 or row.get("succeeded")!=2 or row.get("failed")!=0 or row.get("observations")!=2:
+              raise SystemExit("::error::Latest real collection did not persist both aggregate observations")
+          print("PASS: latest remote D1 run OK, 2/2 targets and 2 immutable aggregate observations")
+          PY
