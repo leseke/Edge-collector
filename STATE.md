@@ -17,3 +17,10 @@ Prior CI run #265 (44109240876) returned success for cloudflare, native Cordis s
 
 ## Open
 Approve V1 contracts, resolve SPA migration, design human review persistence and auth, confirm data transfer/cost policy. No automatic purchase and no production deployment.
+
+## Review persistence task — 2026-11-17
+- Development-only additive migration: `cloud/collector/migrations/002_investigation_review.sql`.
+- Offline negative/positive tests: `cloud/collector/test/test_review_migration.py`.
+- ADR: `docs/adr/002-immutable-human-review.md`.
+- Remote migration **not applied**. No authenticated review API or atomic write service implemented.
+- CI run #292 (44133553861) was in progress when this snapshot was written; results **not verified**. Do not promote this work without checking its final status.
