@@ -75,6 +75,30 @@ jobs:
       - name: Execute actual Cordis plugin registration and read-only tool
         run: node --import tsx agent-harness/test/plugin-runtime-smoke.mts
 
+  dsh-local-d1-e2e:
+    name: DeepSeek plugin through real D1 schema (synthetic fixtures)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Create D1-compatible SQLite fixture with immutable schema
+        run: python3 agent-harness/test/local-d1-fixture.py > "$RUNNER_TEMP/edge-local-fixture.json"
+      - name: Install published tool runtime without scripts
+        run: npm install --no-save --ignore-scripts --no-audit --no-fund @deepseek-ai/cordis @deepseek-ai/dsh-tools tsx
+      - name: Verify full export-normalize-native-tool pipeline
+        env:
+          EDGE_DATA_MODE: FIXTURE
+        run: node --import tsx agent-harness/test/live-d1-plugin.mts < "$RUNNER_TEMP/edge-local-fixture.json"
+      - name: Remove synthetic fixture
+        if: always()
+        run: rm -f "$RUNNER_TEMP/edge-local-fixture.json"
+
   dsh-real-d1-readonly:
     name: DeepSeek tool with real D1 data (read-only)
     runs-on: ubuntu-latest
