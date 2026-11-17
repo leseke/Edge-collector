@@ -47,3 +47,9 @@ GitHub Actions run #217 validated an authenticated **read-only remote D1 query**
 The native tool package integration and local SQLite/D1 schema fixture also pass independently. This is not yet a complete DeepSeek Harness agent session or model inference; the pilot has not been deployed to the public EDGE app.
 
 Remaining gates: pin the upstream runtime version, review isolation and cost limits, enable an agent profile in a disposable environment, and verify an actual model-generated proposal against the typed human-review boundary. Never authorize purchases from model output alone.
+
+## Investigation pipeline — bounded adapter
+
+`investigation-pipeline.mjs` implements the complete **in-process** boundary from validated D1 exports to a product-scoped brief, an injected model adapter, and an independent proposal review. Each product fails closed independently. Inputs are capped and the first 20 products are processed per run; the remainder is counted rather than silently dropped.
+
+`investigation-review.mjs` only matches factual **citation metadata** against the provided observations; it explicitly does **not** verify the semantic truth of model claims. It strips unsolicited purchase flags and never authorizes a transaction. The new end-to-end CI smoke uses a **deterministic stand-in adapter**, not a live LLM. Running a real model requires separate provider credentials, cost controls, sandboxing and a reviewed deployment profile. No such call is implied by passing CI.
