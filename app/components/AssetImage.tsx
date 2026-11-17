@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ImageStatus = "loading" | "loaded";
 const IMAGE_SUFFIX = /\/(?:high|low)\.(?:webp|png|jpg)$/;
@@ -12,9 +12,9 @@ export function tcgdexImageCandidates(src: string | null): string[] {
     const url = new URL(src);
     if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" ||
         url.username || url.password || url.search || url.hash ||
-        !/^\/[a-zA-Z0-9_/-]+(?:\.(?:webp|png|jpg))?$/.test(url.pathname)) return [];
+        !/^\/[a-zA-Z0-9_./-]+$/.test(url.pathname)) return [];
     const base = url.href.replace(IMAGE_SUFFIX, "");
-    const urls = base === url.href ? [url.href, ...IMAGE_VARIANTS.map(variant => base.replace(/\/$/, "") + variant)]
+    const urls = base === url.href ? [...IMAGE_VARIANTS.map(variant => base.replace(/\/$/, "") + variant), url.href]
       : [url.href, ...IMAGE_VARIANTS.map(variant => base + variant)];
     return [...new Set(urls)];
   } catch {
@@ -44,7 +44,32 @@ function ResolvedImage({ src, name }: { src: string; name: string }) {
   </>;
 }
 
-export function AssetImage({ src, name }: { src: string | null; name: string }) {
+function CatalogueImageFallback({ cardId, name }: { cardId: string; name: string }) {
+  const [image, setImage] = useState<string | null>(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/catalog/image?" + new URLSearchParams({ id: cardId }), { signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) return;
+        const data: { image: string | null } = await response.json();
+        if (!controller.signal.aborted) setImage(data.image);
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [cardId]);
+  if (!image) return <Placeholder name={name} reason="missing" />;
+  return <>
+    <ResolvedImage src={image} name={name + " (édition anglaise)"} />
+    <small>Illustration EN</small>
+  </>;
+}
+
+export function AssetImage({ src, name, catalogueId, catalogueLanguage }: {
+  src: string | null; name: string; catalogueId?: string; catalogueLanguage?: string;
+}) {
+  if (!src && catalogueId && catalogueLanguage !== "en") {
+    return <CatalogueImageFallback key={catalogueId} cardId={catalogueId} name={name} />;
+  }
   if (!src) return <Placeholder name={name} reason="missing" />;
   return <ResolvedImage key={src} src={src} name={name} />;
 }

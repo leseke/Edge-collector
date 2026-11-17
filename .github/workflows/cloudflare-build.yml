@@ -82,9 +82,11 @@ jobs:
           export CLOUDFLARE_ACCOUNT_ID
           npm exec -- wrangler deploy --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
           preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
-          curl --fail --silent --show-error --max-time 30 --retry 3 --retry-all-errors \
+          curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-max-time 65 --retry-all-errors \
             "$preview_url/api/catalog/price?lang=fr&id=ecard1-20" | python3 -c 'import json,sys; p=json.load(sys.stdin).get("price"); assert p and p["low"] > 0 and p["updatedAt"], "Expected a dated TCGdex price"'
           curl --fail --silent --show-error --max-time 30 "$preview_url/explorer?catalogue=Mewtwo&lang=fr" -o /dev/null
+          curl --fail --silent --show-error --max-time 20 --retry 3 --retry-all-errors \
+            "$preview_url/api/catalog/image?id=basep-14" | python3 -c 'import json,sys; assert json.load(sys.stdin)["image"].startswith("https://assets.tcgdex.net/en/")'
           echo "Verified Cloudflare preview: $preview_url/explorer?catalogue=Mewtwo&lang=fr"
 
   dsh-plugin-runtime:

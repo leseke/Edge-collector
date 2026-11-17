@@ -50,7 +50,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
     <Link href={back} className="edge-product-back">← Retour au catalogue</Link>
     <p className="native-eyebrow">EDGE / CATALOGUE EXTERNE · TCGDEX</p>
     <div className="edge-product-hero">
-      <div className="edge-product-visual"><AssetImage src={imageUrl(card.image)} name={card.name}/></div>
+      <div className="edge-product-visual"><AssetImage src={imageUrl(card.image)} name={card.name} catalogueId={cardId} catalogueLanguage={language}/></div>
       <div className="edge-product-overview">
         <span className="edge-product-kicker">CARTE RÉFÉRENCÉE · SUIVI EDGE NON ÉTABLI</span>
         <h1>{card.name}</h1>
