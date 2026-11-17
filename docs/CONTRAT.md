@@ -69,3 +69,7 @@ avec un écart absolu d'au moins 10 %. Sans adaptateur, le résultat est
 et les autres restent traités. Le commentaire est `UNREVIEWED`, sans
 effet sur les montants affichés. Aucune route, table D1 ou tâche planifiée
 n'est ajoutée par ce lot.
+
+## Catalogue tile prices
+
+`GET /api/catalog/price?lang=fr&id=basep-14` returns `{ price: { low, updatedAt, stale } | null }` for the exact reference. Amounts are EUR indications from Cardmarket via TCGdex. Invalid inputs receive 400, unavailable upstream data receives 503, and missing indications are represented by null. The search and set payloads and D1 schema are unchanged.

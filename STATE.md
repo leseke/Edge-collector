@@ -84,3 +84,7 @@ Tracked Pokémon detail pages can display a deterministic comparison from publis
 ## Expanded Pokémon commercial collection
 
 The development configuration increases the fixed Pokémon targets from two to six by adding Mewtwo, Tortank, Noctali VMAX and Ectoplasma VMAX. The total bound rises from 16 to 20 to retain five discovery slots. The collector fetched all six live TCGdex prices successfully and 26 commercial tests passed locally. These local observations have not been published. Scheduled collection still runs from the default branch and must adopt this configuration before it builds history for the new cards.
+
+## Explorer tile prices
+
+Search and set tiles request dated Cardmarket indications from TCGdex as they approach the viewport. The local route returned all four prices for basep-14, ecard1-20, ex13-24 and swsh10.5-030 against live TCGdex. No Google model calls are required. Preview UI verification is pending.

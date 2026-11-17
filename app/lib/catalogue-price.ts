@@ -1,4 +1,4 @@
-type CataloguePrice = {
+export type CataloguePrice = {
   low: number;
   updatedAt: string;
   stale: boolean;
