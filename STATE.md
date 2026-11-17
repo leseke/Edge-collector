@@ -32,3 +32,12 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - ADR 003: `docs/adr/003-product-first-investor-home.md`.
 - No new agent API, paid model call, D1 write, or explicit production deployment was performed by this change.
 - CI and real mobile rendering must be verified before promotion.
+
+## Visual V2 / Explorer observed catalogue — 2026-11-17
+- Added `/explorer` with client-side search and series filtering of the existing verified snapshot; this is not a complete TCG catalogue.
+- Added `AssetImage` client fallback for image-load failures; upstream image availability not yet diagnosed.
+- Navigation now links to Explorer and labels existing /mri as Radar; no placeholder Portfolio/Watchlist routes were invented.
+- Home links to Explorer; responsive Explorer styles and structural tests added.
+- ADR 004 documents alternative options, limitations and reversibility.
+- CI execution, Cloudflare deployment, image success, and iPhone rendering **not yet verified** for this lot.
+- No model call, paid service, D1 write, purchase or production deployment performed by these changes.
