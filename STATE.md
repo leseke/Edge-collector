@@ -88,3 +88,5 @@ The development configuration increases the fixed Pokémon targets from two to s
 ## Explorer tile prices
 
 Search and set tiles request dated Cardmarket indications from TCGdex as they approach the viewport. The local route returned all four prices for basep-14, ecard1-20, ex13-24 and swsh10.5-030 against live TCGdex. No Google model calls are required. Preview UI verification is pending.
+
+The price route accepts all 17 documented TCGdex locales. It uses dated Cardmarket EUR prices (including holo when needed), then TCGplayer USD prices with the source and variant identified. Cards without a suitable price return null.

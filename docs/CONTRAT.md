@@ -72,4 +72,4 @@ n'est ajoutée par ce lot.
 
 ## Catalogue tile prices
 
-`GET /api/catalog/price?lang=fr&id=basep-14` returns `{ price: { low, updatedAt, stale } | null }` for the exact reference. Amounts are EUR indications from Cardmarket via TCGdex. Invalid inputs receive 400, unavailable upstream data receives 503, and missing indications are represented by null. The search and set payloads and D1 schema are unchanged.
+`GET /api/catalog/price?lang=fr&id=basep-14` returns `{ price: { low, updatedAt, stale, currency, provider, variant? } | null }` for the exact reference. The route accepts the 17 documented TCGdex locale codes. It prefers Cardmarket EUR, including its holo low when necessary, then returns the dated TCGplayer USD low with its variant when available. Currency stays native and explicit. Invalid inputs receive 400, unavailable upstream data receives 503, and missing indications are represented by null. The search and set payloads and D1 schema are unchanged.

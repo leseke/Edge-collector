@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readCataloguePrice } from "../../app/lib/catalogue-price.ts";
+import { readCataloguePrice, readCatalogueQuote } from "../../app/lib/catalogue-price.ts";
 
 const updated = "2026-11-17T22:16:19.846Z";
 const now = Date.parse(updated);
@@ -19,4 +19,14 @@ test("withholds missing, malformed, undated and future observations", () => {
     assert.equal(readCataloguePrice({ cardmarket: { ...pricing.cardmarket, ...change } }, now), null);
   }
   assert.equal(readCataloguePrice(pricing, now - 1), null);
+});
+
+test("prefers dated EUR prices and uses explicit provider and currency for fallback", () => {
+  const us = { unit: "USD", updated, normal: { lowPrice: 9 }, holofoil: { lowPrice: 4 } };
+  assert.equal(readCatalogueQuote({ ...pricing, tcgplayer: us }, now).currency, "EUR");
+  assert.equal(readCatalogueQuote({ cardmarket: { unit: "EUR", updated, "low-holo": 7 }, tcgplayer: us }, now).low, 7);
+  assert.deepEqual(readCatalogueQuote({ tcgplayer: us }, now), {
+    low: 4, updatedAt: updated, stale: false, currency: "USD", provider: "TCGplayer", variant: "holofoil",
+  });
+  assert.equal(readCatalogueQuote({ tcgplayer: { ...us, updated: null } }, now), null);
 });

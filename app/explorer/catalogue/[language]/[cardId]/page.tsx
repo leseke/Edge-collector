@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { readCataloguePrice } from "../../../../lib/catalogue-price";
+import { readCatalogueQuote } from "../../../../lib/catalogue-price";
 import { getTcgMarketSnapshot } from "../../../../lib/market-data";
 import { linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
 import { notFound } from "next/navigation";
@@ -9,7 +9,7 @@ import "../../../../dashboard.css";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown } };
-const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+
 const sourceDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" });
 
 function imageUrl(value: unknown): string | null {
@@ -44,7 +44,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
   const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
   const snapshot = await getTcgMarketSnapshot();
-  const indicativePrice = readCataloguePrice(card.pricing);
+  const indicativePrice = readCatalogueQuote(card.pricing);
   const marketLink = linkCatalogueToMarket(cardId, language, snapshot.cards);
   return <main className="native-dashboard edge-product-detail">
     <Link href={back} className="edge-product-back">← Retour au catalogue</Link>
@@ -56,12 +56,12 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
         <div className="edge-product-primary">
-          <span>Indication de marché · Cardmarket via TCGdex</span>
+          <span>Indication de marché{indicativePrice ? ` · ${indicativePrice.provider} via TCGdex` : ""}</span>
           {indicativePrice ? (
             <>
-              <strong>{euros.format(indicativePrice.low)}</strong>
+              <strong>{new Intl.NumberFormat("fr-FR", { style: "currency", currency: indicativePrice.currency }).format(indicativePrice.low)}</strong>
               <small>
-                Prix bas indicatif · <a href={sourceUrl}>Source mise à jour le {sourceDate.format(new Date(indicativePrice.updatedAt))}</a>
+                Prix bas indicatif{indicativePrice.variant ? ` · ${indicativePrice.variant}` : ""} · <a href={sourceUrl}>Source mise à jour le {sourceDate.format(new Date(indicativePrice.updatedAt))}</a>
                 {indicativePrice.stale ? " · Donnée de plus de 48 h" : ""}
               </small>
               <small>Vente conclue, langue, édition et état de l’exemplaire non établis par cet indicateur.</small>

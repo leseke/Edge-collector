@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { CataloguePrice } from "../lib/catalogue-price";
+import type { CatalogueQuote } from "../lib/catalogue-price";
 
-const euro = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+const format = {
+  EUR: new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }),
+  USD: new Intl.NumberFormat("fr-FR", { style: "currency", currency: "USD" }),
+};
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "Europe/Paris" });
 
 export function CatalogueTilePrice({ language, cardId }: { language: string; cardId: string }) {
   const element = useRef<HTMLSpanElement>(null);
-  const [result, setResult] = useState<CataloguePrice | null | "ERROR" | undefined>(undefined);
+  const [result, setResult] = useState<CatalogueQuote | null | "ERROR" | undefined>(undefined);
 
   useEffect(() => {
     const target = element.current;
@@ -20,7 +23,7 @@ export function CatalogueTilePrice({ language, cardId }: { language: string; car
       fetch("/api/catalog/price?" + query, { signal: controller.signal })
         .then(async response => {
           if (!response.ok) throw new Error();
-          const data: { price: CataloguePrice | null } = await response.json();
+          const data: { price: CatalogueQuote | null } = await response.json();
           if (!controller.signal.aborted) setResult(data.price);
         })
         .catch(() => {
@@ -50,8 +53,8 @@ export function CatalogueTilePrice({ language, cardId }: { language: string; car
       result === "ERROR" ? "Prix temporairement indisponible" :
       result === null ? "Aucun prix indicatif disponible" :
       <>
-        <strong>{euro.format(result.low)}</strong>
-        <small>Prix bas indicatif · Cardmarket via TCGdex · <time dateTime={result.updatedAt}>{date.format(new Date(result.updatedAt))}</time>{result.stale ? " · Plus de 48 h" : ""}</small>
+        <strong>{format[result.currency ?? "EUR"].format(result.low)}</strong>
+        <small>Prix bas indicatif · {result.provider ?? "Cardmarket"} via TCGdex{result.variant ? ` · ${result.variant}` : ""} · <time dateTime={result.updatedAt}>{date.format(new Date(result.updatedAt))}</time>{result.stale ? " · Plus de 48 h" : ""}</small>
       </>}
   </span>;
 }

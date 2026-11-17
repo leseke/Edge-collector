@@ -17,3 +17,34 @@ export function readCataloguePrice(pricing: unknown, now = Date.now()): Catalogu
   if (!Number.isFinite(timestamp) || timestamp > now) return null;
   return { low, updatedAt: new Date(timestamp).toISOString(), stale: now - timestamp > 48 * 60 * 60 * 1000 };
 }
+
+export type CatalogueQuote = CataloguePrice & {
+  currency: "EUR" | "USD";
+  provider: "Cardmarket" | "TCGplayer";
+  variant?: string;
+};
+
+export function readCatalogueQuote(pricing: unknown, now = Date.now()): CatalogueQuote | null {
+  const european = readCataloguePrice(pricing, now);
+  if (european) return { ...european, currency: "EUR", provider: "Cardmarket" };
+  if (!pricing || typeof pricing !== "object") return null;
+
+  const { cardmarket, tcgplayer } = pricing as Record<string, unknown>;
+  if (cardmarket && typeof cardmarket === "object") {
+    const entry = cardmarket as Record<string, unknown>;
+    const holo = readCataloguePrice({ cardmarket: { ...entry, low: entry["low-holo"] } }, now);
+    if (holo) return { ...holo, currency: "EUR", provider: "Cardmarket", variant: "holo" };
+  }
+
+  if (!tcgplayer || typeof tcgplayer !== "object" || !("unit" in tcgplayer) || tcgplayer.unit !== "USD" ||
+      !("updated" in tcgplayer)) return null;
+  let best: CatalogueQuote | null = null;
+  for (const [variant, entry] of Object.entries(tcgplayer)) {
+    if (!entry || typeof entry !== "object" || !("lowPrice" in entry)) continue;
+    const quote = readCataloguePrice({ cardmarket: { unit: "EUR", low: entry.lowPrice, updated: tcgplayer.updated } }, now);
+    if (quote && (!best || quote.low < best.low)) {
+      best = { ...quote, currency: "USD", provider: "TCGplayer", variant };
+    }
+  }
+  return best;
+}
