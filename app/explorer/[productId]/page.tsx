@@ -22,6 +22,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
   const snapshot = await getTcgMarketSnapshot();
   const card = snapshot.cards.find(item => item.productId === productId);
   if (!card) notFound();
+  const investigation = snapshot.reactionCases.find(item => item.productId === productId);
   return <div className="native-dashboard edge-product-detail">
     <Link href="/explorer" className="edge-product-back">← Retour à l'Explorateur</Link>
     <p className="native-eyebrow">EDGE / FICHE PRODUIT</p>
@@ -47,7 +48,7 @@ export default async function ProductPage({ params }: { params: Promise<{ produc
           <div><dt>Type de prix</dt><dd>{card.priceKind || "Non renseigné"}</dd></div>
         </dl><p className="edge-product-disclaimer">Ces valeurs ne permettent pas de calculer un rendement prévisionnel fiable. La langue, la variante, l'état et les frais de transaction restent à confirmer.</p>
       </section>
-      <section className="edge-product-panel edge-product-ai-panel"><p className="native-eyebrow">02 / EDGE INTELLIGENCE</p><h2>Enquête & analyse IA</h2><p>Cette fiche est prête à être reliée aux investigations du Radar. Aucune recommandation d'achat n'est générée sans dossier et preuves exploitables.</p><div className="edge-product-ai-status">Agent conversationnel DeepSeek non activé</div><Link href="/mri" className="edge-ai-link">Consulter le Radar →</Link></section>
+      <section className="edge-product-panel edge-product-ai-panel"><p className="native-eyebrow">02 / EDGE INTELLIGENCE</p><h2>Enquête & analyse IA</h2><p>{investigation ? `Dossier MRI lié : ${investigation.publicationCount} publication(s) référencée(s). Réaction : ${investigation.reactionStatus}. Décision : ${investigation.financialDecision}.` : "Aucun dossier MRI lié à ce produit dans le dernier relevé vérifiable. Cela ne signifie pas que le produit est sans potentiel."}</p><div className="edge-product-ai-status">Agent conversationnel DeepSeek non activé</div><Link href="/mri" className="edge-ai-link">Consulter le Radar →</Link></section>
     </div>
   </div>;
 }
