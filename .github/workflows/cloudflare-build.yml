@@ -277,4 +277,5 @@ jobs:
           cd cloud/collector
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT COUNT(*) AS runs, COALESCE(SUM(succeeded),0) AS successful_targets, COALESCE(SUM(failed),0) AS failed_targets FROM collection_runs;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT price_kind,COUNT(*) AS observations FROM observations GROUP BY price_kind;" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT product_id,reason_code,COUNT(*) AS failures FROM collection_errors GROUP BY product_id,reason_code ORDER BY product_id,reason_code;" --yes
           echo "Read-only remote D1 collection health checked; no synthetic market observations inserted."
