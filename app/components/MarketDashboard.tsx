@@ -1,64 +1,64 @@
+import Link from "next/link";
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
 
 function date(value: string): string {
-  if (!value) return "Date non disponible";
+  if (!value) return "Date indisponible";
   const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? "Date non disponible" : new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(parsed);
+  return Number.isNaN(parsed.getTime()) ? "Date indisponible" : new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "Europe/Paris" }).format(parsed);
 }
 function money(value: number | null, currency: string): string {
-  if (value === null) return "Non établi";
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency, maximumFractionDigits: 2 }).format(value);
+  if (value === null) return "—";
+  try { return new Intl.NumberFormat("fr-FR", { style: "currency", currency, maximumFractionDigits: 2 }).format(value); }
+  catch { return "—"; }
 }
 function CardTile({ card }: { card: TcgCard }) {
-  return <article className="tcg-card">
-    <div className="tcg-card-visual">
-      {card.image ? <img src={card.image} alt={`Illustration de ${card.name}`} loading="lazy" /> : <span>TCG</span>}
+  return <article className="edge-asset-card">
+    <div className="edge-asset-art">
+      {card.image ? <img src={card.image} alt={`Visuel référencé de ${card.name}`} loading="lazy" /> : <div className="edge-asset-placeholder"><span>◇</span><small>Visuel indisponible</small></div>}
+      <span className="edge-asset-category">POKÉMON · CARTE</span>
     </div>
-    <div className="tcg-card-body">
-      <div className="tcg-card-meta"><span>{card.setName}</span><span>#{card.number}</span></div>
+    <div className="edge-asset-content">
+      <div className="edge-asset-series">{card.setName} · #{card.number}</div>
       <h3>{card.name}</h3>
-      <p className="tcg-rarity">{card.rarity}</p>
-      <div className="tcg-price-label">Indication basse agrégée · Cardmarket via TCGdex</div>
-      <div className="tcg-price">{money(card.low, card.currency)}</div>
-      <div className="tcg-price-details">
-        <span>Moyenne indicative <strong>{money(card.average, card.currency)}</strong></span>
-        <span>Tendance indicative <strong>{money(card.trend, card.currency)}</strong></span>
-      </div>
-      <div className="tcg-source-row"><span>Source : {card.source}</span><span>{card.availability === "UNKNOWN" ? "Disponibilité inconnue" : card.availability}</span></div>
-      <div className="tcg-source-row"><span>Relevé : {date(card.observedAt)}</span><span>{card.languageVerified ? "Langue vérifiée" : "Langue non vérifiée"}</span></div>
-      <p className="tcg-caveat">Ce montant est une indication de prix, pas une vente conclue. Variante, langue et état exacts non confirmés.</p>
+      <p className="edge-asset-rarity">{card.rarity}</p>
+      <div className="edge-asset-value"><span>Prix indicatif bas</span><strong>{money(card.low, card.currency)}</strong></div>
+      <span className="edge-asset-uncertainty">◌ Variante et état à confirmer</span>
+      <details className="edge-asset-details">
+        <summary>Prix & sources <span aria-hidden="true">＋</span></summary>
+        <dl>
+          <div><dt>Moyenne indicative</dt><dd>{money(card.average, card.currency)}</dd></div>
+          <div><dt>Tendance indicative</dt><dd>{money(card.trend, card.currency)}</dd></div>
+          <div><dt>Origine</dt><dd>{card.source}</dd></div>
+          <div><dt>Relevé</dt><dd>{date(card.observedAt)}</dd></div>
+          <div><dt>Langue</dt><dd>{card.languageVerified ? "Vérifiée" : "Non vérifiée"}</dd></div>
+          <div><dt>Disponibilité</dt><dd>{card.availability === "UNKNOWN" ? "Inconnue" : card.availability}</dd></div>
+        </dl>
+        <p>Prix indicatifs, pas des ventes conclues. La variante, la langue et l'état peuvent changer la valeur.</p>
+      </details>
     </div>
   </article>;
 }
 export async function MarketDashboard() {
   const snapshot = await getTcgMarketSnapshot();
   const freshDate = snapshot.observedAt ? date(snapshot.observedAt) : "Non disponible";
-  return <div className="native-dashboard">
-    <section className="dashboard-hero">
-      <div><p className="native-eyebrow">EDGE / VOTRE ESPACE</p><h1>Repérer les opportunités avant le consensus.</h1><p className="dashboard-subtitle">Un point de départ pour explorer les produits suivis, leurs prix observés et les informations qui restent à vérifier.</p></div>
-      <div className="dashboard-stamp"><span className={snapshot.status === "OK" ? "status-dot good" : "status-dot warn"} />DONNÉES {snapshot.status === "OK" ? "DISPONIBLES" : snapshot.status === "PARTIAL" ? "PARTIELLES" : "LIMITÉES"}</div>
+  return <div className="native-dashboard edge-investor-home">
+    <section className="edge-home-heading">
+      <div><p className="native-eyebrow">EDGE · DÉCOUVERTE</p><h1>Le marché, sous un autre angle<span>.</span></h1><p>Explore les produits et repère les pistes à investiguer.</p></div>
+      <Link href="/mri" className="edge-home-action">Voir les analyses <span aria-hidden="true">↗</span></Link>
     </section>
-    <section className="dashboard-metrics" aria-label="État des données">
-      <div className="dashboard-metric"><span>Produits observés</span><strong>{snapshot.cards.length}</strong><small>Produits actuellement visibles dans EDGE.</small></div>
-      <div className="dashboard-metric"><span>Relevés exploitables</span><strong>{snapshot.successfulCount}</strong><small>Données reçues et utilisables.</small></div>
-      <div className="dashboard-metric"><span>Relevés incomplets</span><strong>{snapshot.failedCount}</strong><small>Informations indisponibles ou incomplètes.</small></div>
-      <div className="dashboard-metric"><span>Ventes documentées</span><strong>0</strong><small>Transactions identifiées dans les données.</small></div>
+    <section className="edge-home-market" aria-labelledby="edge-market-title">
+      <div className="edge-home-section-head"><div><p className="native-eyebrow">01 / EXPLORER</p><h2 id="edge-market-title">Produits observés <span>{snapshot.cards.length}</span></h2></div><span className="edge-home-updated">Relevé : {freshDate}</span></div>
+      {snapshot.cards.length ? <div className="edge-asset-grid">{snapshot.cards.map(card => <CardTile key={card.productId} card={card}/>)}</div> : <div className="edge-home-empty"><strong>Aucun produit disponible actuellement</strong><p>Les produits apparaîtront ici lorsqu'un relevé vérifiable sera accessible. Aucun prix n'est simulé.</p></div>}
+      {snapshot.warning && <details className="edge-home-data-note"><summary>État des données</summary><p>{snapshot.warning}</p></details>}
     </section>
-    <section className="dashboard-section">
-      <div className="dashboard-section-heading"><div><p className="native-eyebrow">PRODUITS À EXPLORER</p><h2>Marché observé</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
-      {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
-      {snapshot.cards.length ? <div className="tcg-card-grid">{snapshot.cards.map((card) => <CardTile key={card.productId} card={card} />)}</div> : <div className="dashboard-empty">Aucun produit vérifiable pour le moment. Les prochaines observations apparaîtront ici.</div>}
+    <section className="edge-home-ai" aria-label="Intelligence EDGE">
+      <div className="edge-home-ai-symbol" aria-hidden="true">✳</div>
+      <div><p className="native-eyebrow">02 / EDGE INTELLIGENCE</p><h2>Au-delà du prix.</h2><p>Les enquêtes relient les observations aux événements du marché, aux risques et aux hypothèses d'investissement.</p><span className="edge-ai-state">Analyses à consulter · Agent conversationnel non activé</span></div>
+      <Link href="/mri" className="edge-ai-link">Explorer les analyses <span aria-hidden="true">→</span></Link>
     </section>
-    <section className="dashboard-method">
-      <p className="native-eyebrow">COMMENT LIRE CES PRIX</p>
-      <h2>Observer n'est pas acheter.</h2>
-      <div className="method-grid">
-        <div><strong>Prix affiché ≠ prix vendu</strong><p>Une annonce ou une moyenne indicative ne prouve pas qu'un acheteur a payé ce montant.</p></div>
-        <div><strong>Produit exact à confirmer</strong><p>Langue, édition, état et disponibilité peuvent modifier fortement la valeur réelle.</p></div>
-        <div><strong>Une piste n'est pas une certitude</strong><p>EDGE peut signaler un pari précoce, mais conserve les risques et les preuves manquantes.</p></div>
-      </div>
-      <a className="edge-analysis-link" href="/mri">Comprendre les signaux de marché →</a>
-    </section>
-    <footer className="native-footer">EDGE · Données observées séparées des estimations · Aucun achat ni rendement futur n’est validé par cette interface.</footer>
+    <details className="edge-home-help">
+      <summary>Comprendre les données et les limites d'EDGE <span aria-hidden="true">＋</span></summary>
+      <div><p>Les prix affichés sont indicatifs : une annonce ou un agrégat n'est pas une vente conclue. Les variantes, langues et états doivent être vérifiés avant toute décision.</p><p>Une investigation est une hypothèse à examiner, jamais une garantie de rendement ni une autorisation d'achat. Les détails des sources figurent dans chaque carte.</p><p>État du relevé : {snapshot.status}. Relevés exploitables : {snapshot.successfulCount}. Relevés incomplets : {snapshot.failedCount}. Ventes conclues identifiées : {snapshot.completedSales}.</p></div>
+    </details>
   </div>;
 }
