@@ -1,3 +1,4 @@
+import { PwaInstall } from "./PwaInstall";
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -29,7 +30,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="app-main">
       <header className="app-topbar">
         <div className="breadcrumb"><span>EDGE</span><span className="breadcrumb-sep">/</span><strong>{current?.short ?? "Marché"}</strong></div>
-        <div className="topbar-right"><span className="environment"><i /> ENVIRONNEMENT DE PRÉVISUALISATION</span></div>
+        <div className="topbar-right"><PwaInstall /><span className="environment"><i /> ENVIRONNEMENT DE PRÉVISUALISATION</span></div>
       </header>
       <main className="workspace">{children}</main>
     </div>
