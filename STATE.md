@@ -48,3 +48,10 @@ Approve V1 contracts, resolve SPA migration, design human review persistence and
 - DeepSeek explicitly marked inactive; no AI API, paid request, D1 mutation, purchase or deployment.
 - ADR 005 and structural contract tests added.
 - CI, build and real mobile rendering **pending verification**.
+
+## MRI public evidence bridge — 2026-11-17
+- MRI case summaries are now projected from the SHA-verified public snapshot, including publication titles/URLs, recorded reaction status and financial decision.
+- Radar displays available cases and their publication references; product detail matches by exact product ID, with explicit absence when none is linked.
+- The inspected public snapshot contained LEGO MRI cases but no `pokemon_card_` case. No AI-generated thesis or financial recommendation was fabricated.
+- ADR 006 and structural tests added. CI, build and mobile rendering remain **unverified** for this lot.
+- No paid AI calls, purchases, D1 writes or production deployment.
