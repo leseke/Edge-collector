@@ -22,7 +22,7 @@ async function fetchTarget(target: Target): Promise<{raw: string; price: number 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 7000);
   try {
-    const response = await fetch(target.url, { signal: controller.signal, headers: { Accept: "application/json" }, redirect: "error" });
+    const response = await fetch(target.url, { signal: controller.signal, headers: { Accept: "application/json" }, redirect: "manual" });
     if (!response.ok) throw new Error("upstream_" + response.status);
     const raw = await readBoundedText(response, MAX_BYTES);
     const parsed = parseIndicativePrice(raw);
