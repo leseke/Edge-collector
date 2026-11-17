@@ -9,12 +9,13 @@ export function assessMarket(rows, productId, now = new Date().toISOString()) {
   if (!Number.isFinite(Date.parse(now))) throw new Error("invalid_assessment_time");
   const matches = rows.filter(r => r?.product_id === productId);
   const latestTime = snapshot.latest?.observedAt;
-  const ageHours = latestTime ? Math.max(0, (Date.parse(now) - Date.parse(latestTime)) / 3600000) : null;
+  const ageHours = latestTime ? (Date.parse(now) - Date.parse(latestTime)) / 3600000 : null;
   const uniqueDays = new Set(matches.map(r => r.observed_at.slice(0, 10))).size;
   const reasons = [];
   if (snapshot.observations === 0) reasons.push("NO_OBSERVATIONS");
   if (snapshot.observations < 3) reasons.push("INSUFFICIENT_HISTORY");
   if (uniqueDays < 3) reasons.push("INSUFFICIENT_INDEPENDENT_DAYS");
+  if (ageHours !== null && ageHours < -0.0834) reasons.push("FUTURE_DATED_OBSERVATION");
   if (ageHours === null || ageHours > 48) reasons.push("STALE_OR_MISSING_OBSERVATION");
   reasons.push("NO_COMPLETED_SALES_OR_VOLUME_EVIDENCE");
   return {
