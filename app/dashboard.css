@@ -201,3 +201,19 @@
 .edge-sealed-empty .edge-sealed-note{color:#c9b9a1;font-size:11px}
 .edge-reset-filters{margin-top:12px;padding:10px 15px;border:1px solid #6660ad;border-radius:9px;background:#24203c;color:#dcd6ff;font-size:11px;cursor:pointer}
 @media(max-width:760px){.edge-explorer-tabs{width:100%}.edge-explorer-tabs button{flex:1;justify-content:center;padding:10px 8px;font-size:11px}.edge-explorer-filters-v3{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.edge-explorer-filters-v3 label:first-child{grid-column:1/-1}.edge-series-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.edge-series-card{padding:9px}.edge-series-art{height:108px}.edge-sealed-empty{padding:26px 16px}}
+
+
+/* Read-only TCGdex catalogue: independent from market observations */
+.edge-catalogue-search{margin:28px 0;padding:20px;border:1px solid #393650;border-radius:16px;background:linear-gradient(150deg,#1c1d31,#11131e)}
+.edge-catalogue-search>p{color:#aeb8cf;font-size:12px;line-height:1.6}
+.edge-catalogue-controls{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:12px;margin:15px 0}
+.edge-catalogue-controls label{display:flex;flex-direction:column;gap:7px;color:#b6b8d5;font-size:11px}
+.edge-catalogue-controls input,.edge-catalogue-controls select{width:100%;min-width:0;padding:12px;border:1px solid #46445f;border-radius:9px;background:#101321;color:#f3f3ff;font:inherit}
+.edge-catalogue-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:13px;margin-top:17px}
+.edge-catalogue-card{min-width:0;display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid #34364e;border-radius:12px;background:#181a2a}
+.edge-catalogue-image{display:grid;place-items:center;height:150px;overflow:hidden;border-radius:8px;background:#25243c}
+.edge-catalogue-image img{max-width:100%;max-height:145px;object-fit:contain}
+.edge-catalogue-card strong{color:#f2f2ff;font-size:12px}
+.edge-catalogue-card small{color:#a7acc9;font-size:10px;overflow-wrap:anywhere}
+.edge-catalogue-card>span{margin-top:auto;color:#b6e4e6;font-size:10px}
+@media(max-width:650px){.edge-catalogue-search{padding:13px}.edge-catalogue-controls{grid-template-columns:1fr}.edge-catalogue-results{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}}
