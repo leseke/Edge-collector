@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-type ImageStatus = "loading" | "loaded" | "failed";
+type ImageStatus = "loading" | "loaded";
 const IMAGE_SUFFIX = /\/(?:high|low)\.(?:webp|png|jpg)$/;
 const IMAGE_VARIANTS = ["/high.webp", "/low.webp", "/high.png", "/low.png"] as const;
 
@@ -38,7 +38,7 @@ function ResolvedImage({ src, name }: { src: string; name: string }) {
   return <>
     {status === "loading" && <div className="edge-asset-placeholder" role="status" aria-label={`Chargement de l'image de ${name}`}><span aria-hidden="true">◇</span><small>Chargement…</small></div>}
     <img key={urls[index]} src={urls[index]} alt={`Illustration de ${name}`} loading="lazy"
-      style={status === "loaded" ? undefined : { display: "none" }}
+      style={status === "loaded" ? undefined : { opacity: 0, position: "absolute", pointerEvents: "none" }}
       onLoad={() => setStatus("loaded")}
       onError={() => { setStatus("loading"); setIndex(previous => previous + 1); }} />
   </>;
