@@ -50,7 +50,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
       <div className="edge-explorer-filters edge-explorer-filters-v3">
         <label><span>Rechercher une carte ou une série</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Nom, numéro, extension…" /></label>
         <label><span>Série</span><select value={series} onChange={event => setSeries(event.target.value)}><option value="ALL">Toutes les séries</option>{seriesGroups.map(([name]) => <option key={name} value={name}>{name}</option>)}</select></label>
-        <label><span>Trier par</span><select value={sort} onChange={event => setSort(event.target.value)}><option value="series">Série et numéro</option><option value="name">Nom A–Z</option><option value="price-low">Prix croissant</option><option value="price-high">Prix décroissant</option></select></label>
+        <label><span>Trier par</span><select value={sort} onChange={event => { const value = event.currentTarget.value; if (value === "series" || value === "name" || value === "price-low" || value === "price-high") setSort(value); }}><option value="series">Série et numéro</option><option value="name">Nom A–Z</option><option value="price-low">Prix croissant</option><option value="price-high">Prix décroissant</option></select></label>
       </div>
 
       {series === "ALL" && !query.trim() && seriesGroups.length > 0 && <section className="edge-series-section" aria-label="Collections observées">
