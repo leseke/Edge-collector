@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { gccListingPages, getGccActiveListings, getGccSeries, type GccListingKind } from "../lib/gcc-active-listings";
 
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -13,13 +14,18 @@ function gccRadarUrl(kind: GccListingKind, cursor: string | null, series?: strin
   return "/mri" + (query ? "?" + query : "") + "#gcc-" + kind;
 }
 
+async function GccSeriesChoices({ choices }: { choices: Promise<string[]> }) {
+  return <datalist id="gcc-series">{(await choices).map(choice => <option key={choice} value={choice} />)}</datalist>;
+}
+
 export async function GccAvailability({ kind, cursor = null, series = null }: {
   kind: GccListingKind; cursor?: string | null; series?: string | null;
 }) {
   const auction = kind === "auction";
   const closed = kind === "closed";
 
-  const [data, choices] = await Promise.all([getGccActiveListings(kind, cursor, series), closed ? getGccSeries() : []]);
+  const choices = closed ? getGccSeries() : null;
+  const data = await getGccActiveListings(kind, cursor, series);
   const grouped = new Map<string, NonNullable<typeof data>["items"]>();
   for (const item of data?.items ?? []) {
     const label = closed ? item.series ?? "Série non renseignée" : "";
@@ -37,7 +43,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
         <input id="gcc-set" name="serie" list="gcc-series" defaultValue={series ?? ""} maxLength={100} placeholder="Ex. Héros Transcendants" />
         <button type="submit">Filtrer</button>
       </form>
-      <datalist id="gcc-series">{choices.map(choice => <option key={choice} value={choice} />)}</datalist>
+      {choices && <Suspense fallback={null}><GccSeriesChoices choices={choices} /></Suspense>}
       {series && <a className="radar-sale-source" href={gccRadarUrl(kind, null)}>Toutes les séries ↗</a>}
     </div>}
     {data ? <p className="radar-sales-description">
