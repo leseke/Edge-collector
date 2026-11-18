@@ -28,3 +28,17 @@ test("paid sales deduplicate by transaction and exclude future records", () => {
   const result = summarizeCardLiquidity({ ...evidence, paidSales: [sale, sale, { ...sale, id: "future", day: "2026-11-19" }] }, "2026-11-18");
   assert.deepEqual(result.saleWindows.map(x => x.observed), [1, 1, 1]);
 });
+
+test("flags only fresh comparable supply declines with resilient paid sales", () => {
+  const sales = ["2026-11-17", "2026-11-03", "2026-10-15", "2026-09-29"].map((day, id) =>
+    ({ ...evidence.paidSales[0], id: String(id), day }));
+  const listings = [
+    { day: "2026-11-17", scope: "same", listingIds: ["a"] },
+    { day: "2026-11-10", scope: "same", listingIds: ["a", "b"] },
+  ];
+  const pilot = { ...evidence, paidSales: sales, listings };
+  assert.equal(summarizeCardLiquidity(pilot, "2026-11-18").signal, "SUPPLY_TIGHTENING");
+  assert.equal(summarizeCardLiquidity({ ...pilot, paidSales: sales.slice(0, 2) }, "2026-11-18").signal, "INSUFFICIENT_EVIDENCE");
+  assert.equal(summarizeCardLiquidity({ ...pilot, paidSales: sales.map((sale, id) =>
+    id < 2 ? { ...sale, cents: sale.cents - 100 } : sale) }, "2026-11-18").signal, "NO_SIGNAL");
+});

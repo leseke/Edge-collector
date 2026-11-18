@@ -96,3 +96,5 @@ Catalogue detail exposes user-initiated Vinted and Leboncoin searches with the c
 ## Pokémon liquidity pilot
 
 The MRI dashboard shows the age, scoped observed listing inventory and paid-sale counts over 7/30/90 days for the same card variant. The only reviewed case currently shipped is Noctali VMAX 215/203 FR Unlimited PCA 9 (one documented historical paid sale, no comparable listing snapshots). No drop rate, total market count or trading recommendation is inferred. Automated marketplace collection and Radar alerting are not connected.
+
+The pilot prioritizes a tightening candidate only when a listing capture at most seven days old has a comparable earlier capture at most 30 days apart and fewer observed listings, with at least two documented paid sales in each of the current and previous 30-day windows and stable or rising sale count and median. These are pilot review criteria. No reviewed case currently qualifies, and marketplace ingestion remains unconnected.

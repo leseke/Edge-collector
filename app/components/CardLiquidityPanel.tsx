@@ -5,13 +5,16 @@ const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "
 
 export function CardLiquidityPanel() {
   const asOf = new Date().toISOString().slice(0, 10);
+  const cases = reviewedCardLiquidity.map(card => ({ card, facts: summarizeCardLiquidity(card, asOf) }));
+  const ranked = cases.filter(({ facts }) => facts.signal === "SUPPLY_TIGHTENING");
   return <section className="dashboard-section" aria-label="Offre et liquidité">
     <h2>Offre et liquidité des cartes</h2>
-    {reviewedCardLiquidity.map(card => {
-      const facts = summarizeCardLiquidity(card, asOf);
+    {ranked.length === 0 && <p>Aucune piste de raréfaction étayée dans les relevés disponibles.</p>}
+    {[...ranked, ...cases.filter(({ facts }) => facts.signal !== "SUPPLY_TIGHTENING")].map(({ card, facts }) => {
       return <article key={card.name + card.variant} className="edge-mri-case">
         <div>
           <h3>{card.name}</h3>
+          {facts.signal === "SUPPLY_TIGHTENING" && <p>À approfondir · Moins d’annonces observées, ventes payées et prix médians stables ou en hausse.</p>}
           <p>{card.variant} · <a href={card.releaseSource}>Sortie le {date.format(new Date(card.releasedOn))}</a> · {facts.ageDays} jours</p>
           <p>{facts.active === null ? "Pas de relevé comparable d’annonces actives" :
             `${facts.active} annonces observées le ${date.format(new Date(facts.listingDay!))}`}</p>
