@@ -5,6 +5,10 @@ const site = "https://gradedcardcenter.com";
 export const publicAuctionPage = site + "/filtres/auctions";
 const lotPrefix = site + "/item/";
 const dayMs = 86_400_000;
+const pages = [
+  { category: "AUCTIONS", url: publicAuctionPage },
+  { category: "FIXED_PRICE", url: site + "/filtres/fixed-price" },
+] as const;
 
 export function publicLotIds(html: string): string[] {
   const ids = new Set<string>();
@@ -24,21 +28,29 @@ async function fetchHtml(url: string, request: typeof fetch) {
 export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, scheduledTime: number, request: typeof fetch = fetch) {
   const day = new Date(scheduledTime).toISOString().slice(0, 10);
   const claim = await env.DB.prepare("INSERT INTO paid_sale_scans(scan_day,status) VALUES (?,'RUNNING') ON CONFLICT(scan_day) DO NOTHING").bind(day).run();
-  if (!claim.meta.changes) return;
+  if (!claim.meta.changes) return { status: "ALREADY_RUN", discovered: 0, checked: 0, verified: 0, inserted: 0 };
 
-  let failures = 0, checked = 0, verified = 0, inserted = 0;
-  try {
-    const ids = publicLotIds(await fetchHtml(publicAuctionPage, request));
-    if (!ids.length) failures++;
-    else {
-      const offset = Math.floor(scheduledTime / dayMs) % ids.length;
-      const sample = [...ids.slice(offset), ...ids.slice(0, offset)].slice(0, 4);
-      for (const id of sample) {
-        await env.DB.prepare("INSERT INTO gcc_lot_queue(lot_id,first_seen_day,next_check_day) VALUES (?,?,?) ON CONFLICT(lot_id) DO NOTHING").bind(id, day, day).run();
-      }
+  let failures = 0, discovered = 0, checked = 0, verified = 0, inserted = 0;
+  for (const { category, url } of pages) {
+    try {
+      const { results } = await env.DB.prepare("SELECT next_page FROM gcc_listing_cursor WHERE category=?")
+        .bind(category).all<{next_page: number}>();
+      const page = results[0]?.next_page ?? 1;
+      const html = await fetchHtml(page === 1 ? url : url + "?page=" + page, request);
+      const ids = publicLotIds(html).slice(0, 48);
+      const count = html.match(/([0-9][0-9'’]*)\s+résultats?/i)?.[1];
+      const total = count ? Number(count.replace(/['’]/g, "")) : null;
+      if (!ids.length && (total === null || (page - 1) * 24 < total)) throw new Error("gcc_page_empty");
+      const next = ids.length && (total === null || page * 24 < total) ? page + 1 : 1;
+      const result = await env.DB.prepare(`INSERT INTO gcc_lot_queue(lot_id,first_seen_day,next_check_day)
+        SELECT value,?,? FROM json_each(?) WHERE 1 ON CONFLICT(lot_id) DO NOTHING`)
+        .bind(day, day, JSON.stringify(ids)).run();
+      discovered += result.meta.changes ?? 0;
+      await env.DB.prepare(`INSERT INTO gcc_listing_cursor(category,next_page) VALUES (?,?)
+        ON CONFLICT(category) DO UPDATE SET next_page=excluded.next_page`).bind(category, next).run();
+    } catch {
+      failures++;
     }
-  } catch {
-    failures++;
   }
 
   const oldest = new Date(scheduledTime - 28 * dayMs).toISOString().slice(0, 10);
@@ -46,7 +58,7 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
   try {
     const { results } = await env.DB.prepare(`SELECT lot_id FROM gcc_lot_queue
       WHERE next_check_day <= ? AND first_seen_day >= ? AND paid_day IS NULL
-      ORDER BY next_check_day,first_seen_day DESC,lot_id LIMIT 6`).bind(day, oldest).all<{lot_id: string}>();
+      ORDER BY next_check_day,first_seen_day,lot_id LIMIT 6`).bind(day, oldest).all<{lot_id: string}>();
     for (const { lot_id: id } of results) {
       checked++;
       let paidDay: string | null = null;
@@ -74,8 +86,9 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
     failures++;
   }
 
-  const status = failures > 0 ? (verified > 0 || checked > failures ? "PARTIAL" : "FAILED") :
+  const status = failures > 0 ? (discovered > 0 || verified > 0 || checked > failures ? "PARTIAL" : "FAILED") :
     verified > 0 ? "OK" : "EMPTY";
   await env.DB.prepare("UPDATE paid_sale_scans SET status=?,checked=?,verified=?,inserted=? WHERE scan_day=?")
     .bind(status, checked, verified, inserted, day).run();
+  return { status, discovered, checked, verified, inserted };
 }

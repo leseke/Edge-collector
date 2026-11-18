@@ -35,19 +35,22 @@ test("queues active auctions, rechecks and stores a paid variant without duplica
   };
   const fetchPage = async url => {
     requests++;
-    assert.ok(url === publicAuctionPage || url === site + id);
-    return new Response(url === publicAuctionPage ? href : active ? "Enchère en cours" : paid,
+    const listing = url.startsWith(publicAuctionPage) || url.startsWith("https://gradedcardcenter.com/filtres/fixed-price");
+    assert.ok(listing || url === site + id);
+    return new Response(listing ? href : active ? "Enchère en cours" : paid,
       { headers: { "Content-Type": "text/html; charset=utf-8" } });
   };
   const day = Date.parse("2026-11-18T00:00:00Z");
+  assert.deepEqual(await collectPublicGccLots(env, day, fetchPage),
+    { status: "EMPTY", discovered: 1, checked: 1, verified: 0, inserted: 0 });
   await collectPublicGccLots(env, day, fetchPage);
-  await collectPublicGccLots(env, day, fetchPage);
-  assert.equal(requests, 2);
+  assert.equal(requests, 3);
+  assert.equal(db.prepare("SELECT COUNT(*) n FROM gcc_listing_cursor WHERE next_page=2").get().n, 2);
   assert.equal(db.prepare("SELECT COUNT(*) n FROM paid_market_sales").get().n, 0);
   active = false;
   await collectPublicGccLots(env, day + 86400000, fetchPage);
   await collectPublicGccLots(env, day + 2 * 86400000, fetchPage);
-  assert.equal(requests, 5);
+  assert.equal(requests, 8);
   assert.equal(db.prepare("SELECT COUNT(*) n FROM paid_market_sales").get().n, 1);
   const sale = db.prepare("SELECT variant_key,price_cents FROM paid_market_sales").get();
   assert.equal(sale.variant_key, "swsh7-215:fr:unlimited:pca:9");

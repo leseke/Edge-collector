@@ -139,3 +139,7 @@ Catalogue detail accepts manual asking-price observations with a Cardmarket sing
 
 ## Public Graded Card Center discovery
 The collector schedules public-auction discovery without a paid model. It samples up to four new lot links and visits up to six due lots per UTC day. The D1 queue preserves pending lots for up to 28 days; only an explicitly paid, validated lot enters the existing immutable sales table. The source HTML check found 24 lot links and extracted a known paid FR PCA 9 Noctali VMAX sale at EUR 1,750 on 2026-05-27. The active-to-paid queue transition was tested in SQLite with fixtures. Deployment of the scheduled collector and application of the additive D1 table remain separate live steps.
+
+### Expanded Graded Card Center listing discovery
+
+Discovery now walks the public auctions and fixed-price grids with independent D1 cursors and inserts each discovered lot once. A run checks up to six queued lots and writes a sale only when the public item page verifies the payment. The authenticated collector trigger now returns GCC counters. The public sitemap is a possible backfill source and is not yet a deployed feed.

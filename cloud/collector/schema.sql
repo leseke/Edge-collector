@@ -96,3 +96,8 @@ CREATE TABLE IF NOT EXISTS gcc_lot_queue (
   paid_day TEXT
 );
 CREATE INDEX IF NOT EXISTS gcc_lot_queue_due ON gcc_lot_queue(paid_day,next_check_day,first_seen_day);
+
+CREATE TABLE IF NOT EXISTS gcc_listing_cursor (
+  category TEXT PRIMARY KEY CHECK (category IN ('AUCTIONS','FIXED_PRICE')),
+  next_page INTEGER NOT NULL CHECK (next_page >= 1)
+);

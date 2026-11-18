@@ -396,6 +396,13 @@ jobs:
             exit 1
           fi
           echo "Authenticated collection request completed against the deployed Cloudflare Worker."
+          python3 - "$RUNNER_TEMP/collection-response.json" <<'PY'
+          import json,sys
+          gcc=json.load(open(sys.argv[1])).get("gcc") or {}
+          print("GCC collection:", json.dumps({key:gcc.get(key) for key in ("status","discovered","checked","verified","inserted")}))
+          if gcc.get("status") not in ("OK","EMPTY","PARTIAL","ALREADY_RUN"):
+              raise SystemExit("GCC collection did not return a usable result")
+          PY
           unset trigger_secret
       - name: Read remote collection health
         env:
@@ -408,6 +415,7 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT product_id,reason_code,COUNT(*) AS failures FROM collection_errors GROUP BY product_id,reason_code ORDER BY product_id,reason_code;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "WITH ranked AS (SELECT product_id, observed_at, price_cents, price_kind, ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY observed_at DESC, observation_id DESC) AS rn FROM observations WHERE price_kind='AGGREGATE' AND price_cents IS NOT NULL) SELECT current.product_id, current.observed_at AS latest_at, current.price_cents AS latest_cents, previous.price_cents AS previous_cents, ROUND(100.0*(current.price_cents-previous.price_cents)/NULLIF(previous.price_cents,0),2) AS change_pct, 'INDICATIVE_AGGREGATE_NOT_COMPLETED_SALE' AS provenance FROM ranked current LEFT JOIN ranked previous ON current.product_id=previous.product_id AND previous.rn=2 WHERE current.rn=1 ORDER BY current.product_id;" --yes
           echo "Read-only remote D1 collection health checked; no synthetic market observations inserted."
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT category,next_page FROM gcc_listing_cursor ORDER BY category; SELECT COUNT(*) AS queued,COUNT(paid_day) AS paid_in_queue FROM gcc_lot_queue; SELECT scan_day,status,checked,verified,inserted FROM paid_sale_scans ORDER BY scan_day DESC LIMIT 1;" --yes
 
       - name: Assert latest real collection persisted both targets
         env:

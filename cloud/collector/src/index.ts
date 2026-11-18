@@ -73,7 +73,9 @@ export default {
         return Response.json({ error: "not_found" }, { status: 404 });
       }
       await collect(env);
-      return Response.json({ service: "edge-tcg-collector", collection: "completed" });
+      const gcc = await collectPublicGccLots(env, Date.now());
+      console.log("gcc_public_scan", gcc);
+      return Response.json({ service: "edge-tcg-collector", collection: "completed", gcc });
     }
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
