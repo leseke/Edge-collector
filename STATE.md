@@ -181,3 +181,7 @@ Les fiches GCC ouvertes estiment automatiquement le coût livré pour un envoi C
 ### Classement des offres GCC à prix fixe
 
 Classement automatique de la page affichée au relevé GCC, par écart relatif entre coût livré estimé et médiane des ventes payées. Les signaux précoces reposent sur deux fenêtres de sept jours de ventes documentées par série. Les références isolées restent identifiées. Les 23 tests du collecteur passent localement. Build Cloudflare et validation mobile en attente.
+
+### Radar · Sélection multipage
+
+La sélection à prix fixe commence en page 1 et suit jusqu’à huit pages, avec dédoublonnage et indication de la couverture. Les fiches s’ouvrent dans la sélection, même pour un lot trouvé sur une autre page. 25 tests collecteur réussis. Rendu sur appareil et compilation Cloudflare à vérifier.

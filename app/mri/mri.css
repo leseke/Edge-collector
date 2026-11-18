@@ -110,3 +110,13 @@ html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
 
 .radar-cost { display: grid; gap: .5rem; padding-block: .8rem; border-top: 1px solid currentColor; }
 .radar-cost p, .radar-cost h4 { margin: 0; }
+
+.radar-ranking { border-color: #76643d; background: linear-gradient(135deg,#212633,#111c31 55%); }
+.rank-coverage { color: #dce6f4; line-height: 1.5; }
+.rank-coverage small,.rank-group small { display: block; color: #b6c7dd; }
+.rank-group { margin-block: 1.25rem; }
+.rank-group>h3 { margin: 0 0 .625rem; color: var(--radar-tone); font-size: 1rem; }
+.rank-group>h3 span { font-weight: 400; }
+.rank-group .radar-sales>li { border-inline-start: 3px solid var(--radar-tone); }
+.rank-group .rank-evidence { color: #eff4ff; font-size: .9rem; line-height: 1.5; }
+.rank-group .radar-sale-main { gap: .35rem; }

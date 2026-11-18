@@ -1,3 +1,4 @@
+import { FixedOfferRanking } from "./FixedOfferRanking";
 import { PaidHistoryProvider } from "./ComparableSales";
 import { Suspense } from "react";
 import Link from "next/link";
@@ -14,7 +15,7 @@ const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR
 const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
 
 const radarShortcuts = [
-  { href: "#analyse-annonce", title: "Analyser une annonce", description: "Estimer la marge", icon: "⌕", tone: "gold" },
+  { href: "#offres-a-examiner", title: "Offres à examiner", description: "Sélection à prix fixe", icon: "⌕", tone: "gold" },
   { href: "#ventes-payees", title: "Ventes payées", description: "Paiements vérifiés", icon: "✓", tone: "mint" },
   { href: "#gcc-closed", title: "Historique GCC", description: "Ventes par série", icon: "◷", tone: "lilac" },
   { href: "#disponibilite", title: "Offres ouvertes", description: "Enchères et prix fixes", icon: "≡", tone: "blue" },
@@ -43,7 +44,15 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
           <small>{description}</small>
         </a>)}
       </nav>
+      <a className="radar-sale-source" href="#analyse-annonce">Analyser une annonce Leboncoin ↓</a>
     </header>
+
+    <section id="offres-a-examiner" className="dashboard-section radar-section radar-ranking" aria-labelledby="fixed-ranking-title">
+      <h2 id="fixed-ranking-title" className="radar-section-title" data-tone="gold">Offres à examiner</h2>
+      <Suspense fallback={<p role="status">Analyse des offres à prix fixe sur GCC…</p>}>
+        <FixedOfferRanking variants={sales.variants} />
+      </Suspense>
+    </section>
 
     <section id="ventes-payees" className="dashboard-section radar-section" aria-labelledby="radar-sales-title">
       <h2 id="radar-sales-title" className="radar-section-title" data-tone="mint">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
@@ -75,7 +84,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
       </div>
       <div id="gcc-fixed" className="radar-offer-list">
-        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability variants={sales.variants} kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
+        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
       </div>
       <details className="radar-disclosure">
         <summary>Fréquence des ventes par variante</summary>

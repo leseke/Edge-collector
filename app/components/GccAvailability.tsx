@@ -1,5 +1,3 @@
-import { FixedOfferRanking } from "./FixedOfferRanking";
-import type { SaleVariant } from "../lib/radar-paid-sales";
 import { listingCardKey } from "../lib/comparable-sales";
 import { GccProductImage, RadarProductZoom, ZoomComparables } from "./RadarProductZoom";
 import { Suspense } from "react";
@@ -22,8 +20,8 @@ async function GccSeriesChoices({ choices }: { choices: Promise<string[]> }) {
   return <datalist id="gcc-series">{(await choices).map(choice => <option key={choice} value={choice} />)}</datalist>;
 }
 
-export async function GccAvailability({ kind, cursor = null, series = null, variants = [] }: {
-  kind: GccListingKind; variants?: SaleVariant[]; cursor?: string | null; series?: string | null;
+export async function GccAvailability({ kind, cursor = null, series = null }: {
+  kind: GccListingKind; cursor?: string | null; series?: string | null;
 }) {
   const auction = kind === "auction";
   const closed = kind === "closed";
@@ -54,7 +52,6 @@ export async function GccAvailability({ kind, cursor = null, series = null, vari
       Page {data.page}{data.total !== null && <> · {integer.format(data.total)} résultats signalés par GCC</>}
       {" · Relevé du "}{date.format(new Date(data.checkedAt))}
     </p> : <p className="radar-sales-description">La page GCC est momentanément indisponible.</p>}
-    {data && kind === "fixed" && <FixedOfferRanking page={data} variants={variants} />}
     {data && !data.items.length && <p>Aucun lot Pokémon à afficher sur cette page.</p>}
     {groups.map(([label, items]) => <div className="radar-gcc-series" key={label}>
       {closed && <h3 className="radar-series-heading">{!series && items[0].series ? <a href={gccRadarUrl(kind, null, label)}>{label}</a> : label}</h3>}
