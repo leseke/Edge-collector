@@ -1,4 +1,4 @@
-import { RadarProductZoom } from "./RadarProductZoom";
+import { GccProductImage, RadarProductZoom } from "./RadarProductZoom";
 import { gccListingPages, getGccActiveListings, getGccSeries, type GccListingKind } from "../lib/gcc-active-listings";
 
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -52,7 +52,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
         {items.map(item => <li key={item.id}>
           <RadarProductZoom name={item.title}>
             <div className="radar-sale-art">
-              {item.image ? <img src={item.image} alt={item.title} loading="lazy" /> : <small>Photo sur GCC</small>}
+              {item.image ? <GccProductImage src={item.image} name={item.title} /> : <small>Photo sur GCC</small>}
             </div>
             <div className="radar-sale-main">
               <h4 className="radar-gcc-lot-title">{item.title}</h4>

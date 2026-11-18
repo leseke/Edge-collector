@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
+
+const ExpandedImage = createContext(false);
+
+export function GccProductImage({ src, name }: { src: string; name: string }) {
+  const expanded = useContext(ExpandedImage);
+  const [useThumbnail, setUseThumbnail] = useState(false);
+  const full = src.replace("/width=300,fit=contain,format=webp,quality=65/", "/width=1000,fit=contain,format=webp,quality=85/");
+  return <img src={expanded && !useThumbnail ? full : src} alt={name}
+    loading={expanded ? "eager" : "lazy"} onError={() => setUseThumbnail(true)} />;
+}
 
 export function RadarProductZoom({ name, children }: { name: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -25,7 +35,7 @@ export function RadarProductZoom({ name, children }: { name: string; children: R
         <header><strong id={titleId}>{name}</strong>
           <button autoFocus type="button" onClick={() => dialog.current?.close()}>Fermer</button>
         </header>
-        <div className="radar-zoom-detail">{children}</div>
+        <ExpandedImage.Provider value={true}><div className="radar-zoom-detail">{children}</div></ExpandedImage.Provider>
       </div>
     </dialog>}
   </>;
