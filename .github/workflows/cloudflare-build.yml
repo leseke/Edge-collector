@@ -361,6 +361,19 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file schema.sql --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('collection_runs','observations','collection_errors') ORDER BY name;" --yes
 
+      - name: Index the public GCC sitemap in D1
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --max-time 45 --max-filesize 24000000 \
+            https://gradedcardcenter.com/sitemap-items.xml -o "$RUNNER_TEMP/gcc-sitemap.xml"
+          python3 cloud/collector/tools/gcc-index.py "$RUNNER_TEMP/gcc-sitemap.xml" "$RUNNER_TEMP/gcc-index.sql"
+          cd cloud/collector
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file "$RUNNER_TEMP/gcc-index.sql" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT COUNT(*) AS indexed_lots,MAX(source_modified_day) AS latest_source_day FROM gcc_public_index;" --yes
+
       - name: Probe real TCGdex sources before deployment
         run: node cloud/collector/test/live-source-probe.mjs
       - name: Deploy isolated collector Worker (daily cron)
@@ -399,7 +412,7 @@ jobs:
           python3 - "$RUNNER_TEMP/collection-response.json" <<'PY'
           import json,sys
           gcc=json.load(open(sys.argv[1])).get("gcc") or {}
-          print("GCC collection:", json.dumps({key:gcc.get(key) for key in ("status","discovered","checked","verified","inserted")}))
+          print("GCC collection:", json.dumps({key:gcc.get(key) for key in ("status","discovered","checked","verified","inserted","diagnostics")}))
           if gcc.get("status") not in ("OK","EMPTY","PARTIAL","ALREADY_RUN"):
               raise SystemExit("GCC collection did not return a usable result")
           PY

@@ -21,34 +21,44 @@ async function fetchHtml(url: string, request: typeof fetch) {
   const response = await request(url, {
     redirect: "error", signal: AbortSignal.timeout(8_000), headers: { Accept: "text/html", "Accept-Language": "fr" },
   });
-  if (!response.ok || !response.headers.get("content-type")?.includes("text/html")) throw new Error("gcc_unavailable");
+  if (!response.ok) throw new Error("http_" + response.status);
+  if (!response.headers.get("content-type")?.includes("text/html")) throw new Error("unexpected_content_type");
   return readBoundedText(response, 1_500_000);
 }
 
 export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, scheduledTime: number, request: typeof fetch = fetch) {
   const day = new Date(scheduledTime).toISOString().slice(0, 10);
-  const claim = await env.DB.prepare("INSERT INTO paid_sale_scans(scan_day,status) VALUES (?,'RUNNING') ON CONFLICT(scan_day) DO NOTHING").bind(day).run();
+  const claim = await env.DB.prepare(`INSERT INTO paid_sale_scans(scan_day,status) VALUES (?,'RUNNING')
+    ON CONFLICT(scan_day) DO UPDATE SET status='RUNNING'
+    WHERE paid_sale_scans.status='FAILED'`).bind(day).run();
   if (!claim.meta.changes) return { status: "ALREADY_RUN", discovered: 0, checked: 0, verified: 0, inserted: 0 };
 
   let failures = 0, discovered = 0, checked = 0, verified = 0, inserted = 0;
+  const diagnostics: Record<string, string> = {};
   for (const { category, url } of pages) {
+    let stage = "read_cursor";
     try {
       const { results } = await env.DB.prepare("SELECT next_page FROM gcc_listing_cursor WHERE category=?")
         .bind(category).all<{next_page: number}>();
       const page = results[0]?.next_page ?? 1;
+      stage = "fetch_grid";
       const html = await fetchHtml(page === 1 ? url : url + "?page=" + page, request);
+      stage = "parse_grid";
       const ids = publicLotIds(html).slice(0, 48);
       const count = html.match(/([0-9][0-9'’]*)\s+résultats?/i)?.[1];
       const total = count ? Number(count.replace(/['’]/g, "")) : null;
       if (!ids.length && (total === null || (page - 1) * 24 < total)) throw new Error("gcc_page_empty");
       const next = ids.length && (total === null || page * 24 < total) ? page + 1 : 1;
+      stage = "enqueue";
       const result = await env.DB.prepare(`INSERT INTO gcc_lot_queue(lot_id,first_seen_day,next_check_day)
         SELECT value,?,? FROM json_each(?) WHERE 1 ON CONFLICT(lot_id) DO NOTHING`)
         .bind(day, day, JSON.stringify(ids)).run();
       discovered += result.meta.changes ?? 0;
       await env.DB.prepare(`INSERT INTO gcc_listing_cursor(category,next_page) VALUES (?,?)
         ON CONFLICT(category) DO UPDATE SET next_page=excluded.next_page`).bind(category, next).run();
-    } catch {
+    } catch (error) {
+      const code = error instanceof Error ? error.message : "";
+      diagnostics[category] = stage + (/^(?:http_[1-5][0-9]{2}|unexpected_content_type|gcc_page_empty)$/.test(code) ? ":" + code : "");
       failures++;
     }
   }
@@ -90,5 +100,5 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
     verified > 0 ? "OK" : "EMPTY";
   await env.DB.prepare("UPDATE paid_sale_scans SET status=?,checked=?,verified=?,inserted=? WHERE scan_day=?")
     .bind(status, checked, verified, inserted, day).run();
-  return { status, discovered, checked, verified, inserted };
+  return { status, discovered, checked, verified, inserted, ...(Object.keys(diagnostics).length ? { diagnostics } : {}) };
 }

@@ -101,3 +101,8 @@ CREATE TABLE IF NOT EXISTS gcc_listing_cursor (
   category TEXT PRIMARY KEY CHECK (category IN ('AUCTIONS','FIXED_PRICE')),
   next_page INTEGER NOT NULL CHECK (next_page >= 1)
 );
+
+CREATE TABLE IF NOT EXISTS gcc_public_index (
+  lot_id TEXT PRIMARY KEY,
+  source_modified_day TEXT NOT NULL
+);

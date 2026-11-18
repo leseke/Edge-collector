@@ -143,3 +143,5 @@ The collector schedules public-auction discovery without a paid model. It sample
 ### Expanded Graded Card Center listing discovery
 
 Discovery now walks the public auctions and fixed-price grids with independent D1 cursors and inserts each discovered lot once. A run checks up to six queued lots and writes a sale only when the public item page verifies the payment. The authenticated collector trigger now returns GCC counters. The public sitemap is a possible backfill source and is not yet a deployed feed.
+
+The first expanded deployment installed the Worker and schema but returned no discovered lots. The next deploy exposes per-category failure stages and indexes the public sitemap from GitHub Actions independently. The sitemap import was tested twice with the same 15,740 real identifiers in SQLite; index entries have no listing or payment status until checked.
