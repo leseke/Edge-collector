@@ -108,3 +108,5 @@ The MRI dashboard links to the six configured searches and can retain direct Leb
 ## Manual listing analysis
 
 Saved Leboncoin leads can be evaluated with a user-entered asking price, acquisition fees, available budget, target gain, and hypothetical net resale. The result shows cash needed, hypothetical gain and a conditional maximum asking price. Missing fees/resale block the maximum. Values are session-only. No offer or transaction data are fetched or inferred from the URL.
+
+The listing analysis no longer requests a resale price. For a user-confirmed exact variant, the short-term calculation consumes reviewed paid sales within 90 days and requires two observations. A sale minimum-to-median range is reported gross; the entry cap uses the low end and a transparent 10% resale fee assumption. The long-term decision can flag a vulnerable entry or a speculative watch using past-sale downside and the existing supply-tightening signal. An annual price forecast is not emitted. No automatic Leboncoin identity matching or paid sales ingestion is enabled.

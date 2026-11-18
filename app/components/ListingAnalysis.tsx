@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { analyzeListing, euroCents } from "../lib/listing-analysis";
+import { reviewedCardLiquidity, summarizeCardLiquidity } from "../lib/card-liquidity";
+import { analyzeListing, estimateListingMarket, euroCents, resaleFeePercent } from "../lib/listing-analysis";
 
 const format = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const euros = (cents: number) => format.format(cents / 100);
@@ -9,27 +10,40 @@ const euros = (cents: number) => format.format(cents / 100);
 export function ListingAnalysis({ listingId }: { listingId: string }) {
   const [asking, setAsking] = useState("");
   const [fees, setFees] = useState("");
-  const [exit, setExit] = useState("");
+  const [variantIndex, setVariantIndex] = useState("");
   const [target, setTarget] = useState("");
   const [budget, setBudget] = useState("300");
   const askingCents = euroCents(asking);
   const acquisitionFeesCents = euroCents(fees);
-  const exitNetCents = euroCents(exit);
+  const evidence = variantIndex === "" ? undefined : reviewedCardLiquidity[Number(variantIndex)];
+  const asOf = new Date().toISOString().slice(0, 10);
+  const market = estimateListingMarket(evidence?.paidSales ?? [], asOf);
+  const exitNetCents = market.conservativeNet;
   const targetGainCents = euroCents(target || "0");
   const budgetCents = euroCents(budget);
   const result = askingCents !== null && askingCents > 0 && targetGainCents !== null && budgetCents !== null
     ? analyzeListing({ askingCents, acquisitionFeesCents, exitNetCents, targetGainCents, budgetCents })
     : null;
+  const longTerm = evidence ? summarizeCardLiquidity(evidence, asOf) : null;
+  const historicalNet = market.historicalLow === null ? null :
+    Math.floor(market.historicalLow * (100 - resaleFeePercent) / 100);
+  const holdingGain = historicalNet === null || result?.cost == null ? null : historicalNet - result.cost;
   const fields = [
     ["asking", "Prix demandé (€)", asking, setAsking],
     ["fees", "Livraison et frais d’achat (€)", fees, setFees],
-    ["exit", "Hypothèse de revente nette (€)", exit, setExit],
     ["target", "Gain net visé (€)", target, setTarget],
     ["budget", "Budget disponible (€)", budget, setBudget],
   ] as const;
   return <details>
     <summary>Analyser le prix</summary>
-    <p>Renseigne les montants affichés par l’annonce. Pour la revente, utilise un montant net après frais et compare la même référence, la langue, l’édition et l’état ou le grade.</p>
+    <p>Renseigne le coût de l’annonce et confirme la variante exacte. EDGE calcule le repère de revente à partir des ventes documentées.</p>
+    <label htmlFor={listingId + "-variant"}>Variante vérifiée dans l’annonce</label>{" "}
+    <select id={listingId + "-variant"} value={variantIndex} onChange={event => setVariantIndex(event.target.value)}>
+      <option value="">Variante inconnue ou absente du catalogue étudié</option>
+      {reviewedCardLiquidity.map((card, index) => <option key={card.name + card.variant} value={index}>
+        {card.name} · {card.variant}
+      </option>)}
+    </select>
     <div className="dashboard-metrics">
       {fields.map(([name, label, value, setValue]) => <div key={name}>
         <label htmlFor={listingId + "-" + name}>{label}</label>{" "}
@@ -42,10 +56,31 @@ export function ListingAnalysis({ listingId }: { listingId: string }) {
       {result && <>
         <p>{result.cost === null ? "Coût total à vérifier · frais d’achat manquants" : "Coût d’achat total · " + euros(result.cost)}</p>
         {result.budgetExceeded && <p>Budget dépassé. Piste à conserver en veille.</p>}
-        {result.gain !== null && <p>Gain net selon ton hypothèse · {euros(result.gain)}</p>}
-        {result.maxAsk !== null && <p>Prix demandé maximal selon ton hypothèse · {euros(result.maxAsk)}</p>}
-        {result.maxAsk === null && <p>Le prix maximal exige une hypothèse de revente nette et les frais d’achat.</p>}
+        {result.gain !== null && <p>Marge nette estimée · {euros(result.gain)}</p>}
+        {result.maxAsk !== null && <p>Prix d’entrée maximal · {euros(result.maxAsk)}</p>}
+        {result.gain !== null && <p>{result.budgetExceeded ? "Hors budget" :
+          result.gain <= 0 || result.gain < (targetGainCents ?? 0) ? "Marge insuffisante à ce prix" : "Marge estimée compatible avec ton objectif"}.</p>}
       </>}
     </div>
+    <h3>Court terme · 0 à 3 mois</h3>
+    {market.conservativeGross === null || market.medianGross === null
+      ? <p>{evidence ? "Veille · Moins de deux ventes comparables sur les 90 derniers jours." :
+        "À identifier · Référence, langue, édition et état ou grade à confirmer."}</p>
+      : <p>Revente brute indicative · {euros(market.conservativeGross)} à {euros(market.medianGross)} · {market.recent.length} ventes sur 90 jours.
+        {" "}Le prix d’entrée utilise le bas de la fourchette et une hypothèse de {resaleFeePercent} % de frais de revente.</p>}
+    <h3>Long terme · 1 an et plus</h3>
+    {holdingGain !== null && holdingGain <= 0
+      ? <p>Prix d’entrée fragile · Le bas des ventes historiques, net des frais estimés, ne couvre pas ton coût.</p>
+      : longTerm?.signal === "SUPPLY_TIGHTENING" && holdingGain !== null
+        ? <p>Pari à approfondir · Marge sur le scénario bas et raréfaction observée. Catalyseur et risque de baisse à vérifier.</p>
+        : <p>Veille spéculative · {market.historicalLow === null ? "Historique comparable trop court ou trop mince." :
+          "Aucun signal de raréfaction étayé dans les relevés disponibles."} Catalyseur à documenter.</p>}
+    {market.historicalLow !== null && <p>Scénario de baisse · Retour au bas des ventes observées, {euros(market.historicalLow)} brut. Ce montant ne prédit pas le prix à un an.</p>}
+    {market.history.length > 0 && <details>
+      <summary>Ventes documentées · {market.history.length}</summary>
+      <ul>{market.history.map(sale => <li key={sale.id}>
+        <a href={sale.source} target="_blank" rel="noopener noreferrer">{euros(sale.cents)} · {sale.day} ↗</a>
+      </li>)}</ul>
+    </details>}
   </details>;
 }
