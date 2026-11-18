@@ -21,11 +21,6 @@ const lanes = [
   { category: "SORTIE", search: "Publications officielles Pokémon sur les sorties TCG, annonces de coffrets et extensions, réassorts, réimpressions et retraits." },
 ] as const;
 
-export function discoveryLane(day: string) {
-  const age = Math.floor(Date.parse(day + "T00:00:00Z") / 86_400_000);
-  return lanes[age % lanes.length];
-}
-
 export function candidateLeads(text: string) {
   const links = new Map<string, "LOT" | "ANNONCE" | "PUBLICATION">();
   for (const id of candidateLots(text)) links.set(itemPrefix + id, "LOT");
@@ -43,14 +38,14 @@ export function candidateLeads(text: string) {
     } catch {
       continue;
     }
-    if (links.size >= 12) break;
+    if (links.size >= 8) break;
   }
   return links;
 }
 
 export function candidateLots(text: string): string[] {
   const matches = text.matchAll(new RegExp("https://gradedcardcenter\\.com/(?:fr/|en/)?item/(" + lotPattern + ")(?![a-z0-9/-])", "gi"));
-  return [...new Set([...matches].map(match => match[1].toLowerCase()))].slice(0, 8);
+  return [...new Set([...matches].map(match => match[1].toLowerCase()))].slice(0, 2);
 }
 
 export function readPaidLot(html: string, lotId: string, scanDay: string) {
@@ -104,66 +99,76 @@ export function readPaidLot(html: string, lotId: string, scanDay: string) {
   return { lotId, key, day, cents, source: itemPrefix + lotId };
 }
 
+async function discoverLeads(search: string, apiKey: string, request: Fetch) {
+  const response = await request(endpoint, {
+    method: "POST",
+    redirect: "error",
+    signal: AbortSignal.timeout(30_000),
+    headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
+    body: JSON.stringify({
+      tools: [{ google_search: {} }],
+      generationConfig: { maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } },
+      contents: [{ parts: [{ text: "Recherche Google, marché Pokémon accessible depuis la France. " + search +
+        " Renvoie jusqu’à huit URL directes récentes, dont deux lots gradedcardcenter.com/item/ au maximum. Pour les annonces, utilise Leboncoin ou Vinted. Pour les publications, utilise le site officiel Pokémon. Aucun prix ni déclaration non sourcée. N’invente aucune URL." }] }],
+    }),
+  });
+  if (response.status === 429 || response.status === 402) return null;
+  if (!response.ok) throw new Error("discovery_http_error");
+  const data = JSON.parse(await readBoundedText(response, 128_000));
+  const answer = data.candidates?.[0];
+  if (!answer || answer.finishReason !== "STOP" || !Array.isArray(answer.content?.parts) ||
+      !answer.groundingMetadata?.webSearchQueries?.length) throw new Error("discovery_response_invalid");
+  return candidateLeads(answer.content.parts.map((part: {text?: string}) => part.text ?? "").join("\n"));
+}
+
 export async function collectPaidSales(env: PaidSaleEnv, scheduledTime: number, request: Fetch = fetch) {
   if (env.GEMINI_FREE_TIER_ENABLED !== "true" || !env.GEMINI_API_KEY) return;
   const day = new Date(scheduledTime).toISOString().slice(0, 10);
-  const lane = discoveryLane(day);
   const claim = await env.DB.prepare("INSERT INTO paid_sale_scans (scan_day,status) VALUES (?,'RUNNING') ON CONFLICT(scan_day) DO NOTHING").bind(day).run();
   if (!claim.meta.changes) return;
 
-  let checked = 0, verified = 0, inserted = 0, failures = 0;
-  let discoveryFailed = false;
-  try {
-    const response = await request(endpoint, {
-      method: "POST",
-      redirect: "error",
-      signal: AbortSignal.timeout(30_000),
-      headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
-      body: JSON.stringify({
-        tools: [{ google_search: {} }],
-        generationConfig: { maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } },
-        contents: [{ parts: [{ text: "Recherche Google, marché Pokémon accessible depuis la France. " + lane.search +
-          " Renvoie jusqu’à douze URL directes. Priorité aux pages de lots gradedcardcenter.com/item/, annonces Leboncoin et Vinted, et publications officielles Pokémon. Aucun prix ni déclaration non sourcée. N’invente aucune URL." }] }],
-      }),
-    });
-    if (!response.ok) throw new Error("discovery_http_error");
-    const data = JSON.parse(await readBoundedText(response, 128_000));
-    const answer = data.candidates?.[0];
-    if (!answer || answer.finishReason !== "STOP" || !Array.isArray(answer.content?.parts) ||
-        !answer.groundingMetadata?.webSearchQueries?.length) throw new Error("discovery_response_invalid");
-    const text = answer.content.parts.map((part: {text?: string}) => part.text ?? "").join("\n");
-    for (const [url, kind] of candidateLeads(text)) {
-      await env.DB.prepare("INSERT INTO market_discovery_leads (source_url,category,kind,first_seen_day) VALUES (?,?,?,?) ON CONFLICT(source_url) DO NOTHING")
-        .bind(url, lane.category, kind, day).run();
-      if (kind !== "LOT") continue;
-      const id = url.slice(itemPrefix.length);
-      checked++;
-      try {
-        const page = await request(itemPrefix + id, {
-          redirect: "error", signal: AbortSignal.timeout(8000),
-          headers: { "Accept-Language": "fr-FR,fr;q=0.9", Accept: "text/html" },
-        });
-        if (!page.ok || !page.headers.get("content-type")?.includes("text/html")) throw new Error("lot_response_invalid");
-        const html = await readBoundedText(page, 1_500_000);
-        const sale = readPaidLot(html, id, day);
-        if (!sale) continue;
-        verified++;
-        const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(html));
-        const sha = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
-        const written = await env.DB.prepare(`INSERT INTO paid_market_sales
-          (lot_id,variant_key,sold_day,price_cents,source_url,collected_at,payload_sha256)
-          VALUES (?,?,?,?,?,?,?) ON CONFLICT(lot_id) DO NOTHING`)
-          .bind("gcc-" + id, sale.key, sale.day, sale.cents, sale.source, new Date().toISOString(), sha).run();
-        inserted += written.meta.changes ?? 0;
-      } catch {
-        failures++;
+  let checked = 0, verified = 0, inserted = 0, failures = 0, discovered = 0;
+  const seenUrls = new Set<string>();
+  for (const lane of lanes) {
+    try {
+      const leads = await discoverLeads(lane.search, env.GEMINI_API_KEY, request);
+      if (!leads) break;
+      discovered++;
+      for (const [url, kind] of leads) {
+        if (seenUrls.has(url)) continue;
+        seenUrls.add(url);
+        await env.DB.prepare("INSERT INTO market_discovery_leads (source_url,category,kind,first_seen_day) VALUES (?,?,?,?) ON CONFLICT(source_url) DO NOTHING")
+          .bind(url, lane.category, kind, day).run();
+        if (kind !== "LOT") continue;
+        const id = url.slice(itemPrefix.length);
+        checked++;
+        try {
+          const page = await request(itemPrefix + id, {
+            redirect: "error", signal: AbortSignal.timeout(8000),
+            headers: { "Accept-Language": "fr-FR,fr;q=0.9", Accept: "text/html" },
+          });
+          if (!page.ok || !page.headers.get("content-type")?.includes("text/html")) throw new Error("lot_response_invalid");
+          const html = await readBoundedText(page, 1_500_000);
+          const sale = readPaidLot(html, id, day);
+          if (!sale) continue;
+          verified++;
+          const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(html));
+          const sha = [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("");
+          const written = await env.DB.prepare(`INSERT INTO paid_market_sales
+            (lot_id,variant_key,sold_day,price_cents,source_url,collected_at,payload_sha256)
+            VALUES (?,?,?,?,?,?,?) ON CONFLICT(lot_id) DO NOTHING`)
+            .bind("gcc-" + id, sale.key, sale.day, sale.cents, sale.source, new Date().toISOString(), sha).run();
+          inserted += written.meta.changes ?? 0;
+        } catch {
+          failures++;
+        }
       }
+    } catch {
+      failures++;
     }
-  } catch {
-    discoveryFailed = true;
   }
-  const status = discoveryFailed || (failures > 0 && failures === checked) ? "FAILED" :
-    failures > 0 ? "PARTIAL" : verified > 0 ? "OK" : "EMPTY";
+  const status = discovered === 0 ? "FAILED" :
+    discovered < lanes.length || failures > 0 ? "PARTIAL" : verified > 0 ? "OK" : "EMPTY";
   await env.DB.prepare("UPDATE paid_sale_scans SET status=?,checked=?,verified=?,inserted=? WHERE scan_day=?")
     .bind(status, checked, verified, inserted, day).run();
 }

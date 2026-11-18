@@ -10,7 +10,7 @@ const hooks = registerHooks({
     return nextResolve(specifier, context);
   },
 });
-const { candidateLots, candidateLeads, discoveryLane, readPaidLot, collectPaidSales } = await import("../src/paid-sales.ts");
+const { candidateLots, candidateLeads, readPaidLot, collectPaidSales } = await import("../src/paid-sales.ts");
 const { readRadarPaidSales } = await import("../../../app/lib/radar-paid-sales.ts");
 const { estimateListingMarket } = await import("../../../app/lib/listing-analysis.ts");
 const { compareMarketWindows } = await import("../../../app/lib/market-trends.ts");
@@ -43,9 +43,7 @@ test("only direct lot links are candidates and only the exact paid lot is eligib
   assert.equal(readPaidLot(booster.replace("scellé", "ouvert"), id, "2026-11-18"), null);
 });
 
-test("a four-day sweep includes releases, cards, boosters and boxes, and preserves source types", () => {
-  assert.deepEqual(new Set(["18", "19", "20", "21"].map(day => discoveryLane("2026-11-" + day).category)),
-    new Set(["CARTE", "BOOSTER", "COFFRET", "SORTIE"]));
+test("lead classification preserves source types", () => {
   const ad = "https://www.leboncoin.fr/ad/collection/123";
   const release = "https://www.pokemon.com/fr/actualites/produits-novembre";
   assert.deepEqual([...candidateLeads(`${ad}?track=test ${release} ${itemUrl} https://evil.example/`)], [
@@ -81,13 +79,19 @@ test("a native scan and its retry feed the real market calculation through SQLit
       } };
     },
   };
-  let searches = 0;
+  const searches = [];
+  let pages = 0;
+  let responseStatus = () => 200;
   const transport = async (url, options) => {
     if (url === itemUrl) {
+      pages++;
       assert.equal(options.headers["x-goog-api-key"], undefined);
       return new Response(page, { headers: { "content-type": "text/html" } });
     }
-    searches++;
+    const prompt = JSON.parse(options.body).contents[0].parts[0].text;
+    searches.push(prompt);
+    const status = responseStatus(searches.length);
+    if (status !== 200) return new Response(null, { status });
     return Response.json({ candidates: [{
       finishReason: "STOP",
       groundingMetadata: { webSearchQueries: ["test"] },
@@ -96,11 +100,25 @@ test("a native scan and its retry feed the real market calculation through SQLit
   };
   const now = new Date("2026-11-18T09:00:00Z");
   await collectPaidSales({ DB }, +now, transport);
-  assert.equal(searches, 0);
+  assert.equal(searches.length, 0);
   const env = { DB, GEMINI_FREE_TIER_ENABLED: "true", GEMINI_API_KEY: "test" };
   await Promise.all([collectPaidSales(env, +now, transport), collectPaidSales(env, +now, transport)]);
-  assert.equal(searches, 1);
+  assert.equal(searches.length, 4);
+  for (const [index, topic] of [/cartes Pokémon/, /boosters Pokémon/, /coffrets Pokémon/, /sorties TCG/].entries()) {
+    assert.match(searches[index], topic);
+  }
+  assert.equal(pages, 1);
+  responseStatus = index => index === 5 ? 503 : 200;
   await collectPaidSales(env, +now + 86_400_000, transport);
+  assert.equal(searches.length, 8);
+  assert.equal(pages, 2);
+  assert.equal(db.prepare("SELECT status FROM paid_sale_scans WHERE scan_day='2026-11-19'").get().status, "PARTIAL");
+
+  responseStatus = () => 429;
+  await collectPaidSales(env, +now + 2 * 86_400_000, transport);
+  assert.equal(searches.length, 9);
+  assert.equal(pages, 2);
+  assert.equal(db.prepare("SELECT status FROM paid_sale_scans WHERE scan_day='2026-11-20'").get().status, "FAILED");
   assert.equal(db.prepare("SELECT COUNT(*) AS n FROM paid_market_sales").get().n, 1);
   assert.throws(() => db.exec("UPDATE paid_market_sales SET price_cents=1"), /immutable_paid_sale/);
 
