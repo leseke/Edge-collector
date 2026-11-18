@@ -92,3 +92,7 @@ Search and set tiles request dated Cardmarket indications from TCGdex as they ap
 The price route accepts all 17 documented TCGdex locales. It uses dated Cardmarket EUR prices (including holo when needed), then TCGplayer USD prices with the source and variant identified. Cards without a suitable price return null.
 
 Catalogue detail exposes user-initiated Vinted and Leboncoin searches with the card identity, plus a ready-to-copy Google AI Studio query. No Gemini API integration or automated marketplace observation is enabled by these links.
+
+## Pokémon liquidity pilot
+
+The MRI dashboard shows the age, scoped observed listing inventory and paid-sale counts over 7/30/90 days for the same card variant. The only reviewed case currently shipped is Noctali VMAX 215/203 FR Unlimited PCA 9 (one documented historical paid sale, no comparable listing snapshots). No drop rate, total market count or trading recommendation is inferred. Automated marketplace collection and Radar alerting are not connected.

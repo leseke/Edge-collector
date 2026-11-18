@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
+import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { DataLimit, EvidenceGuide } from "./EvidenceGuide";
 
 export async function MarketReactionDashboard() {
@@ -17,6 +18,7 @@ export async function MarketReactionDashboard() {
       <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>{snapshot.completedSales}</strong><small>Déclarées dans les données, preuves à examiner au cas par cas.</small></div>
     </section>
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
+    <CardLiquidityPanel />
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">ÉTAT DES PREUVES</p><h2>Réactions TCG documentées</h2></div><span className="dashboard-date">Dernier relevé : {formatDate(snapshot.observedAt)}</span></div>
       {snapshot.reactionCases.length > 0 && <div className="edge-mri-cases">
