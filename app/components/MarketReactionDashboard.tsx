@@ -32,6 +32,7 @@ export async function MarketReactionDashboard() {
           <p>Prix médian · {trend.priceChange > 0 ? "+" : ""}{trend.priceChange} % · {trend.priorCount} puis {trend.recentCount} ventes observées</p>
           <p>{trend.scenario === "INDETERMINE" ? "Scénario encore indéterminé." :
             `Scénario ${trend.scenario.toLowerCase()} si la variation de prix et le volume se maintiennent sur le prochain relevé.`}</p>
+          {trend.analogues > 0 && <p>Signaux similaires sur ce produit · La tendance s’est poursuivie dans {trend.continued} cas sur {trend.analogues} observés.</p>}
         </article>;
       })}
       {sales.leads.length > 0 && <details>

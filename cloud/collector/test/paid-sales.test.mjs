@@ -58,9 +58,14 @@ test("trend estimates require same-variant price and volume evidence in both win
   const recent = Array.from({ length: 3 }, (_, i) => row("coffret:a", "2026-11-17", 11500 + i * 100));
   const prior = Array.from({ length: 3 }, (_, i) => row("coffret:a", "2026-10-17", 9900 + i * 100));
   assert.equal(compareMarketWindows([...recent, ...prior.slice(0, 2), row("coffret:b", "2026-10-17", 10000)], "2026-11-18").length, 0);
-  const [trend] = compareMarketWindows([...recent, ...prior], "2026-11-18");
+  const pastSignal = recent.map(sale => ({ ...sale, sold_day: "2026-08-18" }));
+  const pastBefore = prior.map(sale => ({ ...sale, sold_day: "2026-07-18" }));
+  const pastAfter = recent.map(sale => ({ ...sale, sold_day: "2026-09-18", price_cents: sale.price_cents + 500 }));
+  const [trend] = compareMarketWindows([...recent, ...prior, ...pastBefore, ...pastSignal, ...pastAfter], "2026-11-18");
   assert.equal(trend.priceChange, 16);
   assert.equal(trend.scenario, "HAUSSIER");
+  assert.equal(trend.analogues, 1);
+  assert.equal(trend.continued, 1);
 });
 
 test("a native scan and its retry feed the real market calculation through SQLite", async () => {

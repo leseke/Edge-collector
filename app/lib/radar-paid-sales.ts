@@ -43,13 +43,14 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
       return { ...card, paidSales: [...sales.values()] };
     }));
     const windowStart = new Date(+asOf - 59 * 86_400_000).toISOString().slice(0, 10);
+    const historyStart = new Date(+asOf - 359 * 86_400_000).toISOString().slice(0, 10);
     const [markets, leads] = await Promise.all([
       db.prepare(`SELECT variant_key,sold_day,price_cents FROM paid_market_sales
-        WHERE sold_day BETWEEN ? AND ? ORDER BY sold_day DESC,lot_id LIMIT 1001`).bind(windowStart, today).all<TrendSale>(),
+        WHERE sold_day BETWEEN ? AND ? ORDER BY sold_day DESC,lot_id LIMIT 4001`).bind(historyStart, today).all<TrendSale>(),
       db.prepare(`SELECT source_url,category,kind,first_seen_day FROM market_discovery_leads
         WHERE first_seen_day BETWEEN ? AND ? AND kind<>'LOT'
         ORDER BY first_seen_day DESC,source_url LIMIT 12`).bind(windowStart, today).all<Lead>(),
     ]);
-    const trends = markets.results.length <= 1000 ? compareMarketWindows(markets.results, today) : [];
+    const trends = markets.results.length <= 4000 ? compareMarketWindows(markets.results, today) : [];
     return { cards, scan: scan.results[0] ?? null, leads: leads.results, trends };
 }
