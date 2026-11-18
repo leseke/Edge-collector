@@ -176,4 +176,4 @@ La fiche utilise les ventes payées documentées dans EDGE. Le lot courant et le
 
 ### Radar · Coût livré en France
 
-Les fiches GCC ouvertes comparent le total saisi (lot, frais acheteur, livraison assurance comprise) à la médiane des prix de vente de la variante. Les enchères reprennent le prochain palier fourni par GCC. Sept tests ciblés réussis. Le contrôle TypeScript complet reste bloqué localement par la dépendance OpenNext Cloudflare absente.
+Les fiches GCC ouvertes estiment automatiquement le coût livré pour un envoi Colissimo individuel. L’assurance suppose une valeur déclarée égale au prix fixe ou au prochain palier. Les frais acheteur éventuels sont inconnus. La comparaison historique utilise le prix du lot hors livraison. Sept tests ciblés et quatre cas de rendu HTML réussis. Validation iPhone en attente.

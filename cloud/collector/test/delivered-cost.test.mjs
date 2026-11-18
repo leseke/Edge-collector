@@ -1,14 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { amountInCents, deliveredCost } from "../../../app/lib/delivered-cost.ts";
+import { estimateDeliveredCost } from "../../../app/lib/delivered-cost.ts";
 import { readGccPage } from "../../../app/lib/gcc-active-listings.ts";
 
-test("total uses confirmed costs including explicit zero and French decimal input", () => {
-  assert.equal(deliveredCost(10000, "0", "12,50"), 11250);
-  assert.equal(deliveredCost(10000, "1.25", "0"), 10125);
-  assert.equal(deliveredCost(10000, "0", ""), null);
-  assert.equal(deliveredCost(null, "0", "0"), null);
-  for (const value of ["", "-1", "1,234", "1e4", "abc"]) assert.equal(amountInCents(value), null);
+test("single-item Colissimo estimate uses the listing price as declared value", () => {
+  assert.deepEqual(estimateDeliveredCost(10000), { insurance: 100, estimate: 11300 });
+  assert.deepEqual(estimateDeliveredCost(8050), { insurance: 81, estimate: 9331 });
+  for (const price of [null, 0, -1, 1.5, Number.MAX_SAFE_INTEGER]) assert.equal(estimateDeliveredCost(price), null);
 });
 
 test("auction uses the next bid supplied by GCC, including when missing", () => {

@@ -110,5 +110,3 @@ html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
 
 .radar-cost { display: grid; gap: .5rem; padding-block: .8rem; border-top: 1px solid currentColor; }
 .radar-cost p, .radar-cost h4 { margin: 0; }
-.radar-cost label { display: grid; grid-template-columns: minmax(0, 1fr) 7.5rem; align-items: center; gap: .5rem; }
-.radar-cost input { box-sizing: border-box; width: 100%; min-height: 44px; padding-inline: .5rem; font-size: 1rem; }
