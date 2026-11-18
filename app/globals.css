@@ -21,7 +21,6 @@
 .edge-analysis-link{display:inline-flex;margin-top:22px;color:var(--accent);font-size:12px;font-weight:700}
 @media(max-width:760px){
   .sidebar-bottom{display:none}
-  .side-nav{grid-template-columns:repeat(2,minmax(0,1fr))}
   .edge-admin-link{font-size:10px;padding:6px 8px}
 }
 

@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { summarizeCardLiquidity, type CardLiquidityEvidence } from "../lib/card-liquidity";
+import type { SaleVariant } from "../lib/radar-paid-sales";
 import { analyzeListing, estimateListingMarket, euroCents, resaleFeePercent } from "../lib/listing-analysis";
 
 const format = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const euros = (cents: number) => format.format(cents / 100);
 
-export function ListingAnalysis({ listingId, cards }: { listingId: string; cards: CardLiquidityEvidence[] }) {
+export function ListingAnalysis({ listingId, cards, initiallyOpen }: { listingId: string; cards: (SaleVariant | CardLiquidityEvidence)[]; initiallyOpen?: boolean }) {
   const [asking, setAsking] = useState("");
   const [fees, setFees] = useState("");
   const [variantKey, setVariantKey] = useState("");
@@ -24,7 +25,7 @@ export function ListingAnalysis({ listingId, cards }: { listingId: string; cards
   const result = askingCents !== null && askingCents > 0 && targetGainCents !== null && budgetCents !== null
     ? analyzeListing({ askingCents, acquisitionFeesCents, exitNetCents, targetGainCents, budgetCents })
     : null;
-  const longTerm = evidence ? summarizeCardLiquidity(evidence, asOf) : null;
+  const longTerm = evidence && "listings" in evidence ? summarizeCardLiquidity(evidence, asOf) : null;
   const historicalNet = market.historicalLow === null ? null :
     Math.floor(market.historicalLow * (100 - resaleFeePercent) / 100);
   const holdingGain = historicalNet === null || result?.cost == null ? null : historicalNet - result.cost;
@@ -34,7 +35,7 @@ export function ListingAnalysis({ listingId, cards }: { listingId: string; cards
     ["target", "Gain net visé (€)", target, setTarget],
     ["budget", "Budget disponible (€)", budget, setBudget],
   ] as const;
-  return <details>
+  return <details open={initiallyOpen || undefined}>
     <summary>Analyser le prix</summary>
     <p>Renseigne le coût de l’annonce et confirme la variante exacte. EDGE calcule le repère de revente à partir des ventes documentées.</p>
     <label htmlFor={listingId + "-variant"}>Variante vérifiée dans l’annonce</label>{" "}
@@ -44,7 +45,7 @@ export function ListingAnalysis({ listingId, cards }: { listingId: string; cards
         {card.name} · {card.variant}
       </option>)}
     </select>
-    <div className="dashboard-metrics">
+    <div className="radar-input-grid">
       {fields.map(([name, label, value, setValue]) => <div key={name}>
         <label htmlFor={listingId + "-" + name}>{label}</label>{" "}
         <input id={listingId + "-" + name} inputMode="decimal" value={value}

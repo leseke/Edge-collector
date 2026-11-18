@@ -9,3 +9,32 @@
 .edge-mri-case ul{padding-left:18px}.edge-mri-case li{margin:10px 0;font-size:11px;line-height:1.5}
 .edge-mri-case a{color:#b4e4ec;text-decoration:underline;text-underline-offset:3px}
 .edge-mri-case small{display:block;color:#929eb3;margin-top:4px;overflow-wrap:anywhere}
+
+.radar-dashboard{display:grid;gap:1.25rem}
+.radar-intro{padding:1.5rem 0 .25rem}
+.radar-intro h1{margin:0;font-size:clamp(2rem,7vw,3.75rem);line-height:1.1;letter-spacing:-.045em}
+.radar-intro p,.radar-section>p{max-width:64ch}
+.radar-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.15rem 0 0}
+.radar-action{display:inline-flex;align-items:center;min-height:44px;padding:.5rem .9rem;border:1px solid #4d719f;border-radius:.65rem;background:#11345e;color:#edf4ff;font-weight:700;text-decoration:none}
+.radar-action.primary,.radar-listing-form button{border-color:#ffd126;background:#ffd126;color:#0a2041}
+.radar-section{margin:0;padding:clamp(.85rem,3.2vw,1.5rem);border:1px solid #334b6a;border-radius:1rem;background:#111c31;scroll-margin-top:12rem}
+.radar-section>h2{margin:0 0 .6rem}
+.radar-sales{margin:.4rem 0;padding:0;list-style:none}
+.radar-sales li{display:flex;justify-content:space-between;align-items:start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #33445c}
+.radar-sales li:last-child{border-bottom:0}
+.radar-sales li div{min-width:0;overflow-wrap:anywhere}
+.radar-sales li a{flex-shrink:0;text-align:right}
+.radar-sales small{display:block;margin-top:.2rem;color:#b5c3d7;font-size:.8rem}
+.radar-disclosure{margin:.8rem 0 0;border-top:1px solid #33445c}
+.radar-disclosure summary{padding:.75rem 0;cursor:pointer;color:#dbe8fc;font-weight:650}
+.radar-disclosure[open]>summary{color:#ffe17c}
+.radar-listing-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.45rem .7rem;align-items:end}
+.radar-listing-form label{grid-column:1/-1}
+.radar-listing-form input,.radar-listing-form button{min-height:44px;padding:.5rem .7rem;border:1px solid #4d719f;border-radius:.55rem;font:inherit}
+.radar-listing-form input{min-width:0;background:#0a1526;color:inherit}
+.radar-listing-form button{cursor:pointer;font-weight:700}
+.radar-form-status:empty{margin:0}
+@media(max-width:350px){.radar-listing-form{grid-template-columns:minmax(0,1fr)}}
+.radar-input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:1rem 0}
+.radar-input-grid label{display:block;margin-bottom:.25rem}
+.radar-input-grid input,.radar-section select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:.45rem .6rem;border:1px solid #4d719f;border-radius:.5rem;background:#0a1526;color:inherit;font:inherit}

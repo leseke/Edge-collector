@@ -126,7 +126,18 @@ test("a native scan and its retry feed the real market calculation through SQLit
   assert.equal(db.prepare("SELECT COUNT(*) AS n FROM paid_market_sales").get().n, 1);
   assert.throws(() => db.exec("UPDATE paid_market_sales SET price_cents=1"), /immutable_paid_sale/);
 
-  const { cards, scan } = await readRadarPaidSales(DB, now);
+  const otherLanguage = "carte:2021:poing-de-fusion:157/264:ectoplasma-vmax:it:unlimited:psa:10";
+  const sealedKey = "coffret:2024:151:coffret-151:fr:unlimited:scelle";
+  const addSale = db.prepare("INSERT INTO paid_market_sales (lot_id,variant_key,sold_day,price_cents,source_url,collected_at,payload_sha256) VALUES (?,?,?,?,?,?,?)");
+  for (const [key, suffix, day] of [[otherLanguage, "aaa", "2026-11-06"], [sealedKey, "bbb", "2026-11-07"]]) {
+    const lotId = "11111111-2222-3333-4444-555555555" + suffix;
+    addSale.run("gcc-" + lotId, key, day, 1000, "https://gradedcardcenter.com/item/" + lotId, now.toISOString(), "a".repeat(64));
+  }
+  const { cards, scan, variants, recentSales } = await readRadarPaidSales(DB, now);
+  assert.equal(recentSales.length, 3);
+  assert.match(recentSales[0].variant, /FR.*Scellé/);
+  assert.match(recentSales[1].variant, /IT.*PSA 10/);
+  assert.equal(variants.find(variant => variant.key === otherLanguage).paidSales.length, 1);
   assert.equal(scan.status, "OK");
   const psa = cards.find(card => card.key === "swsh8-157:fr:unlimited:psa:10");
   const pca = cards.find(card => card.key === "swsh8-157:fr:unlimited:pca:9.5");

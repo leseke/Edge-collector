@@ -15,7 +15,9 @@ test("product lookup matches exact product ID and distinguishes no investigation
   assert.match(product, /sans potentiel/);
 });
 test("radar links source publications but does not imply causality", () => {
-  assert.match(radar, /snapshot\.reactionCases\.map/);
+  assert.match(radar, /snapshot\.reactionCases\.filter\(item => item\.productId\.startsWith\("pokemon_card_"\)\)/);
+  assert.match(radar, /pokemonCases\.map/);
   assert.match(radar, /publication\.url/);
-  assert.match(radar, /pas des preuves de causalité/);
+  assert.match(radar, /href="#analyse-annonce"/);
+  assert.match(radar, /href="#ventes-payees"/);
 });
