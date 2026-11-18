@@ -34,3 +34,14 @@ test("auction expiry and closed payment statuses remain distinct", () => {
   const closing = { ...auction, status: "WAITING_FOR_PAYMENT", soldAt: "2026-11-18T19:00:00Z" };
   assert.equal(readGccPage({ info, results: [closing] }, "closed", now).items[0].awaitingPayment, true);
 });
+
+test("a graded promo matches its own language and grader only", () => {
+  const card = { ...item, title: "CA 9.5 Arceus V", gradingCompany: "CA", grade: "9.5",
+    isSigned: false, subtitle: "Pokemon • French • 2019 • Promos Épée et Bouclier • Unlimited • #SWSH204",
+    collectible: { category: "Pokemon", type: "CARDS", set: "Promos Épée et Bouclier" } };
+  const key = change => readGccPage({ info, results: [{ ...row, item: { ...card, ...change } }] }, "fixed", now).items[0].variantKey;
+  assert.equal(key({}), "carte:2019:promos-epee-et-bouclier:swsh204:arceus-v:fr:unlimited:ca:9.5");
+  assert.notEqual(key({ subtitle: card.subtitle.replace("French", "English") }), key({}));
+  assert.equal(key({ isSigned: true }), null);
+  assert.equal(key({ gradingCompany: "PSA" }), null);
+});

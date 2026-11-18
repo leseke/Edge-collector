@@ -12,7 +12,7 @@ export function GccProductImage({ src, name }: { src: string; name: string }) {
     loading={expanded ? "eager" : "lazy"} onError={() => setUseThumbnail(true)} />;
 }
 
-export function RadarProductZoom({ name, children }: { name: string; children: ReactNode }) {
+export function RadarProductZoom({ name, children, details }: { name: string; children: ReactNode; details?: ReactNode }) {
   const [open, setOpen] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -36,6 +36,7 @@ export function RadarProductZoom({ name, children }: { name: string; children: R
           <button autoFocus type="button" onClick={() => dialog.current?.close()}>Fermer</button>
         </header>
         <ExpandedImage.Provider value={true}><div className="radar-zoom-detail">{children}</div></ExpandedImage.Provider>
+        {details}
       </div>
     </dialog>}
   </>;

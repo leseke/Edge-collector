@@ -59,7 +59,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     <section id="gcc-closed" className="dashboard-section radar-section" aria-labelledby="radar-history-title">
       <h2 id="radar-history-title" className="radar-section-title" data-tone="lilac">Ventes clôturées sur GCC</h2>
       <Suspense fallback={<p>Chargement de l’historique GCC…</p>}>
-        <GccAvailability kind="closed" cursor={gccCursor(params.closed)} series={gccSeries(params.serie)} />
+        <GccAvailability variants={sales.variants} kind="closed" cursor={gccCursor(params.closed)} series={gccSeries(params.serie)} />
       </Suspense>
     </section>
 
@@ -71,10 +71,10 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         <a href="#gcc-fixed">Offres à prix fixe <span aria-hidden="true">↓</span></a>
       </nav>
       <div id="gcc-auction" className="radar-offer-list">
-        <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
+        <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability variants={sales.variants} kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
       </div>
       <div id="gcc-fixed" className="radar-offer-list">
-        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
+        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability variants={sales.variants} kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
       </div>
       <details className="radar-disclosure">
         <summary>Fréquence des ventes par variante</summary>
