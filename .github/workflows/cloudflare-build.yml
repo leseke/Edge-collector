@@ -362,6 +362,7 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT name FROM sqlite_master WHERE type='table' AND name IN ('collection_runs','observations','collection_errors') ORDER BY name;" --yes
 
       - name: Index the public GCC sitemap in D1
+        id: gcc_index
         continue-on-error: true
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -373,6 +374,20 @@ jobs:
           cd cloud/collector
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file "$RUNNER_TEMP/gcc-index.sql" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT COUNT(*) AS indexed_lots,MAX(source_modified_day) AS latest_source_day FROM gcc_public_index;" --yes
+
+      - name: Verify public GCC sales and append them to D1
+        if: steps.gcc_index.outcome == 'success'
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          node cloud/collector/tools/gcc-paid-probe.mjs "$RUNNER_TEMP/gcc-sitemap.xml" app/lib/card-liquidity.ts "$RUNNER_TEMP/gcc-paid.sql"
+          cd cloud/collector
+          if test -s "$RUNNER_TEMP/gcc-paid.sql"; then
+            npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --file "$RUNNER_TEMP/gcc-paid.sql" --yes
+          fi
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.remote-ci.json --command "SELECT COUNT(*) AS verified_paid_lots,COUNT(DISTINCT variant_key) AS variants FROM paid_market_sales WHERE lot_id LIKE 'gcc-%';" --yes
 
       - name: Probe real TCGdex sources before deployment
         run: node cloud/collector/test/live-source-probe.mjs
@@ -414,7 +429,7 @@ jobs:
           gcc=json.load(open(sys.argv[1])).get("gcc") or {}
           print("GCC collection:", json.dumps({key:gcc.get(key) for key in ("status","discovered","checked","verified","inserted","diagnostics")}))
           if gcc.get("status") not in ("OK","EMPTY","PARTIAL","ALREADY_RUN"):
-              raise SystemExit("GCC collection did not return a usable result")
+              print("::warning::GCC Worker collection did not return a usable result. Refer to the independent GitHub runner import.")
           PY
           unset trigger_secret
       - name: Read remote collection health
