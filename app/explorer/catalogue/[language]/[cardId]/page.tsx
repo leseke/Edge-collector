@@ -7,6 +7,7 @@ import { getRadarPaidSales } from "../../../../lib/radar-paid-sales";
 import { notFound } from "next/navigation";
 import { MarketplaceSearch } from "../../../../components/MarketplaceSearch";
 import { AssetImage } from "../../../../components/AssetImage";
+import { CardmarketOffers } from "../../../../components/CardmarketOffers";
 import "../../../../dashboard.css";
 
 export const dynamic = "force-dynamic";
@@ -94,6 +95,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         </li>)}</ul>
       </div>)}
     </section>}
+    <CardmarketOffers key={cardId + ":" + language} cardId={cardId} language={language} />
     <MarketplaceSearch query={marketplaceQuery} />
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
       <div className="edge-catalogue-facts-heading"><span>IDENTITÉ DU PRODUIT</span><h2>Caractéristiques vérifiables</h2><p>Informations descriptives transmises par TCGdex, sans estimation financière.</p></div>

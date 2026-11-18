@@ -132,3 +132,7 @@ Daily collection now uses one Gemini request per UTC day for all four families, 
 ## Market language evidence — 2026-11-18
 
 The Explorer supports Italian catalogue searches and detail pages. The catalogue quote exposes `marketLanguage: null` because the provider's aggregates do not identify an exemplar language. A live comparison of TCGdex FR and IT for base1-4 returned the same Cardmarket product ID and the same low, 7-day and 30-day prices. Documented sales on catalogue detail require an exact reference and exact language in the paid-sale key; an absent language dataset stays empty. The Radar shows the full variant when rendering tracked sale trends. No D1 schema changes or new provider calls were required.
+
+## Manual Cardmarket offers by language
+
+Catalogue detail accepts manual asking-price observations with a Cardmarket singles link, stated condition, timestamp and explicit confirmation of the reference and offer language. The browser keeps up to 20 records per card and language. This is a listing observation entered by the user. No remote scraper, completed-sale inference, account access or cloud persistence was added.
