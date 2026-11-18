@@ -100,3 +100,7 @@ The MRI dashboard shows the age, scoped observed listing inventory and paid-sale
 The pilot prioritizes a tightening candidate only when a listing capture at most seven days old has a comparable earlier capture at most 30 days apart and fewer observed listings, with at least two documented paid sales in each of the current and previous 30-day windows and stable or rising sale count and median. These are pilot review criteria. No reviewed case currently qualifies, and marketplace ingestion remains unconnected.
 
 The liquidity pilot can ingest reviewed Vinted and Leboncoin inventory captures by exact card variant, capture day, and canonical search scope. It accepts direct listing IDs, deduplicates URLs and rejects search landing pages as individual listings. The capture corpus is empty until verified observations can be supplied. A native email alert is a lead and cannot populate an inventory snapshot on its own.
+
+## Leboncoin watch searches and manual leads
+
+The MRI dashboard links to the six configured searches and can retain direct Leboncoin listing links in local browser storage. Leads are deduplicated by listing ID and query strings are removed before storage. They do not populate reviewed inventory captures or sales. Outlook alert delivery and automated ingestion still await verification.

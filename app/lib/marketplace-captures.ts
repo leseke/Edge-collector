@@ -6,7 +6,7 @@ export type ReviewedMarketplaceCapture = {
   activeListingUrls: string[];
 };
 
-function canonicalListingId(value: string, platform: ReviewedMarketplaceCapture["platform"]) {
+export function canonicalListingId(value: string, platform: ReviewedMarketplaceCapture["platform"]) {
   try {
     const url = new URL(value);
     if (url.protocol !== "https:" || url.username || url.password || url.port) return null;
