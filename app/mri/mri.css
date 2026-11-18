@@ -55,4 +55,8 @@
 .radar-active-group{margin-top:1.15rem}
 .radar-active-group+.radar-active-group{padding-top:1rem;border-top:1px solid #33445c}
 .radar-active-group h3{margin:0 0 .35rem;color:#f4f7ff}
-.radar-sale-main h4{margin:0;overflow-wrap:anywhere;color:#f4f7ff;font-size:clamp(.98rem,4vw,1.2rem);line-height:1.25}
+.radar-sale-main .radar-gcc-lot-title{margin:0;overflow-wrap:anywhere;color:#f4f7ff;font-size:clamp(.98rem,4vw,1.2rem);line-height:1.25}
+
+.radar-active-group[id]{scroll-margin-top:12rem}
+.radar-gcc-series h4{margin:1.05rem 0 .45rem;color:#eaf2ff}
+.radar-gcc-series h4 a{text-decoration:underline;text-underline-offset:.18em}

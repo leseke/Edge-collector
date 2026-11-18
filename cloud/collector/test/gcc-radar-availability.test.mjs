@@ -1,32 +1,36 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readGccActiveListings } from "../../../app/lib/gcc-active-listings.ts";
+import { gccCursor, gccPageUrl, readGccPage } from "../../../app/lib/gcc-active-listings.ts";
 
 const now = new Date("2026-11-18T19:04:00Z");
-const card = (button, extra = "", metadata = "Pokemon • French • 2021 • Poing de Fusion • #157/264") => `
-<div class="bg-surface-2 relative flex flex-col overflow-hidden rounded-[10px] h-full">
-  <a href="/item/01234567-89ab-4cde-8fab-0123456789ab"></a>
-  <p class="text-base font-semibold text-white truncate">Ectoplasma &amp; VMAX</p>
-  <p class="text-[11px] font-medium text-gray-100 truncate">${metadata}</p>
-  <p class="text-2xl font-semibold text-white">1'250,50€</p>
-  ${extra}${button}
-</div>`;
+const info = { currentPage: 2, nextCursor: "valid_cursor_3", counts: { total: 42, auctionCount: 40, fixedPriceCount: 2 } };
+const item = { title: "Ectoplasma", subtitle: "Pokemon • French • 2021 • Poing de Fusion", rectoImageKey: "item/example", collectible: { category: "Pokemon", set: "Poing de Fusion" } };
+const row = { id: "01234567-89ab-4cde-8fab-0123456789ab", status: "ON_SALE", sellingType: "FIXED_PRICE", priceInCents: 125050, item };
 
-test("fixed-price offers preserve the variant and reject other games or inactive buttons", () => {
-  const [offer] = readGccActiveListings(card("<button>Acheter</button>"), "fixed", now);
-  assert.equal(offer.cents, 125050);
-  assert.equal(offer.title, "Ectoplasma & VMAX");
-  assert.match(offer.variant, /^Français/);
-  assert.equal(offer.ends, null);
-  assert.deepEqual(readGccActiveListings(card("<button disabled>Acheter</button>"), "fixed", now), []);
-  assert.deepEqual(readGccActiveListings(card("<button>Acheter</button>", "", "Magic • French"), "fixed", now), []);
+test("catalogue forwards opaque cursors and the exact sales series", () => {
+  const url = gccPageUrl("closed", "valid_cursor_2", "Héros Transcendants");
+  assert.deepEqual(url.searchParams.getAll("status"), ["SOLD", "WAITING_FOR_PAYMENT"]);
+  assert.equal(url.searchParams.get("sets"), "Héros Transcendants");
+  assert.equal(url.searchParams.get("cursor"), "valid_cursor_2");
+  assert.equal(gccCursor(["valid_cursor_2"]), null);
+  assert.equal(gccCursor("invalid?cursor"), null);
 });
 
-test("auctions require an open action and a future Paris time", () => {
-  const listing = end => card("<button>Enchérir</button>", "7 enchères • Fin le " + end);
-  assert.equal(readGccActiveListings(listing("18/11 @ 20h05"), "auction", now)[0].ends, "18/11 @ 20h05");
-  assert.deepEqual(readGccActiveListings(listing("18/11 @ 20h04"), "auction", now), []);
-  assert.deepEqual(readGccActiveListings(listing("31/11 @ 20h09"), "auction", now), []);
-  assert.deepEqual(readGccActiveListings(listing("18/11 @ 20h09"), "fixed", now), []);
-  assert.throws(() => readGccActiveListings("<html>Maintenance</html>", "fixed", now), /unavailable/);
+test("catalogue retains source page metadata and exposes only public listing fields", () => {
+  const page = readGccPage({ info, results: [{ ...row, seller: { displayName: "ignored" } }] }, "fixed", now);
+  assert.equal(page.page, 2);
+  assert.equal(page.nextCursor, "valid_cursor_3");
+  assert.equal(page.total, 2);
+  assert.equal(page.items[0].cents, 125050);
+  assert.match(page.items[0].variant, /^Français/);
+  assert.equal(page.items[0].series, "Poing de Fusion");
+  assert.ok(!("seller" in page.items[0]));
+});
+test("auction expiry and closed payment statuses remain distinct", () => {
+  const auction = { ...row, sellingType: "PRIVATE", endTime: "2026-11-18T19:05:00Z" };
+  assert.equal(readGccPage({ info, results: [auction] }, "auction", now).items.length, 1);
+  assert.deepEqual(readGccPage({ info, results: [auction] }, "auction", new Date(auction.endTime)).items, []);
+  assert.deepEqual(readGccPage({ info, results: [row] }, "closed", now).items, []);
+  const closing = { ...auction, status: "WAITING_FOR_PAYMENT", soldAt: "2026-11-18T19:00:00Z" };
+  assert.equal(readGccPage({ info, results: [closing] }, "closed", now).items[0].awaitingPayment, true);
 });

@@ -1,13 +1,13 @@
-# 014. Open offers in the Radar
+# 014. GCC public catalogue in the Radar
 
 ## Context
-The paid-sale history only retains a subset of exact verified transactions. Public GCC pages also list open auctions and fixed-price items.
+The original Radar sampled the first listing grids and displayed a separate, curated history of paid sales. The GCC public browsing interface has open-auction, fixed-price and closed-lot views, and returns an opaque cursor for continuation.
 
 ## Options
-Expose source links only, add a read of the public grids, or persist a separate offer history.
+Keep a static sample, crawl and persist the entire catalogue, or paginate the public browsing feed on demand.
 
 ## Decision
-Read the two public Pokémon-filtered listing grids in parallel and show up to eight open Pokémon entries per group. Require a matching action and a euro price and exclude expired auctions. Bound the request and HTML size, cache only parsed public snapshots for 120 seconds in the preview Worker and keep links when the source is unavailable.
+Paginate the public Pokémon feed on demand using the same upstream cursor as the GCC browsing interface. Validate each response and retain only public lot information. Group closed results by set on the current page and offer an upstream set filter that applies across all pages. Prepopulate the filter with up to 200 series and accept other exact labels. Cache each page briefly and keep original source links.
 
 ## Consequences
-An active offer is separate from the immutable paid-sale dataset. A sample cannot establish full inventory or a sale. Prices are observed values with a timestamp. The view can be removed without modifying collection history or schema.
+The user can navigate all listings exposed in the public feed without bulk requests. The catalogue can change between pages. Closed and waiting-for-payment lots are never added to verified paid sales. The change is reversible without database changes.

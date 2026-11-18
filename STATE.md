@@ -164,3 +164,8 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 - Radar reads public Pokémon listing grids for GCC auctions and fixed-price listings. Each view is limited to eight entries from the first page and stamped with the fetch time. Auction deadlines are evaluated in Paris time.
 - This view does not add any paid transactions or update the historical availability series. The original GCC pages remain linked if the live sample is unavailable.
 - Both public grids were parsed locally and the targeted positive and negative tests passed. Preview CI checks both listing types in the deployed page.
+
+## GCC catalogue pagination — 2026-11-18
+
+- Radar paginates all three public Pokémon feeds using the upstream cursor, 24 lots per source page. Closed lots are grouped by set and can be filtered across the upstream catalogue using the exact set label.
+- GCC’s reported sale state and waiting-for-payment state remain separate from EDGE’s verified paid history.

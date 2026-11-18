@@ -6,6 +6,7 @@ import { LeboncoinWatchPanel } from "./LeboncoinWatchPanel";
 import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { RadarSaleCard } from "./RadarSaleCard";
 import { GccAvailability } from "./GccAvailability";
+import { gccCursor, gccSeries } from "../lib/gcc-active-listings";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -17,7 +18,7 @@ function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPai
   </ul>;
 }
 
-export async function MarketReactionDashboard() {
+export async function MarketReactionDashboard({ params = {} }: { params?: Record<string, unknown> }) {
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
@@ -28,6 +29,7 @@ export async function MarketReactionDashboard() {
       <div className="radar-actions">
         <a className="radar-action primary" href="#analyse-annonce">Analyser une annonce</a>
         <a className="radar-action" href="#ventes-payees">Voir les ventes payées</a>
+        <a className="radar-action" href="#gcc-closed">Historique GCC</a>
         <a className="radar-action" href="#disponibilite">Voir les offres ouvertes</a>
       </div>
     </header>
@@ -44,11 +46,17 @@ export async function MarketReactionDashboard() {
       </details>}
     </section>
 
+    <section className="dashboard-section radar-section" aria-label="Historique public GCC">
+      <Suspense fallback={<p>Chargement de l’historique GCC…</p>}>
+        <GccAvailability kind="closed" cursor={gccCursor(params.closed)} series={gccSeries(params.serie)} />
+      </Suspense>
+    </section>
+
     <section id="disponibilite" className="dashboard-section radar-section" aria-labelledby="radar-availability-title">
       <h2 id="radar-availability-title">Disponibilité</h2>
-      <p className="radar-sales-description">Aperçu des annonces Pokémon ouvertes sur Graded Card Center, jusqu’à huit par type. Les prix affichés peuvent évoluer.</p>
-      <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" /></Suspense>
-      <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" /></Suspense>
+      <p className="radar-sales-description">Parcours les annonces Pokémon ouvertes sur Graded Card Center. Les prix sont ceux du relevé et peuvent évoluer.</p>
+      <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
+      <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
       <details className="radar-disclosure">
         <summary>Fréquence des ventes par variante</summary>
         <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
