@@ -18,13 +18,29 @@ export function publicLotIds(html: string): string[] {
 }
 
 async function fetchHtml(url: string, request: typeof fetch) {
-  const response = await request(url, {
-    redirect: "error", signal: AbortSignal.timeout(8_000), headers: { Accept: "text/html", "Accept-Language": "fr" },
-  });
-  if (!response.ok) throw new Error("http_" + response.status);
-  if (!response.headers.get("content-type")?.includes("text/html")) throw new Error("unexpected_content_type");
-  return readBoundedText(response, 1_500_000);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8_000);
+  try {
+    const response = await request(url, {
+      redirect: "manual", signal: controller.signal, headers: { Accept: "text/html", "Accept-Language": "fr" },
+    });
+    if (!response.ok) throw new Error("http_" + response.status);
+    if (!response.headers.get("content-type")?.includes("text/html")) throw new Error("unexpected_content_type");
+    return await readBoundedText(response, 1_500_000);
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error("timeout");
+    if (error instanceof TypeError) throw new Error("network_or_decode");
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }
+
+const sourceError = (error: unknown) => {
+  const code = error instanceof Error ? error.message : "";
+  return /^(?:http_[1-5][0-9]{2}|unexpected_content_type|gcc_page_empty|timeout|network_or_decode|oversize|invalid_empty_body)$/.test(code)
+    ? code : "other";
+};
 
 export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, scheduledTime: number, request: typeof fetch = fetch) {
   const day = new Date(scheduledTime).toISOString().slice(0, 10);
@@ -33,7 +49,7 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
     WHERE paid_sale_scans.status='FAILED'`).bind(day).run();
   if (!claim.meta.changes) return { status: "ALREADY_RUN", discovered: 0, checked: 0, verified: 0, inserted: 0 };
 
-  let failures = 0, discovered = 0, checked = 0, verified = 0, inserted = 0;
+  let failures = 0, discovered = 0, checked = 0, readLots = 0, verified = 0, inserted = 0;
   const diagnostics: Record<string, string> = {};
   for (const { category, url } of pages) {
     let stage = "read_cursor";
@@ -57,23 +73,39 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
       await env.DB.prepare(`INSERT INTO gcc_listing_cursor(category,next_page) VALUES (?,?)
         ON CONFLICT(category) DO UPDATE SET next_page=excluded.next_page`).bind(category, next).run();
     } catch (error) {
-      const code = error instanceof Error ? error.message : "";
-      diagnostics[category] = stage + (/^(?:http_[1-5][0-9]{2}|unexpected_content_type|gcc_page_empty)$/.test(code) ? ":" + code : "");
+      const code = sourceError(error);
+      diagnostics[category] = stage + ":" + code;
       failures++;
+      if (code === "http_403" || code === "http_429") break;
     }
   }
 
   const oldest = new Date(scheduledTime - 28 * dayMs).toISOString().slice(0, 10);
   const tomorrow = new Date(scheduledTime + dayMs).toISOString().slice(0, 10);
+  const accessDenied = Object.values(diagnostics).some(value => /:http_(?:403|429)$/.test(value));
   try {
+    if (accessDenied) throw new Error("gcc_source_denied");
     const { results } = await env.DB.prepare(`SELECT lot_id FROM gcc_lot_queue
       WHERE next_check_day <= ? AND first_seen_day >= ? AND paid_day IS NULL
       ORDER BY next_check_day,first_seen_day,lot_id LIMIT 6`).bind(day, oldest).all<{lot_id: string}>();
+    if (results.length < 6) {
+      const indexed = await env.DB.prepare(`SELECT i.lot_id FROM gcc_public_index i
+        WHERE NOT EXISTS (SELECT 1 FROM gcc_lot_queue q WHERE q.lot_id=i.lot_id)
+          AND NOT EXISTS (SELECT 1 FROM paid_market_sales s WHERE s.lot_id='gcc-' || i.lot_id)
+        ORDER BY i.source_modified_day DESC,i.lot_id LIMIT ?`).bind(6 - results.length).all<{lot_id: string}>();
+      for (const row of indexed.results) {
+        if (!/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(row.lot_id)) continue;
+        await env.DB.prepare(`INSERT INTO gcc_lot_queue(lot_id,first_seen_day,next_check_day)
+          VALUES (?,?,?) ON CONFLICT(lot_id) DO NOTHING`).bind(row.lot_id, day, day).run();
+        results.push(row);
+      }
+    }
     for (const { lot_id: id } of results) {
       checked++;
       let paidDay: string | null = null;
       try {
         const html = await fetchHtml(lotPrefix + id, request);
+        readLots++;
         const sale = readPaidLot(html, id, day);
         if (sale) {
           const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(html));
@@ -86,17 +118,19 @@ export async function collectPublicGccLots(env: Pick<PaidSaleEnv, "DB">, schedul
           verified++;
           paidDay = sale.day;
         }
-      } catch {
+      } catch (error) {
+        diagnostics.LOT = "fetch_or_store:" + sourceError(error);
         failures++;
       }
       await env.DB.prepare("UPDATE gcc_lot_queue SET next_check_day=?,paid_day=? WHERE lot_id=?")
         .bind(tomorrow, paidDay, id).run();
+      if (/^fetch_or_store:http_(?:403|429)$/.test(diagnostics.LOT ?? "")) break;
     }
   } catch {
     failures++;
   }
 
-  const status = failures > 0 ? (discovered > 0 || verified > 0 || checked > failures ? "PARTIAL" : "FAILED") :
+  const status = failures > 0 ? (discovered > 0 || readLots > 0 ? "PARTIAL" : "FAILED") :
     verified > 0 ? "OK" : "EMPTY";
   await env.DB.prepare("UPDATE paid_sale_scans SET status=?,checked=?,verified=?,inserted=? WHERE scan_day=?")
     .bind(status, checked, verified, inserted, day).run();

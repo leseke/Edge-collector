@@ -55,5 +55,22 @@ test("queues active auctions, rechecks and stores a paid variant without duplica
   const sale = db.prepare("SELECT variant_key,price_cents FROM paid_market_sales").get();
   assert.equal(sale.variant_key, "swsh7-215:fr:unlimited:pca:9");
   assert.equal(sale.price_cents, 175000);
+  const unknown = "aaaaaaaa-0000-0000-0000-000000000001";
+  db.prepare("INSERT INTO gcc_public_index VALUES (?,?)").run(unknown, "2026-11-18");
+  const unavailableGrid = async url => {
+    if (!url.includes("/item/")) throw new TypeError("connection refused");
+    assert.equal(url, site + unknown);
+    return new Response("Enchère en cours", { headers: { "Content-Type": "text/html" } });
+  };
+  const fallback = await collectPublicGccLots(env, day + 3 * 86400000, unavailableGrid);
+  assert.equal(fallback.status, "PARTIAL");
+  assert.equal(fallback.checked, 1);
+  assert.equal(fallback.diagnostics.AUCTIONS, "fetch_grid:network_or_decode");
+  const denied = await collectPublicGccLots(env, day + 4 * 86400000, async url => {
+    assert.ok(url.startsWith(publicAuctionPage));
+    return new Response(null, { status: 403 });
+  });
+  assert.equal(denied.checked, 0);
+  assert.equal(denied.diagnostics.AUCTIONS, "fetch_grid:http_403");
   db.close();
 });
