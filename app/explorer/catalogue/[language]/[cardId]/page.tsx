@@ -30,10 +30,10 @@ function imageUrl(value: unknown): string | null {
 }
 export default async function CatalogueCardPage({ params, searchParams }: {
   params: Promise<{ language: string; cardId: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; family?: string; set?: string }>;
 }) {
   const { language, cardId } = await params;
-  const { q } = await searchParams;
+  const { q, family, set } = await searchParams;
   if (!isCatalogueLanguage(language) || !/^(?=.{2,50}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(cardId)) notFound();
   const sourceUrl = "https://api.tcgdex.net/v2/" + language + "/cards/" + encodeURIComponent(cardId);
   let card: Card | null = null;
@@ -48,7 +48,11 @@ export default async function CatalogueCardPage({ params, searchParams }: {
     if (value && typeof value === "object" && !Array.isArray(value)) card = value as Card;
   } catch { /* A catalogue outage is not a missing market observation. */ }
   const field = (value: unknown): string => typeof value === "string" && value.trim() ? value : "Non renseigné";
-  const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
+  const origin = new URLSearchParams({ lang: language });
+  if (typeof q === "string" && q.length <= 60) origin.set("catalogue", q);
+  if (typeof family === "string" && /^[a-z0-9.-]{1,40}$/i.test(family)) origin.set("family", family);
+  if (typeof set === "string" && /^[a-z0-9.-]{1,40}$/i.test(set)) origin.set("set", set);
+  const back = "/explorer?" + origin;
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
   const setSize = card.set?.cardCount?.official;
   const cardNumber = typeof card.localId === "string" && typeof setSize === "number"

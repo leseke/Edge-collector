@@ -26,15 +26,26 @@ async function upstream(url: string): Promise<unknown> {
 export async function GET(request: NextRequest) {
   const language = request.nextUrl.searchParams.get("lang") ?? "fr";
   const setId = request.nextUrl.searchParams.get("set");
+  const family = request.nextUrl.searchParams.get("series");
+  if (family !== null && (setId !== null || (family !== "" && !/^[a-zA-Z0-9.-]{1,40}$/.test(family)))) return NextResponse.json({ error: "Série invalide" }, { status: 400 });
   if (!LANGUAGES.has(language) || (setId !== null && !/^(?=.{2,40}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(setId))) {
     return NextResponse.json({ error: "Paramètres invalides" }, { status: 400 });
   }
   try {
+    if (family !== null) {
+      const data = await upstream("https://api.tcgdex.net/v2/" + language + "/series" + (family ? "/" + encodeURIComponent(family) : ""));
+      const list = family && object(data) ? data.sets : data;
+      if (!Array.isArray(list)) throw new Error("Invalid series");
+      const entries = list.filter(object).filter(entry => typeof entry.id === "string" && typeof entry.name === "string")
+        .map(entry => ({ id: entry.id, name: entry.name, logo: imageUrl(entry.logo),
+          cardCount: object(entry.cardCount) && typeof entry.cardCount.total === "number" ? entry.cardCount.total : null }));
+      return NextResponse.json({ entries, language });
+    }
     const base = "https://api.tcgdex.net/v2/" + language + "/sets";
     if (setId !== null) {
       const data = await upstream(base + "/" + encodeURIComponent(setId));
       if (!object(data) || !Array.isArray(data.cards)) throw new Error("Invalid set");
-      const cards = data.cards.slice(0, 120).filter(object).filter(card => typeof card.id === "string" && typeof card.name === "string")
+      const cards = data.cards.filter(object).filter(card => typeof card.id === "string" && typeof card.name === "string")
         .map(card => ({ id: card.id, name: card.name, number: typeof card.localId === "string" ? card.localId : "", image: imageUrl(card.image), language, source: "TCGdex", price: null }));
       return NextResponse.json({ cards, set: { id: setId, name: typeof data.name === "string" ? data.name : setId }, source: "TCGdex", marketPricesIncluded: false });
     }
