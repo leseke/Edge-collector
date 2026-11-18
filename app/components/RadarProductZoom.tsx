@@ -4,9 +4,11 @@ import { createContext, useContext, useEffect, useId, useRef, useState, type Rea
 
 import { ComparableSales } from "./ComparableSales";
 
+import type { PurchaseBasis } from "../lib/delivered-cost";
+
 const ExpandedImage = createContext(false);
 
-export function ZoomComparables(props: { cardKey: string | null; lotId: string }) {
+export function ZoomComparables(props: { cardKey: string | null; lotId: string; basis?: PurchaseBasis }) {
   return useContext(ExpandedImage) ? <ComparableSales {...props} /> : null;
 }
 

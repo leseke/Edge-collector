@@ -9,10 +9,10 @@ export const gccListingPages = {
 };
 
 export type GccListingKind = keyof typeof gccListingPages;
-type Lot = { comparableCard: boolean; id: string; title: string; variant: string; cents: number | null; ends: string | null; soldAt: string | null; image: string | null; awaitingPayment: boolean; series: string | null };
+type Lot = { nextBidCents: number | null; comparableCard: boolean; id: string; title: string; variant: string; cents: number | null; ends: string | null; soldAt: string | null; image: string | null; awaitingPayment: boolean; series: string | null };
 type GccPage = { checkedAt: string; items: Lot[]; page: number; nextCursor: string | null; total: number | null };
 type GccRow = {
-  id?: string; status?: string; sellingType?: string; priceInCents?: number; endTime?: string; soldAt?: string;
+  id?: string; status?: string; sellingType?: string; priceInCents?: number; nextPriceInCents?: number; endTime?: string; soldAt?: string;
   item?: { isSigned?: boolean; articleSerialNumber?: string; gradeDetails?: string; title?: string; subtitle?: string; rectoImageKey?: string; collectible?: { type?: string; category?: string; set?: string } };
 };
 
@@ -67,6 +67,7 @@ export function readGccPage(data: unknown, kind: GccListingKind, now: Date): Gcc
     const sourceImage = typeof imageKey === "string" && /^item\/[A-Za-z0-9_-]{1,120}$/.test(imageKey)
       ? "https://cdn.gradedcardcenter.com/image/width=300,fit=contain,format=webp,quality=65/" + imageKey : null;
     const lot = {
+      nextBidCents: kind === "auction" && positiveInt(row.nextPriceInCents) ? row.nextPriceInCents : null,
       comparableCard: item.collectible.type === "CARDS" && item.isSigned === false && !item.articleSerialNumber && !item.gradeDetails,
       id: row.id, title: item.title.slice(0, 180), cents: positiveInt(row.priceInCents) ? row.priceInCents : null, ends,
       variant: subtitle.slice(0, 250).replace(/^(French|English|Italian|Japanese|Spanish|German)(?=\s*•)/, lang => labels[lang]),
@@ -82,7 +83,7 @@ export function readGccPage(data: unknown, kind: GccListingKind, now: Date): Gcc
 }
 
 export async function getGccActiveListings(kind: GccListingKind, cursor: string | null, series?: string | null): Promise<GccPage | null> {
-  const key = new Request(`https://edge-radar-preview-1c14d55.ylan-seke.workers.dev/_gcc-catalogue-v3/${kind}/${cursor ?? "first"}?series=${encodeURIComponent(series ?? "")}`);
+  const key = new Request(`https://edge-radar-preview-1c14d55.ylan-seke.workers.dev/_gcc-catalogue-v4/${kind}/${cursor ?? "first"}?series=${encodeURIComponent(series ?? "")}`);
   const cache = typeof caches === "undefined" ? undefined : (caches as CacheStorage & { default?: Cache }).default;
   try {
     const cached = await cache?.match(key).catch(() => undefined);

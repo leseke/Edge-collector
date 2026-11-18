@@ -173,3 +173,7 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 ### Radar · Comparables GCC · 18 novembre 2026
 
 La fiche utilise les ventes payées documentées dans EDGE. Le lot courant et les autres variantes sont exclus de la médiane. Cinq tests ciblés réussis. Le rendu HTML a été vérifié avec les ventes archivées d’Ectoplasma VMAX PSA 10. Validation mobile et CI complète en attente.
+
+### Radar · Coût livré en France
+
+Les fiches GCC ouvertes comparent le total saisi (lot, frais acheteur, livraison assurance comprise) à la médiane des prix de vente de la variante. Les enchères reprennent le prochain palier fourni par GCC. Sept tests ciblés réussis. Le contrôle TypeScript complet reste bloqué localement par la dépendance OpenNext Cloudflare absente.

@@ -4,6 +4,9 @@ import { createContext, useContext, type ReactNode } from "react";
 import { comparableSales } from "../lib/comparable-sales";
 import type { SaleVariant } from "../lib/radar-paid-sales";
 
+import { DeliveredCost } from "./DeliveredCost";
+import type { PurchaseBasis } from "../lib/delivered-cost";
+
 const PaidVariants = createContext<SaleVariant[]>([]);
 export function PaidHistoryProvider({ variants, children }: { variants: SaleVariant[]; children: ReactNode }) {
   return <PaidVariants.Provider value={variants}>{children}</PaidVariants.Provider>;
@@ -12,7 +15,7 @@ export function PaidHistoryProvider({ variants, children }: { variants: SaleVari
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 
-export function ComparableSales({ cardKey, lotId }: { cardKey: string | null; lotId: string }) {
+export function ComparableSales({ cardKey, lotId, basis }: { cardKey: string | null; lotId: string; basis?: PurchaseBasis }) {
   const variants = useContext(PaidVariants);
   const history = comparableSales(variants, cardKey, lotId, new Date().toISOString().slice(0, 10));
   function list(rows: NonNullable<typeof history>["exact"], showVariant = false) {
@@ -22,7 +25,8 @@ export function ComparableSales({ cardKey, lotId }: { cardKey: string | null; lo
       {showVariant && <small>{row.variant}</small>}
     </li>)}</ul>;
   }
-  return <section className="radar-comparables">
+  return <>{basis && <DeliveredCost basis={basis} median={history?.median ?? null} />}
+  <section className="radar-comparables">
     <h4>Ventes comparables</h4>
     {!history ? <p>Les détails du lot ne permettent pas d’identifier sa variante avec certitude.</p> : <>
       {history.exact.length ? <>
@@ -33,5 +37,5 @@ export function ComparableSales({ cardKey, lotId }: { cardKey: string | null; lo
       </> : <p>Aucune autre vente payée de cette variante dans l’historique EDGE.</p>}
       {history.related.length > 0 && <details><summary>Autres variantes de la carte ({history.related.length})</summary>{list(history.related, true)}</details>}
     </>}
-  </section>;
+  </section></>;
 }
