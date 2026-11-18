@@ -1,3 +1,5 @@
+import { readMarketplaceCaptures, reviewedMarketplaceCaptures } from "./marketplace-captures";
+
 type ListingSnapshot = { day: string; scope: string; listingIds: string[] };
 type Sale = { id: string; day: string; cents: number; source: string };
 export type CardLiquidityEvidence = {
@@ -62,7 +64,7 @@ export const reviewedCardLiquidity: CardLiquidityEvidence[] = [{
   variant: "FR · Unlimited · PCA 9",
   releasedOn: "2021-08-27",
   releaseSource: "https://press.pokemon.com/en/MEDIA-ALERT-Pokemon-Trading-Card-Game-Sword-ShieldEvolving-Skies-Expan",
-  listings: [],
+  listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9"),
   paidSales: [{
     id: "gcc-8c29e2ba-d560-49b9-945b-6a8ac21a8978",
     day: "2026-05-27",

@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { summarizeCardLiquidity, reviewedCardLiquidity } from "../../app/lib/card-liquidity.ts";
+import { registerHooks } from "node:module";
+const hooks = registerHooks({
+  resolve(specifier, context, nextResolve) {
+    if (specifier === "./marketplace-captures" && context.parentURL?.endsWith("/card-liquidity.ts")) {
+      return nextResolve("./marketplace-captures.ts", context);
+    }
+    return nextResolve(specifier, context);
+  },
+});
+const { summarizeCardLiquidity, reviewedCardLiquidity } = await import("../../app/lib/card-liquidity.ts");
+hooks.deregister();
 
 const [evidence] = reviewedCardLiquidity;
 test("missing listing coverage is unknown and historical paid sales stay dated", () => {
