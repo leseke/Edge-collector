@@ -18,7 +18,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
 }) {
   const auction = kind === "auction";
   const closed = kind === "closed";
-  const LotTitle = closed ? "h5" : "h4";
+
   const [data, choices] = await Promise.all([getGccActiveListings(kind, cursor, series), closed ? getGccSeries() : []]);
   const grouped = new Map<string, NonNullable<typeof data>["items"]>();
   for (const item of data?.items ?? []) {
@@ -28,8 +28,8 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
     else grouped.set(label, [item]);
   }
   const groups = [...grouped].sort(([left], [right]) => left.localeCompare(right, "fr"));
-  return <div className="radar-active-group" id={"gcc-" + kind}>
-    <h3>{titles[kind]}</h3>
+  return <div className="radar-active-group">
+    {!closed && <h3>{titles[kind]}</h3>}
     {closed && <div>
       <p className="radar-sales-description">Historique public de GCC. Les lots en attente de paiement sont signalés.</p>
       <form action="/mri#gcc-closed" className="radar-listing-form">
@@ -46,7 +46,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
     </p> : <p className="radar-sales-description">La page GCC est momentanément indisponible.</p>}
     {data && !data.items.length && <p>Aucun lot Pokémon à afficher sur cette page.</p>}
     {groups.map(([label, items]) => <div className="radar-gcc-series" key={label}>
-      {closed && <h4>{!series && items[0].series ? <a href={gccRadarUrl(kind, null, label)}>{label}</a> : label}</h4>}
+      {closed && <h3 className="radar-series-heading">{!series && items[0].series ? <a href={gccRadarUrl(kind, null, label)}>{label}</a> : label}</h3>}
       <ul className="radar-sales">
         {items.map(item => <li key={item.id}>
           <article className="radar-sale-card">
@@ -54,7 +54,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
               {item.image ? <img src={item.image} alt={item.title} loading="lazy" /> : <small>Photo sur GCC</small>}
             </div>
             <div className="radar-sale-main">
-              <LotTitle className="radar-gcc-lot-title">{item.title}</LotTitle>
+              <h4 className="radar-gcc-lot-title">{item.title}</h4>
               <p className="radar-sale-variant">{item.variant}</p>
               <div className="radar-sale-price">
                 <strong>{item.cents === null ? "Prix indisponible" : euros.format(item.cents / 100)}</strong>

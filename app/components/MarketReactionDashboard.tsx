@@ -12,6 +12,13 @@ const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
 
+const radarShortcuts = [
+  { href: "#analyse-annonce", title: "Analyser une annonce", description: "Estimer la marge", icon: "⌕", tone: "gold" },
+  { href: "#ventes-payees", title: "Ventes payées", description: "Paiements vérifiés", icon: "✓", tone: "mint" },
+  { href: "#gcc-closed", title: "Historique GCC", description: "Ventes par série", icon: "◷", tone: "lilac" },
+  { href: "#disponibilite", title: "Offres ouvertes", description: "Enchères et prix fixes", icon: "≡", tone: "blue" },
+];
+
 function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"] }) {
   return <ul className="radar-sales">
     {sales.map(sale => <li key={sale.id}><RadarSaleCard sale={sale} /></li>)}
@@ -25,17 +32,20 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   return <div className="native-dashboard radar-dashboard">
     <header className="radar-intro">
       <h1>Radar Pokémon</h1>
-      <p>Consulte les ventes de cartes, boosters et coffrets Pokémon. Pour évaluer une annonce, compare-la aux ventes de la même version, dans la même langue et au même grade.</p>
-      <div className="radar-actions">
-        <a className="radar-action primary" href="#analyse-annonce">Analyser une annonce</a>
-        <a className="radar-action" href="#ventes-payees">Voir les ventes payées</a>
-        <a className="radar-action" href="#gcc-closed">Historique GCC</a>
-        <a className="radar-action" href="#disponibilite">Voir les offres ouvertes</a>
-      </div>
+      <p>Suivre les prix du marché et évaluer une annonce.</p>
+      <nav className="radar-shortcuts" aria-label="Rubriques du Radar">
+        {radarShortcuts.map(({ href, title, description, icon, tone }) => <a
+          key={href} href={href} className="radar-shortcut" data-tone={tone}>
+          <span className="radar-shortcut-icon" aria-hidden="true">{icon}</span>
+          <span className="radar-shortcut-arrow" aria-hidden="true">↘</span>
+          <strong>{title}</strong>
+          <small>{description}</small>
+        </a>)}
+      </nav>
     </header>
 
     <section id="ventes-payees" className="dashboard-section radar-section" aria-labelledby="radar-sales-title">
-      <h2 id="radar-sales-title">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
+      <h2 id="radar-sales-title" className="radar-section-title" data-tone="mint">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
       <p className="radar-sales-description">{sales.archiveOnly ?
         "Les ventes déjà documentées restent consultables pendant l’indisponibilité de la collecte." :
         "Transactions payées que EDGE a pu vérifier. La liste couvre une partie des ventes de Graded Card Center."}</p>
@@ -46,17 +56,26 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
       </details>}
     </section>
 
-    <section className="dashboard-section radar-section" aria-label="Historique public GCC">
+    <section id="gcc-closed" className="dashboard-section radar-section" aria-labelledby="radar-history-title">
+      <h2 id="radar-history-title" className="radar-section-title" data-tone="lilac">Ventes clôturées sur GCC</h2>
       <Suspense fallback={<p>Chargement de l’historique GCC…</p>}>
         <GccAvailability kind="closed" cursor={gccCursor(params.closed)} series={gccSeries(params.serie)} />
       </Suspense>
     </section>
 
     <section id="disponibilite" className="dashboard-section radar-section" aria-labelledby="radar-availability-title">
-      <h2 id="radar-availability-title">Disponibilité</h2>
+      <h2 id="radar-availability-title" className="radar-section-title" data-tone="blue">Offres ouvertes</h2>
       <p className="radar-sales-description">Parcours les annonces Pokémon ouvertes sur Graded Card Center. Les prix sont ceux du relevé et peuvent évoluer.</p>
-      <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
-      <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
+      <nav className="radar-offer-links" aria-label="Types d’offres ouvertes">
+        <a href="#gcc-auction">Enchères en cours <span aria-hidden="true">↓</span></a>
+        <a href="#gcc-fixed">Offres à prix fixe <span aria-hidden="true">↓</span></a>
+      </nav>
+      <div id="gcc-auction" className="radar-offer-list">
+        <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
+      </div>
+      <div id="gcc-fixed" className="radar-offer-list">
+        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
+      </div>
       <details className="radar-disclosure">
         <summary>Fréquence des ventes par variante</summary>
         <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />

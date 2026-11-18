@@ -111,6 +111,9 @@ jobs:
           from pathlib import Path
           html = Path(sys.argv[1]).read_text()
           assert "Radar Pokémon" in html and "Dernières ventes payées" in html
+          assert 'class="radar-shortcuts"' in html
+          for anchor in ("analyse-annonce", "ventes-payees", "gcc-closed", "disponibilite", "gcc-auction", "gcc-fixed"):
+              assert f'href="#{anchor}"' in html and html.count(f'id="{anchor}"') == 1, anchor
           assert "Enchères en cours" in html and "Offres à prix fixe" in html
           assert "Enchère affichée" in html and "Prix demandé" in html, "Expected active listings from both GCC grids"
           assert "Ventes clôturées sur GCC" in html and "Filtrer les ventes par série Pokémon" in html

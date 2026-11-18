@@ -66,8 +66,8 @@ export function LeboncoinWatchPanel({ cards }: { cards: SaleVariant[] }) {
   }
 
   return <section id="analyse-annonce" className="dashboard-section radar-section" aria-labelledby="leboncoin-watch-title">
-    <h2 id="leboncoin-watch-title">Analyser une annonce Leboncoin</h2>
-    <p>Ajoute une annonce, confirme la variante et indique son prix avec les frais. EDGE utilise les ventes comparables pour estimer la revente quand les données le permettent.</p>
+    <h2 id="leboncoin-watch-title" className="radar-section-title" data-tone="gold">Analyser une annonce Leboncoin</h2>
+    <p className="radar-sales-description">Ajoute le lien d’une annonce Leboncoin. EDGE compare le prix avec les ventes payées de la même variante, dans la même langue et au même grade.</p>
     <form className="radar-listing-form" onSubmit={addListing}>
       <label htmlFor="leboncoin-listing">Lien direct d’une annonce</label>{" "}
       <input id="leboncoin-listing" type="url" value={value} onChange={event => setValue(event.target.value)} required />{" "}
