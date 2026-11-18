@@ -104,3 +104,7 @@ The liquidity pilot can ingest reviewed Vinted and Leboncoin inventory captures 
 ## Leboncoin watch searches and manual leads
 
 The MRI dashboard links to the six configured searches and can retain direct Leboncoin listing links in local browser storage. Leads are deduplicated by listing ID and query strings are removed before storage. They do not populate reviewed inventory captures or sales. Outlook alert delivery and automated ingestion still await verification.
+
+## Manual listing analysis
+
+Saved Leboncoin leads can be evaluated with a user-entered asking price, acquisition fees, available budget, target gain, and hypothetical net resale. The result shows cash needed, hypothetical gain and a conditional maximum asking price. Missing fees/resale block the maximum. Values are session-only. No offer or transaction data are fetched or inferred from the URL.

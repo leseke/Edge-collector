@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { canonicalListingId } from "../lib/marketplace-captures";
+import { ListingAnalysis } from "./ListingAnalysis";
 import { leboncoinSearchUrl, leboncoinWatch } from "../lib/leboncoin-watch";
 
 const storageKey = "edge.leboncoin.pistes.v1";
@@ -75,6 +76,7 @@ export function LeboncoinWatchPanel() {
     {links.length > 0 && <ul aria-label="Pistes à vérifier">{links.map(url => <li key={url}>
       <a href={url} target="_blank" rel="noopener noreferrer">Annonce {canonicalListingId(url, "leboncoin")?.split(":")[1]} ↗</a>{" "}
       <button type="button" onClick={() => removeListing(url)}>Retirer</button>
+      <ListingAnalysis listingId={canonicalListingId(url, "leboncoin") ?? url} />
     </li>)}</ul>}
     <small>Les pistes sont conservées dans ce navigateur. La réception des alertes Outlook reste à confirmer.</small>
   </section>;
