@@ -389,7 +389,7 @@ jobs:
               "database_id":os.environ["EDGE_D1_DATABASE_ID"]
             }]
           }
-          config["triggers"]={"crons":["17 9 * * *"]}
+          config["triggers"]={"crons":["17 9 * * *", "*/10 * * * *"]}
           Path("cloud/collector/wrangler.remote-ci.json").write_text(json.dumps(config))
           PY
           cd cloud/collector
@@ -433,7 +433,7 @@ jobs:
           set -euo pipefail
           cd cloud/collector
           npx wrangler deploy --config wrangler.remote-ci.json
-          echo "Deployed isolated Worker with one daily scheduled collection at 09:17 UTC; public HTTP endpoint cannot initiate collection."
+          echo "Deployed isolated Worker with daily collection and ten-minute GCC coverage updates; public HTTP endpoint cannot initiate collection."
 
       - name: Configure protected trigger and collect real data now
         env:

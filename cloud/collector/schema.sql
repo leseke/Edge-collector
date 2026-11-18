@@ -106,3 +106,20 @@ CREATE TABLE IF NOT EXISTS gcc_public_index (
   lot_id TEXT PRIMARY KEY,
   source_modified_day TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS gcc_coverage (
+  kind TEXT PRIMARY KEY CHECK(kind IN ('closed','fixed','auction')),
+  cycle INTEGER NOT NULL DEFAULT 1,
+  page INTEGER NOT NULL DEFAULT 0,
+  cursor TEXT,
+  announced INTEGER,
+  observed INTEGER NOT NULL DEFAULT 0,
+  checked_at TEXT,
+  last_complete TEXT,
+  finished INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS gcc_coverage_ids (
+  kind TEXT NOT NULL,
+  lot_id TEXT NOT NULL,
+  PRIMARY KEY(kind,lot_id)
+) WITHOUT ROWID;

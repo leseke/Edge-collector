@@ -1,3 +1,4 @@
+import { collectCoverage } from "./gcc-coverage";
 import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
 import { collectPublicGccLots } from "./gcc-public";
@@ -80,6 +81,10 @@ export default {
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    if (event.cron === "*/10 * * * *") {
+      ctx.waitUntil(collectCoverage(env.DB));
+      return;
+    }
     ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime)]));
   },
 };

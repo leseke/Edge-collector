@@ -1,3 +1,4 @@
+import { GccCoverage } from "./GccCoverage";
 import type { SaleVariant } from "../lib/radar-paid-sales";
 import { GccProductImage, RadarProductZoom } from "./RadarProductZoom";
 import { Suspense } from "react";
@@ -39,6 +40,7 @@ export async function GccAvailability({ kind, variants, cursor = null, series = 
   const groups = [...grouped].sort(([left], [right]) => left.localeCompare(right, "fr"));
   return <div className="radar-active-group">
     {!closed && <h3>{titles[kind]}</h3>}
+    <Suspense fallback={null}><GccCoverage kind={kind} /></Suspense>
     {closed && <div>
       <p className="radar-sales-description">Historique public de GCC. Les lots en attente de paiement sont signalés.</p>
       <form action="/mri#gcc-closed" className="radar-listing-form">
