@@ -1,9 +1,9 @@
 import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
+import { collectPaidSales, type PaidSaleEnv } from "./paid-sales";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
-interface Env {
-  DB: D1Database;
+interface Env extends PaidSaleEnv {
   TRIGGER_SECRET?: string;
 }
 type Target = { productId: string; url: string };
@@ -76,7 +76,7 @@ export default {
     }
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
-  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(collect(env));
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(Promise.all([collect(env), collectPaidSales(env, event.scheduledTime)]));
   },
 };

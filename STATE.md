@@ -114,3 +114,7 @@ The listing analysis no longer requests a resale price. For a user-confirmed exa
 ## Reviewed paid-sales coverage — 2026-11-18
 
 The Radar consumes nine sourced Graded Card Center sales over five French Unlimited card and grade combinations. Each item page explicitly shows a paid status. Ectoplasma VMAX 157/264 has one paid sale within 90 days per covered grade, so neither grade has a short-term resale quote. Its PSA 10 grade has three dated sales spanning over 90 days and supports a historical downside scenario. These observations do not establish total market volume or a future price. Eight targeted tests passed locally. No new network calls, paid service, D1 change or runtime route is required.
+
+## Native EDGE paid-sale collection — 2026-11-18
+
+The scheduled collector can discover public lot links via Gemini Google Search and confirm paid EUR lots directly on the source page for five exact French variants. A unique D1 claim bounds discovery to one request per UTC day. Paid lots are immutable and keyed by source lot ID. The Radar reads the same D1 evidence and passes it to the existing calculations. Two integration tests passed locally against SQLite with simulated source responses, including retry deduplication and an updated resale quote. The previous conversation-based scan has been paused. No remote Gemini call, D1 schema application or activation of this collection feature was performed for this change. See ADR 008 for activation requirements.

@@ -1,21 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { reviewedCardLiquidity, summarizeCardLiquidity } from "../lib/card-liquidity";
+import { summarizeCardLiquidity, type CardLiquidityEvidence } from "../lib/card-liquidity";
 import { analyzeListing, estimateListingMarket, euroCents, resaleFeePercent } from "../lib/listing-analysis";
 
 const format = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const euros = (cents: number) => format.format(cents / 100);
 
-export function ListingAnalysis({ listingId }: { listingId: string }) {
+export function ListingAnalysis({ listingId, cards }: { listingId: string; cards: CardLiquidityEvidence[] }) {
   const [asking, setAsking] = useState("");
   const [fees, setFees] = useState("");
-  const [variantIndex, setVariantIndex] = useState("");
+  const [variantKey, setVariantKey] = useState("");
   const [target, setTarget] = useState("");
   const [budget, setBudget] = useState("300");
   const askingCents = euroCents(asking);
   const acquisitionFeesCents = euroCents(fees);
-  const evidence = variantIndex === "" ? undefined : reviewedCardLiquidity[Number(variantIndex)];
+  const evidence = cards.find(card => card.key === variantKey);
   const asOf = new Date().toISOString().slice(0, 10);
   const market = estimateListingMarket(evidence?.paidSales ?? [], asOf);
   const exitNetCents = market.conservativeNet;
@@ -38,9 +38,9 @@ export function ListingAnalysis({ listingId }: { listingId: string }) {
     <summary>Analyser le prix</summary>
     <p>Renseigne le coût de l’annonce et confirme la variante exacte. EDGE calcule le repère de revente à partir des ventes documentées.</p>
     <label htmlFor={listingId + "-variant"}>Variante vérifiée dans l’annonce</label>{" "}
-    <select id={listingId + "-variant"} value={variantIndex} onChange={event => setVariantIndex(event.target.value)}>
+    <select id={listingId + "-variant"} value={variantKey} onChange={event => setVariantKey(event.target.value)}>
       <option value="">Variante inconnue ou absente du catalogue étudié</option>
-      {reviewedCardLiquidity.map((card, index) => <option key={card.name + card.variant} value={index}>
+      {cards.map(card => <option key={card.key} value={card.key}>
         {card.name} · {card.variant}
       </option>)}
     </select>

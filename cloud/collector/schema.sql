@@ -58,3 +58,25 @@ CREATE UNIQUE INDEX IF NOT EXISTS observations_run_product_unique
 ON observations(run_id, product_id);
 CREATE UNIQUE INDEX IF NOT EXISTS collection_errors_run_product_unique
 ON collection_errors(run_id, product_id);
+
+CREATE TABLE IF NOT EXISTS paid_sale_scans (
+  scan_day TEXT PRIMARY KEY,
+  status TEXT NOT NULL CHECK (status IN ('RUNNING','OK','EMPTY','PARTIAL','FAILED')),
+  checked INTEGER NOT NULL DEFAULT 0,
+  verified INTEGER NOT NULL DEFAULT 0,
+  inserted INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS paid_market_sales (
+  lot_id TEXT PRIMARY KEY,
+  variant_key TEXT NOT NULL,
+  sold_day TEXT NOT NULL,
+  price_cents INTEGER NOT NULL CHECK (price_cents > 0),
+  source_url TEXT NOT NULL,
+  collected_at TEXT NOT NULL,
+  payload_sha256 TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS paid_market_sales_variant_day ON paid_market_sales(variant_key,sold_day DESC);
+CREATE TRIGGER IF NOT EXISTS paid_market_sales_no_update
+BEFORE UPDATE ON paid_market_sales BEGIN SELECT RAISE(ABORT, 'immutable_paid_sale'); END;
+CREATE TRIGGER IF NOT EXISTS paid_market_sales_no_delete
+BEFORE DELETE ON paid_market_sales BEGIN SELECT RAISE(ABORT, 'immutable_paid_sale'); END;

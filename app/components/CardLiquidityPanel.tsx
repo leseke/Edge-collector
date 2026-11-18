@@ -1,14 +1,20 @@
-import { reviewedCardLiquidity, summarizeCardLiquidity } from "../lib/card-liquidity";
+import { summarizeCardLiquidity, type CardLiquidityEvidence } from "../lib/card-liquidity";
 
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 
-export function CardLiquidityPanel() {
+export function CardLiquidityPanel({ cards, scan }: {
+  cards: CardLiquidityEvidence[];
+  scan: { scan_day: string; status: string } | null;
+}) {
   const asOf = new Date().toISOString().slice(0, 10);
-  const cases = reviewedCardLiquidity.map(card => ({ card, facts: summarizeCardLiquidity(card, asOf) }));
+  const cases = cards.map(card => ({ card, facts: summarizeCardLiquidity(card, asOf) }));
   const ranked = cases.filter(({ facts }) => facts.signal === "SUPPLY_TIGHTENING");
   return <section className="dashboard-section" aria-label="Offre et liquidité">
     <h2>Offre et liquidité des cartes</h2>
+    <p>{scan ? `Collecte des ventes du ${date.format(new Date(scan.scan_day))} · ${scan.status === "OK" ? "ventes vérifiées" :
+      scan.status === "EMPTY" ? "aucune vente vérifiée sur ce passage" : scan.status === "PARTIAL" ? "collecte partielle" :
+      scan.status === "FAILED" ? "collecte indisponible" : "collecte démarrée"}` : "Dernière collecte automatique indisponible. Historique documenté affiché."}</p>
     {ranked.length === 0 && <p>Aucune piste de raréfaction étayée dans les relevés disponibles.</p>}
     {[...ranked, ...cases.filter(({ facts }) => facts.signal !== "SUPPLY_TIGHTENING")].map(({ card, facts }) => {
       return <article key={card.name + card.variant} className="edge-mri-case">

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
+import { getRadarPaidSales } from "../lib/radar-paid-sales";
 import { LeboncoinWatchPanel } from "./LeboncoinWatchPanel";
 import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { DataLimit, EvidenceGuide } from "./EvidenceGuide";
 
 export async function MarketReactionDashboard() {
-  const snapshot = await getTcgMarketSnapshot();
+  const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const formatDate = (value: string) => value ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(new Date(value)) : "Non disponible";
   return <div className="native-dashboard">
     <section className="dashboard-hero">
@@ -19,8 +20,8 @@ export async function MarketReactionDashboard() {
       <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>{snapshot.completedSales}</strong><small>Déclarées dans les données, preuves à examiner au cas par cas.</small></div>
     </section>
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
-    <LeboncoinWatchPanel />
-    <CardLiquidityPanel />
+    <LeboncoinWatchPanel cards={sales.cards} />
+    <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">ÉTAT DES PREUVES</p><h2>Réactions TCG documentées</h2></div><span className="dashboard-date">Dernier relevé : {formatDate(snapshot.observedAt)}</span></div>
       {snapshot.reactionCases.length > 0 && <div className="edge-mri-cases">

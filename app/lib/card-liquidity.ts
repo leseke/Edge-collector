@@ -1,8 +1,9 @@
 import { readMarketplaceCaptures, reviewedMarketplaceCaptures } from "./marketplace-captures";
 
 type ListingSnapshot = { day: string; scope: string; listingIds: string[] };
-type Sale = { id: string; day: string; cents: number; source: string };
+export type Sale = { id: string; day: string; cents: number; source: string };
 export type CardLiquidityEvidence = {
+  key: string;
   name: string;
   variant: string;
   releasedOn: string;
@@ -83,12 +84,14 @@ function gccPaidSale(lotId: string, day: string, cents: number): Sale {
 export const reviewedCardLiquidity: CardLiquidityEvidence[] = [
   {
     ...noctali,
+    key: "swsh7-215:fr:unlimited:pca:9",
     variant: "FR · Unlimited · PCA 9",
     listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9"),
     paidSales: [gccPaidSale("8c29e2ba-d560-49b9-945b-6a8ac21a8978", "2026-05-27", 175000)],
   },
   {
     ...noctali,
+    key: "swsh7-215:fr:unlimited:pca:9.5",
     variant: "FR · Unlimited · PCA 9.5",
     listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9.5"),
     paidSales: [
@@ -98,6 +101,7 @@ export const reviewedCardLiquidity: CardLiquidityEvidence[] = [
   },
   {
     ...noctali,
+    key: "swsh7-215:fr:unlimited:psa:10",
     variant: "FR · Unlimited · PSA 10",
     listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:psa:10"),
     paidSales: [
@@ -107,12 +111,14 @@ export const reviewedCardLiquidity: CardLiquidityEvidence[] = [
   },
   {
     ...ectoplasma,
+    key: "swsh8-157:fr:unlimited:pca:9.5",
     variant: "FR · Unlimited · PCA 9.5",
     listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh8-157:fr:unlimited:pca:9.5"),
     paidSales: [gccPaidSale("39a0c666-270e-46f6-b520-359b81362a53", "2026-09-12", 8500)],
   },
   {
     ...ectoplasma,
+    key: "swsh8-157:fr:unlimited:psa:10",
     variant: "FR · Unlimited · PSA 10",
     listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh8-157:fr:unlimited:psa:10"),
     paidSales: [
