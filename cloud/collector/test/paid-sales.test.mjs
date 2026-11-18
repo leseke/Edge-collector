@@ -82,6 +82,7 @@ test("a native scan and its retry feed the real market calculation through SQLit
   const searches = [];
   let pages = 0;
   let responseStatus = () => 200;
+  let includedSections = ["[CARTE]", "[BOOSTER]", "[COFFRET]", "[SORTIE]"];
   const transport = async (url, options) => {
     if (url === itemUrl) {
       pages++;
@@ -95,7 +96,9 @@ test("a native scan and its retry feed the real market calculation through SQLit
     return Response.json({ candidates: [{
       finishReason: "STOP",
       groundingMetadata: { webSearchQueries: ["test"] },
-      content: { parts: [{ text: itemUrl }] },
+      content: { parts: [{ text: includedSections.map((section, i) => [
+        section, itemUrl, "https://www.leboncoin.fr/ad/collection/" + (12340 + i),
+      ].join("\n")).join("\n") }] },
     }] });
   };
   const now = new Date("2026-11-18T09:00:00Z");
@@ -103,20 +106,21 @@ test("a native scan and its retry feed the real market calculation through SQLit
   assert.equal(searches.length, 0);
   const env = { DB, GEMINI_FREE_TIER_ENABLED: "true", GEMINI_API_KEY: "test" };
   await Promise.all([collectPaidSales(env, +now, transport), collectPaidSales(env, +now, transport)]);
-  assert.equal(searches.length, 4);
-  for (const [index, topic] of [/cartes Pokémon/, /boosters Pokémon/, /coffrets Pokémon/, /sorties TCG/].entries()) {
-    assert.match(searches[index], topic);
+  assert.equal(searches.length, 1);
+  for (const topic of [/\[CARTE\].*cartes Pokémon/, /\[BOOSTER\].*boosters Pokémon/, /\[COFFRET\].*coffrets Pokémon/, /\[SORTIE\].*sorties TCG/]) {
+    assert.match(searches[0], topic);
   }
   assert.equal(pages, 1);
-  responseStatus = index => index === 5 ? 503 : 200;
+  assert.equal(db.prepare("SELECT COUNT(DISTINCT category) AS n FROM market_discovery_leads").get().n, 4);
+  includedSections = includedSections.slice(0, 3);
   await collectPaidSales(env, +now + 86_400_000, transport);
-  assert.equal(searches.length, 8);
+  assert.equal(searches.length, 2);
   assert.equal(pages, 2);
   assert.equal(db.prepare("SELECT status FROM paid_sale_scans WHERE scan_day='2026-11-19'").get().status, "PARTIAL");
 
   responseStatus = () => 429;
   await collectPaidSales(env, +now + 2 * 86_400_000, transport);
-  assert.equal(searches.length, 9);
+  assert.equal(searches.length, 3);
   assert.equal(pages, 2);
   assert.equal(db.prepare("SELECT status FROM paid_sale_scans WHERE scan_day='2026-11-20'").get().status, "FAILED");
   assert.equal(db.prepare("SELECT COUNT(*) AS n FROM paid_market_sales").get().n, 1);

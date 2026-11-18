@@ -99,7 +99,8 @@ export function readPaidLot(html: string, lotId: string, scanDay: string) {
   return { lotId, key, day, cents, source: itemPrefix + lotId };
 }
 
-async function discoverLeads(search: string, apiKey: string, request: Fetch) {
+async function discoverLeads(apiKey: string, request: Fetch) {
+  const topics = lanes.map(lane => `[${lane.category}] ${lane.search}`).join("\n");
   const response = await request(endpoint, {
     method: "POST",
     redirect: "error",
@@ -107,9 +108,11 @@ async function discoverLeads(search: string, apiKey: string, request: Fetch) {
     headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
     body: JSON.stringify({
       tools: [{ google_search: {} }],
-      generationConfig: { maxOutputTokens: 2048, thinkingConfig: { thinkingBudget: 0 } },
-      contents: [{ parts: [{ text: "Recherche Google, marché Pokémon accessible depuis la France. " + search +
-        " Renvoie jusqu’à huit URL directes récentes, dont deux lots gradedcardcenter.com/item/ au maximum. Pour les annonces, utilise Leboncoin ou Vinted. Pour les publications, utilise le site officiel Pokémon. Aucun prix ni déclaration non sourcée. N’invente aucune URL." }] }],
+      generationConfig: { maxOutputTokens: 4096, thinkingConfig: { thinkingBudget: 0 } },
+      contents: [{ parts: [{ text: "Recherche Google, marché Pokémon accessible depuis la France. Couvre les quatre familles ensemble.\n" + topics +
+        "\nRéponds en texte brut, avec exactement les quatre en-têtes entre crochets ci-dessus, chacun seul sur sa ligne." +
+        " Sous chaque en-tête, donne jusqu’à huit URL directes récentes, une par ligne, dont deux lots gradedcardcenter.com/item/ au maximum." +
+        " Annonces : Leboncoin ou Vinted. Publications : site officiel Pokémon. Si aucun résultat fiable, garde l’en-tête et indique AUCUN. N’invente aucune URL." }] }],
     }),
   });
   if (response.status === 429 || response.status === 402) return null;
@@ -118,7 +121,13 @@ async function discoverLeads(search: string, apiKey: string, request: Fetch) {
   const answer = data.candidates?.[0];
   if (!answer || answer.finishReason !== "STOP" || !Array.isArray(answer.content?.parts) ||
       !answer.groundingMetadata?.webSearchQueries?.length) throw new Error("discovery_response_invalid");
-  return candidateLeads(answer.content.parts.map((part: {text?: string}) => part.text ?? "").join("\n"));
+  const text = answer.content.parts.map((part: {text?: string}) => part.text ?? "").join("\n");
+  const sections = text.split(/^[ \t]*\[(CARTE|BOOSTER|COFFRET|SORTIE)\][ \t]*\r?$/m);
+  const grouped = new Map<string, ReturnType<typeof candidateLeads>>();
+  for (let i = 1; i < sections.length; i += 2) {
+    if (!grouped.has(sections[i])) grouped.set(sections[i], candidateLeads(sections[i + 1]));
+  }
+  return grouped;
 }
 
 export async function collectPaidSales(env: PaidSaleEnv, scheduledTime: number, request: Fetch = fetch) {
@@ -129,12 +138,11 @@ export async function collectPaidSales(env: PaidSaleEnv, scheduledTime: number, 
 
   let checked = 0, verified = 0, inserted = 0, failures = 0, discovered = 0;
   const seenUrls = new Set<string>();
-  for (const lane of lanes) {
-    try {
-      const leads = await discoverLeads(lane.search, env.GEMINI_API_KEY, request);
-      if (!leads) break;
-      discovered++;
-      for (const [url, kind] of leads) {
+  try {
+    const grouped = await discoverLeads(env.GEMINI_API_KEY, request);
+    discovered = grouped?.size ?? 0;
+    for (const lane of lanes) {
+      for (const [url, kind] of grouped?.get(lane.category) ?? []) {
         if (seenUrls.has(url)) continue;
         seenUrls.add(url);
         await env.DB.prepare("INSERT INTO market_discovery_leads (source_url,category,kind,first_seen_day) VALUES (?,?,?,?) ON CONFLICT(source_url) DO NOTHING")
@@ -163,9 +171,9 @@ export async function collectPaidSales(env: PaidSaleEnv, scheduledTime: number, 
           failures++;
         }
       }
-    } catch {
-      failures++;
     }
+  } catch {
+    failures++;
   }
   const status = discovered === 0 ? "FAILED" :
     discovered < lanes.length || failures > 0 ? "PARTIAL" : verified > 0 ? "OK" : "EMPTY";
