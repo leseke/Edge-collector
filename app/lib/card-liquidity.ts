@@ -59,16 +59,66 @@ export function summarizeCardLiquidity(evidence: CardLiquidityEvidence, asOf: st
   };
 }
 
-export const reviewedCardLiquidity: CardLiquidityEvidence[] = [{
+const noctali = {
   name: "Noctali VMAX 215/203",
-  variant: "FR · Unlimited · PCA 9",
   releasedOn: "2021-08-27",
   releaseSource: "https://press.pokemon.com/en/MEDIA-ALERT-Pokemon-Trading-Card-Game-Sword-ShieldEvolving-Skies-Expan",
-  listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9"),
-  paidSales: [{
-    id: "gcc-8c29e2ba-d560-49b9-945b-6a8ac21a8978",
-    day: "2026-05-27",
-    cents: 175000,
-    source: "https://gradedcardcenter.com/item/8c29e2ba-d560-49b9-945b-6a8ac21a8978",
-  }],
-}];
+};
+const ectoplasma = {
+  name: "Ectoplasma VMAX 157/264",
+  releasedOn: "2021-11-12",
+  releaseSource: "https://press.pokemon.com/en/Pokemon-TCG-Sword-ShieldFusion-Strike",
+};
+
+// Each GCC lot below has a public sale price and an explicit paid status.
+function gccPaidSale(lotId: string, day: string, cents: number): Sale {
+  return {
+    id: "gcc-" + lotId,
+    day,
+    cents,
+    source: "https://gradedcardcenter.com/item/" + lotId,
+  };
+}
+
+export const reviewedCardLiquidity: CardLiquidityEvidence[] = [
+  {
+    ...noctali,
+    variant: "FR · Unlimited · PCA 9",
+    listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9"),
+    paidSales: [gccPaidSale("8c29e2ba-d560-49b9-945b-6a8ac21a8978", "2026-05-27", 175000)],
+  },
+  {
+    ...noctali,
+    variant: "FR · Unlimited · PCA 9.5",
+    listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:pca:9.5"),
+    paidSales: [
+      gccPaidSale("9e70c3a8-8ed4-4bfe-a988-63d83bea6220", "2026-03-14", 180000),
+      gccPaidSale("7237a6f7-cfe8-4708-b3b6-274a8b46fd4d", "2026-06-01", 190000),
+    ],
+  },
+  {
+    ...noctali,
+    variant: "FR · Unlimited · PSA 10",
+    listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh7-215:fr:unlimited:psa:10"),
+    paidSales: [
+      gccPaidSale("a42e4e3d-6427-498f-971e-8e489fe63127", "2026-02-15", 320000),
+      gccPaidSale("6bb74cb4-5910-4bc1-ab31-45f9dd1b88f6", "2026-02-26", 290000),
+    ],
+  },
+  {
+    ...ectoplasma,
+    variant: "FR · Unlimited · PCA 9.5",
+    listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh8-157:fr:unlimited:pca:9.5"),
+    paidSales: [gccPaidSale("39a0c666-270e-46f6-b520-359b81362a53", "2026-09-12", 8500)],
+  },
+  {
+    ...ectoplasma,
+    variant: "FR · Unlimited · PSA 10",
+    listings: readMarketplaceCaptures(reviewedMarketplaceCaptures, "swsh8-157:fr:unlimited:psa:10"),
+    paidSales: [
+      gccPaidSale("c7a9d32f-c531-4993-afd0-c3f800ccc415", "2026-03-03", 13000),
+      gccPaidSale("c06c8964-11d2-43e3-b91c-cb6ac6a1514c", "2026-05-29", 20000),
+      gccPaidSale("fc56512c-6d10-4f93-919d-17b81665f676", "2026-09-06", 19000),
+    ],
+  },
+];

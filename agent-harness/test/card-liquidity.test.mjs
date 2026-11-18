@@ -13,6 +13,20 @@ const { summarizeCardLiquidity, reviewedCardLiquidity } = await import("../../ap
 hooks.deregister();
 
 const [evidence] = reviewedCardLiquidity;
+const { estimateListingMarket } = await import("../../app/lib/listing-analysis.ts");
+
+test("reviewed sales remain unique and different graders never combine into a short-term quote", () => {
+  const sales = reviewedCardLiquidity.flatMap(card => card.paidSales);
+  assert.equal(new Set(sales.map(sale => sale.id)).size, sales.length);
+  const cases = reviewedCardLiquidity.filter(card => card.name === "Ectoplasma VMAX 157/264");
+  assert.equal(cases.length, 2);
+  for (const card of cases) {
+    const estimate = estimateListingMarket(card.paidSales, "2026-11-18");
+    assert.equal(estimate.recent.length, 1);
+    assert.equal(estimate.conservativeNet, null);
+    assert.equal(estimate.historicalLow, card.variant.includes("PSA") ? 13000 : null);
+  }
+});
 test("missing listing coverage is unknown and historical paid sales stay dated", () => {
   const result = summarizeCardLiquidity(evidence, "2026-11-18");
   assert.equal(result.active, null);
