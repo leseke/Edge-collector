@@ -3,12 +3,13 @@ import { readCatalogueQuote } from "../../../../lib/catalogue-price";
 import { getTcgMarketSnapshot } from "../../../../lib/market-data";
 import { linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
 import { notFound } from "next/navigation";
+import { MarketplaceSearch } from "../../../../components/MarketplaceSearch";
 import { AssetImage } from "../../../../components/AssetImage";
 import "../../../../dashboard.css";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown } };
+type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown; cardCount?: { official?: unknown } } };
 
 const sourceDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" });
 
@@ -43,6 +44,12 @@ export default async function CatalogueCardPage({ params, searchParams }: {
   const field = (value: unknown): string => typeof value === "string" && value.trim() ? value : "Non renseigné";
   const back = "/explorer" + (typeof q === "string" && q.length <= 60 ? "?catalogue=" + encodeURIComponent(q) + "&lang=" + language : "");
   if (!card || card.id !== cardId || typeof card.name !== "string") return <main className="native-dashboard edge-product-detail"><Link href={back}>← Retour au catalogue</Link><h1>Fiche temporairement indisponible</h1><p>Réessaie plus tard. Aucune donnée de marché n'a été inventée.</p></main>;
+  const setSize = card.set?.cardCount?.official;
+  const cardNumber = typeof card.localId === "string" && typeof setSize === "number"
+    ? `${card.localId}/${setSize}` : card.localId;
+  const marketplaceQuery = [card.name, cardNumber, card.set?.name]
+    .filter((part): part is string => typeof part === "string" && part.trim().length > 0)
+    .join(" ");
   const snapshot = await getTcgMarketSnapshot();
   const indicativePrice = readCatalogueQuote(card.pricing);
   const marketLink = linkCatalogueToMarket(cardId, language, snapshot.cards);
@@ -70,6 +77,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         </div>
       </div>
     </div>
+    <MarketplaceSearch query={marketplaceQuery} />
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
       <div className="edge-catalogue-facts-heading"><span>IDENTITÉ DU PRODUIT</span><h2>Caractéristiques vérifiables</h2><p>Informations descriptives transmises par TCGdex, sans estimation financière.</p></div>
       <dl className="edge-catalogue-facts-grid">

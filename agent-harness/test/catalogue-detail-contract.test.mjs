@@ -29,3 +29,14 @@ test("PRODUCT-001 displays only sourced attributes and no invented investment co
   assert.match(page, /INTELLIGENCE EDGE · À CONNECTER/);
   assert.match(page, /aucun signal BUY|Aucun signal BUY/);
 });
+
+test("marketplace search uses the catalogue identity and keeps Gemini user-initiated", async () => {
+  const search = await readFile(new URL("../../app/components/MarketplaceSearch.tsx", import.meta.url), "utf8");
+  assert.match(page, /marketplaceQuery = \[card\.name, cardNumber, card\.set\?\.name\]/);
+  assert.match(page, /<MarketplaceSearch query={marketplaceQuery}/);
+  assert.match(search, /vinted\.fr\/catalog/);
+  assert.match(search, /leboncoin\.fr\/recherche/);
+  assert.match(search, /new URLSearchParams\(\{ search_text: query \}\)/);
+  assert.match(search, /aistudio\.google\.com/);
+  assert.doesNotMatch(search, /fetch\(/);
+});
