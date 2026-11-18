@@ -6,13 +6,14 @@ import test from "node:test";
 
 const hooks = registerHooks({
   resolve(specifier, context, nextResolve) {
-    if (["./card-liquidity", "./marketplace-captures"].includes(specifier)) return nextResolve(specifier + ".ts", context);
+    if (["./card-liquidity", "./marketplace-captures", "./market-trends"].includes(specifier)) return nextResolve(specifier + ".ts", context);
     return nextResolve(specifier, context);
   },
 });
-const { candidateLots, readPaidLot, collectPaidSales } = await import("../src/paid-sales.ts");
+const { candidateLots, candidateLeads, discoveryLane, readPaidLot, collectPaidSales } = await import("../src/paid-sales.ts");
 const { readRadarPaidSales } = await import("../../../app/lib/radar-paid-sales.ts");
 const { estimateListingMarket } = await import("../../../app/lib/listing-analysis.ts");
+const { compareMarketWindows } = await import("../../../app/lib/market-trends.ts");
 hooks.deregister();
 
 const id = "11111111-2222-3333-4444-555555555555";
@@ -29,11 +30,37 @@ test("only direct lot links are candidates and only the exact paid lot is eligib
   assert.equal(result.cents, 18000);
   assert.equal(result.day, "2026-11-05");
   for (const [from, to] of [
-    ["157/264", "271/264"], ["French", "English"], ["PSA 10", "PSA 9"],
-    ["Unlimited", "First Edition"], ["Article vendu", "Enchère en cours"], ["Payé", "En attente"],
+    ["157/264", "inconnue"], ["French", "Inconnue"], ["PSA 10", ""],
+    ["Unlimited", "édition inconnue"], ["Article vendu", "Enchère en cours"], ["Payé", "En attente"],
     ["Payé", "<script>Payé</script>"], ["Payé", "Payé partiellement"], ["05/11/2026", "31/11/2026"],
     ["05/11/2026", "19/11/2026"], ["05/11/2026", "10/11/2021"],
   ]) assert.equal(readPaidLot(page.replace(from, to), id, "2026-11-18"), null, from);
+  for (const [from, to] of [["French", "English"], ["157/264", "271/264"], ["Unlimited", "First Edition"], ["PSA 10", "PSA 9"]]) {
+    assert.match(readPaidLot(page.replace(from, to), id, "2026-11-18").key, /^carte:/);
+  }
+  const booster = page.replace("PSA 10 Ectoplasma VMax", "Booster Poing de Fusion scellé").replace(" • #157/264", "");
+  assert.match(readPaidLot(booster, id, "2026-11-18").key, /^booster:/);
+  assert.equal(readPaidLot(booster.replace("scellé", "ouvert"), id, "2026-11-18"), null);
+});
+
+test("a four-day sweep includes releases, cards, boosters and boxes, and preserves source types", () => {
+  assert.deepEqual(new Set(["18", "19", "20", "21"].map(day => discoveryLane("2026-11-" + day).category)),
+    new Set(["CARTE", "BOOSTER", "COFFRET", "SORTIE"]));
+  const ad = "https://www.leboncoin.fr/ad/collection/123";
+  const release = "https://www.pokemon.com/fr/actualites/produits-novembre";
+  assert.deepEqual([...candidateLeads(`${ad}?track=test ${release} ${itemUrl} https://evil.example/`)], [
+    [itemUrl, "LOT"], [ad, "ANNONCE"], [release, "PUBLICATION"],
+  ]);
+});
+
+test("trend estimates require same-variant price and volume evidence in both windows", () => {
+  const row = (variant_key, sold_day, price_cents) => ({ variant_key, sold_day, price_cents });
+  const recent = Array.from({ length: 3 }, (_, i) => row("coffret:a", "2026-11-17", 11500 + i * 100));
+  const prior = Array.from({ length: 3 }, (_, i) => row("coffret:a", "2026-10-17", 9900 + i * 100));
+  assert.equal(compareMarketWindows([...recent, ...prior.slice(0, 2), row("coffret:b", "2026-10-17", 10000)], "2026-11-18").length, 0);
+  const [trend] = compareMarketWindows([...recent, ...prior], "2026-11-18");
+  assert.equal(trend.priceChange, 16);
+  assert.equal(trend.scenario, "HAUSSIER");
 });
 
 test("a native scan and its retry feed the real market calculation through SQLite", async () => {

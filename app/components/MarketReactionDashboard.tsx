@@ -22,6 +22,26 @@ export async function MarketReactionDashboard() {
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
     <LeboncoinWatchPanel cards={sales.cards} />
     <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
+    <section className="dashboard-section" aria-labelledby="market-trends-title">
+      <h2 id="market-trends-title">Tendances Pokémon</h2>
+      {sales.trends.length === 0 && <p>Il faut au moins trois ventes comparables dans chacune des deux périodes de 30 jours pour dégager une tendance.</p>}
+      {sales.trends.slice(0, 12).map(trend => {
+        const label = sales.cards.find(card => card.key === trend.key)?.name ?? trend.key.split(":").slice(2).join(" · ").replaceAll("-", " ");
+        return <article key={trend.key}>
+          <h3>{label}</h3>
+          <p>Prix médian · {trend.priceChange > 0 ? "+" : ""}{trend.priceChange} % · {trend.priorCount} puis {trend.recentCount} ventes observées</p>
+          <p>{trend.scenario === "INDETERMINE" ? "Scénario encore indéterminé." :
+            `Scénario ${trend.scenario.toLowerCase()} si la variation de prix et le volume se maintiennent sur le prochain relevé.`}</p>
+        </article>;
+      })}
+      {sales.leads.length > 0 && <details>
+        <summary>Annonces et publications à vérifier</summary>
+        <ul>{sales.leads.map(lead => <li key={lead.source_url}>
+          <a href={lead.source_url} target="_blank" rel="noopener noreferrer">{new URL(lead.source_url).hostname} ↗</a>
+          {" · "}{lead.category.toLowerCase()}{" · "}{lead.first_seen_day}
+        </li>)}</ul>
+      </details>}
+    </section>
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">ÉTAT DES PREUVES</p><h2>Réactions TCG documentées</h2></div><span className="dashboard-date">Dernier relevé : {formatDate(snapshot.observedAt)}</span></div>
       {snapshot.reactionCases.length > 0 && <div className="edge-mri-cases">

@@ -1,7 +1,10 @@
 import { reviewedCardLiquidity } from "./card-liquidity";
+import { compareMarketWindows, type TrendSale } from "./market-trends";
 
 type PaidSaleRow = { variant_key: string; lot_id: string; sold_day: string; price_cents: number; source_url: string };
 type Scan = { scan_day: string; status: "RUNNING" | "OK" | "EMPTY" | "PARTIAL" | "FAILED" };
+type Lead = { source_url: string; category: string; kind: string; first_seen_day: string };
+const fallback = { cards: reviewedCardLiquidity, scan: null, leads: [] as Lead[], trends: [] as ReturnType<typeof compareMarketWindows> };
 type PaidSaleDatabase = {
   prepare(query: string): {
     bind(...values: string[]): { all<T>(): Promise<{ results: T[] }> };
@@ -13,10 +16,10 @@ export async function getRadarPaidSales() {
     const { getCloudflareContext } = await import("@opennextjs/cloudflare");
     const { env } = await getCloudflareContext({ async: true });
     const db = (env as { SALES_DB?: PaidSaleDatabase }).SALES_DB;
-    if (!db) return { cards: reviewedCardLiquidity, scan: null };
+    if (!db) return fallback;
     return await readRadarPaidSales(db);
   } catch {
-    return { cards: reviewedCardLiquidity, scan: null };
+    return fallback;
   }
 }
 
@@ -39,5 +42,14 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
       }
       return { ...card, paidSales: [...sales.values()] };
     }));
-    return { cards, scan: scan.results[0] ?? null };
+    const windowStart = new Date(+asOf - 59 * 86_400_000).toISOString().slice(0, 10);
+    const [markets, leads] = await Promise.all([
+      db.prepare(`SELECT variant_key,sold_day,price_cents FROM paid_market_sales
+        WHERE sold_day BETWEEN ? AND ? ORDER BY sold_day DESC,lot_id LIMIT 1001`).bind(windowStart, today).all<TrendSale>(),
+      db.prepare(`SELECT source_url,category,kind,first_seen_day FROM market_discovery_leads
+        WHERE first_seen_day BETWEEN ? AND ? AND kind<>'LOT'
+        ORDER BY first_seen_day DESC,source_url LIMIT 12`).bind(windowStart, today).all<Lead>(),
+    ]);
+    const trends = markets.results.length <= 1000 ? compareMarketWindows(markets.results, today) : [];
+    return { cards, scan: scan.results[0] ?? null, leads: leads.results, trends };
 }

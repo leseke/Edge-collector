@@ -19,3 +19,11 @@ Critère d'acceptation : un cycle simulé avec une page payée écrit une vente 
 4. Vérifier dans D1 `paid_sale_scans` et `paid_market_sales`, puis ouvrir le Radar et comparer la variante, le nombre de ventes et le prix. En cas d'échec ou de résultat vide, inspecter le passage suivant avant de conclure à une couverture réelle.
 
 Sans activation, la prévisualisation continue d'afficher l'historique déjà documenté. Les pages d'enchères source peuvent refuser la lecture ou évoluer. Les tests locaux simulent les réponses externes et vérifient le comportement avec SQLite.
+
+## Recherche par famille et calcul des tendances
+
+La recherche tourne sur quatre familles (cartes, boosters et displays, coffrets scellés, et sorties/événements). Elle n'est pas limitée à une liste de cartes. Une requête par jour reste la borne, chaque famille dispose donc d'un passage tous les quatre jours. Ce mode couvre l'univers de recherche par échantillonnage, sans prétendre indexer toutes les annonces des plateformes. Les annonces et publications sont enregistrées comme liens candidats, avec la famille de la recherche et le jour de découverte. L'accès, le prix, la disponibilité et le rattachement à un produit restent à confirmer.
+
+Les lots gradés et scellés GCC peuvent être analysés si la page indique le prix final en EUR, le statut payé et une identité assez précise. Pour les scellés, un titre explicite est requis. Les conditions des cartes brutes et les prix de ventes sur d'autres plateformes restent à intégrer. La clé de variante préserve série, référence ou présentation, langue, édition et grade ou scellement. Les dossiers existants restent compatibles.
+
+Le Radar compare deux fenêtres de 30 jours pour chaque variante, avec trois ventes vérifiées minimum par fenêtre. Un scénario conditionnel directionnel est affiché si la médiane évolue d'au moins 10 % et que le volume observé ne diminue pas. Ce signal n'est pas une probabilité, un prix futur ou la preuve d'une réaction à une annonce. Il reste à valider et dater les événements puis à les rattacher aux variantes pour mesurer les réactions historiques et comparer des cycles similaires.

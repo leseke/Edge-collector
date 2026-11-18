@@ -80,3 +80,11 @@ CREATE TRIGGER IF NOT EXISTS paid_market_sales_no_update
 BEFORE UPDATE ON paid_market_sales BEGIN SELECT RAISE(ABORT, 'immutable_paid_sale'); END;
 CREATE TRIGGER IF NOT EXISTS paid_market_sales_no_delete
 BEFORE DELETE ON paid_market_sales BEGIN SELECT RAISE(ABORT, 'immutable_paid_sale'); END;
+
+CREATE TABLE IF NOT EXISTS market_discovery_leads (
+  source_url TEXT PRIMARY KEY,
+  category TEXT NOT NULL CHECK (category IN ('CARTE','BOOSTER','COFFRET','SORTIE')),
+  kind TEXT NOT NULL CHECK (kind IN ('LOT','ANNONCE','PUBLICATION')),
+  first_seen_day TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS market_discovery_leads_day ON market_discovery_leads(first_seen_day DESC);
