@@ -11,7 +11,7 @@ const hooks = registerHooks({
   },
 });
 const { candidateLots, candidateLeads, readPaidLot, collectPaidSales } = await import("../src/paid-sales.ts");
-const { readRadarPaidSales } = await import("../../../app/lib/radar-paid-sales.ts");
+const { archivedRadarSales, readRadarPaidSales } = await import("../../../app/lib/radar-paid-sales.ts");
 const { estimateListingMarket } = await import("../../../app/lib/listing-analysis.ts");
 const { compareMarketWindows } = await import("../../../app/lib/market-trends.ts");
 hooks.deregister();
@@ -134,7 +134,9 @@ test("a native scan and its retry feed the real market calculation through SQLit
     addSale.run("gcc-" + lotId, key, day, 1000, "https://gradedcardcenter.com/item/" + lotId, now.toISOString(), "a".repeat(64));
   }
   const { cards, scan, variants, recentSales } = await readRadarPaidSales(DB, now);
-  assert.equal(recentSales.length, 3);
+  assert.equal(recentSales.length, 8);
+  assert.equal(recentSales[0].key, sealedKey);
+  assert.equal(recentSales[1].key, otherLanguage);
   assert.match(recentSales[0].variant, /FR.*Scellé/);
   assert.match(recentSales[1].variant, /IT.*PSA 10/);
   assert.equal(variants.find(variant => variant.key === otherLanguage).paidSales.length, 1);
@@ -144,4 +146,12 @@ test("a native scan and its retry feed the real market calculation through SQLit
   assert.equal(estimateListingMarket(psa.paidSales, "2026-11-18").conservativeGross, 18000);
   assert.equal(estimateListingMarket(pca.paidSales, "2026-11-18").conservativeGross, null);
   db.close();
+});
+
+test("reviewed paid sales remain in the main feed without a Cloudflare binding", async () => {
+  const { archiveOnly, recentSales, otherSales, trends } = archivedRadarSales(new Date("2026-11-18T12:00:00Z"));
+  assert.equal(archiveOnly, true);
+  assert.equal(recentSales.length + otherSales.length, 9);
+  assert.ok(recentSales.every(sale => sale.key && sale.source.startsWith("https://gradedcardcenter.com/item/")));
+  assert.deepEqual(trends, []);
 });

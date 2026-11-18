@@ -3,6 +3,7 @@ import { getTcgMarketSnapshot } from "../lib/market-data";
 import { getRadarPaidSales } from "../lib/radar-paid-sales";
 import { LeboncoinWatchPanel } from "./LeboncoinWatchPanel";
 import { CardLiquidityPanel } from "./CardLiquidityPanel";
+import { RadarSaleCard } from "./RadarSaleCard";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -10,13 +11,7 @@ const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDi
 
 function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"] }) {
   return <ul className="radar-sales">
-    {sales.map(sale => <li key={sale.id}>
-      <div><strong>{sale.name}</strong><small>{sale.variant}</small></div>
-      <a href={sale.source} target="_blank" rel="noopener noreferrer">
-        <strong>{euros.format(sale.cents / 100)}</strong>
-        <small>{date.format(new Date(sale.day))} · GCC ↗</small>
-      </a>
-    </li>)}
+    {sales.map(sale => <li key={sale.id}><RadarSaleCard sale={sale} /></li>)}
   </ul>;
 }
 
@@ -27,7 +22,7 @@ export async function MarketReactionDashboard() {
   return <div className="native-dashboard radar-dashboard">
     <header className="radar-intro">
       <h1>Radar Pokémon</h1>
-      <p>Repère ce qui bouge sur le marché des cartes, boosters et coffrets. Compare le prix d’une annonce aux ventes payées de la même variante.</p>
+      <p>Consulte les ventes de cartes, boosters et coffrets Pokémon. Pour évaluer une annonce, compare-la aux ventes de la même version, dans la même langue et au même grade.</p>
       <div className="radar-actions">
         <a className="radar-action primary" href="#analyse-annonce">Analyser une annonce</a>
         <a className="radar-action" href="#ventes-payees">Voir les ventes payées</a>
@@ -35,15 +30,17 @@ export async function MarketReactionDashboard() {
     </header>
 
     <section id="ventes-payees" className="dashboard-section radar-section" aria-labelledby="radar-sales-title">
-      <h2 id="radar-sales-title">Dernières ventes payées</h2>
-      {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} /> : <p>{sales.scan ? "Aucune vente payée récente à afficher. L’historique est disponible ci-dessous." :
-        "La collecte automatique est indisponible. Tu peux consulter l’historique ci-dessous."}</p>}
+      <h2 id="radar-sales-title">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
+      <p className="radar-sales-description">{sales.archiveOnly ?
+        "Les ventes déjà documentées restent consultables pendant l’indisponibilité de la collecte." :
+        "Montants payés sur les plateformes suivies. Clique sur le nom d’une plateforme pour ouvrir la vente d’origine."}</p>
+      {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} /> : <p>Aucune vente payée documentée pour le moment.</p>}
       {sales.otherSales.length > 0 && <details className="radar-disclosure">
         <summary>Autres ventes relevées ({sales.otherSales.length})</summary>
         <PaidSalesList sales={sales.otherSales} />
       </details>}
       <details className="radar-disclosure">
-        <summary>Historique et disponibilité des cartes</summary>
+        <summary>Disponibilité et fréquence des ventes</summary>
         <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
       </details>
     </section>

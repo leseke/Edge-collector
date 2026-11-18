@@ -153,3 +153,8 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 - Radar starts with documented paid sales and a shortcut to the listing comparison. Variant keys retain the exact language, edition and grade or sealed status. Cardmarket price references, supporting sources and methodology are accessible on demand. The Pokémon event list excludes unrelated products.
 - The isolated Cloudflare preview reads the existing sales database with no migration. Build and deployed paid-sale HTML were verified in CI run 44370724790. Ten targeted tests passed locally, including language separation and the price calculation.
 - The first screen shows eight paid sales. Additional dated sales are available in its expandable list, up to 50 records total. An incomplete collection can still be too sparse to support a trend or resale estimate.
+
+## Illustrated Radar sales — 2026-11-18
+
+- Paid-sale tiles expose original platform, transaction price and date, variant, and exact TCGdex artwork when confirmed. Ectoplasma currently uses a labelled English catalogue image for the French sale. An unavailable database still leaves the reviewed sales in the main feed in archive mode.
+- Five targeted collector and Radar tests passed locally. The isolated deployment checks both catalogue image references and the marketplace name in the live response.

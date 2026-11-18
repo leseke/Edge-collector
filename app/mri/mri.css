@@ -19,12 +19,6 @@
 .radar-action.primary,.radar-listing-form button{border-color:#ffd126;background:#ffd126;color:#0a2041}
 .radar-section{margin:0;padding:clamp(.85rem,3.2vw,1.5rem);border:1px solid #334b6a;border-radius:1rem;background:#111c31;scroll-margin-top:12rem}
 .radar-section>h2{margin:0 0 .6rem}
-.radar-sales{margin:.4rem 0;padding:0;list-style:none}
-.radar-sales li{display:flex;justify-content:space-between;align-items:start;gap:1rem;padding:.75rem 0;border-bottom:1px solid #33445c}
-.radar-sales li:last-child{border-bottom:0}
-.radar-sales li div{min-width:0;overflow-wrap:anywhere}
-.radar-sales li a{flex-shrink:0;text-align:right}
-.radar-sales small{display:block;margin-top:.2rem;color:#b5c3d7;font-size:.8rem}
 .radar-disclosure{margin:.8rem 0 0;border-top:1px solid #33445c}
 .radar-disclosure summary{padding:.75rem 0;cursor:pointer;color:#dbe8fc;font-weight:650}
 .radar-disclosure[open]>summary{color:#ffe17c}
@@ -38,3 +32,22 @@
 .radar-input-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:1rem 0}
 .radar-input-grid label{display:block;margin-bottom:.25rem}
 .radar-input-grid input,.radar-section select{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:.45rem .6rem;border:1px solid #4d719f;border-radius:.5rem;background:#0a1526;color:inherit;font:inherit}
+
+.radar-sales-description{margin:.25rem 0 1rem;color:#bacbe2;font-size:.9rem;line-height:1.55}
+.radar-sales{display:grid;gap:.75rem;margin:0;padding:0;list-style:none}
+.radar-sales>li{min-width:0;margin:0;padding:0;overflow:hidden;border:1px solid #355173;border-radius:.9rem;background:linear-gradient(140deg,#1a2b46,#121b2e 65%)}
+.radar-sale-card{display:grid;grid-template-columns:clamp(65px,20vw,98px) minmax(0,1fr);gap:.85rem;align-items:start;padding:.8rem}
+.radar-sale-art{display:grid;justify-items:center;gap:.25rem;position:relative;text-align:center;color:#a8bdd7}
+.radar-sale-art img,.radar-sale-art .edge-asset-placeholder{display:block;width:100%;height:auto;aspect-ratio:5/7;min-height:0;border-radius:.4rem;object-fit:contain;background:#0d192c}
+.radar-sale-art .edge-asset-placeholder{display:grid;place-content:center;padding:0 .15rem}
+.radar-sale-art>small{font-size:.63rem;line-height:1.25}
+.radar-sale-main{display:grid;min-width:0;gap:.2rem}
+.radar-sale-main h3,.radar-sale-main p{margin:0;overflow-wrap:anywhere}
+.radar-sale-main h3{color:#f4f7ff;font-size:clamp(.98rem,4vw,1.2rem);line-height:1.25}
+.radar-sale-series,.radar-sale-variant{color:#bacbe2;font-size:.8rem;line-height:1.4}
+.radar-sale-price{display:flex;flex-wrap:wrap;column-gap:.55rem;align-items:baseline;margin-top:.3rem}
+.radar-sale-price strong{font-size:1.3rem;line-height:1.15;color:#ffdb60}
+.radar-sale-price span{font-size:.76rem;color:#bacbe2}
+.radar-sale-source{display:inline-flex;align-items:center;gap:.3rem;width:fit-content;min-height:32px;margin-top:.2rem;color:#c3e9ff;font-size:.78rem;text-decoration:underline;text-underline-offset:.2em}
+.radar-liquidity-facts{display:grid;gap:.25rem;padding:.65rem .8rem;border-top:1px solid #355173;color:#bacbe2;font-size:.78rem}
+@media(min-width:850px){.radar-sales{grid-template-columns:repeat(2,minmax(0,1fr))}}

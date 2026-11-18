@@ -20,3 +20,7 @@ The page can answer what sold and give a comparison for a supported listing. Rec
 ## Reversibility
 
 Revert the view and remove the preview-only binding configuration. No stored observations need to be changed.
+
+## Sale card follow-up
+
+The compact sale card combines the exact catalogue illustration where available and the linked marketplace record. The illustration language is shown independently of the sold variant. Both the reviewed archive and database-backed feed use the same presentation. Archive-only mode describes service availability and shows only actual reviewed evidence. This change can be reverted without changing observations.

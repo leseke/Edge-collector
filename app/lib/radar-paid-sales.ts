@@ -6,12 +6,27 @@ type Scan = { scan_day: string; status: "RUNNING" | "OK" | "EMPTY" | "PARTIAL" |
 type Lead = { source_url: string; category: string; kind: string; first_seen_day: string };
 export type SaleVariant = { key: string; name: string; variant: string; paidSales: Sale[] };
 
-const fallback = {
+export type RadarSale = Sale & Pick<SaleVariant, "name" | "variant" | "key">;
+
+function saleFeed(sales: RadarSale[]) {
+  const ordered = [...new Map(sales.map(sale => [sale.id, sale])).values()]
+    .sort((a, b) => b.day.localeCompare(a.day) || a.id.localeCompare(b.id));
+  return { recentSales: ordered.slice(0, 8), otherSales: ordered.slice(8, 50) };
+}
+
+function reviewedSales(cards: SaleVariant[], today: string): RadarSale[] {
+  return cards.flatMap(({ key, name, variant, paidSales }) => paidSales
+    .filter(sale => sale.day <= today)
+    .map(sale => ({ ...sale, key, name, variant })));
+}
+
+export function archivedRadarSales(asOf = new Date()) {
+  return {
   cards: reviewedCardLiquidity, variants: reviewedCardLiquidity as SaleVariant[],
-  recentSales: [] as (Sale & Pick<SaleVariant, "name" | "variant">)[],
-  otherSales: [] as (Sale & Pick<SaleVariant, "name" | "variant">)[],
-  scan: null, leads: [] as Lead[], trends: [] as ReturnType<typeof compareMarketWindows>,
-};
+    ...saleFeed(reviewedSales(reviewedCardLiquidity, asOf.toISOString().slice(0, 10))),
+    scan: null, archiveOnly: true, leads: [] as Lead[], trends: [] as ReturnType<typeof compareMarketWindows>,
+  };
+}
 
 function publicPaidSale(row: PaidSaleRow): Sale | null {
   const id = row.lot_id.match(/^gcc-([0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/);
@@ -45,10 +60,10 @@ export async function getRadarPaidSales() {
     const { getCloudflareContext } = await import("@opennextjs/cloudflare");
     const { env } = await getCloudflareContext({ async: true });
     const db = (env as { SALES_DB?: PaidSaleDatabase }).SALES_DB;
-    if (!db) return fallback;
+    if (!db) return archivedRadarSales();
     return await readRadarPaidSales(db);
   } catch {
-    return fallback;
+    return archivedRadarSales();
   }
 }
 
@@ -80,8 +95,7 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
     ]);
     const variants = new Map<string, SaleVariant>(cards.map(card => [card.key, card]));
     const eligibleRows = [];
-    const recentSales: typeof fallback.recentSales = [];
-    const otherSales: typeof fallback.otherSales = [];
+    const documentedSales: RadarSale[] = [];
     for (const row of markets.results) {
       const sale = publicPaidSale(row);
       if (!sale) continue;
@@ -93,11 +107,10 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
         variants.set(row.variant_key, variant);
       }
       if (!variant.paidSales.some(item => item.id === sale.id)) variant.paidSales.push(sale);
-      const publicSale = { ...sale, name: variant.name, variant: variant.variant };
-      if (recentSales.length < 8) recentSales.push(publicSale);
-      else if (otherSales.length < 42) otherSales.push(publicSale);
+      documentedSales.push({ ...sale, key: variant.key, name: variant.name, variant: variant.variant });
       eligibleRows.push(row);
     }
     const trends = markets.results.length <= 4000 ? compareMarketWindows(eligibleRows, today) : [];
-    return { cards, variants: [...variants.values()], recentSales, otherSales, scan: scan.results[0] ?? null, leads: leads.results, trends };
+    const feed = saleFeed([...reviewedSales(reviewedCardLiquidity, today), ...documentedSales]);
+    return { cards, variants: [...variants.values()], ...feed, scan: scan.results[0] ?? null, archiveOnly: false, leads: leads.results, trends };
 }
