@@ -3,14 +3,27 @@ import { registerHooks } from "node:module";
 import test from "node:test";
 const hooks = registerHooks({
   resolve(specifier, context, nextResolve) {
-    if (specifier === "./product-variant" && context.parentURL?.endsWith("/market-data.ts")) {
-      return nextResolve("./product-variant.ts", context);
+    if (["./product-variant", "./cardmarket-window"].includes(specifier) && context.parentURL?.endsWith("/market-data.ts")) {
+      return nextResolve(specifier + ".ts", context);
     }
     return nextResolve(specifier, context);
   },
 });
 const { readPriceChange } = await import("../../app/lib/market-data.ts");
+const { readCardmarketWindow } = await import("../../app/lib/cardmarket-window.ts");
 hooks.deregister();
+
+test("Cardmarket overlapping windows require dated positive EUR values", () => {
+  const now = Date.parse("2026-11-18T16:00:00Z");
+  const valid = { avg7: 90, avg30: 100, unit: "EUR", updated: "2026-11-17T09:00:00Z" };
+  assert.deepEqual(readCardmarketWindow(valid, now), {
+    avg7: 90, avg30: 100, updated: valid.updated, stale: false, percent: -10,
+  });
+  assert.equal(readCardmarketWindow({ ...valid, avg30: 0 }, now), null);
+  assert.equal(readCardmarketWindow({ ...valid, unit: "USD" }, now), null);
+  assert.equal(readCardmarketWindow({ ...valid, updated: "2026-11-20" }, now), null);
+  assert.equal(readCardmarketWindow({ ...valid, updated: "2026-11-15" }, now).stale, true);
+});
 
 const observation = {
   id: "tcgdex_base1-4", product_id: "pokemon_card_base1-4", status: "OK",

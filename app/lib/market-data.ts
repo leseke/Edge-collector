@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { marketVariant, type ProductVariant } from "./product-variant";
+import { readCardmarketWindow } from "./cardmarket-window";
 
 const DATA_BASE = "https://raw.githubusercontent.com/leseke/Edge-collector/edge/commercial-history/";
 const encoder = new TextEncoder();
@@ -43,6 +44,7 @@ export type TcgCard = {
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
   variant?: ProductVariant;
   priceChange?: PriceChange;
+  guideWindow?: ReturnType<typeof readCardmarketWindow>;
 };
 export type ReactionCaseSummary = { productId: string; publicationCount: number; reactionStatus: string; financialDecision: string; publications: { title: string; url: string; publishedAt: string; relationship: string }[] };
 export type MarketSnapshot = {
@@ -152,6 +154,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
           availability: item.availability, languageVerified: item.market_language_verified === true,
           priceKind: item.price_kind, image: safeImage(card.image),
           priceChange: readPriceChange(await eventsPromise, item),
+          guideWindow: item.status === "OK" ? readCardmarketWindow(pricing) : null,
           variant: marketVariant(item.status === "OK" ? item.variant_evidence : undefined),
         };
       } catch { return null; }

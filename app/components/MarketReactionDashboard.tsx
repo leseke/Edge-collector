@@ -8,6 +8,8 @@ import { DataLimit, EvidenceGuide } from "./EvidenceGuide";
 export async function MarketReactionDashboard() {
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const formatDate = (value: string) => value ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(new Date(value)) : "Non disponible";
+  const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
+  const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
   return <div className="native-dashboard">
     <section className="dashboard-hero">
       <div><p className="native-eyebrow">EDGE / MARKET REACTION INTELLIGENCE</p><h1>Comprendre ce qui fait bouger les TCG.</h1><p className="dashboard-subtitle">Relier les publications, les changements d’offre, les prix et les réactions — sans confondre corrélation et causalité.</p></div>
@@ -22,6 +24,20 @@ export async function MarketReactionDashboard() {
     {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
     <LeboncoinWatchPanel cards={sales.cards} />
     <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
+    <section className="dashboard-section" aria-labelledby="guide-window-title">
+      <h2 id="guide-window-title">Repères de prix Cardmarket</h2>
+      <p>Prix indicatifs via TCGdex. Les moyennes sur 7 et 30 jours se chevauchent. Les volumes vendus, la langue et le grade restent inconnus.</p>
+      {snapshot.cards.filter(card => card.guideWindow).length === 0 && <p>Aucune moyenne datée disponible pour les cartes suivies.</p>}
+      <ul>{snapshot.cards.flatMap(card => {
+        const guide = card.guideWindow;
+        if (!guide) return [];
+        return [<li key={card.productId}>
+          <strong>{card.name} · {card.setName} · {card.number}</strong>{" · "}
+          7 j {euros.format(guide.avg7)} · 30 j {euros.format(guide.avg30)} · Écart {signed.format(guide.percent)} %
+          <small> · {formatDate(guide.updated)}{guide.stale ? " · relevé de plus de 48 h" : ""}</small>
+        </li>];
+      })}</ul>
+    </section>
     <section className="dashboard-section" aria-labelledby="market-trends-title">
       <h2 id="market-trends-title">Tendances Pokémon</h2>
       {sales.trends.length === 0 && <p>Il faut au moins trois ventes comparables dans chacune des deux périodes de 30 jours pour dégager une tendance.</p>}
