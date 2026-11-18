@@ -1,4 +1,5 @@
-import { GccProductImage, RadarProductZoom } from "./RadarProductZoom";
+import { listingCardKey } from "../lib/comparable-sales";
+import { GccProductImage, RadarProductZoom, ZoomComparables } from "./RadarProductZoom";
 import { Suspense } from "react";
 import { gccListingPages, getGccActiveListings, getGccSeries, type GccListingKind } from "../lib/gcc-active-listings";
 
@@ -67,6 +68,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
                 <strong>{item.cents === null ? "Prix indisponible" : euros.format(item.cents / 100)}</strong>
                 <span>{auction ? "Enchère affichée" : closed ? "Prix indiqué par GCC" : "Prix demandé"}</span>
               </div>
+              <ZoomComparables cardKey={item.comparableCard ? listingCardKey(item.title, item.variant, item.series) : null} lotId={"gcc-" + item.id} />
               {item.ends && <p className="radar-sale-variant">Fin le {date.format(new Date(item.ends))}</p>}
               {closed && <p className="radar-sale-variant">{item.awaitingPayment ? "En attente de paiement" : "Vendu selon GCC"}
                 {item.soldAt && <> · {date.format(new Date(item.soldAt))}</>}

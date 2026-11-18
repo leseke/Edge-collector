@@ -2,7 +2,13 @@
 
 import { createContext, useContext, useEffect, useId, useRef, useState, type ReactNode } from "react";
 
+import { ComparableSales } from "./ComparableSales";
+
 const ExpandedImage = createContext(false);
+
+export function ZoomComparables(props: { cardKey: string | null; lotId: string }) {
+  return useContext(ExpandedImage) ? <ComparableSales {...props} /> : null;
+}
 
 export function GccProductImage({ src, name }: { src: string; name: string }) {
   const expanded = useContext(ExpandedImage);

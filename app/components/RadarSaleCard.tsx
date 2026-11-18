@@ -1,4 +1,4 @@
-import { RadarProductZoom } from "./RadarProductZoom";
+import { RadarProductZoom, ZoomComparables } from "./RadarProductZoom";
 import { AssetImage } from "./AssetImage";
 import type { RadarSale } from "../lib/radar-paid-sales";
 
@@ -27,6 +27,7 @@ export function RadarSaleCard({ sale }: { sale: RadarSale }) {
       {art && <p className="radar-sale-series">{art.series}</p>}
       <p className="radar-sale-variant">{variant}</p>
       <div className="radar-sale-price"><strong>{euros.format(sale.cents / 100)}</strong><span>payé le <time dateTime={sale.day}>{date.format(new Date(sale.day))}</time></span></div>
+      <ZoomComparables cardKey={sale.key} lotId={sale.id} />
       <a className="radar-sale-source" href={sale.source} target="_blank" rel="noopener noreferrer"
         aria-label={`Voir la vente de ${sale.name} sur ${platform}`}>
         {platform} <span aria-hidden="true">↗</span>

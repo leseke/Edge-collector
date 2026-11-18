@@ -169,3 +169,7 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 
 - Radar paginates all three public Pokémon feeds using the upstream cursor, 24 lots per source page. Closed lots are grouped by set and can be filtered across the upstream catalogue using the exact set label.
 - GCC’s reported sale state and waiting-for-payment state remain separate from EDGE’s verified paid history.
+
+### Radar · Comparables GCC · 18 novembre 2026
+
+La fiche utilise les ventes payées documentées dans EDGE. Le lot courant et les autres variantes sont exclus de la médiane. Cinq tests ciblés réussis. Le rendu HTML a été vérifié avec les ventes archivées d’Ectoplasma VMAX PSA 10. Validation mobile et CI complète en attente.

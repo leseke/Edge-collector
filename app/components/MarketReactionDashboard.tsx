@@ -1,3 +1,4 @@
+import { PaidHistoryProvider } from "./ComparableSales";
 import { Suspense } from "react";
 import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
@@ -29,7 +30,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
-  return <div className="native-dashboard radar-dashboard">
+  return <PaidHistoryProvider variants={sales.variants}><div className="native-dashboard radar-dashboard">
     <header className="radar-intro">
       <h1>Radar Pokémon</h1>
       <p>Suivre les prix du marché et évaluer une annonce.</p>
@@ -136,5 +137,5 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         <p>EDGE compare les prix médians de deux périodes de 30 jours, avec au moins trois ventes par période pour la même variante. Les publications servent à dater un événement. Il faut ensuite des prix, des ventes ou des relevés d’offre comparables pour mesurer la réaction du marché.</p>
       </details>
     </section>
-  </div>;
+  </div></PaidHistoryProvider>;
 }
