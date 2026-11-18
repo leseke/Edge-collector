@@ -1,3 +1,4 @@
+import { RadarProductZoom } from "./RadarProductZoom";
 import { gccListingPages, getGccActiveListings, getGccSeries, type GccListingKind } from "../lib/gcc-active-listings";
 
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -49,7 +50,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
       {closed && <h3 className="radar-series-heading">{!series && items[0].series ? <a href={gccRadarUrl(kind, null, label)}>{label}</a> : label}</h3>}
       <ul className="radar-sales">
         {items.map(item => <li key={item.id}>
-          <article className="radar-sale-card">
+          <RadarProductZoom name={item.title}>
             <div className="radar-sale-art">
               {item.image ? <img src={item.image} alt={item.title} loading="lazy" /> : <small>Photo sur GCC</small>}
             </div>
@@ -66,7 +67,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
               </p>}
               <a className="radar-sale-source" href={`https://gradedcardcenter.com/item/${item.id}`} target="_blank" rel="noopener noreferrer">Voir sur Graded Card Center ↗</a>
             </div>
-          </article>
+          </RadarProductZoom>
         </li>)}
       </ul>
     </div>)}

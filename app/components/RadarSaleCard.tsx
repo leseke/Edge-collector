@@ -1,3 +1,4 @@
+import { RadarProductZoom } from "./RadarProductZoom";
 import { AssetImage } from "./AssetImage";
 import type { RadarSale } from "../lib/radar-paid-sales";
 
@@ -16,7 +17,7 @@ export function RadarSaleCard({ sale }: { sale: RadarSale }) {
   const platform = host === "gradedcardcenter.com" ? "Graded Card Center" : host;
   const variant = sale.variant.replace(/\bFR\b/, "Français").replace(/\bIT\b/, "Italien")
     .replace(/\bEN\b/, "Anglais");
-  return <article className="radar-sale-card">
+  return <RadarProductZoom name={sale.name}>
     <div className="radar-sale-art">
       <AssetImage src={art?.image ?? null} name={sale.name + (art?.language === "en" ? " (édition anglaise)" : "")} />
       {art && <small>{art.language === "en" ? "Visuel catalogue EN" : "Visuel catalogue FR"}</small>}
@@ -31,5 +32,5 @@ export function RadarSaleCard({ sale }: { sale: RadarSale }) {
         {platform} <span aria-hidden="true">↗</span>
       </a>
     </div>
-  </article>;
+  </RadarProductZoom>;
 }

@@ -82,3 +82,22 @@
 .radar-offer-links a{display:inline-flex;align-items:center;gap:.35rem;min-height:40px;padding:.3rem .65rem;border:1px solid #39597d;border-radius:.5rem;background:#142b47;color:#dceeff;font-size:.8rem;text-decoration:none}
 .radar-offer-links a:hover{border-color:#a6d8ff}
 @media(min-width:860px){.radar-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+.radar-zoom-card { position: relative; }
+.radar-zoom-trigger { grid-column: 2; justify-self: start; border: 0; background: transparent; color: #b9ddff; padding: .15rem 0; font: inherit; font-size: .85rem; cursor: zoom-in; }
+.radar-zoom-trigger::after { content: ""; position: absolute; inset: 0; border-radius: .85rem; }
+.radar-zoom-trigger:focus-visible::after { outline: 3px solid #ffce26; outline-offset: -3px; }
+.radar-zoom-card .radar-sale-source { position: relative; z-index: 1; justify-self: start; }
+html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
+.radar-zoom-dialog { position: fixed; inset: 0; margin: auto; width: min(92vw, 40rem); max-height: 88vh; max-height: 88dvh; box-sizing: border-box; overflow: auto; overscroll-behavior: contain; padding: 0; background: #111e34; color: #f4f7ff; border: 1px solid #48627f; border-radius: 1rem; }
+.radar-zoom-dialog::backdrop { background: rgba(2,9,21,.83); }
+.radar-zoom-content header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #111e34; padding: .65rem 1rem; border-bottom: 1px solid #354962; }
+.radar-zoom-content header strong { overflow-wrap: anywhere; }
+.radar-zoom-content header button { flex: none; min-height: 44px; padding: 0 .85rem; background: #ffce26; color: #101b30; border: 0; border-radius: .6rem; font: inherit; font-weight: 650; cursor: pointer; }
+.radar-zoom-detail { display: grid; gap: 1rem; padding: 1rem; }
+.radar-zoom-detail .radar-sale-art img { max-height: 46vh; max-height: 46dvh; width: 100%; object-fit: contain; }
+.radar-zoom-detail .radar-sale-main { gap: .45rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .radar-zoom-dialog[open] { animation: radar-zoom-in .18s ease-out; }
+  @keyframes radar-zoom-in { from { opacity: 0; transform: scale(.94); } }
+}
