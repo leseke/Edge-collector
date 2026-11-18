@@ -18,6 +18,8 @@ test("radar links source publications but does not imply causality", () => {
   assert.match(radar, /snapshot\.reactionCases\.filter\(item => item\.productId\.startsWith\("pokemon_card_"\)\)/);
   assert.match(radar, /pokemonCases\.map/);
   assert.match(radar, /publication\.url/);
-  assert.match(radar, /href="#analyse-annonce"/);
-  assert.match(radar, /href="#ventes-payees"/);
+  assert.match(radar, /aria-label="Rubriques du Radar"/);
+  for (const anchor of ["analyse-annonce", "ventes-payees", "gcc-closed", "disponibilite"]) {
+    assert.ok(radar.includes(`href: "#${anchor}"`));
+  }
 });
