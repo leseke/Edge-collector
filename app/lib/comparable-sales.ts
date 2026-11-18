@@ -19,7 +19,7 @@ export function listingCardKey(title: string, subtitle: string, series: string |
   return ["carte", year, keyPart(set), number.slice(1), keyPart(graded[3]), languages[language], keyPart(edition), graded[1], graded[2]].join(":");
 }
 
-function canonical(key: string) {
+export function canonical(key: string) {
   const [first, ...rest] = key.split(":");
   return catalog[first] ? [catalog[first], ...rest].join(":") : key;
 }

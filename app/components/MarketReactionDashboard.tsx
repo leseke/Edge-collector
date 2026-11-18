@@ -75,7 +75,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" cursor={gccCursor(params.auction)} /></Suspense>
       </div>
       <div id="gcc-fixed" className="radar-offer-list">
-        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
+        <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability variants={sales.variants} kind="fixed" cursor={gccCursor(params.fixed)} /></Suspense>
       </div>
       <details className="radar-disclosure">
         <summary>Fréquence des ventes par variante</summary>

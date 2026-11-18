@@ -177,3 +177,7 @@ La fiche utilise les ventes payées documentées dans EDGE. Le lot courant et le
 ### Radar · Coût livré en France
 
 Les fiches GCC ouvertes estiment automatiquement le coût livré pour un envoi Colissimo individuel. L’assurance suppose une valeur déclarée égale au prix fixe ou au prochain palier. Les frais acheteur éventuels sont inconnus. La comparaison historique utilise le prix du lot hors livraison. Sept tests ciblés et quatre cas de rendu HTML réussis. Validation iPhone en attente.
+
+### Classement des offres GCC à prix fixe
+
+Classement automatique de la page affichée au relevé GCC, par écart relatif entre coût livré estimé et médiane des ventes payées. Les signaux précoces reposent sur deux fenêtres de sept jours de ventes documentées par série. Les références isolées restent identifiées. Les 23 tests du collecteur passent localement. Build Cloudflare et validation mobile en attente.
