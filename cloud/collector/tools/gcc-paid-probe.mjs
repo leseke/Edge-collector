@@ -9,9 +9,15 @@ const sitemap = await readFile(sitemapPath, "utf8");
 const reviewed = await readFile(reviewedPath, "utf8");
 const known = [...reviewed.matchAll(/gccPaidSale\("([0-9a-f-]{36})"/g)].map(match => match[1]);
 const indexed = [...sitemap.matchAll(/<loc>https:\/\/gradedcardcenter\.com\/item\/([0-9a-f-]{36})<\/loc>\s*<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g)];
-indexed.sort((a, b) => b[2].localeCompare(a[2]));
-const ids = [...new Set([...known, ...indexed.slice(0, 16).map(match => match[1])])].slice(0, 24);
 const now = new Date().toISOString();
+const utcToday = Date.parse(now.slice(0, 10) + "T00:00:00Z");
+const buckets = [[], [], [], []];
+for (const match of indexed) {
+  const age = (utcToday - Date.parse(match[2] + "T00:00:00Z")) / 86_400_000;
+  if (age >= 0 && age < 365) buckets[age < 3 ? 0 : age < 14 ? 1 : age < 60 ? 2 : 3].push(match[1]);
+}
+const sample = buckets.flatMap(ids => Array.from({ length: Math.min(ids.length, 24) }, (_, i) => ids[Math.floor(i * ids.length / Math.min(ids.length, 24))]));
+const ids = [...new Set([...known, ...sample])].slice(0, 120);
 const sqlLiteral = value => "'" + value.replaceAll("'", "''") + "'";
 const rows = [];
 let checked = 0, failures = 0;
