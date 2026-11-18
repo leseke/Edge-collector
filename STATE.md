@@ -136,3 +136,6 @@ The Explorer supports Italian catalogue searches and detail pages. The catalogue
 ## Manual Cardmarket offers by language
 
 Catalogue detail accepts manual asking-price observations with a Cardmarket singles link, stated condition, timestamp and explicit confirmation of the reference and offer language. The browser keeps up to 20 records per card and language. This is a listing observation entered by the user. No remote scraper, completed-sale inference, account access or cloud persistence was added.
+
+## Public Graded Card Center discovery
+The collector schedules public-auction discovery without a paid model. It samples up to four new lot links and visits up to six due lots per UTC day. The D1 queue preserves pending lots for up to 28 days; only an explicitly paid, validated lot enters the existing immutable sales table. The source HTML check found 24 lot links and extracted a known paid FR PCA 9 Noctali VMAX sale at EUR 1,750 on 2026-05-27. The active-to-paid queue transition was tested in SQLite with fixtures. Deployment of the scheduled collector and application of the additive D1 table remain separate live steps.

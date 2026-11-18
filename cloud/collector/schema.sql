@@ -88,3 +88,11 @@ CREATE TABLE IF NOT EXISTS market_discovery_leads (
   first_seen_day TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS market_discovery_leads_day ON market_discovery_leads(first_seen_day DESC);
+
+CREATE TABLE IF NOT EXISTS gcc_lot_queue (
+  lot_id TEXT PRIMARY KEY,
+  first_seen_day TEXT NOT NULL,
+  next_check_day TEXT NOT NULL,
+  paid_day TEXT
+);
+CREATE INDEX IF NOT EXISTS gcc_lot_queue_due ON gcc_lot_queue(paid_day,next_check_day,first_seen_day);
