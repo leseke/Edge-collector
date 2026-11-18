@@ -9,6 +9,7 @@ export type SaleVariant = { key: string; name: string; variant: string; paidSale
 const fallback = {
   cards: reviewedCardLiquidity, variants: reviewedCardLiquidity as SaleVariant[],
   recentSales: [] as (Sale & Pick<SaleVariant, "name" | "variant">)[],
+  otherSales: [] as (Sale & Pick<SaleVariant, "name" | "variant">)[],
   scan: null, leads: [] as Lead[], trends: [] as ReturnType<typeof compareMarketWindows>,
 };
 
@@ -80,6 +81,7 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
     const variants = new Map<string, SaleVariant>(cards.map(card => [card.key, card]));
     const eligibleRows = [];
     const recentSales: typeof fallback.recentSales = [];
+    const otherSales: typeof fallback.otherSales = [];
     for (const row of markets.results) {
       const sale = publicPaidSale(row);
       if (!sale) continue;
@@ -91,9 +93,11 @@ export async function readRadarPaidSales(db: PaidSaleDatabase, asOf = new Date()
         variants.set(row.variant_key, variant);
       }
       if (!variant.paidSales.some(item => item.id === sale.id)) variant.paidSales.push(sale);
-      if (recentSales.length < 8) recentSales.push({ ...sale, name: variant.name, variant: variant.variant });
+      const publicSale = { ...sale, name: variant.name, variant: variant.variant };
+      if (recentSales.length < 8) recentSales.push(publicSale);
+      else if (otherSales.length < 42) otherSales.push(publicSale);
       eligibleRows.push(row);
     }
     const trends = markets.results.length <= 4000 ? compareMarketWindows(eligibleRows, today) : [];
-    return { cards, variants: [...variants.values()], recentSales, scan: scan.results[0] ?? null, leads: leads.results, trends };
+    return { cards, variants: [...variants.values()], recentSales, otherSales, scan: scan.results[0] ?? null, leads: leads.results, trends };
 }

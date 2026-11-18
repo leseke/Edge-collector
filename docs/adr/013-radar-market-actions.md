@@ -11,7 +11,7 @@ The Radar opened with collection counters and methodology. The isolated preview 
 
 ## Decision
 
-Use option 2 on the existing /mri route. Give the isolated preview the existing D1 database through the SALES_DB binding. The Radar issues SELECT queries only, reads the existing paid_market_sales fields, and limits the visible list to eight documented transactions with source links. Comparison uses the exact variant key, including language, edition, and grade or sealed status. Keep the reviewed history as a fallback. Group Cardmarket aggregates and publication sources behind disclosure controls.
+Use option 2 on the existing /mri route. Give the isolated preview the existing D1 database through the SALES_DB binding. The Radar issues SELECT queries only, reads the existing paid_market_sales fields, and shows the eight latest documented transactions and makes up to 42 earlier entries available on demand, with source links. Comparison uses the exact variant key, including language, edition, and grade or sealed status. Keep the reviewed history as a fallback. Group Cardmarket aggregates and publication sources behind disclosure controls.
 
 ## Consequences
 

@@ -147,3 +147,9 @@ Discovery now walks the public auctions and fixed-price grids with independent D
 The first expanded deployment installed the Worker and schema but returned no discovered lots. The next deploy exposes per-category failure stages and indexes the public sitemap from GitHub Actions independently. The sitemap import was tested twice with the same 15,740 real identifiers in SQLite; index entries have no listing or payment status until checked.
 
 The live runner completed an expanded verification of 105 GCC item pages and D1 contained 15,739 indexed lots and 13 paid lots across 8 variants. Worker grid fetches still failed. The Worker now records bounded diagnostic reasons and uses unverified D1-indexed lot links when the active listing queue has spare capacity. Verified lots are excluded from this fallback. A 403 or 429 stops source access for the run. Offline tests cover degraded grids and explicit refusal; the remote run must prove source reachability.
+
+## Radar Pokémon — 2026-11-18
+
+- Radar starts with documented paid sales and a shortcut to the listing comparison. Variant keys retain the exact language, edition and grade or sealed status. Cardmarket price references, supporting sources and methodology are accessible on demand. The Pokémon event list excludes unrelated products.
+- The isolated Cloudflare preview reads the existing sales database with no migration. Build and deployed paid-sale HTML were verified in CI run 44370724790. Ten targeted tests passed locally, including language separation and the price calculation.
+- The first screen shows eight paid sales. Additional dated sales are available in its expandable list, up to 50 records total. An incomplete collection can still be too sparse to support a trend or resale estimate.

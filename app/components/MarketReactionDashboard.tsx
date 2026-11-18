@@ -8,6 +8,18 @@ const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
 
+function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"] }) {
+  return <ul className="radar-sales">
+    {sales.map(sale => <li key={sale.id}>
+      <div><strong>{sale.name}</strong><small>{sale.variant}</small></div>
+      <a href={sale.source} target="_blank" rel="noopener noreferrer">
+        <strong>{euros.format(sale.cents / 100)}</strong>
+        <small>{date.format(new Date(sale.day))} · GCC ↗</small>
+      </a>
+    </li>)}
+  </ul>;
+}
+
 export async function MarketReactionDashboard() {
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
@@ -24,16 +36,12 @@ export async function MarketReactionDashboard() {
 
     <section id="ventes-payees" className="dashboard-section radar-section" aria-labelledby="radar-sales-title">
       <h2 id="radar-sales-title">Dernières ventes payées</h2>
-      {sales.recentSales.length ? <ul className="radar-sales">
-        {sales.recentSales.map(sale => <li key={sale.id}>
-          <div><strong>{sale.name}</strong><small>{sale.variant}</small></div>
-          <a href={sale.source} target="_blank" rel="noopener noreferrer">
-            <strong>{euros.format(sale.cents / 100)}</strong>
-            <small>{date.format(new Date(sale.day))} · GCC ↗</small>
-          </a>
-        </li>)}
-      </ul> : <p>{sales.scan ? "Aucune vente payée récente à afficher. L’historique est disponible ci-dessous." :
+      {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} /> : <p>{sales.scan ? "Aucune vente payée récente à afficher. L’historique est disponible ci-dessous." :
         "La collecte automatique est indisponible. Tu peux consulter l’historique ci-dessous."}</p>}
+      {sales.otherSales.length > 0 && <details className="radar-disclosure">
+        <summary>Autres ventes relevées ({sales.otherSales.length})</summary>
+        <PaidSalesList sales={sales.otherSales} />
+      </details>}
       <details className="radar-disclosure">
         <summary>Historique et disponibilité des cartes</summary>
         <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
