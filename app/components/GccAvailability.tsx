@@ -1,3 +1,4 @@
+import { GccProductImage, RadarProductZoom } from "./RadarProductZoom";
 import { Suspense } from "react";
 import { gccListingPages, getGccActiveListings, getGccSeries, type GccListingKind } from "../lib/gcc-active-listings";
 
@@ -55,9 +56,9 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
       {closed && <h3 className="radar-series-heading">{!series && items[0].series ? <a href={gccRadarUrl(kind, null, label)}>{label}</a> : label}</h3>}
       <ul className="radar-sales">
         {items.map(item => <li key={item.id}>
-          <article className="radar-sale-card">
+          <RadarProductZoom name={item.title}>
             <div className="radar-sale-art">
-              {item.image ? <img src={item.image} alt={item.title} loading="lazy" /> : <small>Photo sur GCC</small>}
+              {item.image ? <GccProductImage src={item.image} name={item.title} /> : <small>Photo sur GCC</small>}
             </div>
             <div className="radar-sale-main">
               <h4 className="radar-gcc-lot-title">{item.title}</h4>
@@ -72,7 +73,7 @@ export async function GccAvailability({ kind, cursor = null, series = null }: {
               </p>}
               <a className="radar-sale-source" href={`https://gradedcardcenter.com/item/${item.id}`} target="_blank" rel="noopener noreferrer">Voir sur Graded Card Center ↗</a>
             </div>
-          </article>
+          </RadarProductZoom>
         </li>)}
       </ul>
     </div>)}
