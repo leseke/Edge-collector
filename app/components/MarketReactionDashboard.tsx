@@ -1,9 +1,11 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
 import { getRadarPaidSales } from "../lib/radar-paid-sales";
 import { LeboncoinWatchPanel } from "./LeboncoinWatchPanel";
 import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { RadarSaleCard } from "./RadarSaleCard";
+import { GccAvailability } from "./GccAvailability";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -26,6 +28,7 @@ export async function MarketReactionDashboard() {
       <div className="radar-actions">
         <a className="radar-action primary" href="#analyse-annonce">Analyser une annonce</a>
         <a className="radar-action" href="#ventes-payees">Voir les ventes payées</a>
+        <a className="radar-action" href="#disponibilite">Voir les offres ouvertes</a>
       </div>
     </header>
 
@@ -33,14 +36,21 @@ export async function MarketReactionDashboard() {
       <h2 id="radar-sales-title">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
       <p className="radar-sales-description">{sales.archiveOnly ?
         "Les ventes déjà documentées restent consultables pendant l’indisponibilité de la collecte." :
-        "Montants payés sur les plateformes suivies. Clique sur le nom d’une plateforme pour ouvrir la vente d’origine."}</p>
+        "Transactions payées que EDGE a pu vérifier. La liste couvre une partie des ventes de Graded Card Center."}</p>
       {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} /> : <p>Aucune vente payée documentée pour le moment.</p>}
       {sales.otherSales.length > 0 && <details className="radar-disclosure">
         <summary>Autres ventes relevées ({sales.otherSales.length})</summary>
         <PaidSalesList sales={sales.otherSales} />
       </details>}
+    </section>
+
+    <section id="disponibilite" className="dashboard-section radar-section" aria-labelledby="radar-availability-title">
+      <h2 id="radar-availability-title">Disponibilité</h2>
+      <p className="radar-sales-description">Aperçu des annonces Pokémon ouvertes sur Graded Card Center, jusqu’à huit par type. Les prix affichés peuvent évoluer.</p>
+      <Suspense fallback={<p>Chargement des enchères en cours…</p>}><GccAvailability kind="auction" /></Suspense>
+      <Suspense fallback={<p>Chargement des offres à prix fixe…</p>}><GccAvailability kind="fixed" /></Suspense>
       <details className="radar-disclosure">
-        <summary>Disponibilité et fréquence des ventes</summary>
+        <summary>Fréquence des ventes par variante</summary>
         <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
       </details>
     </section>

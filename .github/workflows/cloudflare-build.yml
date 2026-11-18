@@ -111,6 +111,8 @@ jobs:
           from pathlib import Path
           html = Path(sys.argv[1]).read_text()
           assert "Radar Pokémon" in html and "Dernières ventes payées" in html
+          assert "Enchères en cours" in html and "Offres à prix fixe" in html
+          assert "Enchère affichée" in html and "Prix demandé" in html, "Expected active listings from both GCC grids"
           assert "Graded Card Center" in html and "assets.tcgdex.net/fr/swsh/swsh7/215/" in html
           assert "assets.tcgdex.net/en/swsh/swsh8/157/" in html and "Visuel catalogue EN" in html
           assert re.search(r'<ul class="radar-sales">.*?href="https://gradedcardcenter\.com/item/[a-f0-9-]+"', html, re.S), "Expected paid market data in Radar HTML"

@@ -158,3 +158,9 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 
 - Paid-sale tiles expose original platform, transaction price and date, variant, and exact TCGdex artwork when confirmed. Ectoplasma currently uses a labelled English catalogue image for the French sale. An unavailable database still leaves the reviewed sales in the main feed in archive mode.
 - Five targeted collector and Radar tests passed locally. The isolated deployment checks both catalogue image references and the marketplace name in the live response.
+
+## GCC availability — 2026-11-18
+
+- Radar reads public Pokémon listing grids for GCC auctions and fixed-price listings. Each view is limited to eight entries from the first page and stamped with the fetch time. Auction deadlines are evaluated in Paris time.
+- This view does not add any paid transactions or update the historical availability series. The original GCC pages remain linked if the live sample is unavailable.
+- Both public grids were parsed locally and the targeted positive and negative tests passed. Preview CI checks both listing types in the deployed page.
