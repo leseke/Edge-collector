@@ -247,7 +247,8 @@ jobs:
       group: edge-cloudflare-d1-deployment
       cancel-in-progress: false
     needs: cloudflare
-    if: github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001'
+    if: >-
+      github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/cloudflare-migration-001' && github.event.head_commit.message != 'chore(ci): publish isolated EDGE Cloudflare preview'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
