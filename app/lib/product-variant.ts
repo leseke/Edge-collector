@@ -7,8 +7,16 @@ export type EvidenceValue<T extends string> =
   | { status: "UNKNOWN"; value: null; source: null }
   | { status: "VERIFIED"; value: T; source: string };
 
+export const catalogueLanguages = { fr: "Français", en: "Anglais", ja: "Japonais", it: "Italien" } as const;
+type CatalogueLanguage = keyof typeof catalogueLanguages;
+type MarketLanguage = CatalogueLanguage | "de" | "es";
+
+export function isCatalogueLanguage(value: string): value is CatalogueLanguage {
+  return Object.hasOwn(catalogueLanguages, value);
+}
+
 export type ProductVariant = {
-  language: EvidenceValue<"fr" | "en" | "ja">;
+  language: EvidenceValue<MarketLanguage>;
   edition: EvidenceValue<"FIRST_EDITION" | "UNLIMITED" | "OTHER">;
   condition: EvidenceValue<"NM" | "EX" | "GD" | "PL" | "PO">;
   grading: EvidenceValue<"RAW" | "PSA" | "BGS" | "CGC" | "OTHER">;
@@ -19,8 +27,8 @@ const unknown = <T extends string>(): EvidenceValue<T> => ({ status: "UNKNOWN", 
 
 export function catalogueVariant(language: string): ProductVariant {
   return {
-    language: ["fr", "en", "ja"].includes(language)
-      ? { status: "VERIFIED", value: language as "fr" | "en" | "ja", source: "TCGdex catalogue locale" }
+    language: isCatalogueLanguage(language)
+      ? { status: "VERIFIED", value: language, source: "TCGdex catalogue locale" }
       : unknown(),
     edition: unknown(), condition: unknown(), grading: unknown(), grade: unknown(),
   };
@@ -50,7 +58,7 @@ export function marketVariant(input?: unknown): ProductVariant {
   const grading = readEvidence(evidence.grading, (value): value is "RAW" | "PSA" | "BGS" | "CGC" | "OTHER" =>
     /^(RAW|PSA|BGS|CGC|OTHER)$/.test(value));
   return {
-    language: readEvidence(evidence.language, (value): value is "fr" | "en" | "ja" => /^(fr|en|ja)$/.test(value)),
+    language: readEvidence(evidence.language, (value): value is MarketLanguage => /^(fr|en|ja|it|de|es)$/.test(value)),
     edition: readEvidence(evidence.edition, (value): value is "FIRST_EDITION" | "UNLIMITED" | "OTHER" =>
       /^(FIRST_EDITION|UNLIMITED|OTHER)$/.test(value)),
     condition: readEvidence(evidence.condition, (value): value is "NM" | "EX" | "GD" | "PL" | "PO" =>

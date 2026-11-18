@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { readCatalogueQuote } from "../../../../lib/catalogue-price";
 import { getTcgMarketSnapshot } from "../../../../lib/market-data";
-import { linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
+import { filterCatalogueSaleVariants, linkCatalogueToMarket } from "../../../../lib/catalogue-market-link";
+import { isCatalogueLanguage } from "../../../../lib/product-variant";
+import { getRadarPaidSales } from "../../../../lib/radar-paid-sales";
 import { notFound } from "next/navigation";
 import { MarketplaceSearch } from "../../../../components/MarketplaceSearch";
 import { AssetImage } from "../../../../components/AssetImage";
@@ -12,12 +14,15 @@ export const runtime = "nodejs";
 type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown; cardCount?: { official?: unknown } } };
 
 const sourceDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" });
+const saleDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
+const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 
 function imageUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
-    if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash || !/^\/(fr|en|ja)\/[a-zA-Z0-9_./-]+$/.test(url.pathname)) return null;
+    if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash ||
+        !/^\/[a-z]{2}\/[a-zA-Z0-9_./-]+$/.test(url.pathname) || !isCatalogueLanguage(url.pathname.split("/")[1])) return null;
     const path = url.pathname.replace(/\/$/, "");
     return /\/(high|low)\.(webp|png|jpg)$/.test(path) ? url.href : url.origin + path + "/high.webp";
   } catch { return null; }
@@ -28,7 +33,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
 }) {
   const { language, cardId } = await params;
   const { q } = await searchParams;
-  if (!["fr", "en", "ja"].includes(language) || !/^(?=.{2,50}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(cardId)) notFound();
+  if (!isCatalogueLanguage(language) || !/^(?=.{2,50}$)[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*$/.test(cardId)) notFound();
   const sourceUrl = "https://api.tcgdex.net/v2/" + language + "/cards/" + encodeURIComponent(cardId);
   let card: Card | null = null;
   try {
@@ -50,7 +55,8 @@ export default async function CatalogueCardPage({ params, searchParams }: {
   const marketplaceQuery = [card.name, cardNumber, card.set?.name]
     .filter((part): part is string => typeof part === "string" && part.trim().length > 0)
     .join(" ");
-  const snapshot = await getTcgMarketSnapshot();
+  const [snapshot, paid] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
+  const languageSales = filterCatalogueSaleVariants(cardId, language, paid.cards).filter(variant => variant.paidSales.length > 0);
   const indicativePrice = readCatalogueQuote(card.pricing);
   const marketLink = linkCatalogueToMarket(cardId, language, snapshot.cards);
   return <main className="native-dashboard edge-product-detail">
@@ -63,12 +69,14 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         <h1>{card.name}</h1>
         <p>{typeof card.set?.name === "string" ? card.set.name : "Extension non renseignée"} · #{typeof card.localId === "string" ? card.localId : "?"} · {language.toUpperCase()}</p>
         <div className="edge-product-primary">
+          <span>Prix de la version {language.toUpperCase()}</span>
+          <small>{languageSales.length > 0 ? "Ventes documentées par variante ci-dessous." : "Aucun prix vérifié dans cette langue."}</small>
           <span>Indication de marché{indicativePrice ? ` · ${indicativePrice.provider} via TCGdex` : ""}</span>
           {indicativePrice ? (
             <>
               <strong>{new Intl.NumberFormat("fr-FR", { style: "currency", currency: indicativePrice.currency }).format(indicativePrice.low)}</strong>
               <small>
-                Prix bas indicatif{indicativePrice.variant ? ` · ${indicativePrice.variant}` : ""} · <a href={sourceUrl}>Source mise à jour le {sourceDate.format(new Date(indicativePrice.updatedAt))}</a>
+                Prix bas indicatif · Langue non ventilée{indicativePrice.variant ? ` · ${indicativePrice.variant}` : ""} · <a href={sourceUrl}>Source mise à jour le {sourceDate.format(new Date(indicativePrice.updatedAt))}</a>
                 {indicativePrice.stale ? " · Donnée de plus de 48 h" : ""}
               </small>
               <small>Vente conclue, langue, édition et état de l’exemplaire non établis par cet indicateur.</small>
@@ -77,6 +85,15 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         </div>
       </div>
     </div>
+    {languageSales.length > 0 && <section className="edge-product-panel" aria-label="Ventes documentées dans la langue de la fiche">
+      <h2>Ventes documentées · {language.toUpperCase()}</h2>
+      {languageSales.map(variant => <div key={variant.key}>
+        <h3>{variant.variant}</h3>
+        <ul>{[...variant.paidSales].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 3).map(sale => <li key={sale.id}>
+          {euros.format(sale.cents / 100)} · <a href={sale.source}>{saleDate.format(new Date(sale.day))}</a>
+        </li>)}</ul>
+      </div>)}
+    </section>}
     <MarketplaceSearch query={marketplaceQuery} />
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
       <div className="edge-catalogue-facts-heading"><span>IDENTITÉ DU PRODUIT</span><h2>Caractéristiques vérifiables</h2><p>Informations descriptives transmises par TCGdex, sans estimation financière.</p></div>
@@ -94,7 +111,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
     <section className="edge-catalogue-intelligence" aria-label="Investigation EDGE">
       <span className="edge-product-kicker">INTELLIGENCE EDGE · À CONNECTER</span>
       <h2>Du catalogue à l'investigation</h2>
-      <p>Prix réalisés, liquidité, catalyseurs, risques et analyse IA ne sont pas disponibles pour cette fiche. Aucun signal BUY ou STRONG BUY n'est généré sans dossier associé et données traçables.</p>
+      <p>L’évaluation d’achat nécessite des ventes comparables, un relevé de liquidité et des risques documentés. Aucun signal BUY ou STRONG BUY n'est généré sans dossier associé et données traçables.</p>
       <Link href={back}>Revenir à l'exploration</Link>
     </section>
     <section className="edge-product-panel">

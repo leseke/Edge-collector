@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { catalogueLanguages } from "../../../lib/product-variant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const LANGUAGES = new Set(["fr", "en", "ja"]);
+const LANGUAGES = new Set(Object.keys(catalogueLanguages));
 const API = "https://api.tcgdex.net/v2";
 const ASSETS = "https://assets.tcgdex.net/";
 type TcgDexCard = { id?: unknown; localId?: unknown; name?: unknown; image?: unknown };
@@ -13,7 +14,7 @@ function safeImage(value: unknown): string | null {
     const url = new URL(value);
     if (url.protocol !== "https:" || url.hostname !== "assets.tcgdex.net" || url.search || url.hash) return null;
     const path = url.pathname.replace(/\/$/, "");
-    if (!/^\/(fr|en|ja)\/[a-zA-Z0-9_./-]+$/.test(path)) return null;
+    if (!/^\/[a-z]{2}\/[a-zA-Z0-9_./-]+$/.test(path) || !LANGUAGES.has(path.split("/")[1])) return null;
     return /\/(high|low)\.(webp|png|jpg)$/.test(path) ? url.href : `${url.origin}${path}/high.webp`;
   } catch { return null; }
 }

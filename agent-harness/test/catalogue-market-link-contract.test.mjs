@@ -11,7 +11,7 @@ const hooks = registerHooks({
     return nextResolve(specifier, context);
   },
 });
-const { linkCatalogueToMarket } = await import("../../app/lib/catalogue-market-link.ts");
+const { filterCatalogueSaleVariants, linkCatalogueToMarket } = await import("../../app/lib/catalogue-market-link.ts");
 const { marketVariant } = await import("../../app/lib/product-variant.ts");
 hooks.deregister();
 
@@ -52,6 +52,20 @@ test("keeps legacy, malformed, and inapplicable evidence unknown", () => {
   for (const key of ["language", "edition", "condition", "grade"]) {
     assert.deepEqual(result[key], { status: "UNKNOWN", value: null, source: null });
   }
+});
+
+test("French and Italian observations with the same reference remain separate", () => {
+  const fr = { ...snapshotCard, variant: marketVariant({ language: recorded("fr") }) };
+  const it = { ...snapshotCard, variant: marketVariant({ language: recorded("it") }) };
+  assert.strictEqual(linkCatalogueToMarket("base1-4", "fr", [fr, it]).card, fr);
+  assert.strictEqual(linkCatalogueToMarket("base1-4", "it", [fr, it]).card, it);
+  assert.strictEqual(linkCatalogueToMarket("base1-4", "it", [fr]).card, null);
+  assert.strictEqual(linkCatalogueToMarket("base1-4", "it", [it, legacyCard]).card, it);
+  const frenchSales = { key: "base1-4:fr:unlimited:psa:9", cents: 10000 };
+  const italianSales = { key: "base1-4:it:unlimited:psa:9", cents: 8000 };
+  assert.deepEqual(filterCatalogueSaleVariants("base1-4", "it", [frenchSales, italianSales]), [italianSales]);
+  assert.deepEqual(filterCatalogueSaleVariants("base1-4", "it", [frenchSales]), []);
+  assert.deepEqual(filterCatalogueSaleVariants("base1-4", "it", [{ key: "base1-41:it:unlimited:psa:9" }]), []);
 });
 
 test("catalogue detail keeps market provenance and withholds attribution and advice", async () => {

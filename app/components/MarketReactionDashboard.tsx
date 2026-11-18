@@ -32,7 +32,7 @@ export async function MarketReactionDashboard() {
         const guide = card.guideWindow;
         if (!guide) return [];
         return [<li key={card.productId}>
-          <strong>{card.name} · {card.setName} · {card.number}</strong>{" · "}
+          <strong>{card.name} · {card.setName} · {card.number}</strong>{" · Langue non ventilée · "}
           7 j {euros.format(guide.avg7)} · 30 j {euros.format(guide.avg30)} · Écart {signed.format(guide.percent)} %
           <small> · {formatDate(guide.updated)}{guide.stale ? " · relevé de plus de 48 h" : ""}</small>
         </li>];
@@ -42,7 +42,8 @@ export async function MarketReactionDashboard() {
       <h2 id="market-trends-title">Tendances Pokémon</h2>
       {sales.trends.length === 0 && <p>Il faut au moins trois ventes comparables dans chacune des deux périodes de 30 jours pour dégager une tendance.</p>}
       {sales.trends.slice(0, 12).map(trend => {
-        const label = sales.cards.find(card => card.key === trend.key)?.name ?? trend.key.split(":").slice(2).join(" · ").replaceAll("-", " ");
+        const card = sales.cards.find(card => card.key === trend.key);
+        const label = card ? card.name + " · " + card.variant : trend.key.split(":").slice(2).join(" · ").replaceAll("-", " ");
         return <article key={trend.key}>
           <h3>{label}</h3>
           <p>Prix médian · {trend.priceChange > 0 ? "+" : ""}{trend.priceChange} % · {trend.priorCount} puis {trend.recentCount} ventes observées</p>

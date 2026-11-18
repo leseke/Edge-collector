@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { catalogueLanguages } from "../../../lib/product-variant";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-const LANGUAGES = new Set(["fr", "en", "ja"]);
+const LANGUAGES = new Set(Object.keys(catalogueLanguages));
 const IMAGE_HOST = "assets.tcgdex.net";
 type RecordValue = Record<string, unknown>;
 function object(value: unknown): value is RecordValue { return !!value && typeof value === "object" && !Array.isArray(value); }

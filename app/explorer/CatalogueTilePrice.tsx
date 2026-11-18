@@ -54,7 +54,7 @@ export function CatalogueTilePrice({ language, cardId }: { language: string; car
       result === null ? "Aucun prix indicatif disponible" :
       <>
         <strong>{format[result.currency ?? "EUR"].format(result.low)}</strong>
-        <small>Prix bas indicatif · {result.provider ?? "Cardmarket"} via TCGdex{result.variant ? ` · ${result.variant}` : ""} · <time dateTime={result.updatedAt}>{date.format(new Date(result.updatedAt))}</time>{result.stale ? " · Plus de 48 h" : ""}</small>
+        <small>Prix bas indicatif · Langue non ventilée · {result.provider ?? "Cardmarket"} via TCGdex{result.variant ? ` · ${result.variant}` : ""} · <time dateTime={result.updatedAt}>{date.format(new Date(result.updatedAt))}</time>{result.stale ? " · Plus de 48 h" : ""}</small>
       </>}
   </span>;
 }

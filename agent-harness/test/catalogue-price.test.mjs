@@ -24,9 +24,10 @@ test("withholds missing, malformed, undated and future observations", () => {
 test("prefers dated EUR prices and uses explicit provider and currency for fallback", () => {
   const us = { unit: "USD", updated, normal: { lowPrice: 9 }, holofoil: { lowPrice: 4 } };
   assert.equal(readCatalogueQuote({ ...pricing, tcgplayer: us }, now).currency, "EUR");
+  assert.equal(readCatalogueQuote(pricing, now).marketLanguage, null);
   assert.equal(readCatalogueQuote({ cardmarket: { unit: "EUR", updated, "low-holo": 7 }, tcgplayer: us }, now).low, 7);
   assert.deepEqual(readCatalogueQuote({ tcgplayer: us }, now), {
-    low: 4, updatedAt: updated, stale: false, currency: "USD", provider: "TCGplayer", variant: "holofoil",
+    low: 4, updatedAt: updated, stale: false, currency: "USD", provider: "TCGplayer", marketLanguage: null, variant: "holofoil",
   });
   assert.equal(readCatalogueQuote({ tcgplayer: { ...us, updated: null } }, now), null);
 });

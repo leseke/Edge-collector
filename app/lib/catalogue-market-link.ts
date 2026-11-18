@@ -1,4 +1,4 @@
-import { catalogueVariant, marketVariant, compareVariants } from "./product-variant";
+import { catalogueVariant, marketVariant, compareVariants, isCatalogueLanguage } from "./product-variant";
 import type { TcgCard } from "./market-data";
 
 export type CatalogueMarketLink =
@@ -15,18 +15,31 @@ export function legacyPokemonProductId(cardId: string): string | null {
   return `pokemon_card_${match[1]}_${match[2]}`;
 }
 
+export function filterCatalogueSaleVariants<T extends { key: string }>(
+  cardId: string, language: string, variants: readonly T[],
+): T[] {
+  if (!isCatalogueLanguage(language)) return [];
+  return variants.filter(({ key }) => {
+    const [reference, saleLanguage] = key.split(":");
+    return reference === cardId && saleLanguage === language;
+  });
+}
+
 export function linkCatalogueToMarket(
   cardId: string,
   language: string,
   cards: readonly TcgCard[],
 ): CatalogueMarketLink {
   const productId = legacyPokemonProductId(cardId);
-  if (!productId || !["fr", "en", "ja"].includes(language)) return { status: "NO_MATCH", productId: null, card: null };
-  const matches = cards.filter(card => card.productId === productId || card.productId === `pokemon_card_${cardId}`);
-  // Fail closed if the market snapshot contains ambiguous duplicate identities.
+  if (!productId || !isCatalogueLanguage(language)) return { status: "NO_MATCH", productId: null, card: null };
+  const target = catalogueVariant(language);
+  const compatible = cards
+    .filter(card => card.productId === productId || card.productId === `pokemon_card_${cardId}`)
+    .map(card => ({ card, variant: card.variant ?? marketVariant() }))
+    .filter(({ variant }) => compareVariants(target, variant) !== "CONFLICT");
+  const exactLanguage = compatible.filter(({ variant }) => variant.language.value === language);
+  const matches = exactLanguage.length ? exactLanguage : compatible;
   if (matches.length !== 1) return { status: "NO_MATCH", productId: null, card: null };
-  const card = matches[0];
-  const variant = card.variant ?? marketVariant();
-  if (compareVariants(catalogueVariant(language), variant) === "CONFLICT") return { status: "NO_MATCH", productId: null, card: null };
+  const { card, variant } = matches[0];
   return { status: "CANDIDATE_UNVERIFIED", productId: card.productId, card, variant };
 }

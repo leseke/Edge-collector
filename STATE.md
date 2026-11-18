@@ -128,3 +128,7 @@ Daily collection now uses one Gemini request per UTC day for all four families, 
 ## Free TCGdex and Cardmarket collection — 2026-11-18
 
 `scripts/cardmarket_history.py` ingests the public Cardmarket Pokémon catalogues and daily guide into a local SQLite history. The official guide dated 2026-11-17 yielded 67,459 cards, 732 boosters, 975 box sets, 517 displays, 402 blisters and 167 ETBs with usable values, plus other sealed formats. An identical import inserted no second snapshot. Two Python regression tests and local validation of the frontend price-window parser passed. The Radar displays the overlapping 7/30-day Cardmarket averages from its existing TCGdex price snapshot, with the source date and a staleness label. The separate full-catalogue importer has no deployed schedule or persistent cloud destination yet. No Gemini key or billing was enabled.
+
+## Market language evidence — 2026-11-18
+
+The Explorer supports Italian catalogue searches and detail pages. The catalogue quote exposes `marketLanguage: null` because the provider's aggregates do not identify an exemplar language. A live comparison of TCGdex FR and IT for base1-4 returned the same Cardmarket product ID and the same low, 7-day and 30-day prices. Documented sales on catalogue detail require an exact reference and exact language in the paid-sale key; an absent language dataset stays empty. The Radar shows the full variant when rendering tracked sale trends. No D1 schema changes or new provider calls were required.

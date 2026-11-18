@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { TcgCard } from "../lib/market-data";
 import { CatalogueTilePrice } from "./CatalogueTilePrice";
 import { AssetImage } from "../components/AssetImage";
+import { catalogueLanguages, isCatalogueLanguage } from "../lib/product-variant";
 
 type Category = "cards" | "sealed";
 type Sort = "series" | "name" | "price-low" | "price-high";
@@ -24,7 +25,10 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
   const [series, setSeries] = useState("ALL");
   const [sort, setSort] = useState<Sort>("series");
   const [catalogueQuery, setCatalogueQuery] = useState(() => (searchParams.get("catalogue") ?? "").slice(0, 60));
-  const [catalogueLanguage, setCatalogueLanguage] = useState(() => ["fr", "en", "ja"].includes(searchParams.get("lang") ?? "") ? searchParams.get("lang")! : "fr");
+  const [catalogueLanguage, setCatalogueLanguage] = useState(() => {
+    const language = searchParams.get("lang") ?? "";
+    return isCatalogueLanguage(language) ? language : "fr";
+  });
   const [catalogueCards, setCatalogueCards] = useState<CatalogueCard[]>([]);
   const [catalogueStatus, setCatalogueStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [catalogueMode, setCatalogueMode] = useState<"search" | "sets">("search");
@@ -68,6 +72,7 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
         if (!response.ok) throw new Error("Catalogue indisponible");
         const payload: unknown = await response.json();
         if (!payload || typeof payload !== "object" || !("cards" in payload) || !Array.isArray(payload.cards)) throw new Error("Réponse invalide");
+        if (controller.signal.aborted) return;
         setCatalogueCards(payload.cards as CatalogueCard[]);
         setCatalogueStatus("ready");
       } catch {
@@ -124,7 +129,17 @@ export function ExplorerGrid({ cards, warning }: { cards: TcgCard[]; warning: st
         <div className="edge-explorer-section-title"><h2>Catalogue étendu · TCGdex</h2><span>Sans prix de marché</span></div>
         <p>Recherche indépendante des relevés EDGE. Une carte trouvée ici n'est pas une opportunité validée.</p>
         <div className="edge-catalogue-mode" role="group" aria-label="Parcours du catalogue"><button type="button" aria-pressed={catalogueMode === "search"} onClick={() => setCatalogueMode("search")}>Rechercher une carte</button><button type="button" aria-pressed={catalogueMode === "sets"} onClick={() => setCatalogueMode("sets")}>Parcourir les extensions</button></div>
-        <label className="edge-catalogue-language"><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => setCatalogueLanguage(event.target.value)}><option value="fr">Français</option><option value="en">Anglais</option><option value="ja">Japonais</option></select></label>
+        <label className="edge-catalogue-language"><span>Langue du catalogue</span><select value={catalogueLanguage} onChange={event => {
+          const language = event.currentTarget.value;
+          if (!isCatalogueLanguage(language) || language === catalogueLanguage) return;
+          setCatalogueCards([]);
+          setCatalogueSets([]);
+          setSetCards([]);
+          setSelectedSet(null);
+          setCatalogueStatus(catalogueQuery.trim().length >= 2 ? "loading" : "idle");
+          setSetsStatus("loading");
+          setCatalogueLanguage(language);
+        }}>{Object.entries(catalogueLanguages).map(([code, label]) => <option key={code} value={code}>{label}</option>)}</select></label>
         {catalogueMode === "sets" ? <div className="edge-catalogue-sets">
           {selectedSet ? <><button type="button" className="edge-catalogue-back" onClick={() => { setSelectedSet(null); setSetCards([]); setSetsStatus("ready"); }}>← Toutes les extensions</button><h3>{selectedSet.name}</h3><p role="status">{setsStatus === "loading" ? "Chargement des cartes…" : setsStatus === "error" ? "Cartes indisponibles pour cette extension." : setCards.length + " carte(s) renvoyée(s)"}</p><div className="edge-catalogue-results">{setCards.map(card => <Link key={card.language + ":" + card.id} href={"/explorer/catalogue/" + encodeURIComponent(card.language) + "/" + encodeURIComponent(card.id) + "?q=" + encodeURIComponent(catalogueQuery)} className="edge-catalogue-card"><div className="edge-catalogue-image"><AssetImage src={card.image} name={card.name} catalogueId={card.id} catalogueLanguage={card.language}/></div><strong>{card.name}</strong><small>{card.id} · {card.language.toUpperCase()} · TCGdex</small><CatalogueTilePrice language={card.language} cardId={card.id} /></Link>)}</div></> :
           <><label className="edge-catalogue-set-filter"><span>Filtrer les extensions</span><input type="search" value={extensionFilter} onChange={event => setExtensionFilter(event.target.value)} placeholder="Nom d'extension…" /></label><p role="status">{setsStatus === "loading" ? "Chargement des extensions…" : setsStatus === "error" ? "Extensions indisponibles. Réessaie plus tard." : filteredCatalogueSets.length + " extension(s) affichée(s) · Liste partielle"}</p><div className="edge-catalogue-set-grid">{filteredCatalogueSets.map(set => <button key={set.id} type="button" className="edge-catalogue-set-tile" onClick={() => setSelectedSet(set)}><span className="edge-catalogue-set-art">{set.logo ? <AssetImage src={set.logo} name={set.name}/> : <span>Extension</span>}</span><strong>{set.name}</strong><small>{set.cardCount === null ? "Nombre de cartes inconnu" : set.cardCount + " cartes répertoriées"}</small></button>)}</div></>}
