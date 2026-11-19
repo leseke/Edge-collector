@@ -37,7 +37,7 @@ class DeltaFencingMigrationTests(unittest.TestCase):
     def test_replaced_lease_blocks_cursor_update(self):
         self.acquire()
         self.assertEqual(self.insert_cursor(),1)
-        self.acquire("different-lease-id")
+        self.acquire("b"*36)
         self.assertEqual(self.update_cursor(),0)
         self.assertEqual(self.db.execute("SELECT generation FROM lbc_graph_delta_cursor").fetchone()[0],1)
     def test_expired_lease_cannot_write(self):
