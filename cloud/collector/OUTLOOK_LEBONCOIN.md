@@ -208,3 +208,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - Offline tests cover missing database/tables, ambiguous scope and
   response redaction; a schema listing does NOT prove correct table shape
   or real Microsoft authorization. See ADR 028.
+
+## End-to-end cancellation of Outlook read-only collection (development V17)
+- `leboncoin-runner.mjs` propagates the active D1 lease cancellation
+  signal and owner check through Microsoft refresh-token requests, Graph
+  /me identity attestation and Graph Delta pages.
+- The token refresh path refuses to rotate stored credentials or start
+  the Graph consumer when the D1 lease has already been lost. D1 lease
+  fencing and encrypted credential CAS remain required.
+- Cooperative cancellation does not replace provisioning Microsoft
+  Entra, Cloudflare Access, remote D1 migrations, user consent and live
+  operational testing. See ADR 029.
