@@ -156,3 +156,16 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   Cloudflare race/cancellation tests remain required before activation.
 - ADR 024 documents the residual time-of-check/time-of-use gap and the
   necessary stronger fencing or reliable bounded run cancellation.
+
+## Atomic Delta cursor fencing (development V12)
+- `src/leboncoin-delta-store.mjs` now accepts an active D1 owner lease
+  token. In both INSERT and UPDATE cases, checkpoint writes use a **single
+  atomic SQL statement** requiring the matching unexpired lease token.
+  If the token was lost/replaced, no checkpoint is advanced.
+- `src/leboncoin-runner.mjs` passes the lease ID supplied by the owner lock.
+  Existing generation compare-and-swap remains active.
+- JavaScript tests and actual SQLite compatibility tests cover missing,
+  expired, and replaced leases. See ADR 025.
+- This closes the race for cursor **writes**, not all other operations:
+  observation batches and OAuth refresh still require further fencing or
+  a proven bounded execution model. No remote D1 test or live deployment.
