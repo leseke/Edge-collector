@@ -1,3 +1,5 @@
+import {webcrypto} from "node:crypto";
+if (!globalThis.crypto) globalThis.crypto=webcrypto;
 import test from "node:test";
 import assert from "node:assert/strict";
 import {runOutlookLeboncoinCollection} from "../src/leboncoin-runner.mjs";
@@ -25,6 +27,8 @@ test("no independent Microsoft OAuth consent means no token request",async()=>{
     OUTLOOK_CLIENT_ID:"123e4567-e89b-12d3-a456-426614174000",
     OUTLOOK_CLIENT_SECRET:"private",
     DB:{prepare(sql){
+      if(sql.startsWith("INSERT INTO lbc_sync_lease"))return {bind(){return {run:async()=>({meta:{changes:1}})}}};
+      if(sql.startsWith("DELETE FROM lbc_sync_lease"))return {bind(){return {run:async()=>({meta:{changes:1}})}}};
       assert.match(sql,/lbc_oauth_credentials/);
       return {bind(){return {first:async()=>null}}}
     },batch(){}}
