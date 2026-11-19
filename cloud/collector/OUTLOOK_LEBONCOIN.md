@@ -108,3 +108,5 @@ binding remain mandatory; do not interpret these modules as a usable login UI.
 - The session-derived mailbox key still requires a fully authenticated EDGE
   session implementation; no actual user account was bound or authorized by
   these changes. See ADR 019.
+
+Identity verification via Microsoft Graph /me requires delegated User.Read in addition to Mail.Read and offline_access. Independent Microsoft user consent has not yet been performed.
