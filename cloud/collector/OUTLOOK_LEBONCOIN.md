@@ -135,3 +135,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - The general Cloudflare collector test failure on a previous commit was
   traced to a flaky signature corruption fixture, corrected to mutate the
   first significant Base64URL signature character. See ADR 022.
+
+## Concurrency protection (development V10)
+- `src/leboncoin-run-lease.mjs` requires a single-owner D1 lease before
+  accessing Microsoft credentials and Graph. A simultaneous run returns BUSY
+  without collecting. Release uses the exact lease owner token.
+- `migrations/006_outlook_run_lease.sql` defines the operational lease table.
+- `test/leboncoin-run-lease.test.mjs` and
+  `test/test_leboncoin_lease_migration.py` cover acquisition, exclusion,
+  stale-lease recovery and safe release.
+- Do not schedule yet: a per-run timeout, renewal strategy and real D1
+  concurrency test are prerequisites. See ADR 023.
