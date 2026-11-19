@@ -20,7 +20,7 @@ test("Microsoft authorize URL uses PKCE S256, narrow scopes and state",async()=>
   const u=new URL(started.authorizationUrl);
   assert.equal(u.origin,"https://login.microsoftonline.com");
   assert.equal(u.searchParams.get("response_type"),"code");
-  assert.equal(u.searchParams.get("scope"),"offline_access Mail.Read");
+  assert.equal(u.searchParams.get("scope"),"offline_access Mail.Read User.Read");
   assert.equal(u.searchParams.get("code_challenge_method"),"S256");
   assert.ok(u.searchParams.get("code_challenge").length>=43);
   assert.ok(u.searchParams.get("state").length>=40);
@@ -35,7 +35,7 @@ test("single-use matching callback exchanges code, stores refresh token, not acc
     called++;
     const p=new URLSearchParams(req.body);
     assert.equal(p.get("grant_type"),"authorization_code");
-    assert.equal(p.get("scope"),"offline_access Mail.Read");
+    assert.equal(p.get("scope"),"offline_access Mail.Read User.Read");
     assert.equal(p.get("redirect_uri"),redirectUri);
     assert.ok(p.get("code_verifier").length>=43);
     assert.equal(p.get("code"),"authorization-code-1234");
