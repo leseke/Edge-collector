@@ -3,13 +3,13 @@
 const GRAPH_ME="https://graph.microsoft.com/v1.0/me?$select=id,userPrincipalName,mail";
 const ID=/^[A-Za-z0-9._@-]{1,256}$/;
 export async function verifyMicrosoftMailbox(accessToken,{
-  fetchImpl=fetch,expectedAccountId=null
+  fetchImpl=fetch,expectedAccountId=null,signal
 }={}) {
   if(typeof accessToken!=="string" || !accessToken)
     throw new Error("missing_graph_access_token");
   const response=await fetchImpl(GRAPH_ME,{
     method:"GET",redirect:"error",
-    headers:{Authorization:"Bearer "+accessToken,Accept:"application/json"}
+    headers:{Authorization:"Bearer "+accessToken,Accept:"application/json"},signal
   });
   if(!response.ok)throw new Error("graph_identity_http_"+response.status);
   const profile=await response.json();
