@@ -121,3 +121,17 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   a Cloudflare Access policy, D1 migrations, or production collection exist.
 - No remote Access policy, Microsoft Entra application or schedule was
   provisioned in this iteration. See ADR 021.
+
+## Full consented collection composition (development V9)
+- `src/leboncoin-runner.mjs`: a **single opt-in invocation** combining the
+  encrypted OAuth credential vault, refresh, Graph /me identity check,
+  bounded Delta ingestion, immutable D1 records and encrypted cursor.
+- Collection explicitly requires `OUTLOOK_INGEST_ENABLED=true`, a verified
+  account ID, a valid independently consented Microsoft refresh credential,
+  a trusted server-derived owner key, D1 and encryption secrets. Otherwise
+  it fails closed with no Graph collection. Not wired to cron or live HTTP.
+- `OUTLOOK_DELTA_ENCRYPTION_KEY` is a separate 32-byte hex secret from the
+  OAuth encryption key and is now checked by activation diagnostics.
+- The general Cloudflare collector test failure on a previous commit was
+  traced to a flaky signature corruption fixture, corrected to mutate the
+  first significant Base64URL signature character. See ADR 022.
