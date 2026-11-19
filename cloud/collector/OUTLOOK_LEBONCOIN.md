@@ -146,3 +146,13 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   stale-lease recovery and safe release.
 - Do not schedule yet: a per-run timeout, renewal strategy and real D1
   concurrency test are prerequisites. See ADR 023.
+
+## Active lease checks and fetch cancellation (development V11)
+- The per-owner D1 lease now supplies an AbortSignal, and durable ownership
+  verification is performed before Graph pages, listing persistence and cursor
+  checkpoints. A cancelled/expired/lost lease cannot intentionally advance a
+  checkpoint.
+- These checks are not atomic with an observation write. Real D1 and
+  Cloudflare race/cancellation tests remain required before activation.
+- ADR 024 documents the residual time-of-check/time-of-use gap and the
+  necessary stronger fencing or reliable bounded run cancellation.
