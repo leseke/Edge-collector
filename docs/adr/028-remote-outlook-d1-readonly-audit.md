@@ -46,3 +46,14 @@ multi-account/database behavior. Actual remote results are **not claimed**.
 
 ## Reversibility
 Remove the script and workflow without changing production behavior.
+
+## 2026-11-19 audit hardening addendum
+The audit now checks for all four expected immutability triggers as
+well as the six required table names. It refuses to infer completeness
+when a Cloudflare list response reports additional uninspected pages.
+Even when all object names are present, the status is
+`SCHEMA_OBJECTS_PRESENT_UNVERIFIED` and
+`remote_migrations_verified=false`: object presence cannot prove
+column definitions, SQL trigger bodies, indexes, migration provenance,
+access-control policies or actual mailbox authorization. These need
+a separate approved verification procedure.
