@@ -18,7 +18,7 @@ export async function runOutlookLeboncoinCollection({
      !env.OUTLOOK_ENCRYPTION_KEY || !env.OUTLOOK_CLIENT_ID ||
      !env.OUTLOOK_CLIENT_SECRET || !env.OUTLOOK_DELTA_ENCRYPTION_KEY)
     throw new Error("outlook_runtime_not_configured");
-  return withOutlookRunLease({db:env.DB,ownerKey,run:async()=>{
+  return withOutlookRunLease({db:env.DB,ownerKey,run:async({signal,assertActive})=>{
   const stores=await createD1OAuthStores({
     db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
   });
@@ -40,7 +40,7 @@ export async function runOutlookLeboncoinCollection({
       });
       const stats=await syncLeboncoinDelta({
         token:accessToken,db:env.DB,cursorStore:deltaStore,
-        fetchImpl,maxPages
+        fetchImpl,maxPages,signal,assertActive
       });
       return {...stats,active:true,source:"OUTLOOK_LEBONCOIN"};
     }
