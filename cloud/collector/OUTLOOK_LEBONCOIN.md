@@ -84,3 +84,15 @@ credential; this branch does not authorize unattended Outlook access.
 
 For production the authenticated callback endpoints and mailbox identity
 binding remain mandatory; do not interpret these modules as a usable login UI.
+
+## Authenticated HTTP consent adapter (development V5)
+- `src/leboncoin-consent-http.mjs` defines feature-disabled-by-default
+  authorization start and callback handlers, with strict origin/path/method
+  checking and trusted-session callback injection. This module is **not
+  mounted** in `src/index.ts` or production UI.
+- `test/leboncoin-consent-http.test.mjs` verifies session enforcement,
+  callback replay rejection, no tokens in HTTP response, and malformed
+  callback handling.
+- ADR 018 records the reason endpoints remain unmounted: EDGE must first
+  provide a hardened, authenticated session resolver and a verified mailbox
+  ownership binding. The existing ChatGPT Outlook connection cannot substitute.
