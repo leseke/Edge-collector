@@ -195,3 +195,16 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   cursor and refresh-token updates leave existing generations unchanged.
 - This is actual local D1 execution, not remote production D1, not an
   actual Microsoft consent or a real Leboncoin email import. See ADR 027.
+
+## Remote D1 schema audit (development V15)
+- `tools/outlook-remote-readiness.py` is a **read-only audit** for the
+  remote Cloudflare D1 schema. It lists the account/database and asks
+  `sqlite_master` only for the names of six required Outlook tables,
+  never their contents. It prints no token, mailbox ID or D1 UUID.
+- The `outlook-d1-readonly-audit.yml` workflow is **manual-only**. It
+  has not been run or given remote D1 write permissions in this iteration.
+  GitHub may require the workflow on the default branch before dispatch
+  becomes available; do not merge this draft PR merely to activate it.
+- Offline tests cover missing database/tables, ambiguous scope and
+  response redaction; a schema listing does NOT prove correct table shape
+  or real Microsoft authorization. See ADR 028.
