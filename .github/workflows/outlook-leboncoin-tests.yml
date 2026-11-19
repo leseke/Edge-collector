@@ -6,14 +6,14 @@ on:
     paths:
       - 'cloud/collector/src/leboncoin-*.mjs'
       - 'cloud/collector/test/leboncoin*.test.mjs'
-      - 'cloud/collector/test/test_leboncoin_migration.py'
+      - 'cloud/collector/test/test_leboncoin*.py'
       - 'cloud/collector/migrations/00*_outlook_*.sql'
       - '.github/workflows/outlook-leboncoin-tests.yml'
   pull_request:
     paths:
       - 'cloud/collector/src/leboncoin-*.mjs'
       - 'cloud/collector/test/leboncoin*.test.mjs'
-      - 'cloud/collector/test/test_leboncoin_migration.py'
+      - 'cloud/collector/test/test_leboncoin*.py'
       - 'cloud/collector/migrations/00*_outlook_*.sql'
   workflow_dispatch:
 
@@ -32,4 +32,4 @@ jobs:
       - name: Run deterministic offline parser and Graph contract tests
         run: node --test cloud/collector/test/leboncoin-email.test.mjs cloud/collector/test/leboncoin-d1.test.mjs cloud/collector/test/leboncoin-sync.test.mjs cloud/collector/test/leboncoin-delta.test.mjs cloud/collector/test/leboncoin-oauth.test.mjs cloud/collector/test/leboncoin-delta-store.test.mjs cloud/collector/test/leboncoin-consent.test.mjs cloud/collector/test/leboncoin-oauth-store.test.mjs
       - name: Verify append-only D1 migration (SQLite compatibility)
-        run: python -m unittest discover -s cloud/collector/test -p 'test_leboncoin_migration.py'
+        run: python -m unittest discover -s cloud/collector/test -p 'test_leboncoin*.py'
