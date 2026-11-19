@@ -17,7 +17,7 @@ not allow an incorrect account to replace an existing mailbox authorization.
    its opaque ID under the server-verified EDGE principal. Reject mismatches.
 
 ## Decision
-Choose (3), with no new permission beyond delegated Mail.Read:
+Choose (3), with delegated Mail.Read and User.Read (Graph /me profile identity):
 - `leboncoin-identity.mjs` queries `GET /v1.0/me` and validates Graph's
   opaque account ID. It returns no email address or display name.
 - `leboncoin-consent-http.mjs` requires this identity verification before
