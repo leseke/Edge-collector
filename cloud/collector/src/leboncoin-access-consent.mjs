@@ -1,0 +1,30 @@
+// Development assembly only, intentionally NOT mounted on a deployed route.
+// Cloudflare Access must gate traffic AND its signed application JWT is
+// independently validated before EDGE owner-specific Microsoft consent.
+import { verifyCloudflareAccessSession } from "./leboncoin-access-session.mjs";
+import { createD1OAuthStores } from "./leboncoin-oauth-store.mjs";
+import { createOutlookConsentHandler } from "./leboncoin-consent-http.mjs";
+
+export function createAccessProtectedOutlookConsent({env,fetchImpl=fetch}) {
+  if (!env?.DB || !env?.OUTLOOK_ENCRYPTION_KEY || !env?.CF_ACCESS_TEAM_DOMAIN ||
+      !env?.CF_ACCESS_APP_AUD || !env?.OUTLOOK_CLIENT_ID ||
+      !env?.OUTLOOK_CLIENT_SECRET || !env?.OUTLOOK_REDIRECT_URI ||
+      !env?.CF_ACCESS_ALLOWED_SUBJECTS)
+    throw new Error("missing_outlook_consent_config");
+  const allowedSubjects=env.CF_ACCESS_ALLOWED_SUBJECTS.split(",").map(s=>s.trim()).filter(Boolean);
+  if(allowedSubjects.length!==1)throw new Error("operator_allowlist_required");
+  return createOutlookConsentHandler({
+    enabled:env.OUTLOOK_CONSENT_ENABLED==="true",
+    redirectUri:env.OUTLOOK_REDIRECT_URI,
+    tenant:env.OUTLOOK_TENANT || "consumers",
+    clientId:env.OUTLOOK_CLIENT_ID,clientSecret:env.OUTLOOK_CLIENT_SECRET,
+    fetchImpl,
+    verifySession:request=>verifyCloudflareAccessSession(request,{
+      teamUrl:env.CF_ACCESS_TEAM_DOMAIN,
+      audience:env.CF_ACCESS_APP_AUD,allowedSubjects,fetchImpl
+    }),
+    getStores:session=>createD1OAuthStores({
+      db:env.DB,mailboxKey:session.ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
+    })
+  });
+}
