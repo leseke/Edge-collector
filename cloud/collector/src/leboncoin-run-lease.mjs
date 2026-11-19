@@ -19,13 +19,23 @@ export async function withOutlookRunLease({db,ownerKey,run,clock=()=>Date.now(),
     WHERE lbc_sync_lease.expires_at_ms <= excluded.acquired_at_ms`)
     .bind(ownerKey,leaseId,expiry,now).run();
   if (result?.meta?.changes!==1) return {status:"BUSY",active:false};
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),Math.max(0,expiry-clock()));
+  const assertActive=async()=>{
+    if(controller.signal.aborted || clock()>=expiry)throw new Error("outlook_run_lease_expired");
+    const holder=await db.prepare("SELECT lease_id,expires_at_ms FROM lbc_sync_lease WHERE owner_key=?").bind(ownerKey).first();
+    if(!holder || holder.lease_id!==leaseId || holder.expires_at_ms<=clock())
+      throw new Error("outlook_run_lease_lost");
+  };
   try {
-    const output=await run();
+    const output=await run({signal:controller.signal,assertActive});
     // Detect expired lease before reporting success; another worker could have
     // reclaimed it and produced an overlapping (though idempotent) observation.
-    if (clock()>=expiry) throw new Error("outlook_run_lease_expired");
+    await assertActive();
     return output;
   } finally {
+    clearTimeout(timer);
+    controller.abort();
     await db.prepare("DELETE FROM lbc_sync_lease WHERE owner_key=? AND lease_id=?")
       .bind(ownerKey,leaseId).run();
   }
