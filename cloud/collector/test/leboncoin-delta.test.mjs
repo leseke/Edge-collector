@@ -1,0 +1,57 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { syncLeboncoinDelta, validateGraphDeltaUrl } from "../src/leboncoin-delta.mjs";
+const NEXT="https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta?$skiptoken=abc";
+const DELTA="https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta?$deltatoken=end";
+const MAIL={id:"id1",subject:"Pokémon 30 ans : 990 nouveaux résultats",
+  receivedDateTime:"2026-11-19T05:21:31Z",body:{contentType:"html",
+    content:'<a href="https://www.leboncoin.fr/vi/3312500756.htm#email">Dracaufeu 160 € Paris</a>'}};
+function makeDB() {
+  const seen=new Set(),batches=[];
+  return {batches,prepare(sql){return {bind(...args){
+    if(sql.startsWith("SELECT 1"))return {first:async()=>seen.has(args[0])?{seen:1}:null};
+    return {sql,args};
+  }}},async batch(stmts){seen.add(stmts[0].args[0]);batches.push(stmts);
+    return stmts.map(()=>({meta:{changes:1}}))}};
+}
+test("Graph delta URLs are pinned to Graph and message delta resource",()=>{
+  assert.equal(validateGraphDeltaUrl(DELTA),DELTA);
+  assert.throws(()=>validateGraphDeltaUrl("https://evil.example/token"),/unsafe_delta_cursor/);
+  assert.throws(()=>validateGraphDeltaUrl("https://graph.microsoft.com/v1.0/me/drive/root"),/unsafe_delta_cursor/);
+});
+test("checkpoint saves only after successful persistence; safe resume after page cap",async()=>{
+  const saved=[],db=makeDB();let cursor=null,requests=0;
+  const store={load:async()=>cursor,save:async x=>{saved.push(x);cursor=x}};
+  const fetchImpl=async url=>{
+    requests++;
+    if(url.includes("$skiptoken"))return {ok:true,json:async()=>({value:[], "@odata.deltaLink":DELTA})};
+    return {ok:true,json:async()=>({value:[MAIL],"@odata.nextLink":NEXT})};
+  };
+  const a=await syncLeboncoinDelta({token:"fixture",db,cursorStore:store,fetchImpl,maxPages:1});
+  assert.equal(a.status,"PARTIAL");
+  assert.equal(a.inserted_listings,1);
+  assert.deepEqual(saved,[NEXT]);
+  const b=await syncLeboncoinDelta({token:"fixture",db,cursorStore:store,fetchImpl});
+  assert.equal(b.complete,true);
+  assert.deepEqual(saved,[NEXT,DELTA]);
+  assert.equal(requests,2);
+});
+test("D1 write failure must not advance delta cursor",async()=>{
+  let saved=0;
+  const db=makeDB();db.batch=async()=>{throw new Error("db_down")};
+  await assert.rejects(syncLeboncoinDelta({token:"fixture",db,
+    cursorStore:{load:async()=>null,save:async()=>{saved++}},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[MAIL],"@odata.deltaLink":DELTA})})}),/db_down/);
+  assert.equal(saved,0);
+});
+test("does not silently reset expired Graph delta token",async()=>{
+  const store={load:async()=>DELTA,save:async()=>{throw Error("must not save")}};
+  await assert.rejects(syncLeboncoinDelta({token:"fixture",db:makeDB(),cursorStore:store,
+    fetchImpl:async()=>({ok:false,status:410})}),/graph_delta_token_expired/);
+});
+test("rejects cross-origin continuation even when response is otherwise valid",async()=>{
+  await assert.rejects(syncLeboncoinDelta({token:"fixture",db:makeDB(),
+    cursorStore:{load:async()=>null,save:async()=>{}},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[],"@odata.deltaLink":"https://example.com/stolen"})})}),
+    /unsafe_delta_cursor/);
+});
