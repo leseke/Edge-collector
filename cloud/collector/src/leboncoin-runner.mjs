@@ -35,11 +35,13 @@ export async function runOutlookLeboncoinCollection({
     clientId:env.OUTLOOK_CLIENT_ID,
     clientSecret:env.OUTLOOK_CLIENT_SECRET,
     tenant:env.OUTLOOK_TENANT||"consumers",
-    fetchImpl,
+    fetchImpl,signal,assertActive,
     run:async accessToken=>{
+      await assertActive();
       await verifyMicrosoftMailbox(accessToken,{
-        expectedAccountId:saved.accountId,fetchImpl
+        expectedAccountId:saved.accountId,fetchImpl,signal
       });
+      await assertActive();
       const stats=await syncLeboncoinDelta({
         token:accessToken,db:env.DB,cursorStore:deltaStore,
         fetchImpl,maxPages,signal,assertActive,lease:{ownerKey,leaseId}
