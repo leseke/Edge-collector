@@ -6,6 +6,7 @@ const config={
   OUTLOOK_CLIENT_SECRET:"sensitive-test-value",
   OUTLOOK_REDIRECT_URI:"https://edge.example.com/auth/microsoft/callback",
   OUTLOOK_ENCRYPTION_KEY:"ab".repeat(32),
+  OUTLOOK_DELTA_ENCRYPTION_KEY:"cd".repeat(32),
   CF_ACCESS_TEAM_DOMAIN:"https://edge-team.cloudflareaccess.com",
   CF_ACCESS_APP_AUD:"edge-application-audience-123456",
   CF_ACCESS_ALLOWED_SUBJECTS:"operator-account-1",
