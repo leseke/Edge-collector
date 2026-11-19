@@ -11,7 +11,7 @@ test("refresh requests only delegated minimal scopes",async()=>{
       assert.equal(options.method,"POST");
       const data=new URLSearchParams(options.body);
       assert.equal(data.get("grant_type"),"refresh_token");
-      assert.equal(data.get("scope"),"offline_access Mail.Read");
+      assert.equal(data.get("scope"),"offline_access Mail.Read User.Read");
       assert.equal(data.get("refresh_token"),"fixture-refresh");
       return {ok:true,json:async()=>({access_token:"fixture-access",refresh_token:"next-refresh",expires_in:3600})};
     }});
