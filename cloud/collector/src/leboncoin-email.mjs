@@ -15,7 +15,7 @@ export function parseLeboncoinAlert(message) {
   // Microsoft Graph can return Markdown-converted HTML with wrapped URLs.
   // Link suffixes are tracking parameters, deliberately excluded.
   const source = body.replace(/\r/g, "").replace(/\n(?=[\w-]+(?:\/[\w-]+)*[.)#&=?-])/g, "");
-  const links = /\[([\s\S]*?)\]\((https:\/\/www\.leboncoin\.fr\/vi\/\d+\.htm)[\s\S]*?\)/g;
+  const links = /\|\s*\[\s*((?:(?!\|\s*\[)[\s\S])*?)\]\((https:\/\/www\.leboncoin\.fr\/vi\/\d+\.htm)[^)]*\)/g;
   const seen = new Set(), listings = [];
   for (const m of source.matchAll(links)) {
     const id = m[2].match(AD)?.[1];
