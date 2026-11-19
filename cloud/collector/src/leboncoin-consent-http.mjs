@@ -2,6 +2,7 @@
 // Required server infrastructure is injected explicitly; never trust a request
 // header or user-supplied identity as an authenticated EDGE session.
 import { beginMicrosoftConsent, finishMicrosoftConsent } from "./leboncoin-consent.mjs";
+import { verifyMicrosoftMailbox } from "./leboncoin-identity.mjs";
 
 const HEADERS={
   "Cache-Control":"no-store, private",
@@ -64,7 +65,10 @@ export function createOutlookConsentHandler({
       await finishMicrosoftConsent({tenant,clientId,clientSecret,redirectUri,
         sessionId:session.sessionId,code:url.searchParams.get("code"),
         state:url.searchParams.get("state"),pendingStore:stores.pendingStore,
-        credentialStore:stores.credentialStore,fetchImpl});
+        credentialStore:stores.credentialStore,fetchImpl,
+        verifyIdentity:accessToken=>verifyMicrosoftMailbox(accessToken,{
+          fetchImpl,expectedAccountId:session.expectedMicrosoftAccountId ?? null
+        })});
       // No token or mailbox metadata returned to browser.
       return json({connected:true},200);
     } catch (error) {
