@@ -67,7 +67,8 @@ export async function createD1OAuthStores({db,mailboxKey,encryptionKey,clock=()=
           FROM lbc_oauth_credentials WHERE mailbox_key = ?`).bind(mailboxKey).first();
         if(!row){generation=0;return null}
         const value=await unseal(key,secretDomain,row);
-        if(typeof value.refreshToken!=="string" || !value.refreshToken)
+        if(typeof value.refreshToken!=="string" || !value.refreshToken ||
+           (value.accountId!==undefined && (typeof value.accountId!=="string" || !value.accountId)))
           throw new Error("invalid_stored_refresh_token");
         generation=row.generation;
         return value;
@@ -76,8 +77,12 @@ export async function createD1OAuthStores({db,mailboxKey,encryptionKey,clock=()=
         if(typeof value?.refreshToken!=="string" || !value.refreshToken)
           throw new Error("invalid_refresh_token");
         if(generation===null) await this.load();
+        const previous=generation>0 ? await this.load() : null;
+        if(previous?.accountId && value.accountId && previous.accountId!==value.accountId)
+          throw new Error("graph_identity_mismatch");
+        const identity=value.accountId || previous?.accountId;
         const {nonce_b64,ciphertext_b64}=await seal(key,secretDomain,
-          {refreshToken:value.refreshToken});
+          identity ? {refreshToken:value.refreshToken,accountId:identity} : {refreshToken:value.refreshToken});
         let stmt;
         if(generation===0){
           stmt=db.prepare(`INSERT OR IGNORE INTO lbc_oauth_credentials
