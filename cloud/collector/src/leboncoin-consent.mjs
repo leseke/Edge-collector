@@ -52,7 +52,7 @@ export async function beginMicrosoftConsent({tenant="consumers",clientId,redirec
 }
 
 export async function finishMicrosoftConsent({tenant="consumers",clientId,clientSecret,redirectUri,
-  sessionId,state,code,pendingStore,credentialStore,fetchImpl=fetch,now=()=>Date.now()}) {
+  sessionId,state,code,pendingStore,credentialStore,verifyIdentity,fetchImpl=fetch,now=()=>Date.now()}) {
   const c=config({tenant,clientId,redirectUri});
   ensureSession(sessionId);ensureStore(pendingStore);
   if (!credentialStore || typeof credentialStore.save!=="function")
@@ -82,7 +82,11 @@ export async function finishMicrosoftConsent({tenant="consumers",clientId,client
       typeof tokens.refresh_token!=="string" || !tokens.refresh_token ||
       !Number.isFinite(tokens.expires_in) || tokens.expires_in<=0)
     throw new Error("microsoft_code_exchange_invalid_response");
-  // Credential store must encrypt refresh token and bind to a verified mailbox identity.
-  await credentialStore.save({refreshToken:tokens.refresh_token});
+  // Guarded HTTP integration must inject identity attestation before any save.
+  const verified = verifyIdentity ? await verifyIdentity(tokens.access_token) : null;
+  if (verifyIdentity && (typeof verified?.accountId !== "string" || !verified.accountId))
+    throw new Error("graph_identity_unverified");
+  // Never store a mailbox address; persist the verified opaque Graph identity.
+  await credentialStore.save(verified ? {refreshToken:tokens.refresh_token,accountId:verified.accountId} : {refreshToken:tokens.refresh_token});
   return {connected:true,expiresInSeconds:tokens.expires_in};
 }
