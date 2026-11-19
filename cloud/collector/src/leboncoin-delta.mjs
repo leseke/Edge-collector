@@ -30,7 +30,7 @@ function saneStore(store) {
 }
 export async function syncLeboncoinDelta({
   token, db, cursorStore, fetchImpl = fetch, maxPages = 10,
-  clock = () => new Date().toISOString(), signal, assertActive = async()=>{}
+  clock = () => new Date().toISOString(), signal, lease = null, assertActive = async()=>{}
 }) {
   if (typeof token !== "string" || !token.trim()) throw new Error("missing_graph_token");
   if (!db?.prepare || !db?.batch) throw new Error("missing_d1_database");
@@ -67,7 +67,7 @@ export async function syncLeboncoinDelta({
     // If persistence fails, cursor is NOT advanced; the next attempt replays
     // exactly the same page and the message PKs prevent duplicate observations.
     await assertActive();
-    const persisted = await persistLeboncoinAlerts(db,parsed,{clock});
+    const persisted = await persistLeboncoinAlerts(db,parsed,{clock,lease});
     await assertActive();
     await cursorStore.save(checkpoint);
     pages++;
