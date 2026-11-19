@@ -13,7 +13,7 @@ export function validateGraphDeltaUrl(value) {
   // Keep the cursor inside the exact Inbox delta resource. The Graph nextLink
   // can include opaque skip/delta tokens and must be used without modification.
   if (url.origin !== "https://graph.microsoft.com" ||
-      !/^\/v1\.0\/me\/mailfolders\/(?:inbox|\\(\x27[^/]+\x27\\)|[^/]+)\/messages\/delta$/i.test(decodeURIComponent(url.pathname)) ||
+      !/^\/v1\.0\/me\/mailfolders\/[^/]+\/messages\/delta$/i.test(decodeURIComponent(url.pathname)) ||
       url.username || url.password || url.hash) throw new Error("unsafe_delta_cursor");
   return url.toString();
 }
