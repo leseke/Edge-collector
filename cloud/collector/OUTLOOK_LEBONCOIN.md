@@ -45,3 +45,26 @@ to expose credentials in shell history; use a secure secret injection mechanism.
 7. Review CI and security, then request **separate** deployment approval.
 
 No automatic purchase capability is permitted.
+
+## Incremental and secure checkpoint (new)
+- `src/leboncoin-delta.mjs`: Graph Inbox message delta pages. Writes an
+  immutable listing batch before saving each nextLink/deltaLink. An incomplete
+  page budget reports PARTIAL and retains its continuation.
+- `src/leboncoin-delta-store.mjs`: optional server-side AES-256-GCM encrypted
+  cursor store on D1. Requires a private 32-byte encryption key (64 hex chars),
+  and a pseudonymous mailboxKey per identity. D1 stores nonce/ciphertext only.
+  Optimistic generation checks reject stale concurrent writers. Avoid reusing
+  keys and change encryption only with a planned migration.
+- `migrations/004_outlook_delta_cursor.sql`: optional mutable operational
+  checkpoint table; it does not alter append-only price observations.
+- `src/leboncoin-oauth.mjs`: delegated confidential-client refresh helper.
+  Initial authorization (code+PKCE+state), secure refresh-token persistence,
+  CSRF/session protection, secret rotation, and user disconnect are **not**
+  implemented; do not enable it against a live Microsoft mailbox yet.
+- To test all the new modules, run:
+```sh
+node --test cloud/collector/test/leboncoin-*.test.mjs
+```
+
+The ChatGPT Outlook connection is not a portable Microsoft Graph application
+credential; this branch does not authorize unattended Outlook access.
