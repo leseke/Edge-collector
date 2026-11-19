@@ -26,8 +26,10 @@ async function unseal(key,domain,row) {
     return JSON.parse(decoder.decode(bytes));
   } catch {throw new Error("oauth_secret_decryption_failed")}
 }
-export async function createD1OAuthStores({db,mailboxKey,encryptionKey,clock=()=>new Date().toISOString()}) {
+export async function createD1OAuthStores({db,mailboxKey,encryptionKey,lease=null,clock=()=>new Date().toISOString()}) {
   if(!db?.prepare || !MAILBOX.test(mailboxKey || ""))throw new Error("invalid_oauth_store_config");
+  if (lease!==null && (lease.ownerKey!==mailboxKey || !/^[a-f0-9-]{36}$/i.test(lease.leaseId||"")))
+    throw new Error("invalid_oauth_lease");
   const key=await importKey(encryptionKey);
   let generation=null;
   const secretDomain="EDGE:outlook-oauth-credentials:"+mailboxKey;
@@ -85,19 +87,24 @@ export async function createD1OAuthStores({db,mailboxKey,encryptionKey,clock=()=
         const identity=value.accountId || previous?.accountId;
         const {nonce_b64,ciphertext_b64}=await seal(key,secretDomain,
           identity ? {refreshToken:value.refreshToken,accountId:identity} : {refreshToken:value.refreshToken});
+        // For scheduled refresh, a stale run is fenced atomically within
+        // the same SQL write. Interactive consent remains a separate path.
+        const fence=lease ? `EXISTS (SELECT 1 FROM lbc_sync_lease WHERE owner_key=? AND lease_id=? AND expires_at_ms>?)` : null;
+        const fenceArgs=lease ? [lease.ownerKey,lease.leaseId,Date.now()] : [];
         let stmt;
         if(generation===0){
           stmt=db.prepare(`INSERT OR IGNORE INTO lbc_oauth_credentials
             (mailbox_key,nonce_b64,ciphertext_b64,generation,modified_at)
-            VALUES (?,?,?,1,?)`).bind(mailboxKey,nonce_b64,ciphertext_b64,clock());
+            ${fence ? `SELECT ?,?,?,1,? WHERE ${fence}` : "VALUES (?,?,?,1,?)"}`)
+            .bind(mailboxKey,nonce_b64,ciphertext_b64,clock(),...fenceArgs);
         } else {
           stmt=db.prepare(`UPDATE lbc_oauth_credentials SET nonce_b64=?,ciphertext_b64=?,
             generation=generation+1,modified_at=?
-            WHERE mailbox_key=? AND generation=?`)
-            .bind(nonce_b64,ciphertext_b64,clock(),mailboxKey,generation);
+            WHERE mailbox_key=? AND generation=?${fence ? ` AND ${fence}` : ""}`)
+            .bind(nonce_b64,ciphertext_b64,clock(),mailboxKey,generation,...fenceArgs);
         }
         const result=await stmt.run();
-        if(result?.meta?.changes!==1)throw new Error("oauth_credential_concurrent_update");
+        if(result?.meta?.changes!==1)throw new Error(lease ? "oauth_credential_lease_lost_or_conflict" : "oauth_credential_concurrent_update");
         generation++;
       }
     }
