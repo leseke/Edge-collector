@@ -43,7 +43,10 @@ test("valid Cloudflare Access JWT produces stable owner and session-bound nonce"
 });
 test("refuses forged JWT with a valid claim body but corrupt signature",async()=>{
   const f=await fixture(),token=await f.sign(f.claims);
-  const corrupted=token.slice(0,-1)+(token.endsWith("A")?"B":"A");
+  const [header,body,signature]=token.split(".");
+  // Mutate the FIRST significant signature character, not trailing Base64URL
+  // padding bits that may decode to identical bytes.
+  const corrupted=header+"."+body+"."+(signature[0]==="A"?"B":"A")+signature.slice(1);
   await assert.rejects(f.verify(corrupted),/invalid_access_identity/);
 });
 test("refuses wrong issuer, audience, subject, and expired token",async()=>{
