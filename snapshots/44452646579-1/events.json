@@ -1,0 +1,62 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "RESTOCK_OBSERVED",
+      "observation_id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "seller": "JoueClub",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "window_start": "2026-11-18T22:03:11.482961+00:00",
+      "window_end": "2026-11-19T03:36:53.468768+00:00",
+      "previous_snapshot_at": "2026-11-18T22:03:08.299629+00:00",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "evidence_sha256": "b8c4b48b7696b4863fa11a2c026dbd1b555221c85760b5aeff0cb1cf0b6f7e41",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "6dd60aa39cf9d3441f565e41c4fad0627d236a8423424c642d11fecc5da645bf",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "34860530bc0c46bc2434673b7505cb4ef4920ecbcb6a9486b63ff48bebe27a56"
+    },
+    {
+      "kind": "PRICE_CHANGE",
+      "observation_id": "ldlc_75639",
+      "product_id": "lego_75639",
+      "seller": "LDLC",
+      "field": "price",
+      "before": "129.95",
+      "after": "114.95",
+      "window_start": "2026-11-18T04:29:09.180929+00:00",
+      "window_end": "2026-11-19T03:36:54.541446+00:00",
+      "previous_snapshot_at": "2026-11-18T04:29:07.808512+00:00",
+      "source_url": "https://www.ldlc.com/fiche/PB00701668.html",
+      "evidence_sha256": "a991eb81fa05580d95d8c7285056674f1de24ae90c6b77171dae8cb1b2576575",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "03775a41ab22db06c36d323fc9daf3f2520e2cec68efea42a3d569535416b555",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "ea040d5806e35df62d50b43cccfe6864db2ffe8796ed34b96a5d4aac28d50b35"
+    },
+    {
+      "kind": "PRICE_CHANGE",
+      "observation_id": "ldlc_discovered_11383",
+      "product_id": "lego_11383",
+      "seller": "LDLC",
+      "field": "price",
+      "before": "104.95",
+      "after": "97.95",
+      "window_start": "2026-11-18T04:29:13.743417+00:00",
+      "window_end": "2026-11-19T03:37:02.743194+00:00",
+      "previous_snapshot_at": "2026-11-18T04:29:07.808512+00:00",
+      "source_url": "https://www.ldlc.com/fiche/PB00759980.html",
+      "evidence_sha256": "743e25be06eedf53b922859f6175252cb9e8ce43d6c71e5024949aed1b7dae19",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "3b005461ec47c54f51fee7857bdedbe55f930cbfde375cac38d350e3136301d3",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "88809ba64392cbd7a77510b06737f3217117edceaca32d474e48d05f4eb18046"
+    }
+  ]
+}
