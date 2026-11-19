@@ -184,3 +184,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - See ADR 026 for the sampled-time lease-expiry limitation and
   conservative duplicate handling. Do not enable unattended polling
   without independently approved infrastructure.
+
+## Wrangler local D1 integration test (development V14)
+- The Cloudflare build CI now executes
+  `bash cloud/collector/test/wrangler-outlook-d1-smoke.sh` using a real
+  disposable Wrangler `d1 execute --local` database.
+- All four Outlook migrations (003–006) are applied locally.
+  The test inserts synthetic alert, listing, cursor and credential rows
+  under a valid owner lease; then replaces the lease and verifies stale
+  cursor and refresh-token updates leave existing generations unchanged.
+- This is actual local D1 execution, not remote production D1, not an
+  actual Microsoft consent or a real Leboncoin email import. See ADR 027.
