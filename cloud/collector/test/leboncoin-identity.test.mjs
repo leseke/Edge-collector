@@ -18,3 +18,17 @@ test("fails closed for missing identity or Graph errors",async()=>{
   await assert.rejects(verifyMicrosoftMailbox("access",{fetchImpl:async()=>({ok:true,json:async()=>({mail:"attacker@example.invalid"})})}),/invalid_graph_identity/);
   await assert.rejects(verifyMicrosoftMailbox("access",{fetchImpl:async()=>({ok:false,status:401})}),/graph_identity_http_401/);
 });
+
+test("Graph mailbox verification receives the collector AbortSignal",async()=>{
+  const controller=new AbortController();
+  let calls=0;
+  const result=await verifyMicrosoftMailbox("test-token",{
+    signal:controller.signal,
+    fetchImpl:async(_url,options)=>{
+      calls++;assert.equal(options.signal,controller.signal);
+      return {ok:true,json:async()=>({id:"verified-id"})};
+    }
+  });
+  assert.equal(calls,1);
+  assert.deepEqual(result,{accountId:"verified-id"});
+});
