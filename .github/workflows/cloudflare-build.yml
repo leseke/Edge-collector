@@ -51,6 +51,8 @@ jobs:
           npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --file schema.sql
           npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --command "INSERT INTO collection_runs(run_id,started_at,status) VALUES ('ci-run','2026-11-16T00:00:00Z','RUNNING'); INSERT INTO observations(observation_id,run_id,product_id,source,observed_at,price_cents,currency,availability,price_kind,source_url,payload_sha256) VALUES ('ci-observation','ci-run','ci-target','CI','2026-11-16T00:00:00Z',1234,'EUR','UNKNOWN','AGGREGATE','https://example.com','ci-digest');"
           npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --command "SELECT run_id,product_id,price_cents,price_kind FROM observations WHERE run_id='ci-run';"
+      - name: Real Wrangler local D1 Outlook schema and lease smoke test (no remote access)
+        run: bash cloud/collector/test/wrangler-outlook-d1-smoke.sh
       - name: Typecheck isolated Cloudflare collector
         run: npx tsc --project cloud/collector/tsconfig.json
       - name: Type check
