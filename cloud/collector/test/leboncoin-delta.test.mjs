@@ -55,3 +55,10 @@ test("rejects cross-origin continuation even when response is otherwise valid",a
     fetchImpl:async()=>({ok:true,json:async()=>({value:[],"@odata.deltaLink":"https://example.com/stolen"})})}),
     /unsafe_delta_cursor/);
 });
+
+test("accepts documented Graph OData mailfolders('ID') delta continuation",async()=>{
+  const canonical="https://graph.microsoft.com/v1.0/me/mailfolders('AQMkADNkNAAAgEMAAAA')/messages/delta?$skiptoken=opaque";
+  assert.equal(validateGraphDeltaUrl(canonical),canonical);
+  assert.throws(()=>validateGraphDeltaUrl("https://graph.microsoft.com/v1.0/me/mailfolders('abc')/drive/delta"),/unsafe_delta_cursor/);
+  assert.throws(()=>validateGraphDeltaUrl("https://graph.microsoft.com/v1.0/me/mailfolders('abc%2Fusers')/messages/delta"),/unsafe_delta_cursor/);
+});
