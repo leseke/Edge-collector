@@ -30,7 +30,7 @@ function saneStore(store) {
 }
 export async function syncLeboncoinDelta({
   token, db, cursorStore, fetchImpl = fetch, maxPages = 10,
-  clock = () => new Date().toISOString()
+  clock = () => new Date().toISOString(), signal, assertActive = async()=>{}
 }) {
   if (typeof token !== "string" || !token.trim()) throw new Error("missing_graph_token");
   if (!db?.prepare || !db?.batch) throw new Error("missing_d1_database");
@@ -41,11 +41,12 @@ export async function syncLeboncoinDelta({
   const visited = new Set();
   let pages = 0, scanned = 0, alerts = 0, extracted = 0, inserted = 0, duplicates = 0;
   while (pages < maxPages) {
+    await assertActive();
     if (visited.has(url)) throw new Error("graph_delta_pagination_loop");
     visited.add(url);
     const response = await fetchImpl(url,{
       headers:{Authorization:"Bearer " + token,Accept:"application/json"},
-      redirect:"error"
+      redirect:"error",signal
     });
     if (response.status === 410) {
       // Do not silently reset the cursor: it would replay a mailbox and
@@ -65,7 +66,9 @@ export async function syncLeboncoinDelta({
       .filter(Boolean);
     // If persistence fails, cursor is NOT advanced; the next attempt replays
     // exactly the same page and the message PKs prevent duplicate observations.
+    await assertActive();
     const persisted = await persistLeboncoinAlerts(db,parsed,{clock});
+    await assertActive();
     await cursorStore.save(checkpoint);
     pages++;
     scanned += body.value.length;
