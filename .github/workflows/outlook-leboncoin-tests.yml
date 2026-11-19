@@ -10,8 +10,12 @@ on:
       - 'cloud/collector/migrations/00*_outlook_*.sql'
       - 'cloud/collector/migrations/006_outlook_run_lease.sql'
       - '.github/workflows/outlook-leboncoin-tests.yml'
+      - '.github/workflows/outlook-d1-readonly-audit.yml'
+      - 'cloud/collector/tools/outlook-remote-readiness.py'
   pull_request:
     paths:
+      - 'cloud/collector/tools/outlook-remote-readiness.py'
+      - '.github/workflows/outlook-d1-readonly-audit.yml'
       - 'cloud/collector/src/leboncoin-*.mjs'
       - 'cloud/collector/test/leboncoin*.test.mjs'
       - 'cloud/collector/test/test_leboncoin*.py'
