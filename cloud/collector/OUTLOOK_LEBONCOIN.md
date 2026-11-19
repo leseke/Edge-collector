@@ -110,3 +110,14 @@ binding remain mandatory; do not interpret these modules as a usable login UI.
   these changes. See ADR 019.
 
 Identity verification via Microsoft Graph /me requires delegated User.Read in addition to Mail.Read and offline_access. Independent Microsoft user consent has not yet been performed.
+
+## Delta compatibility and activation preflight (development V8)
+- The delta URL validator now accepts both documented Microsoft Graph forms:
+  `/me/mailFolders/{id}/messages/delta` and
+  `/me/mailfolders('id')/messages/delta`, without accepting unrelated hosts.
+- `src/leboncoin-activation-check.mjs` provides a non-secret configuration
+  diagnostic. It reports missing *binding names*, not secret values.
+  Configured environment variables do not establish that Microsoft consent,
+  a Cloudflare Access policy, D1 migrations, or production collection exist.
+- No remote Access policy, Microsoft Entra application or schedule was
+  provisioned in this iteration. See ADR 021.
