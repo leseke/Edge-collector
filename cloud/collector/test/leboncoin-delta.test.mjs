@@ -62,3 +62,24 @@ test("accepts documented Graph OData mailfolders('ID') delta continuation",async
   assert.throws(()=>validateGraphDeltaUrl("https://graph.microsoft.com/v1.0/me/mailfolders('abc')/drive/delta"),/unsafe_delta_cursor/);
   assert.throws(()=>validateGraphDeltaUrl("https://graph.microsoft.com/v1.0/me/mailfolders('abc%2Fusers')/messages/delta"),/unsafe_delta_cursor/);
 });
+
+test("lost lease between Graph fetch and persist never writes or checkpoints",async()=>{
+  const db=makeDB();let saved=0,checks=0;
+  await assert.rejects(syncLeboncoinDelta({
+    token:"fixture",db,cursorStore:{load:async()=>null,save:async()=>{saved++}},
+    assertActive:async()=>{if(++checks===2)throw Error("outlook_run_lease_lost")},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[MAIL],"@odata.deltaLink":DELTA})})
+  }),/outlook_run_lease_lost/);
+  assert.equal(db.batches.length,0);
+  assert.equal(saved,0);
+});
+test("lost lease after immutable write does not advance cursor",async()=>{
+  const db=makeDB();let saved=0,checks=0;
+  await assert.rejects(syncLeboncoinDelta({
+    token:"fixture",db,cursorStore:{load:async()=>null,save:async()=>{saved++}},
+    assertActive:async()=>{if(++checks===3)throw Error("outlook_run_lease_lost")},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[MAIL],"@odata.deltaLink":DELTA})})
+  }),/outlook_run_lease_lost/);
+  assert.equal(db.batches.length,1);
+  assert.equal(saved,0);
+});
