@@ -29,6 +29,7 @@ test("no independent Microsoft OAuth consent means no token request",async()=>{
     DB:{prepare(sql){
       if(sql.startsWith("INSERT INTO lbc_sync_lease"))return {bind(){return {run:async()=>({meta:{changes:1}})}}};
       if(sql.startsWith("DELETE FROM lbc_sync_lease"))return {bind(){return {run:async()=>({meta:{changes:1}})}}};
+      if(sql.startsWith("SELECT lease_id,expires_at_ms FROM lbc_sync_lease"))return {bind(){return {first:async()=>({lease_id:"unused",expires_at_ms:Date.now()+120000})}}};
       assert.match(sql,/lbc_oauth_credentials/);
       return {bind(){return {first:async()=>null}}}
     },batch(){}}
