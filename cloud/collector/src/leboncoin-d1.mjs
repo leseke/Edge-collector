@@ -31,9 +31,12 @@ export function validateAlert(alert) {
   return alert;
 }
 
-export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Date().toISOString() } = {}) {
+export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Date().toISOString(), lease = null } = {}) {
   if (!db || typeof db.prepare !== "function" || typeof db.batch !== "function") throw new Error("invalid_d1_database");
   if (!Array.isArray(alerts) || alerts.length > 500) throw new Error("invalid_lbc_batch");
+  if (lease !== null && (!/^[a-f0-9]{64}$/i.test(lease.ownerKey || "") ||
+      !/^[a-f0-9-]{36}$/i.test(lease.leaseId || "")))
+    throw new Error("invalid_lbc_lease");
   let insertedMessages = 0, insertedListings = 0, skippedMessages = 0;
   for (const untrusted of alerts) {
     const alert = validateAlert(untrusted);
@@ -42,26 +45,29 @@ export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Dat
     if (exists) { skippedMessages++; continue; }
     const now = clock();
     if (!VALID_TIME.test(now)) throw new Error("invalid_clock");
+    const fence = lease ? `EXISTS (SELECT 1 FROM lbc_sync_lease WHERE owner_key = ? AND lease_id = ? AND expires_at_ms > ?)` : null;
+    const leaseArgs = lease ? [lease.ownerKey,lease.leaseId,Date.now()] : [];
     const statements = [
       db.prepare(`INSERT OR IGNORE INTO lbc_alert_messages
         (message_id,received_at,search_name,advertised_count,extracted_count,truncated_email,ingested_at)
-        VALUES (?,?,?,?,?,?,?)`).bind(alert.message_id,alert.received_at,alert.search,
-          alert.advertised_count,alert.listings.length,Number(Boolean(alert.truncated_email)),now)
+        ${fence ? `SELECT ?,?,?,?,?,?,? WHERE ${fence}` : "VALUES (?,?,?,?,?,?,?)"}`).bind(alert.message_id,alert.received_at,alert.search,
+          alert.advertised_count,alert.listings.length,Number(Boolean(alert.truncated_email)),now,...leaseArgs)
     ];
     for (const item of alert.listings) {
       statements.push(db.prepare(`INSERT OR IGNORE INTO lbc_listing_observations
         (message_id,listing_id,observed_at,source_url,title,price_cents,currency,location,category_hint,price_kind,availability,evidence)
         SELECT ?,?,?,?,?,?,?,?,?,?,?,? WHERE EXISTS
-        (SELECT 1 FROM lbc_alert_messages WHERE message_id = ? AND ingested_at = ?)`)
+        (SELECT 1 FROM lbc_alert_messages WHERE message_id = ? AND ingested_at = ?)${fence ? ` AND ${fence}` : ""}`)
         .bind(alert.message_id,item.id,item.observed_at,item.source_url,item.title,
           item.price_cents,item.currency,item.location,alert.search,
-          "LISTING","UNVERIFIED","EMAIL_EXCERPT",alert.message_id,now));
+          "LISTING","UNVERIFIED","EMAIL_EXCERPT",alert.message_id,now,...leaseArgs));
     }
     const results = await db.batch(statements);
     if (results[0]?.meta?.changes === 1) {
       insertedMessages++;
       insertedListings += results.slice(1).reduce((sum,result) => sum + (result.meta?.changes || 0),0);
-    } else skippedMessages++;
+    } else if (lease) throw new Error("outlook_observation_lease_lost_or_conflict");
+    else skippedMessages++;
   }
   return {inserted_messages:insertedMessages, inserted_listings:insertedListings,
     already_seen_messages:skippedMessages};
