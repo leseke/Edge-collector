@@ -20,7 +20,8 @@ export async function runOutlookLeboncoinCollection({
     throw new Error("outlook_runtime_not_configured");
   return withOutlookRunLease({db:env.DB,ownerKey,run:async({signal,assertActive,leaseId})=>{
   const stores=await createD1OAuthStores({
-    db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
+    db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY,
+    lease:{ownerKey,leaseId}
   });
   const saved=await stores.credentialStore.load();
   if(!saved?.refreshToken || !saved?.accountId)
@@ -41,7 +42,7 @@ export async function runOutlookLeboncoinCollection({
       });
       const stats=await syncLeboncoinDelta({
         token:accessToken,db:env.DB,cursorStore:deltaStore,
-        fetchImpl,maxPages,signal,assertActive
+        fetchImpl,maxPages,signal,assertActive,lease:{ownerKey,leaseId}
       });
       return {...stats,active:true,source:"OUTLOOK_LEBONCOIN"};
     }
