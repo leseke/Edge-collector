@@ -1,0 +1,29 @@
+name: EDGE Outlook Leboncoin ingestion tests
+on:
+  push:
+    branches:
+      - edge/outlook-leboncoin-ingestion-001
+    paths:
+      - 'cloud/collector/src/leboncoin-email*.mjs'
+      - 'cloud/collector/test/leboncoin-email.test.mjs'
+      - '.github/workflows/outlook-leboncoin-tests.yml'
+  pull_request:
+    paths:
+      - 'cloud/collector/src/leboncoin-email*.mjs'
+      - 'cloud/collector/test/leboncoin-email.test.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Run deterministic offline parser and Graph contract tests
+        run: node --test cloud/collector/test/leboncoin-email.test.mjs
