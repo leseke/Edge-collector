@@ -16,8 +16,30 @@ export function parseLeboncoinAlert(message) {
   // Link suffixes are tracking parameters, deliberately excluded.
   const source = body.replace(/\r/g, "").replace(/\n(?=[\w-]+(?:\/[\w-]+)*[.)#&=?-])/g, "");
   const links = /\|\s*\[\s*((?:(?!\|\s*\[)[\s\S])*?)\]\((https:\/\/www\.leboncoin\.fr\/vi\/\d+\.htm)[^)]*\)/g;
+  // Native Graph HTML uses real anchors rather than Markdown-converted links.
+  // Extract only exact ad-link hosts and numeric IDs; never trust href parameters.
+  const htmlLinks = [];
+  if (/<a\b/i.test(source)) {
+    for (const anchor of source.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi)) {
+      const href = anchor[1].match(/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)')/i)?.[1]
+        ?? anchor[1].match(/\bhref\s*=\s*(?:"([^"]+)"|'([^']+)')/i)?.[2];
+      if (!href) continue;
+      const normalizedHref = href.replace(/&amp;/gi, "&");
+      const target = normalizedHref.match(/^https:\/\/www\.leboncoin\.fr\/vi\/(\d+)\.htm(?:[#?]|$)/i);
+      if (!target) continue;
+      const label = anchor[2]
+        .replace(/<(?:br|\/p|\/div|\/td|\/tr)\b[^>]*>/gi," ")
+        .replace(/<[^>]*>/g," ")
+        .replace(/&(?:nbsp|#160|#8239);/gi," ")
+        .replace(/&(?:euro|#8364);/gi,"€")
+        .replace(/&(?:amp|#38);/gi,"&")
+        .replace(/&(?:quot|#34);/gi,'"')
+        .replace(/&(?:apos|#39);/gi,"'");
+      htmlLinks.push([null,label,"https://www.leboncoin.fr/vi/"+target[1]+".htm"]);
+    }
+  }
   const seen = new Set(), listings = [];
-  for (const m of source.matchAll(links)) {
+  for (const m of [...source.matchAll(links), ...htmlLinks]) {
     const id = m[2].match(AD)?.[1];
     if (!id || seen.has(id)) continue;
     seen.add(id);
