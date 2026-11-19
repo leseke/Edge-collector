@@ -17,7 +17,9 @@ function fixture(){
     clientSecret:"private-client-secret",
     verifySession:async()=>({authenticated:true,sessionId}),
     getStores:async()=>stores,
-    fetchImpl:async()=>{exchanged++;return {ok:true,json:async()=>({
+    fetchImpl:async(url)=>{
+      if(url.startsWith("https://graph.microsoft.com/"))return {ok:true,json:async()=>({id:"verified-microsoft-id"})};
+      exchanged++;return {ok:true,json:async()=>({
       access_token:"access",refresh_token:"refresh-secret",expires_in:3600})}}
   });
   return {handler,pending,saved,get exchanged(){return exchanged}};
@@ -60,7 +62,7 @@ test("happy path does not expose access or refresh token and rejects replay",asy
   const done=await f.handler(request(path));
   assert.equal(done.status,200);
   assert.deepEqual(await done.json(),{connected:true});
-  assert.deepEqual(f.saved,[{refreshToken:"refresh-secret"}]);
+  assert.deepEqual(f.saved,[{refreshToken:"refresh-secret",accountId:"verified-microsoft-id"}]);
   const replay=await f.handler(request(path));
   assert.equal(replay.status,400);
   assert.equal(f.exchanged,1);
@@ -76,4 +78,23 @@ test("identity provider denial fails without token exchange",async()=>{
   const res=await f.handler(request("/auth/microsoft/callback?error=access_denied&state=abc"));
   assert.equal(res.status,400);
   assert.equal(f.exchanged,0);
+});
+
+test("Graph identity failure cannot persist refresh credentials",async()=>{
+  const pending=new Map(),saved=[];
+  const handler=createOutlookConsentHandler({enabled:true,redirectUri,clientId,
+    clientSecret:"private",verifySession:async()=>({authenticated:true,sessionId}),
+    getStores:async()=>({pendingStore:{
+      async create(item){pending.set(item.stateHash,item)},
+      async consume(key){const item=pending.get(key);pending.delete(key);return item||null}
+    },credentialStore:{async save(item){saved.push(item)}}}),
+    fetchImpl:async url=>url.startsWith("https://graph.microsoft.com/")
+      ? {ok:false,status:403} : {ok:true,json:async()=>({
+        access_token:"access",refresh_token:"refresh",expires_in:3600})}
+  });
+  const start=await handler(request("/auth/microsoft/start"));
+  const state=new URL(start.headers.get("location")).searchParams.get("state");
+  const res=await handler(request("/auth/microsoft/callback?code=valid-code-123&state="+state));
+  assert.equal(res.status,502);
+  assert.deepEqual(saved,[]);
 });
