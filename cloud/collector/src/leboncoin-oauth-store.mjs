@@ -77,7 +77,9 @@ export async function createD1OAuthStores({db,mailboxKey,encryptionKey,clock=()=
         if(typeof value?.refreshToken!=="string" || !value.refreshToken)
           throw new Error("invalid_refresh_token");
         if(generation===null) await this.load();
-        const previous=generation>0 ? await this.load() : null;
+        const existing=generation>0 ? await db.prepare(`SELECT nonce_b64,ciphertext_b64,generation FROM lbc_oauth_credentials WHERE mailbox_key = ?`).bind(mailboxKey).first() : null;
+        if(existing && existing.generation!==generation)throw new Error("oauth_credential_concurrent_update");
+        const previous=existing ? await unseal(key,secretDomain,existing) : null;
         if(previous?.accountId && value.accountId && previous.accountId!==value.accountId)
           throw new Error("graph_identity_mismatch");
         const identity=value.accountId || previous?.accountId;
