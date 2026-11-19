@@ -68,3 +68,19 @@ node --test cloud/collector/test/leboncoin-*.test.mjs
 
 The ChatGPT Outlook connection is not a portable Microsoft Graph application
 credential; this branch does not authorize unattended Outlook access.
+
+## Microsoft consent and encrypted vault (development V4)
+- `src/leboncoin-consent.mjs`: PKCE S256 authorization URL, one-time
+  state bound to an authenticated EDGE session, expiration, code exchange.
+- `src/leboncoin-oauth-store.mjs`: AES-GCM encryption at rest for pending
+  PKCE verifier/session state and refresh tokens. Uses mailbox-bound AAD,
+  atomic `DELETE RETURNING` on consumed state and CAS token rotation.
+- `migrations/005_outlook_oauth_secure.sql`: proposed D1 tables.
+- ADR 017: alternatives, trust boundaries, activation and revocation gates.
+- No Microsoft app registration, live OAuth callback, independent consent,
+  production credential store or Cloudflare cron has been enabled.
+- CI validates offline fixtures only. Microsoft Graph access from ChatGPT
+  cannot be inherited by this application.
+
+For production the authenticated callback endpoints and mailbox identity
+binding remain mandatory; do not interpret these modules as a usable login UI.
