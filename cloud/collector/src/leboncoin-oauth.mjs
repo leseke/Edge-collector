@@ -12,7 +12,7 @@ export async function refreshMicrosoftGraphToken({
   const url="https://login.microsoftonline.com/"+tenant+"/oauth2/v2.0/token";
   const data=new URLSearchParams({
     client_id:clientId,client_secret:clientSecret,grant_type:"refresh_token",
-    refresh_token:refreshToken,scope:"offline_access Mail.Read"
+    refresh_token:refreshToken,scope:"offline_access Mail.Read User.Read"
   });
   const response=await fetchImpl(url,{method:"POST",redirect:"error",
     headers:{"Content-Type":"application/x-www-form-urlencoded"},body:data.toString()});
