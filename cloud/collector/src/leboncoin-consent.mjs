@@ -44,7 +44,7 @@ export async function beginMicrosoftConsent({tenant="consumers",clientId,redirec
   url.searchParams.set("response_type","code");
   url.searchParams.set("redirect_uri",c.redirectUri);
   url.searchParams.set("response_mode","query");
-  url.searchParams.set("scope","offline_access Mail.Read");
+  url.searchParams.set("scope","offline_access Mail.Read User.Read");
   url.searchParams.set("state",state);
   url.searchParams.set("code_challenge",challenge);
   url.searchParams.set("code_challenge_method","S256");
@@ -70,7 +70,7 @@ export async function finishMicrosoftConsent({tenant="consumers",clientId,client
   const data=new URLSearchParams({
     client_id:c.clientId,client_secret:clientSecret,grant_type:"authorization_code",
     code,redirect_uri:c.redirectUri,code_verifier:pending.verifier,
-    scope:"offline_access Mail.Read"
+    scope:"offline_access Mail.Read User.Read"
   });
   const response=await fetchImpl("https://login.microsoftonline.com/"+c.tenant+"/oauth2/v2.0/token",{
     method:"POST",redirect:"error",
