@@ -28,7 +28,7 @@ export async function withOutlookRunLease({db,ownerKey,run,clock=()=>Date.now(),
       throw new Error("outlook_run_lease_lost");
   };
   try {
-    const output=await run({signal:controller.signal,assertActive});
+    const output=await run({signal:controller.signal,assertActive,leaseId});
     // Detect expired lease before reporting success; another worker could have
     // reclaimed it and produced an overlapping (though idempotent) observation.
     await assertActive();
