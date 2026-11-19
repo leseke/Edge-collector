@@ -18,7 +18,7 @@ export async function runOutlookLeboncoinCollection({
      !env.OUTLOOK_ENCRYPTION_KEY || !env.OUTLOOK_CLIENT_ID ||
      !env.OUTLOOK_CLIENT_SECRET || !env.OUTLOOK_DELTA_ENCRYPTION_KEY)
     throw new Error("outlook_runtime_not_configured");
-  return withOutlookRunLease({db:env.DB,ownerKey,run:async({signal,assertActive})=>{
+  return withOutlookRunLease({db:env.DB,ownerKey,run:async({signal,assertActive,leaseId})=>{
   const stores=await createD1OAuthStores({
     db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
   });
@@ -26,7 +26,8 @@ export async function runOutlookLeboncoinCollection({
   if(!saved?.refreshToken || !saved?.accountId)
     throw new Error("outlook_requires_verified_consent");
   const deltaStore=await createEncryptedD1DeltaStore({
-    db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_DELTA_ENCRYPTION_KEY
+    db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_DELTA_ENCRYPTION_KEY,
+    lease:{ownerKey,leaseId}
   });
   return runWithMicrosoftToken({
     credentialStore:stores.credentialStore,
