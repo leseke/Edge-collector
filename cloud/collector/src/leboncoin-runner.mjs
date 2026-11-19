@@ -6,6 +6,7 @@ import {verifyMicrosoftMailbox} from "./leboncoin-identity.mjs";
 import {createD1OAuthStores} from "./leboncoin-oauth-store.mjs";
 import {createEncryptedD1DeltaStore} from "./leboncoin-delta-store.mjs";
 import {syncLeboncoinDelta} from "./leboncoin-delta.mjs";
+import {withOutlookRunLease} from "./leboncoin-run-lease.mjs";
 
 const KEY=/^[a-f0-9]{64}$/i;
 export async function runOutlookLeboncoinCollection({
@@ -17,6 +18,7 @@ export async function runOutlookLeboncoinCollection({
      !env.OUTLOOK_ENCRYPTION_KEY || !env.OUTLOOK_CLIENT_ID ||
      !env.OUTLOOK_CLIENT_SECRET || !env.OUTLOOK_DELTA_ENCRYPTION_KEY)
     throw new Error("outlook_runtime_not_configured");
+  return withOutlookRunLease({db:env.DB,ownerKey,run:async()=>{
   const stores=await createD1OAuthStores({
     db:env.DB,mailboxKey:ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
   });
@@ -43,4 +45,5 @@ export async function runOutlookLeboncoinCollection({
       return {...stats,active:true,source:"OUTLOOK_LEBONCOIN"};
     }
   });
+  }});
 }
