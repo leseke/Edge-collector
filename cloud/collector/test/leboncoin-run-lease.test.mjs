@@ -8,6 +8,12 @@ function fakeDb(){
   const locks=new Map();let now=10000;
   return {locks,now:()=>now,setNow:v=>{now=v},
     prepare(sql){return {bind(...args){return {
+      async first(){
+        if(sql.startsWith("SELECT lease_id,expires_at_ms FROM lbc_sync_lease")){
+          const row=locks.get(args[0]);return row ? {lease_id:row.id,expires_at_ms:row.expiry}:null;
+        }
+        throw Error("unexpected SQL select");
+      },
       async run(){
         if(sql.startsWith("INSERT INTO lbc_sync_lease")){
           const [owner,id,expiry,acquired]=args;
