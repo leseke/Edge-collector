@@ -169,3 +169,18 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - This closes the race for cursor **writes**, not all other operations:
   observation batches and OAuth refresh still require further fencing or
   a proven bounded execution model. No remote D1 test or live deployment.
+
+## Observation and OAuth SQL fencing (development V13)
+- The runner passes one active `{ownerKey, leaseId}` through the Graph
+  Delta cursor, immutable alert/listing writer and encrypted OAuth vault.
+- Alert and listing INSERT statements require the matching D1 lease in
+  SQL. Token insert/rotation likewise checks the same owner lease and
+  continues to use generation compare-and-swap.
+- The guarded messages/listings still represent email-sourced asking
+  prices, not concluded sales or guaranteed available listings.
+- Offline Node tests and SQLite migration tests validate missing,
+  replaced, expired and valid lease scenarios. The Cloudflare D1
+  runtime and Microsoft Graph remain untested against live credentials.
+- See ADR 026 for the sampled-time lease-expiry limitation and
+  conservative duplicate handling. Do not enable unattended polling
+  without independently approved infrastructure.
