@@ -61,3 +61,15 @@ test("bounded Graph retrieval reports partial without hiding unvisited pages", a
   assert.equal(result.listings.length,2);
   assert.equal(result.remaining_pages_possible,true);
 });
+
+test("extracts ad link from native Graph HTML while excluding unrelated links", () => {
+  const html = '<html><a href="https://www.leboncoin.fr/mes-recherches/abc">Voir</a>' +
+    '<a class="item" href="https://www.leboncoin.fr/vi/3312500756.htm?ref=email">' +
+    '<span>Dracaufeu série 30 ans</span><div>160 &euro;</div><span>Villeneuve</span></a></html>';
+  const r = parseLeboncoinAlert({...msg(),body:{contentType:"html",content:html}});
+  assert.equal(r.extracted_count,1);
+  assert.equal(r.listings[0].id,"leboncoin:3312500756");
+  assert.equal(r.listings[0].price_cents,16000);
+  assert.equal(r.listings[0].title,"Dracaufeu série 30 ans");
+  assert.equal(r.listings[0].source_url,"https://www.leboncoin.fr/vi/3312500756.htm");
+});
