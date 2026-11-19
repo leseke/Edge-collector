@@ -96,3 +96,15 @@ binding remain mandatory; do not interpret these modules as a usable login UI.
 - ADR 018 records the reason endpoints remain unmounted: EDGE must first
   provide a hardened, authenticated session resolver and a verified mailbox
   ownership binding. The existing ChatGPT Outlook connection cannot substitute.
+
+## Verified Microsoft account binding (development V6)
+- `src/leboncoin-identity.mjs` queries delegated Graph `/me` after the
+  Microsoft authorization code exchange. It extracts only an opaque account ID.
+- The guarded callback requires Graph identity verification before persisting a
+  refresh token. An identity error leaves the token vault unchanged.
+- Encrypted credentials keep a previously verified Graph identity during token
+  rotation; reconnecting a different account fails rather than silently
+  replacing the connection.
+- The session-derived mailbox key still requires a fully authenticated EDGE
+  session implementation; no actual user account was bound or authorized by
+  these changes. See ADR 019.
