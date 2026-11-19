@@ -30,6 +30,6 @@ jobs:
         with:
           node-version: '24'
       - name: Run deterministic offline parser and Graph contract tests
-        run: node --test cloud/collector/test/leboncoin-email.test.mjs cloud/collector/test/leboncoin-d1.test.mjs cloud/collector/test/leboncoin-sync.test.mjs cloud/collector/test/leboncoin-delta.test.mjs cloud/collector/test/leboncoin-oauth.test.mjs cloud/collector/test/leboncoin-delta-store.test.mjs cloud/collector/test/leboncoin-consent.test.mjs
+        run: node --test cloud/collector/test/leboncoin-email.test.mjs cloud/collector/test/leboncoin-d1.test.mjs cloud/collector/test/leboncoin-sync.test.mjs cloud/collector/test/leboncoin-delta.test.mjs cloud/collector/test/leboncoin-oauth.test.mjs cloud/collector/test/leboncoin-delta-store.test.mjs cloud/collector/test/leboncoin-consent.test.mjs cloud/collector/test/leboncoin-oauth-store.test.mjs
       - name: Verify append-only D1 migration (SQLite compatibility)
         run: python -m unittest discover -s cloud/collector/test -p 'test_leboncoin_migration.py'
