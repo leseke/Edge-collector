@@ -1,0 +1,27 @@
+name: EDGE Outlook remote D1 schema audit (read only)
+
+# Manual-only audit: no D1 writes, no schema changes, no mailbox access.
+# A newly added workflow_dispatch file may need to exist on the default
+# branch before GitHub exposes its Run workflow control.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-outlook-remote-readonly-audit
+  cancel-in-progress: false
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Examine remote D1 Outlook schema (SELECT only; redacted)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: python3 cloud/collector/tools/outlook-remote-readiness.py
