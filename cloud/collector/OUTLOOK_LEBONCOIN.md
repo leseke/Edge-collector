@@ -291,3 +291,19 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   initiating Delta collection or persisting an ad.
 - These are fixture-backed, offline cross-module regression tests,
   not remote Cloudflare D1 writes or real Outlook reads. See ADR 033.
+
+## Sender provenance gate (development V23)
+- The Microsoft Graph Delta request selects `from` and `sender`.
+  The real runner now **requires** the private
+  `OUTLOOK_ALLOWED_SENDER_DOMAINS` configuration before processing
+  Graph messages as Leboncoin market observations.
+- Every sender domain must match an approved exact domain; spoofed
+  subject lines, lookalike suffixes and differing delegated senders are
+  rejected before any immutable listing write. Rejected mail still advances
+  the Graph cursor after a successfully processed page; changing the list
+  later requires an operator-reviewed backfill plan.
+- **Do not guess the Leboncoin notification sender domain.** Inspect an
+  actual alert's Graph sender metadata with appropriate operator
+  authorization, then configure its exact validated domain(s) privately.
+  This is a sender metadata gate, not SPF/DKIM/DMARC validation or
+  evidence that a listing remains available. See ADR 034.
