@@ -27,12 +27,12 @@ function initialUrl() {
 export function verifiedLeboncoinSender(message,allowedDomains) {
   if(!Array.isArray(allowedDomains) || allowedDomains.length===0 ||
      !allowedDomains.every(x=>typeof x==="string" &&
-       /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/.test(x)))
+       /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/.test(x)))
     throw new Error("invalid_outlook_sender_allowlist");
   const check=part=>{
     const address=part?.emailAddress?.address;
     if(typeof address!=="string" || address.length>320 ||
-       !/^[^\\s@]+@[^\\s@]+$/.test(address))return false;
+       !/^[^\s@]+@[^\s@]+$/.test(address))return false;
     const domain=address.slice(address.lastIndexOf("@")+1).toLowerCase();
     return allowedDomains.includes(domain);
   };
