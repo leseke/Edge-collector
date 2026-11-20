@@ -411,3 +411,13 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   with no form. Incomplete or unavailable GCC source is not reported as
   an empty market, and candidates never enter the trusted reviewed
   catalog or auto-trigger investment recommendations. See ADR 045.
+
+## Manufacturer reference research (development V35)
+- A bounded initial set of three actual official Pokémon product-gallery
+  pages provides research links for compatible **English/US**
+  ETB and UPC candidate families, strictly matched by series,
+  packaging and locale. No source URL or SKU is generated from text.
+- Candidate status remains `CANDIDATE_UNVERIFIED`; the official URL
+  creates only a `RESEARCH_LEAD_ONLY` association. A vendor's
+  package/locale/version is not validated and no product is promoted
+  to the trusted catalog. See ADR 046.
