@@ -64,6 +64,63 @@ test("invalid signed identity nonce is rejected",async()=>{
     await assert.rejects(f.verify(await f.sign({...f.claims,identity_nonce})),/invalid_access_identity/);
   }
 });
+test("OAuth start and callback accept signed Access JWT reissue with same identity nonce",async()=>{
+  const f=await fixture();
+  const nonce="signed-login-A12345";
+  const claims={...f.claims,identity_nonce:nonce};
+  const startSession=await f.verify(await f.sign(claims));
+  const callbackSession=await f.verify(await f.sign({...claims,iat:claims.iat+60,exp:claims.exp+60}));
+  const pending=new Map();
+  const pendingStore={
+    async create(x){pending.set(x.stateHash,x)},
+    async consume(x){const v=pending.get(x);pending.delete(x);return v??null}
+  };
+  const redirectUri="https://edge.example.com/auth/microsoft/callback";
+  const clientId="123e4567-e89b-12d3-a456-426614174000";
+  const nowMillis=now;
+  const started=await beginMicrosoftConsent({clientId,redirectUri,
+    sessionId:startSession.sessionId,pendingStore,now:()=>nowMillis});
+  const state=new URL(started.authorizationUrl).searchParams.get("state");
+  const saved=[];
+  const completed=await finishMicrosoftConsent({
+    clientId,clientSecret:"fixture-client",redirectUri,
+    sessionId:callbackSession.sessionId,pendingStore,state,
+    code:"fixture-authorization-code",now:()=>nowMillis,
+    credentialStore:{save:async entry=>saved.push(entry)},
+    verifyIdentity:async()=>({accountId:"graph-account-123"}),
+    fetchImpl:async()=>({ok:true,json:async()=>({
+      access_token:"access-fixture",refresh_token:"refresh-fixture",expires_in:3600
+    })})
+  });
+  assert.equal(completed.connected,true);
+  assert.deepEqual(saved,[{refreshToken:"refresh-fixture",accountId:"graph-account-123"}]);
+  assert.equal(pending.size,0);
+});
+test("OAuth callback refuses a new signed Access identity nonce",async()=>{
+  const f=await fixture();
+  const claims={...f.claims,identity_nonce:"signed-login-A12345"};
+  const first=await f.verify(await f.sign(claims));
+  const second=await f.verify(await f.sign({...claims,identity_nonce:"signed-login-B67890"}));
+  const pending=new Map(),pendingStore={
+    async create(x){pending.set(x.stateHash,x)},
+    async consume(x){const v=pending.get(x);pending.delete(x);return v??null}
+  };
+  const redirectUri="https://edge.example.com/auth/microsoft/callback";
+  const clientId="123e4567-e89b-12d3-a456-426614174000";
+  const started=await beginMicrosoftConsent({clientId,redirectUri,sessionId:first.sessionId,
+    pendingStore,now:()=>now});
+  let exchanged=0;
+  await assert.rejects(finishMicrosoftConsent({
+    clientId,clientSecret:"fixture-client",redirectUri,
+    sessionId:second.sessionId,pendingStore,
+    state:new URL(started.authorizationUrl).searchParams.get("state"),
+    code:"fixture-authorization-code",now:()=>now,
+    credentialStore:{save:async()=>{throw Error("unexpected_write")}},
+    fetchImpl:async()=>{exchanged++}
+  }),/oauth_state_mismatch/);
+  assert.equal(exchanged,0);
+  assert.equal(pending.size,0);
+});
 test("refuses forged JWT with a valid claim body but corrupt signature",async()=>{
   const f=await fixture(),token=await f.sign(f.claims);
   const [header,body,signature]=token.split(".");
