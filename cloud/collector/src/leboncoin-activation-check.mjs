@@ -27,11 +27,12 @@ export function checkOutlookActivationReadiness(env={}) {
   const missing=required.filter(k=>!configuration[k]);
   const d1=Boolean(env.DB && typeof env.DB.prepare==="function" && typeof env.DB.batch==="function");
   const consentEnabled=env.OUTLOOK_CONSENT_ENABLED==="true";
+  const routesEnabled=env.OUTLOOK_ROUTES_ENABLED==="true";
   // Credential provision is a separate explicit operator-approved step.
   return {
     configured:missing.length===0 && d1,
     enabled:consentEnabled,
-    ready_for_live_consent:missing.length===0 && d1 && consentEnabled,
+    ready_for_live_consent:missing.length===0 && d1 && consentEnabled && routesEnabled,
     missing_or_invalid_bindings:missing,
     database_binding_present:d1,
     // These require externally verified facts: do not infer from config names.
