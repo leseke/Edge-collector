@@ -10,6 +10,8 @@ const CLIENT="123e4567-e89b-12d3-a456-426614174000";
 const CURSOR="https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta?$deltatoken=test";
 const MAIL={id:"email-001",subject:"Pokémon 30 ans : 3 nouveaux résultats",
   receivedDateTime:"2026-11-20T07:00:00Z",
+  from:{emailAddress:{address:"alerts@notifications.example.test"}},
+  sender:{emailAddress:{address:"alerts@notifications.example.test"}},
   body:{contentType:"html",content:'<a href="https://www.leboncoin.fr/vi/3312500756.htm">Dracaufeu 160 € Paris</a>'}};
 
 // A D1 contract fixture that persists encrypted ciphertext across entirely
@@ -108,6 +110,7 @@ test("full Outlook runner: encrypted credentials, token rotation, Graph identity
   const env={DB:db,OUTLOOK_INGEST_ENABLED:"true",
     OUTLOOK_ENCRYPTION_KEY:OAUTH_KEY,OUTLOOK_DELTA_ENCRYPTION_KEY:DELTA_KEY,
     OUTLOOK_CLIENT_ID:CLIENT,OUTLOOK_CLIENT_SECRET:"fixture-secret",
+    OUTLOOK_ALLOWED_SENDER_DOMAINS:"notifications.example.test",
     OUTLOOK_TENANT:"consumers"};
   const calls=[];
   let count=0;
