@@ -85,7 +85,7 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
   </div><span class="count">${offers.length} annonce(s) distincte(s)</span></header>
   ${offers.length?`<section class="grid" aria-label="Annonces observées">${tiles}</section>`:
     '<div class="empty">Aucune annonce importée. EDGE n’affiche pas de données fictives.</div>'}
-  <p class="sub">Jusqu’à 50 annonces distinctes récentes, classées par signaux puis fraîcheur · Seuil indicatif baisse : au moins 5 % et 5 € en 48 h · Données issues des emails, sans vérification en direct.</p>
+  <p class="sub">Jusqu’à 50 annonces distinctes récentes, classées par signaux puis fraîcheur · Critère de tri : baisse d’au moins 5 % et 5 €, dernier signalement datant de moins de 48 h · Données issues des emails, sans vérification en direct.</p>
   </main></body></html>`;
 }
 export async function handleOutlookOffers({
