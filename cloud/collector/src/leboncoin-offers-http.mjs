@@ -4,6 +4,7 @@
 import {verifyCloudflareAccessSession} from "./leboncoin-access-session.mjs";
 import {scoreLeboncoinLead,sortLeboncoinLeads} from "./leboncoin-lead-triage.mjs";
 import {comparablePaidSales} from "./leboncoin-paid-comparables.mjs";
+import {discoverPackagedCandidates} from "./leboncoin-product-candidates.mjs";
 
 const HEADERS={
   "Content-Type":"text/html; charset=utf-8",
@@ -47,6 +48,7 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
       return safe?{...safe,lead:scoreLeboncoinLead(row,now),
         comparable:comparablePaidSales(safe.title,paidSales,now)}:null;
     }).filter(Boolean);
+  const candidates=discoverPackagedCandidates(paidSales,{now}).candidates;
   const tiles=offers.map(row=>`<article class="offer">
     <div class="top"><span class="source">LEBONCOIN · EMAIL</span><span class="fresh">${escape(row.freshness)}</span></div>
     <div class="lead" data-signal="${escape(row.lead.kind)}">${escape(row.lead.label)}${row.lead.kind==="PRICE_DROP" ? " · "+escape(row.lead.changePercent.toFixed(1))+" %":""}</div>
@@ -88,6 +90,8 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
   .meta{font-size:12px;color:#9bacbf;line-height:1.6}.history{font-size:12px;color:#bde7cd;line-height:1.5}details{border-top:1px solid #2e3b4f;padding-top:12px;color:#9eafc7;line-height:1.7}
   summary{cursor:pointer;color:#cad7eb}a{margin-top:auto;color:#a4d7ec;font-weight:650;text-decoration:none}a:hover{text-decoration:underline}
   .empty{margin-top:28px;background:#121a28;border:1px dashed #344056;padding:25px;border-radius:12px;color:#aebbcf}
+  .candidate-list{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:12px}.candidate{background:#111b2a;padding:16px 20px;border:1px solid #293c53;border-radius:11px}.candidate h3{font-size:15px;margin:8px 0}.candidate .meta{line-height:1.7}
+  .candidate-section{margin-top:44px;padding-top:24px;border-top:1px solid #283347}.candidate-section h2{font-size:22px;letter-spacing:-.4px}
   </style></head><body><main><header><div><div class="eyebrow">EDGE / RADAR / SOURCES PRIVÉES</div>
   <h1>Alertes Leboncoin<span style="color:#8dd7bf">.</span></h1>
   <p class="sub">Annonces extraites des emails Outlook et enregistrées dans D1. Les baisses de prix sont des signaux à examiner, pas des opportunités prouvées. Aucune vente ou disponibilité n’est confirmée.</p>
@@ -95,6 +99,11 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
   ${offers.length?`<section class="grid" aria-label="Annonces observées">${tiles}</section>`:
     '<div class="empty">Aucune annonce importée. EDGE n’affiche pas de données fictives.</div>'}
   <p class="sub">Jusqu’à 50 annonces distinctes récentes, classées par signaux puis fraîcheur · Critère de tri : baisse d’au moins 5 % et 5 €, dernier signalement datant de moins de 48 h · Données issues des emails, sans vérification en direct.</p>
+  <section class="candidate-section"><h2>Références scellées à vérifier</h2>
+    <p class="sub">Candidats automatiquement découverts dans les identifiants de ventes GCC. Aucune identité constructeur vérifiée : ces entrées ne peuvent pas servir à établir une comparaison de prix.</p>
+    ${candidates.length?'<div class="candidate-list">'+candidates.map(item=>`<article class="candidate"><span class="eyebrow">CANDIDAT · NON VÉRIFIÉ</span><h3>${escape(item.packaging.toUpperCase()+" · "+item.product.replaceAll("-"," "))}</h3><div class="meta">Série : ${escape(item.series.replaceAll("-"," "))} · Langue : ${escape(item.language.toUpperCase())} · Édition : ${escape(item.edition)} · Quantité déclarée : ${item.units}</div><div class="meta">${item.paidLotCount} lot(s) GCC daté(s) · Dernière vente : ${escape(item.latestPaidDay)}</div><div class="meta">À vérifier : référence officielle, composition exacte, langue et identifiants produit.</div></article>`).join("")+'</div>':
+      '<div class="empty">Aucun candidat vérifiable à partir des lignes GCC actuellement accessibles. Aucun produit inventé.</div>'}
+  </section>
   </main></body></html>`;
 }
 export async function handleOutlookOffers({
