@@ -375,3 +375,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   unavailable schema produce **no comparable estimate**.
 - The price comparison is not a buy instruction, proof of condition
   or availability, or a net resale-profit forecast. See ADR 042.
+
+## Sealed product GCC comparisons (development V32)
+- Strict GCC variant matching now includes eligible single sealed boosters
+  and explicitly named sealed coffrets using the recorded seven-field
+  product identity, in addition to fully identified graded cards.
+- Requires series, product name, language, edition/printing, sealed
+  condition and exact packaging type. Single boosters must be
+  unambiguously described as single; lots/displays/bundles are rejected.
+- Still requires at least 3 documented paid GCC lots in 90 days. A
+  listing's gross price gap is **not** net resale gain, proven stock,
+  item authenticity or grading equivalence. See ADR 043.
