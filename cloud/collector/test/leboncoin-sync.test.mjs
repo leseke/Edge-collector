@@ -20,7 +20,7 @@ function dbFixture() {
     async batch(statements) {
       seen.add(statements[0].args[0]);
       stored.push(statements);
-      return statements.map(()=>({meta:{changes:1}}));
+      return statements.map((_,i)=>({meta:{changes:i===statements.length-1?0:1}}));
     }
   };
 }
