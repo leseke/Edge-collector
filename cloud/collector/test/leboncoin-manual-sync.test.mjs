@@ -106,7 +106,7 @@ test("real RS256 Access JWT cryptography gates manual sync and derives owner",as
     publicExponent:new Uint8Array([1,0,1]),hash:"SHA-256"
   },true,["sign","verify"]);
   const jwk=await crypto.subtle.exportKey("jwk",keys.publicKey);
-  const encode=input=>btoa(String.fromCharCode(...input)).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/g,"");
+  const encode=input=>btoa(String.fromCharCode(...input)).split("+").join("-").split("/").join("_").replace(/=+$/g,"");
   const enc=new TextEncoder();
   const header=encode(enc.encode(JSON.stringify({alg:"RS256",kid:"operator-test-key"})));
   const issued=Math.floor(Date.now()/1000);
