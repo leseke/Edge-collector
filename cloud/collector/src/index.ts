@@ -2,6 +2,7 @@ import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
 import { collectPublicGccLots } from "./gcc-public";
 import {handleOutlookWorkerRoute} from "./leboncoin-worker-http.mjs";
+import {runScheduledOutlookCollection} from "./leboncoin-scheduled.mjs";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
@@ -10,6 +11,7 @@ interface Env {
   OUTLOOK_ROUTES_ENABLED?: string;
   OUTLOOK_CONSENT_ENABLED?: string;
   OUTLOOK_INGEST_ENABLED?: string;
+  OUTLOOK_SCHEDULE_ENABLED?: string;
   OUTLOOK_MANUAL_SYNC_ENABLED?: string;
   OUTLOOK_DELTA_ENCRYPTION_KEY?: string;
   OUTLOOK_CLIENT_ID?: string;
@@ -98,6 +100,15 @@ export default {
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime)]));
+    ctx.waitUntil(Promise.all([
+      collect(env),
+      collectPublicGccLots(env, event.scheduledTime),
+      // No Outlook I/O without explicit deployment-side scheduling opt-in.
+      runScheduledOutlookCollection({env,scheduledTime:event.scheduledTime})
+        .then(result=>{
+          if(result.status!=="DISABLED")
+            console.log("outlook_scheduled_status",{status:result.status});
+        }).catch(()=>console.error("outlook_scheduled_failed"))
+    ]));
   },
 };
