@@ -3,6 +3,7 @@
 // supports one private collector owner, not publicly shared multi-tenancy.
 import {verifyCloudflareAccessSession} from "./leboncoin-access-session.mjs";
 import {scoreLeboncoinLead,sortLeboncoinLeads} from "./leboncoin-lead-triage.mjs";
+import {comparablePaidSales} from "./leboncoin-paid-comparables.mjs";
 
 const HEADERS={
   "Content-Type":"text/html; charset=utf-8",
@@ -39,11 +40,12 @@ function sanitized(row,now){
   };
 }
 const money=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
-export function renderOutlookOffers(rows,{now=Date.now()}={}){
+export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
   const offers=sortLeboncoinLeads((Array.isArray(rows)?rows:[]).slice(0,50),now)
     .map(row=>{
       const safe=sanitized(row,now);
-      return safe?{...safe,lead:scoreLeboncoinLead(row,now)}:null;
+      return safe?{...safe,lead:scoreLeboncoinLead(row,now),
+        comparable:comparablePaidSales(safe.title,paidSales,now)}:null;
     }).filter(Boolean);
   const tiles=offers.map(row=>`<article class="offer">
     <div class="top"><span class="source">LEBONCOIN · EMAIL</span><span class="fresh">${escape(row.freshness)}</span></div>
@@ -56,6 +58,11 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
     ${row.alertHits>1 && row.firstObserved?
       `<div class="meta">Premier signalement : ${escape(row.firstObserved)}</div>`:""}
     <div class="meta">${row.emailExtracted!==null&&row.emailAdvertised!==null?escape(row.emailExtracted+" extraits sur "+row.emailAdvertised+" résultats annoncés dans le dernier email"):"Nombre de résultats du dernier email non disponible"}</div>
+    <div class="comparable">
+      ${row.comparable.status==="COMPARABLE"
+        ? `<strong>Ventes payées GCC comparables · ${row.comparable.saleCount} transactions / 90 jours</strong><span>Médiane brute : ${escape(money.format(row.comparable.medianCents/100))} · Bas observé : ${escape(money.format(row.comparable.lowCents/100))}</span><small>Correspondance stricte de la variante déclarée, non vérifiée physiquement. Aucun frais ni transport déduit.</small>`
+        : "<span>Ventes payées comparables non établies · Série, numéro, langue, édition et grade à vérifier.</span>"}
+    </div>
     <details><summary>Vérification & provenance</summary>
       <p>Prix demandé extrait d’un email. Annonce non revérifiée sur Leboncoin.
       Disponibilité inconnue, transaction non confirmée et photo non collectée.</p>
@@ -76,6 +83,8 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
   .lead{font-size:11px;letter-spacing:.15px;color:#b3c4dc;background:#1a2637;border:1px solid #304159;border-radius:6px;padding:7px 9px}
   .lead[data-signal="PRICE_DROP"]{color:#b5eed8;border-color:#326955;background:#142a27}
   .lead[data-signal="REPEATED"]{color:#f0d2a1;border-color:#725b34}
+  .comparable{display:flex;flex-direction:column;gap:6px;border-top:1px solid #2b384d;padding-top:12px;color:#a0b0c7;font-size:12px;line-height:1.6}
+  .comparable strong{color:#c3eedf}.comparable small{color:#859ab2}
   .meta{font-size:12px;color:#9bacbf;line-height:1.6}.history{font-size:12px;color:#bde7cd;line-height:1.5}details{border-top:1px solid #2e3b4f;padding-top:12px;color:#9eafc7;line-height:1.7}
   summary{cursor:pointer;color:#cad7eb}a{margin-top:auto;color:#a4d7ec;font-weight:650;text-decoration:none}a:hover{text-decoration:underline}
   .empty{margin-top:28px;background:#121a28;border:1px dashed #344056;padding:25px;border-radius:12px;color:#aebbcf}
@@ -139,7 +148,19 @@ export async function handleOutlookOffers({
       first_observed_at,first_price_cents
     FROM ranked WHERE rn=1 ORDER BY observed_at DESC,listing_id DESC LIMIT 50`).all();
     if(!Array.isArray(data?.results)||data.results.length>50)throw Error("bad_d1_response");
-    return new Response(renderOutlookOffers(data.results,{now:now()}),{status:200,headers:HEADERS});
+    // Optional: only a verified real paid-sale ledger is comparable. If it
+    // is absent or unreadable, display NO comparison instead of made-up value.
+    let paidSales=null;
+    try{
+      const sales=await env.DB.prepare(`SELECT variant_key,lot_id,sold_day,price_cents,source_url
+        FROM paid_market_sales WHERE sold_day>=? AND sold_day<=?
+        ORDER BY sold_day DESC,lot_id LIMIT 1001`)
+        .bind(new Date(now()-90*86400000).toISOString().slice(0,10),
+          new Date(now()).toISOString().slice(0,10)).all();
+      if(Array.isArray(sales?.results) && sales.results.length<=1000)
+        paidSales=sales.results;
+    }catch{/* Incomplete schema or absent ledger must not be treated as sales. */}
+    return new Response(renderOutlookOffers(data.results,{now:now(),paidSales}),{status:200,headers:HEADERS});
   }catch{
     return new Response("Données momentanément indisponibles",{status:503,headers:HEADERS});
   }
