@@ -12,6 +12,7 @@ const config={
   CF_ACCESS_ALLOWED_SUBJECTS:"operator-account-1",
   OUTLOOK_ALLOWED_SENDER_DOMAINS:"notifications.example.test",
   OUTLOOK_CONSENT_ENABLED:"true",
+  OUTLOOK_ROUTES_ENABLED:"true",
   DB:{prepare(){},batch(){}}
 };
 test("reports missing prerequisites without printing any credential",()=>{
@@ -43,4 +44,12 @@ test("fails closed when no trusted Outlook sender domains are configured",()=>{
     OUTLOOK_ALLOWED_SENDER_DOMAINS:""});
   assert.equal(status.configured,false);
   assert.ok(status.missing_or_invalid_bindings.includes("OUTLOOK_ALLOWED_SENDER_DOMAINS"));
+});
+
+test("consent readiness never reports true when routes are inactive",()=>{
+  const status=checkOutlookActivationReadiness({
+    ...config,OUTLOOK_ROUTES_ENABLED:"false"
+  });
+  assert.equal(status.configured,true);
+  assert.equal(status.ready_for_live_consent,false);
 });
