@@ -29,7 +29,10 @@ function sanitized(row,now){
     price:Number.isSafeInteger(row.price_cents)&&row.price_cents>=0?row.price_cents:null,
     location:typeof row.location==="string"?row.location.slice(0,150):"",
     search:typeof row.search_name==="string"?row.search_name.slice(0,150):"",
-    observed, freshness,canonical
+    observed, freshness,canonical,
+    alertHits:Number.isSafeInteger(row.alert_hits)&&row.alert_hits>0?row.alert_hits:1,
+    emailExtracted:Number.isSafeInteger(row.extracted_count)&&row.extracted_count>=0?row.extracted_count:null,
+    emailAdvertised:Number.isSafeInteger(row.advertised_count)&&row.advertised_count>=0?row.advertised_count:null
   };
 }
 const money=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
@@ -39,7 +42,8 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
     <div class="top"><span class="source">LEBONCOIN · EMAIL</span><span class="fresh">${escape(row.freshness)}</span></div>
     <h2>${escape(row.title)}</h2><strong class="price">${row.price===null?"Prix non renseigné":escape(money.format(row.price/100))}</strong>
     <div class="meta">${row.search?"Recherche : "+escape(row.search):"Recherche non renseignée"}${row.location?" · "+escape(row.location):""}</div>
-    <div class="meta">Signalé le ${row.observed?escape(row.observed):"date inconnue"}</div>
+    <div class="meta">Signalé le ${row.observed?escape(row.observed):"date inconnue"} · ${row.alertHits} alerte(s) distincte(s)</div>
+    <div class="meta">${row.emailExtracted!==null&&row.emailAdvertised!==null?escape(row.emailExtracted+" extraits sur "+row.emailAdvertised+" résultats annoncés dans le dernier email"):"Nombre de résultats du dernier email non disponible"}</div>
     <details><summary>Vérification & provenance</summary>
       <p>Prix demandé extrait d’un email. Annonce non revérifiée sur Leboncoin.
       Disponibilité inconnue, transaction non confirmée et photo non collectée.</p>
@@ -63,10 +67,10 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
   </style></head><body><main><header><div><div class="eyebrow">EDGE / RADAR / SOURCES PRIVÉES</div>
   <h1>Alertes Leboncoin<span style="color:#8dd7bf">.</span></h1>
   <p class="sub">Annonces extraites des emails Outlook et enregistrées dans D1. Ce ne sont ni des ventes conclues ni une preuve de disponibilité.</p>
-  </div><span class="count">${offers.length} observation(s) affichée(s)</span></header>
+  </div><span class="count">${offers.length} annonce(s) distincte(s)</span></header>
   ${offers.length?`<section class="grid" aria-label="Annonces observées">${tiles}</section>`:
     '<div class="empty">Aucune annonce importée. EDGE n’affiche pas de données fictives.</div>'}
-  <p class="sub">Jusqu’à 50 observations récentes · Consultation privée · Relevé des emails, pas vérification des offres en direct.</p>
+  <p class="sub">Jusqu’à 50 annonces distinctes récentes · Consultation privée · Relevé des emails, pas vérification des offres en direct.</p>
   </main></body></html>`;
 }
 export async function handleOutlookOffers({
@@ -98,10 +102,22 @@ export async function handleOutlookOffers({
   if(typeof env.DB?.prepare!=="function")
     return new Response("Données momentanément indisponibles",{status:503,headers:HEADERS});
   try{
-    const data=await env.DB.prepare(`SELECT o.listing_id,o.observed_at,o.source_url,o.title,
-      o.price_cents,o.location,m.search_name FROM lbc_listing_observations o
+    // One card per listing ID, but preserve repeat observations as history.
+    // Email announced counts are NOT the number of ads actually in the email.
+    const data=await env.DB.prepare(`WITH ranked AS (
+      SELECT o.listing_id,o.observed_at,o.source_url,o.title,
+        o.price_cents,o.location,m.search_name,m.advertised_count,
+        m.extracted_count,COUNT(*) OVER (PARTITION BY o.listing_id) AS alert_hits,
+        ROW_NUMBER() OVER (
+          PARTITION BY o.listing_id
+          ORDER BY o.observed_at DESC,o.message_id DESC
+        ) AS rn
+      FROM lbc_listing_observations o
       JOIN lbc_alert_messages m ON m.message_id=o.message_id
-      ORDER BY o.observed_at DESC,o.listing_id DESC LIMIT 50`).all();
+    )
+    SELECT listing_id,observed_at,source_url,title,price_cents,location,
+      search_name,advertised_count,extracted_count,alert_hits
+    FROM ranked WHERE rn=1 ORDER BY observed_at DESC,listing_id DESC LIMIT 50`).all();
     if(!Array.isArray(data?.results)||data.results.length>50)throw Error("bad_d1_response");
     return new Response(renderOutlookOffers(data.results,{now:now()}),{status:200,headers:HEADERS});
   }catch{
