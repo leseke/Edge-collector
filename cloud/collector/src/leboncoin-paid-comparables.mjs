@@ -29,7 +29,7 @@ export function verifiedSaleVariantForListing(title,keys){
   const description=normalize(title);
   if(!description||description.length>500||!Array.isArray(keys))return null;
   const matches=[];
-  for(const key of keys.slice(0,1000)){
+  for(const key of new Set(keys.slice(0,1000))){
     const v=canonicalVariant(key);
     if(!v)continue;
     const cardNumber=v.number.replace("-","/");
