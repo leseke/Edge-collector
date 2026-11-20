@@ -260,3 +260,23 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   or autonomous schedule. No server flags were enabled, no deployment or
   remote migration executed, and no Outlook mailbox was accessed.
   See ADR 031 before any infrastructure activation.
+
+## Scheduled background Outlook ingestion (development V21)
+- `src/leboncoin-scheduled.mjs` is called from the isolated Worker's
+  existing `scheduled` handler, but **no cron trigger is created or
+  enabled** by these changes.
+- Both `OUTLOOK_SCHEDULE_ENABLED=true` and
+  `OUTLOOK_INGEST_ENABLED=true` are required. Absent either flag,
+  the scheduled Outlook path performs no D1 or network I/O.
+- The single Outlook owner key is derived from the deployment's pinned
+  Cloudflare Access issuer, app AUD and one allowlisted subject with
+  the *same* derivation as verified Access JWT requests; no user-provided
+  mailbox or owner ID is accepted during scheduled execution.
+- Runs fetch up to three Graph Delta pages using the encrypted token and
+  D1 lease, then return a sanitized status. On failure, only a fixed
+  failure code is logged and existing GCC/TCG scheduled paths are not
+  blocked by Outlook error propagation.
+- This does not prove autonomous live ingestion. Microsoft Entra consent,
+  Access policy, remote D1 migrations, secrets, approved Worker deployment,
+  cron frequency, and a successful manually authorized Graph import are
+  prerequisites to enabling this path. See ADR 032.
