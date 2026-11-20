@@ -320,3 +320,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - The successful SQL assertion changes zero rows and is not counted as
   an extra observation. Real SQLite transaction rollback tests cover
   the missing-listing and replaced-lease scenarios; see ADR 035.
+
+## Immutable replay integrity (development V25)
+- On an existing message, D1 no longer interprets `message_id`
+  existence alone as proof that the email was fully processed.
+- Before skipping it, the writer compares the original extracted count,
+  actual immutable listing row count and exact parsed listing IDs.
+  Missing or replaced IDs trigger `outlook_existing_message_incomplete_or_changed`
+  and prevent the Graph checkpoint from advancing.
+- An incomplete historical ledger is never modified in place. Recovery
+  requires separate approved investigation and append-only reconciliation.
+  See ADR 036 and actual SQLite regression tests.
