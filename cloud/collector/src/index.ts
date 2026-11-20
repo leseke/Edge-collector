@@ -9,6 +9,7 @@ interface Env {
   DB: D1Database;
   TRIGGER_SECRET?: string;
   OUTLOOK_ROUTES_ENABLED?: string;
+  OUTLOOK_DIAGNOSTICS_ENABLED?: string;
   OUTLOOK_CONSENT_ENABLED?: string;
   OUTLOOK_INGEST_ENABLED?: string;
   OUTLOOK_ALLOWED_SENDER_DOMAINS?: string;
