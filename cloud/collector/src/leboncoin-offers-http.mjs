@@ -2,6 +2,7 @@
 // An Access-signed single operator is mandatory; the D1 schema currently
 // supports one private collector owner, not publicly shared multi-tenancy.
 import {verifyCloudflareAccessSession} from "./leboncoin-access-session.mjs";
+import {scoreLeboncoinLead,sortLeboncoinLeads} from "./leboncoin-lead-triage.mjs";
 
 const HEADERS={
   "Content-Type":"text/html; charset=utf-8",
@@ -39,9 +40,14 @@ function sanitized(row,now){
 }
 const money=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
 export function renderOutlookOffers(rows,{now=Date.now()}={}){
-  const offers=(Array.isArray(rows)?rows:[]).slice(0,50).map(row=>sanitized(row,now)).filter(Boolean);
+  const offers=sortLeboncoinLeads((Array.isArray(rows)?rows:[]).slice(0,50),now)
+    .map(row=>{
+      const safe=sanitized(row,now);
+      return safe?{...safe,lead:scoreLeboncoinLead(row,now)}:null;
+    }).filter(Boolean);
   const tiles=offers.map(row=>`<article class="offer">
     <div class="top"><span class="source">LEBONCOIN · EMAIL</span><span class="fresh">${escape(row.freshness)}</span></div>
+    <div class="lead" data-signal="${escape(row.lead.kind)}">${escape(row.lead.label)}${row.lead.kind==="PRICE_DROP" ? " · "+escape(row.lead.changePercent.toFixed(1))+" %":""}</div>
     <h2>${escape(row.title)}</h2><strong class="price">${row.price===null?"Prix non renseigné":escape(money.format(row.price/100))}</strong>
     <div class="meta">${row.search?"Recherche : "+escape(row.search):"Recherche non renseignée"}${row.location?" · "+escape(row.location):""}</div>
     <div class="meta">Signalé le ${row.observed?escape(row.observed):"date inconnue"} · ${row.alertHits} alerte(s) distincte(s)</div>
@@ -67,16 +73,19 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
   .offer{background:#121a28;border:1px solid #283448;border-radius:13px;padding:22px;min-width:0;display:flex;flex-direction:column;gap:12px}
   .top{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.fresh{color:#e1bd8c}
   h2{font-size:17px;margin:1px 0 0;line-height:1.35}.price{font-size:24px;color:#bbebde}
+  .lead{font-size:11px;letter-spacing:.15px;color:#b3c4dc;background:#1a2637;border:1px solid #304159;border-radius:6px;padding:7px 9px}
+  .lead[data-signal="PRICE_DROP"]{color:#b5eed8;border-color:#326955;background:#142a27}
+  .lead[data-signal="REPEATED"]{color:#f0d2a1;border-color:#725b34}
   .meta{font-size:12px;color:#9bacbf;line-height:1.6}.history{font-size:12px;color:#bde7cd;line-height:1.5}details{border-top:1px solid #2e3b4f;padding-top:12px;color:#9eafc7;line-height:1.7}
   summary{cursor:pointer;color:#cad7eb}a{margin-top:auto;color:#a4d7ec;font-weight:650;text-decoration:none}a:hover{text-decoration:underline}
   .empty{margin-top:28px;background:#121a28;border:1px dashed #344056;padding:25px;border-radius:12px;color:#aebbcf}
   </style></head><body><main><header><div><div class="eyebrow">EDGE / RADAR / SOURCES PRIVÉES</div>
   <h1>Alertes Leboncoin<span style="color:#8dd7bf">.</span></h1>
-  <p class="sub">Annonces extraites des emails Outlook et enregistrées dans D1. Ce ne sont ni des ventes conclues ni une preuve de disponibilité.</p>
+  <p class="sub">Annonces extraites des emails Outlook et enregistrées dans D1. Les baisses de prix sont des signaux à examiner, pas des opportunités prouvées. Aucune vente ou disponibilité n’est confirmée.</p>
   </div><span class="count">${offers.length} annonce(s) distincte(s)</span></header>
   ${offers.length?`<section class="grid" aria-label="Annonces observées">${tiles}</section>`:
     '<div class="empty">Aucune annonce importée. EDGE n’affiche pas de données fictives.</div>'}
-  <p class="sub">Jusqu’à 50 annonces distinctes récentes · Consultation privée · Relevé des emails, pas vérification des offres en direct.</p>
+  <p class="sub">Jusqu’à 50 annonces distinctes récentes, classées par signaux puis fraîcheur · Seuil indicatif baisse : au moins 5 % et 5 € en 48 h · Données issues des emails, sans vérification en direct.</p>
   </main></body></html>`;
 }
 export async function handleOutlookOffers({
