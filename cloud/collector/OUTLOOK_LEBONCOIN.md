@@ -280,3 +280,14 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   Access policy, remote D1 migrations, secrets, approved Worker deployment,
   cron frequency, and a successful manually authorized Graph import are
   prerequisites to enabling this path. See ADR 032.
+
+## Full Outlook runner contract integration test (development V22)
+- `test/leboncoin-runner-e2e.test.mjs` exercises encrypted OAuth
+  credential storage, Microsoft token rotation, Graph /me attestation,
+  parsed HTML Leboncoin email, lease-fenced append-only D1 observations,
+  encrypted Delta checkpoint, and a second resume run without duplicate
+  listings or a lost cursor.
+- The test also rejects a changed Graph mailbox identity without
+  initiating Delta collection or persisting an ad.
+- These are fixture-backed, offline cross-module regression tests,
+  not remote Cloudflare D1 writes or real Outlook reads. See ADR 033.
