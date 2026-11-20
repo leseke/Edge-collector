@@ -361,3 +361,17 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   search matches. The importer only claims five extracted listings.
 - SQLite window-function tests cover the first/latest values and
   preserved history without modifying immutable D1 records. See ADR 040.
+
+## Conservative matching to paid GCC comparables (development V31)
+- The private offers view now attempts a bounded read-only query of
+  `paid_market_sales` in the same D1 binding after authenticating the
+  Cloudflare Access operator. It only trusts the exact structured
+  `carte:pokemon` variant identity when all set, card number, name,
+  language, printing/edition and grader/score details are explicit
+  in the listing title. No fuzzy match.
+- Requires at least **3 distinct paid GCC lots in 90 days** to display
+  gross median and the lowest gross sale price. Incomplete titles,
+  ambiguous variants, missing/oversize paid-sale table results, or
+  unavailable schema produce **no comparable estimate**.
+- The price comparison is not a buy instruction, proof of condition
+  or availability, or a net resale-profit forecast. See ADR 042.
