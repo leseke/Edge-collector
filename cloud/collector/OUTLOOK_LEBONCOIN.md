@@ -386,3 +386,16 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - Still requires at least 3 documented paid GCC lots in 90 days. A
   listing's gross price gap is **not** net resale gain, proven stock,
   item authenticity or grading equivalence. See ADR 043.
+
+## Review-gated ETB / UPC / display catalogue (development V33)
+- New module `src/leboncoin-product-identities.mjs` validates a
+  versioned, review-gated eight-field identity for ETBs, UPCs, displays
+  and named sealed coffrets: type, series, product, region/language,
+  edition, exact unit count, and sealed state.
+- Requires an approved official product source, recorded review date,
+  at least two exact product identifiers, and matching GCC variant key.
+  Missing, ambiguous or incomplete labels are not comparable.
+- The production reviewed catalogue is deliberately **empty** until
+  original manufacturer references and product configurations have
+  been independently verified; tests use explicitly synthetic examples
+  only. There is no end-user form. See ADR 044.
