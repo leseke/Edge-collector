@@ -331,3 +331,21 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - An incomplete historical ledger is never modified in place. Recovery
   requires separate approved investigation and append-only reconciliation.
   See ADR 036 and actual SQLite regression tests.
+
+## Authenticated activation diagnostics (development V26)
+- The isolated Worker now has `GET /internal/outlook/readiness`,
+  available only if both `OUTLOOK_ROUTES_ENABLED=true` and
+  `OUTLOOK_DIAGNOSTICS_ENABLED=true` are explicitly configured.
+- Only a Cloudflare Access **cryptographically verified** single
+  operator can read this private, no-store JSON response on the exact
+  HTTPS consent host. Unknown identities are given 404.
+- It reveals only which configuration binding names are missing or
+  malformed and which runtime switches are on. No secret values,
+  mailbox addresses, authenticated subject, message or D1 row content
+  are emitted, and it performs no SQL or Graph collection.
+- The response **always** marks Microsoft registration, Access policy,
+  remote migrations, consent and production activity as NOT_VERIFIED:
+  environment settings alone cannot prove those external facts.
+- The activation checker now refuses to label live consent configuration
+  ready unless the OAuth route switch is also enabled. See ADR 037.
+- No endpoint has been deployed or enabled on Cloudflare production.
