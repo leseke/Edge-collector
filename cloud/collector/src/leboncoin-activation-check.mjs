@@ -3,12 +3,13 @@
 const required=[
   "OUTLOOK_CLIENT_ID","OUTLOOK_CLIENT_SECRET","OUTLOOK_REDIRECT_URI",
   "OUTLOOK_ENCRYPTION_KEY","OUTLOOK_DELTA_ENCRYPTION_KEY","CF_ACCESS_TEAM_DOMAIN","CF_ACCESS_APP_AUD",
-  "CF_ACCESS_ALLOWED_SUBJECTS"
+  "CF_ACCESS_ALLOWED_SUBJECTS","OUTLOOK_ALLOWED_SENDER_DOMAINS"
 ];
 const validate=(key,val)=>{
   if(typeof val!=="string" || !val.trim())return false;
   if(key==="OUTLOOK_CLIENT_ID")return /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(val);
   if(key==="OUTLOOK_ENCRYPTION_KEY" || key==="OUTLOOK_DELTA_ENCRYPTION_KEY")return /^[a-f0-9]{64}$/i.test(val);
+  if(key==="OUTLOOK_ALLOWED_SENDER_DOMAINS")return val.length<=512 && val.split(",").every(v=>/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/.test(v.trim().toLowerCase()));
   if(key==="CF_ACCESS_ALLOWED_SUBJECTS")return val.split(",").filter(Boolean).length===1 && val.length<256;
   if(key==="OUTLOOK_REDIRECT_URI" || key==="CF_ACCESS_TEAM_DOMAIN"){
     try{
