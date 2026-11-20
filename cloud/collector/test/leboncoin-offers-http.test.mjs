@@ -52,16 +52,19 @@ test("signed operator reads limited private D1 observations with provenance",asy
   const res=await handleOutlookOffers({
     request:req(),env:{...env,DB:{prepare(sql){
       queries++;
-      assert.match(sql,/lbc_listing_observations/);
-      assert.match(sql,/LIMIT 50/);
-      assert.match(sql,/PARTITION BY o\.listing_id/);
-      assert.match(sql,/WHERE rn=1/);
-      assert.match(sql,/FIRST_VALUE\(o.price_cents\)/);
-      return {all:async()=>({results:[ROW]})};
+      if(sql.includes("lbc_listing_observations")){
+        assert.match(sql,/LIMIT 50/);
+        assert.match(sql,/PARTITION BY o\.listing_id/);
+        assert.match(sql,/WHERE rn=1/);
+        assert.match(sql,/FIRST_VALUE\(o.price_cents\)/);
+        return {all:async()=>({results:[ROW]})};
+      }
+      assert.match(sql,/paid_market_sales/);
+      return {bind:()=>({all:async()=>({results:[]})})};
     }}},
     verifySession:verified,now:()=>Date.parse("2026-11-20T08:00:00Z")
   });
-  assert.equal(res.status,200);assert.equal(queries,1);
+  assert.equal(res.status,200);assert.equal(queries,2);
   const html=await res.text();
   assert.match(html,/Dracaufeu 30 ans/);
   assert.match(html,/160,00/);
@@ -73,6 +76,7 @@ test("signed operator reads limited private D1 observations with provenance",asy
   assert.match(html,/−10,00|-10,00/);
   assert.match(html,/Premier signalement/);
   assert.match(html,/Prix demandé extrait/);
+  assert.match(html,/Ventes payées comparables non établies/);
   assert.match(html,/https:\/\/www\.leboncoin\.fr\/vi\/3312500756\.htm/);
   assert.doesNotMatch(html,/COMPLETED_SALE|Vente confirmée/);
   assert.equal(res.headers.get("cache-control"),"no-store, private");
@@ -116,4 +120,30 @@ test("private offers HTML prioritizes price-drop investigations above one-off si
   assert.match(html,/data-signal="PRICE_DROP"/);
   assert.match(html,/data-signal="REPEATED"/);
   assert.match(html,/data-signal="OBSERVED"/);
+});
+
+test("strict complete variant and 3 paid GCC sales reveal dated median, not a BUY status",async()=>{
+  const key="carte:pokemon:evolving-skies:215-203:umbreon-vmax:fr:unlimited:psa:10";
+  const title="Carte Pokémon Evolving Skies 215/203 Umbreon VMAX Français Unlimited PSA 10";
+  const sales=[20000,25000,30000].map((price,i)=>{
+    const id="gcc-0000000"+(i+1)+"-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    return {variant_key:key,lot_id:id,sold_day:"2026-11-15",price_cents:price,
+      source_url:"https://gradedcardcenter.com/item/"+id.slice(4)};
+  });
+  const db={prepare(sql){
+    if(sql.includes("lbc_listing_observations"))
+      return {all:async()=>({results:[{...ROW,title}]})};
+    assert.match(sql,/paid_market_sales/);
+    return {bind:()=>({all:async()=>({results:sales})})};
+  }};
+  const res=await handleOutlookOffers({
+    request:req(),env:{...env,DB:db},verifySession:verified,
+    now:()=>Date.parse("2026-11-20T10:00:00Z")
+  });
+  assert.equal(res.status,200);
+  const html=await res.text();
+  assert.match(html,/3 transactions \/ 90 jours/);
+  assert.match(html,/Médiane brute : 250,00/);
+  assert.match(html,/Bas observé : 200,00/);
+  assert.doesNotMatch(html,/ACHETER|BUY|rendement garanti/i);
 });
