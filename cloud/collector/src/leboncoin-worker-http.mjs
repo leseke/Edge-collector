@@ -3,11 +3,13 @@
 // No connection to the scheduled collector or public app is inferred.
 import {createAccessProtectedOutlookConsent} from "./leboncoin-access-consent.mjs";
 import {handleOutlookManualSync} from "./leboncoin-manual-sync.mjs";
+import {handleOutlookReadiness} from "./leboncoin-readiness-http.mjs";
 
 const HIDDEN={"Cache-Control":"no-store, private","Referrer-Policy":"no-referrer"};
 const ROUTES=new Set(["/auth/microsoft/start","/auth/microsoft/callback"]);
 export async function handleOutlookWorkerRoute({request,env,fetchImpl=fetch}) {
   const path=new URL(request.url).pathname;
+  if(path==="/internal/outlook/readiness")return handleOutlookReadiness({request,env,fetchImpl});
   if(path==="/internal/outlook/sync")return handleOutlookManualSync({request,env,fetchImpl});
   if(!ROUTES.has(path))return null;
   // Do not initialize credentials, touch D1, contact Access or Microsoft
