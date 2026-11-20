@@ -15,7 +15,7 @@ function dbFixture() {
       return { bind(...args) {
         if (sql.startsWith("SELECT 1")) return {first:async()=>seen.has(args[0])?{seen:1}:null};
         if (sql.startsWith("SELECT m.extracted_count"))return {first:async()=>(
-          seen.has(args[0])?{expected_count:1,actual_count:1}:null)};
+          seen.has(args.at(-1))?{expected_count:1,actual_count:1,matching_count:1}:null)};
         return {sql,args};
       }};
     },
