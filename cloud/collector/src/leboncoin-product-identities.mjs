@@ -18,7 +18,7 @@ const clean=v=>typeof v==="string"?v.normalize("NFKD")
 const phrase=(text,needle)=>Boolean(needle)&&(" "+text+" ").includes(" "+needle+" ");
 const sealed=title=>["scelle","scellee","sealed","non ouvert","sous blister"]
   .some(term=>phrase(title,term));
-function unpack(key){
+export function parsePackagedVariantKey(key){
   // Eight fields: kind:pokemon:set:product:lang:printing:units:scelle.
   if(typeof key!=="string"||key.length>240)return null;
   const parts=key.split(":");
@@ -44,7 +44,7 @@ const forbiddenFor={
 };
 function validEntry(entry){
   if(!entry||entry.version!==PRODUCT_IDENTITY_SCHEMA_VERSION||
-     entry.reviewStatus!=="VERIFIED"||!unpack(entry.variantKey)||
+     entry.reviewStatus!=="VERIFIED"||!parsePackagedVariantKey(entry.variantKey)||
      !Array.isArray(entry.identifiers)||entry.identifiers.length<2||
      entry.identifiers.length>8||entry.identifiers.some(x=>
        typeof x!=="string"||clean(x).length<4||clean(x).length>100)||
@@ -69,7 +69,7 @@ export function catalogVariantForListing(title,variants,catalog=reviewedPackaged
   const hits=[];
   for(const entry of catalog){
     if(!validEntry(entry)||!keys.has(entry.variantKey))continue;
-    const v=unpack(entry.variantKey);
+    const v=parsePackagedVariantKey(entry.variantKey);
     if(!sealed(text)||!categoryLabels[v.type].some(x=>phrase(text,x))||
        forbiddenFor[v.type].some(x=>phrase(text,x)))continue;
     if(!phrase(text,clean(v.series.replaceAll("-"," ")))||
