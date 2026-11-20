@@ -24,10 +24,14 @@ on separately provisioning a Cloudflare Access application:
   JWT from `Cf-Access-Jwt-Assertion`. Verify RS256 against the team's pinned
   certificates endpoint, exact issuer, application audience, exp, iat, type,
   and allowlisted `sub`. Do not trust email header or unsigned claims.
-- Derive a stable opaque ownerKey from issuer, audience, subject; derive a
-  consent session ID from the token hash, binding start and callback to
-  the same Access session. Sessions may rotate during consent: restart
-  required rather than weakening verification.
+- Derive a stable opaque ownerKey from issuer, audience, subject. For
+  the consent session ID, prefer a hashed combination of verified issuer,
+  audience, subject and signed `identity_nonce` when this claim is present.
+  Cloudflare documents this claim as an identity-cache key; token reissues
+  retaining the same nonce can finish the same OAuth transaction, while a
+  changed nonce fails closed. When the claim is absent, bind to the exact
+  JWT hash and require a restart if it rotates. No unsigned cookie/header
+  is accepted as a fallback.
 - `leboncoin-access-consent.mjs`: inject the verified identity into the
   previously disabled OAuth consent HTTP adapter and encrypted D1 stores.
 - Require exactly one explicitly allowlisted subject. JWT verification
@@ -59,3 +63,13 @@ missing secrets and allowlist. CI required for acceptance.
 ## Reversibility
 Standalone, additive files on a development branch only. The original
 application and production paths are unchanged.
+
+## V18 — Session continuity validation (2026-11-20)
+Cloudflare's application-token documentation includes a signed
+`identity_nonce` identity-cache key alongside issuer, AUD, subject and
+token type. This is used only after complete RS256 verification, and the
+OAuth state remains encrypted and single-use. Unit tests cover JWT renewal
+with a retained nonce, a changed nonce/new login, absent nonce and
+malformed nonce. Cloudflare does not promise that a nonce persists through
+every renewal: a changed nonce deliberately requires restarting consent.
+No Access policy or Microsoft registration was provisioned.
