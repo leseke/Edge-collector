@@ -219,3 +219,22 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - Cooperative cancellation does not replace provisioning Microsoft
   Entra, Cloudflare Access, remote D1 migrations, user consent and live
   operational testing. See ADR 029.
+
+## Isolated Worker consent route attachment (development V19)
+- `cloud/collector/src/index.ts` now delegates the exact
+  `/auth/microsoft/start` and `/auth/microsoft/callback` paths to
+  `src/leboncoin-worker-http.mjs` **in source only**.
+- Both `OUTLOOK_ROUTES_ENABLED=true` and `OUTLOOK_CONSENT_ENABLED=true`
+  must be set on the isolated Worker. Otherwise each route returns a
+  generic private 404 **before** resolving any credentials, D1, Cloudflare
+  Access or Microsoft request. Unknown routes fall through.
+- If explicitly enabled, the existing Cloudflare Access RS256-signed operator
+  verification and the one-time PKCE state flow still apply. A missing
+  environment binding or absent/invalid Access JWT fails closed.
+- The entire PR is still UNDEPLOYED and no feature flag, Access policy,
+  Microsoft registration, independent consent, D1 migration, or remote
+  ingestion is configured in production. No collector cron is added.
+- Earlier sections documenting these routes as unmounted describe V5-V18;
+  this V19 attaches them behind the new **second opt-in**. The complete
+  operator authorization procedure must be verified before either flag
+  is enabled on an approved deployment.
