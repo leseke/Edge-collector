@@ -53,3 +53,42 @@ test("rejects invalid clock before writing",async()=>{
   const db={prepare:()=>({bind:()=>({first:async()=>null})}),batch:async()=>{throw Error("should not write")}};
   await assert.rejects(persistLeboncoinAlerts(db,[sample()],{clock:()=>"invalid"}),/invalid_clock/);
 });
+
+test("an archived email with missing listing cannot be skipped as a duplicate",async()=>{
+  const db={prepare(sql){return {bind(){return {
+    async first(){
+      if(sql.startsWith("SELECT 1"))return {seen:1};
+      if(sql.startsWith("SELECT m.extracted_count"))
+        return {expected_count:2,actual_count:1,matching_count:1};
+      throw Error("unexpected_sql");
+    }
+  }}}},batch:async()=>{throw Error("must_not_write")}};
+  await assert.rejects(persistLeboncoinAlerts(db,[sample()]),
+    /outlook_existing_message_incomplete_or_changed/);
+});
+test("existing message with equal counts but different listing IDs fails closed",async()=>{
+  const db={prepare(sql){return {bind(){return {
+    async first(){
+      if(sql.startsWith("SELECT 1"))return {seen:1};
+      if(sql.startsWith("SELECT m.extracted_count"))
+        return {expected_count:1,actual_count:1,matching_count:0};
+      throw Error("unexpected_sql");
+    }
+  }}}},batch:async()=>{throw Error("must_not_write")}};
+  await assert.rejects(persistLeboncoinAlerts(db,[sample()]),
+    /outlook_existing_message_incomplete_or_changed/);
+});
+test("existing alert with all expected listing IDs is a safe duplicate",async()=>{
+  const db={prepare(sql){return {bind(){return {
+    async first(){
+      if(sql.startsWith("SELECT 1"))return {seen:1};
+      if(sql.startsWith("SELECT m.extracted_count"))
+        return {expected_count:1,actual_count:1,matching_count:1};
+      throw Error("unexpected_sql");
+    }
+  }}}},batch:async()=>{throw Error("must_not_write")}};
+  const result=await persistLeboncoinAlerts(db,[sample()]);
+  assert.deepEqual(result,{
+    inserted_messages:0,inserted_listings:0,already_seen_messages:1
+  });
+});
