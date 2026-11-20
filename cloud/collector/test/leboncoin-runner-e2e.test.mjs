@@ -96,6 +96,11 @@ function makeD1(){
             result.push({meta:{changes:0}});continue
           }
           state.listings.set(key,params);result.push({meta:{changes:1}});
+        }else if(sql.includes("SELECT ?,?,?,-1,0,0,? WHERE")){
+          const count=[...state.listings.keys()].filter(k=>k.startsWith(params[0]+"/")).length;
+          if(!state.messages.has(params[0]) || count!==params[7])
+            throw Error("integrity_assertion_failed");
+          result.push({meta:{changes:0}});
         }else throw Error("unexpected_d1_batch:"+sql);
       }
       return result;
