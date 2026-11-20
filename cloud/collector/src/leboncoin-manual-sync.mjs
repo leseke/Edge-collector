@@ -37,8 +37,22 @@ export async function handleOutlookManualSync({
      request.headers.get("X-Owner-Key"))return notFound();
   // No externally supplied parameters, data, query, cursor or maxPages.
   // Request body is required to be empty JSON to prevent hidden options.
-  const body=await request.text();
-  if(body.length>2 || body!=="{}")return notFound();
+  if(Number(request.headers.get("Content-Length")||"0")>16)return notFound();
+  const reader=request.body?.getReader();
+  if(!reader)return notFound();
+  let bytes=0,body="";
+  const decoder=new TextDecoder("utf-8",{fatal:true});
+  try {
+    while(true){
+      const chunk=await reader.read();
+      if(chunk.done)break;
+      bytes+=chunk.value.byteLength;
+      if(bytes>16){await reader.cancel();return notFound()}
+      body+=decoder.decode(chunk.value,{stream:true});
+    }
+    body+=decoder.decode();
+  } catch{return notFound()}
+  if(body!=="{}")return notFound();
   const allowedSubjects=env.CF_ACCESS_ALLOWED_SUBJECTS?.split(",").map(s=>s.trim()).filter(Boolean);
   if(allowedSubjects?.length!==1 || !env.CF_ACCESS_TEAM_DOMAIN || !env.CF_ACCESS_APP_AUD)
     return notFound();
