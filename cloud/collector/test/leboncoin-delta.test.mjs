@@ -12,7 +12,7 @@ function makeDB() {
     if(sql.startsWith("SELECT 1"))return {first:async()=>seen.has(args[0])?{seen:1}:null};
     return {sql,args};
   }}},async batch(stmts){seen.add(stmts[0].args[0]);batches.push(stmts);
-    return stmts.map(()=>({meta:{changes:1}}))}};
+    return stmts.map((_,i)=>({meta:{changes:i===stmts.length-1?0:1}}))}};
 }
 test("Graph delta URLs are pinned to Graph and message delta resource",()=>{
   assert.equal(validateGraphDeltaUrl(DELTA),DELTA);
