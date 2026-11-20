@@ -42,7 +42,23 @@ export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Dat
     const alert = validateAlert(untrusted);
     const exists = await db.prepare("SELECT 1 AS seen FROM lbc_alert_messages WHERE message_id = ? LIMIT 1")
       .bind(alert.message_id).first();
-    if (exists) { skippedMessages++; continue; }
+    if (exists) {
+      // A legacy or corrupt partially-written email must NOT be treated
+      // as a safe duplicate: advancing the Graph cursor would lose data.
+      // The append-only ledger cannot be repaired by updating its rows.
+      const integrity=await db.prepare(`SELECT m.extracted_count AS expected_count,
+        (SELECT COUNT(*) FROM lbc_listing_observations o
+         WHERE o.message_id = m.message_id) AS actual_count
+        FROM lbc_alert_messages m WHERE m.message_id = ? LIMIT 1`)
+        .bind(alert.message_id).first();
+      if(!integrity || !Number.isSafeInteger(integrity.expected_count) ||
+         !Number.isSafeInteger(integrity.actual_count) ||
+         integrity.expected_count!==integrity.actual_count ||
+         integrity.expected_count!==alert.listings.length)
+        throw new Error("outlook_existing_message_incomplete_or_changed");
+      skippedMessages++;
+      continue;
+    }
     const now = clock();
     if (!VALID_TIME.test(now)) throw new Error("invalid_clock");
     const fence = lease ? `EXISTS (SELECT 1 FROM lbc_sync_lease WHERE owner_key = ? AND lease_id = ? AND expires_at_ms > ?)` : null;
