@@ -5,7 +5,7 @@ import { parseLeboncoinAlert } from "./leboncoin-email.mjs";
 import { persistLeboncoinAlerts } from "./leboncoin-d1.mjs";
 
 const BASE = "https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta";
-const FIELDS = "id,subject,receivedDateTime,body";
+const FIELDS = "id,subject,receivedDateTime,body,from,sender";
 export function validateGraphDeltaUrl(value) {
   if (typeof value !== "string" || value.length > 8192) throw new Error("invalid_delta_cursor");
   let url;
@@ -24,17 +24,34 @@ export function validateGraphDeltaUrl(value) {
 function initialUrl() {
   return BASE + "?" + new URLSearchParams({"$select":FIELDS,"$top":"50"});
 }
+export function verifiedLeboncoinSender(message,allowedDomains) {
+  if(!Array.isArray(allowedDomains) || allowedDomains.length===0 ||
+     !allowedDomains.every(x=>typeof x==="string" &&
+       /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/.test(x)))
+    throw new Error("invalid_outlook_sender_allowlist");
+  const check=part=>{
+    const address=part?.emailAddress?.address;
+    if(typeof address!=="string" || address.length>320 ||
+       !/^[^\\s@]+@[^\\s@]+$/.test(address))return false;
+    const domain=address.slice(address.lastIndexOf("@")+1).toLowerCase();
+    return allowedDomains.includes(domain);
+  };
+  // A Graph 'from' header alone is insufficient when Graph also exposes
+  // a distinct actual sender. Reject delegated/forwarded mismatches.
+  return check(message?.from) && (!message.sender || check(message.sender));
+}
 function saneStore(store) {
   if (!store || typeof store.load !== "function" || typeof store.save !== "function")
     throw new Error("missing_secure_cursor_store");
 }
 export async function syncLeboncoinDelta({
   token, db, cursorStore, fetchImpl = fetch, maxPages = 10,
-  clock = () => new Date().toISOString(), signal, lease = null, assertActive = async()=>{}
+  clock = () => new Date().toISOString(), signal, lease = null, assertActive = async()=>{}, allowedSenderDomains = null
 }) {
   if (typeof token !== "string" || !token.trim()) throw new Error("missing_graph_token");
   if (!db?.prepare || !db?.batch) throw new Error("missing_d1_database");
   saneStore(cursorStore);
+  if(allowedSenderDomains!==null)verifiedLeboncoinSender({},allowedSenderDomains);
   if (!Number.isInteger(maxPages) || maxPages < 1 || maxPages > 50) throw new Error("invalid_max_pages");
 
   let url = validateGraphDeltaUrl((await cursorStore.load()) || initialUrl());
@@ -62,6 +79,7 @@ export async function syncLeboncoinDelta({
     const checkpoint = validateGraphDeltaUrl(next || delta);
     const parsed = body.value
       .filter(m => m && !m["@removed"])
+      .filter(m => allowedSenderDomains===null || verifiedLeboncoinSender(m,allowedSenderDomains))
       .map(parseLeboncoinAlert)
       .filter(Boolean);
     // If persistence fails, cursor is NOT advanced; the next attempt replays
