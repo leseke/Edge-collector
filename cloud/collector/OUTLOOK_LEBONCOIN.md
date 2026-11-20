@@ -349,3 +349,15 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
 - The activation checker now refuses to label live consent configuration
   ready unless the OAuth route switch is also enabled. See ADR 037.
 - No endpoint has been deployed or enabled on Cloudflare production.
+
+## First-versus-latest email asking prices (development V29)
+- The private offers view displays each unique listing once, keeping
+  its earliest and latest observed asking prices, signed EUR difference,
+  first and latest email observation timestamps and number of email
+  appearances. These reflect saved-search email excerpts, **not**
+  completed sales or currently verified offers.
+- An offline synthetic regression reflects the real Outlook alert
+  structure: five detailed links in an email reporting 1,286 total
+  search matches. The importer only claims five extracted listings.
+- SQLite window-function tests cover the first/latest values and
+  preserved history without modifying immutable D1 records. See ADR 040.
