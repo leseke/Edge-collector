@@ -99,3 +99,42 @@ test("concurrent collection is reported as busy, not successful",async()=>{
 test("unrelated paths do not enter the sync route",async()=>{
   assert.equal(await handleOutlookManualSync({request:request({path:"/other"}),env}),null);
 });
+
+test("real RS256 Access JWT cryptography gates manual sync and derives owner",async()=>{
+  const keys=await crypto.subtle.generateKey({
+    name:"RSASSA-PKCS1-v1_5",modulusLength:2048,
+    publicExponent:new Uint8Array([1,0,1]),hash:"SHA-256"
+  },true,["sign","verify"]);
+  const jwk=await crypto.subtle.exportKey("jwk",keys.publicKey);
+  const encode=input=>btoa(String.fromCharCode(...input)).replace(/\\+/g,"-").replace(/\\//g,"_").replace(/=+$/g,"");
+  const enc=new TextEncoder();
+  const header=encode(enc.encode(JSON.stringify({alg:"RS256",kid:"operator-test-key"})));
+  const issued=Math.floor(Date.now()/1000);
+  const payload=encode(enc.encode(JSON.stringify({
+    iss:env.CF_ACCESS_TEAM_DOMAIN,aud:env.CF_ACCESS_APP_AUD,
+    sub:"trusted-subject",type:"app",iat:issued-5,exp:issued+300
+  })));
+  const data=header+"."+payload;
+  const signature=encode(new Uint8Array(await crypto.subtle.sign(
+    "RSASSA-PKCS1-v1_5",keys.privateKey,enc.encode(data))));
+  const jwt=data+"."+signature;
+  let network=0,ran=0;
+  const req=new Request(origin+path,{method:"POST",body:"{}",
+    headers:{"Origin":origin,"Content-Type":"application/json",
+      "Cf-Access-Jwt-Assertion":jwt}});
+  const res=await handleOutlookManualSync({
+    request:req,env,
+    fetchImpl:async url=>{
+      network++;
+      assert.equal(url,env.CF_ACCESS_TEAM_DOMAIN+"/cdn-cgi/access/certs");
+      return {ok:true,json:async()=>({keys:[{...jwk,kid:"operator-test-key",alg:"RS256",use:"sig"}]})};
+    },
+    runCollection:async ({ownerKey})=>{
+      ran++;assert.match(ownerKey,/^[a-f0-9]{64}$/);
+      return {status:"EMPTY",complete:true,pages:1};
+    }
+  });
+  assert.equal(res.status,200);
+  assert.equal(network,1);assert.equal(ran,1);
+  assert.equal((await res.json()).status,"EMPTY");
+});
