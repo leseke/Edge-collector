@@ -42,9 +42,16 @@ export async function runOutlookLeboncoinCollection({
         expectedAccountId:saved.accountId,fetchImpl,signal
       });
       await assertActive();
+      // Do not turn mail subject lines into market evidence without an
+      // operator-approved sender domain list sourced from real Graph metadata.
+      const rawDomains=env.OUTLOOK_ALLOWED_SENDER_DOMAINS;
+      if(typeof rawDomains!=="string" || !rawDomains.trim())
+        throw new Error("outlook_sender_allowlist_not_configured");
+      const allowedSenderDomains=rawDomains.split(",").map(s=>s.trim().toLowerCase());
       const stats=await syncLeboncoinDelta({
         token:accessToken,db:env.DB,cursorStore:deltaStore,
-        fetchImpl,maxPages,signal,assertActive,lease:{ownerKey,leaseId}
+        fetchImpl,maxPages,signal,assertActive,lease:{ownerKey,leaseId},
+        allowedSenderDomains
       });
       return {...stats,active:true,source:"OUTLOOK_LEBONCOIN"};
     }
