@@ -7,7 +7,8 @@ const PATH="/internal/outlook/offers";
 const LISTING_ID="leboncoin:3312500756";
 const ROW={listing_id:LISTING_ID,source_url:"https://www.leboncoin.fr/vi/3312500756.htm",
   title:"Dracaufeu 30 ans",price_cents:16000,location:"Paris",
-  search_name:"Pokémon 30 ans",observed_at:"2026-11-20T07:00:00Z"};
+  search_name:"Pokémon 30 ans",observed_at:"2026-11-20T07:00:00Z",
+  alert_hits:2,advertised_count:1286,extracted_count:5};
 const env={
   OUTLOOK_ROUTES_ENABLED:"true",OUTLOOK_OFFERS_ENABLED:"true",
   OUTLOOK_REDIRECT_URI:ORIGIN+"/auth/microsoft/callback",
@@ -52,6 +53,8 @@ test("signed operator reads limited private D1 observations with provenance",asy
       queries++;
       assert.match(sql,/lbc_listing_observations/);
       assert.match(sql,/LIMIT 50/);
+      assert.match(sql,/PARTITION BY o\.listing_id/);
+      assert.match(sql,/WHERE rn=1/);
       return {all:async()=>({results:[ROW]})};
     }}},
     verifySession:verified,now:()=>Date.parse("2026-11-20T08:00:00Z")
@@ -61,6 +64,8 @@ test("signed operator reads limited private D1 observations with provenance",asy
   assert.match(html,/Dracaufeu 30 ans/);
   assert.match(html,/160,00/);
   assert.match(html,/MOINS DE 24 H/);
+  assert.match(html,/2 alerte\(s\) distincte\(s\)/);
+  assert.match(html,/5 extraits sur 1286 résultats annoncés/);
   assert.match(html,/Prix demandé extrait/);
   assert.match(html,/https:\/\/www\.leboncoin\.fr\/vi\/3312500756\.htm/);
   assert.doesNotMatch(html,/COMPLETED_SALE|Vente confirmée/);
