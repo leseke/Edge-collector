@@ -62,10 +62,30 @@ export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Dat
           item.price_cents,item.currency,item.location,alert.search,
           "LISTING","UNVERIFIED","EMAIL_EXCERPT",alert.message_id,now,...leaseArgs));
     }
+    // D1 batch is a single SQLite transaction. Make partial insertion a
+    // database-level error so the entire batch rolls back BEFORE the Graph
+    // cursor can advance. The deliberately invalid advertised_count=-1
+    // triggers the immutable alert table's CHECK constraint only when the
+    // message or one of its expected listing rows is absent.
+    // Do not "recover" by updating immutable observations.
+    statements.push(db.prepare(`INSERT INTO lbc_alert_messages
+      (message_id,received_at,search_name,advertised_count,extracted_count,truncated_email,ingested_at)
+      SELECT ?,?,?,-1,0,0,? WHERE
+      NOT EXISTS (SELECT 1 FROM lbc_alert_messages WHERE message_id=? AND ingested_at=?)
+      OR (SELECT COUNT(*) FROM lbc_listing_observations WHERE message_id=?)<>?`)
+      .bind(alert.message_id,alert.received_at,alert.search,now,
+        alert.message_id,now,alert.message_id,alert.listings.length));
     const results = await db.batch(statements);
     if (results[0]?.meta?.changes === 1) {
+      // Last statement is the SQL integrity assertion, not an observation.
+      const insertedRows=results.slice(1,-1).reduce((sum,result)=>
+        sum + (result?.meta?.changes===1 ? 1 : 0),0);
+      if(results.length!==alert.listings.length+2 ||
+         insertedRows!==alert.listings.length ||
+         results.at(-1)?.meta?.changes!==0)
+        throw new Error("outlook_observation_batch_integrity_unknown");
       insertedMessages++;
-      insertedListings += results.slice(1).reduce((sum,result) => sum + (result.meta?.changes || 0),0);
+      insertedListings+=insertedRows;
     } else if (lease) throw new Error("outlook_observation_lease_lost_or_conflict");
     else skippedMessages++;
   }
