@@ -1,3 +1,4 @@
+import {catalogVariantForListing,reviewedPackagedProducts} from "./leboncoin-product-identities.mjs";
 // Strict provenance-aware joins of email listings to GCC paid-sale variants.
 // No fuzzy matching. Any missing variant attribute means NO_COMPARABLE.
 const normalize=value=>typeof value==="string"
@@ -65,7 +66,7 @@ const sealedMatch=(description,v)=>{
   }
   return true;
 };
-export function verifiedSaleVariantForListing(title,keys){
+export function verifiedSaleVariantForListing(title,keys,catalog=reviewedPackagedProducts){
   const description=normalize(title);
   if(!description||description.length>500||!Array.isArray(keys))return null;
   const matches=[];
@@ -94,7 +95,9 @@ export function verifiedSaleVariantForListing(title,keys){
     matches.push(key);
     if(matches.length>1)return null;
   }
-  return matches.length===1?matches[0]:null;
+  const packaged=catalogVariantForListing(title,keys,catalog);
+  if(packaged && matches.length)return null;
+  return matches.length===1?matches[0]:packaged;
 }
 const safeSale=row=>{
   if(!row||typeof row.variant_key!=="string"||
@@ -106,9 +109,9 @@ const safeSale=row=>{
      !Number.isFinite(Date.parse(row.sold_day+"T00:00:00Z")))return false;
   return true;
 };
-export function comparablePaidSales(title,sales,now=Date.now()){
+export function comparablePaidSales(title,sales,now=Date.now(),catalog=reviewedPackagedProducts){
   if(!Array.isArray(sales))return {status:"NO_VERIFIED_VARIANT"};
-  const key=verifiedSaleVariantForListing(title,sales.map(s=>s?.variant_key));
+  const key=verifiedSaleVariantForListing(title,sales.map(s=>s?.variant_key),catalog);
   if(!key)return {status:"NO_VERIFIED_VARIANT"};
   const asOf=new Date(now).toISOString().slice(0,10);
   const cutoff=now-90*86400000;
