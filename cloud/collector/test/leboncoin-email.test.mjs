@@ -73,3 +73,39 @@ test("extracts ad link from native Graph HTML while excluding unrelated links", 
   assert.equal(r.listings[0].title,"Dracaufeu série 30 ans");
   assert.equal(r.listings[0].source_url,"https://www.leboncoin.fr/vi/3312500756.htm");
 });
+
+test("five-listing saved-search email layout preserves actual excerpts, prices and tracking URL removal",()=>{
+  // Layout derived from real Outlook saved-search notifications, with
+  // synthetic IDs, search identifiers and ad descriptions only.
+  const cards=[
+    ["Boîte Pokémon édition anniversaire","150 €","Brest 29200","7700000001"],
+    ["Carte Pokémon rare","24 €","Paris 75006","7700000002"],
+    ["Coffret Pokémon scellé","65 €","Lille 59000","7700000003"],
+    ["Lot boosters Pokémon","35 €","Lyon 69000","7700000004"],
+    ["ETB Pokémon","89 €","Nantes 44000","7700000005"]
+  ];
+  const body=[
+    "Bonjour,","1 286 nouvelles annonces correspondant à votre recherche ont été publiées !",
+    '[Voir les résultats : "Pokémon 30 ans"](https://www.leboncoin.fr/mes-recherches/synthetic)',
+    ...cards.flatMap(([title,price,location,id])=>[
+      "---","| [",title,price,location,
+      `](https://www.leboncoin.fr/vi/${id}.htm#at_medium=email&at_campaign=synthetic)`
+    ])
+  ].join("\n");
+  const parsed=parseLeboncoinAlert({
+    id:"synthetic-mail",subject:"Pokémon 30 ans : 1 286 nouveaux résultats",
+    receivedDateTime:"2026-11-20T05:11:45Z",
+    body:{contentType:"html",content:body}
+  });
+  assert.equal(parsed.advertised_count,1286);
+  assert.equal(parsed.extracted_count,5);
+  assert.equal(parsed.truncated_email,true);
+  assert.deepEqual(parsed.listings.map(row=>row.price_cents),
+    [15000,2400,6500,3500,8900]);
+  assert.equal(parsed.listings[0].title,"Boîte Pokémon édition anniversaire");
+  assert.equal(parsed.listings[0].location,"Brest 29200");
+  assert.equal(parsed.listings[0].source_url,
+    "https://www.leboncoin.fr/vi/7700000001.htm");
+  assert.ok(parsed.listings.every(row=>
+    row.price_kind==="LISTING" && row.availability==="UNVERIFIED"));
+});
