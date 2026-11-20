@@ -149,3 +149,22 @@ test("strict complete variant and 3 paid GCC sales reveal dated median, not a BU
   assert.match(html,/hors frais, livraison et risque de variante/);
   assert.doesNotMatch(html,/ACHETER|BUY|rendement garanti/i);
 });
+
+test("private view displays GCC packaged candidates without granting VERIFIED status",()=>{
+  const key="etb:pokemon:evolving-skies:elite-trainer-box:fr:unlimited:u1:scelle";
+  const lot="gcc-00000001-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+  const html=renderOutlookOffers([],{
+    now:Date.parse("2026-11-20T10:00:00Z"),
+    paidSales:[{variant_key:key,lot_id:lot,sold_day:"2026-11-15",
+      price_cents:13000,source_url:"https://gradedcardcenter.com/item/"+lot.slice(4)}]
+  });
+  assert.match(html,/Références scellées à vérifier/);
+  assert.match(html,/CANDIDAT · NON VÉRIFIÉ/);
+  assert.match(html,/ETB · elite trainer box/);
+  assert.match(html,/1 lot\(s\) GCC daté\(s\)/);
+  assert.doesNotMatch(html,/Référence vérifiée|ACHETER maintenant/);
+});
+test("missing paid GCC ledger is distinct from a genuine empty verified source",()=>{
+  assert.match(renderOutlookOffers([],{paidSales:null}),/Registre des ventes GCC indisponible ou incomplet/);
+  assert.match(renderOutlookOffers([],{paidSales:[]}),/Aucun candidat trouvé dans les ventes GCC accessibles/);
+});
