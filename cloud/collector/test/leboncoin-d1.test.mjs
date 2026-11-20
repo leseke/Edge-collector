@@ -28,6 +28,8 @@ test("uses one atomic batch and skips previously processed messages",async()=>{
       return {
         bind(...params){
           if (sql.startsWith("SELECT 1")) return {first:async()=>seen.has(params[0])?{seen:1}:null};
+          if (sql.startsWith("SELECT m.extracted_count"))return {first:async()=>(
+            seen.has(params[0])?{expected_count:1,actual_count:1}:null)};
           return {sql,params};
         }
       };
