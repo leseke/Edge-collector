@@ -1,29 +1,29 @@
 {
   "schema": "edge.public.live_capture.v1",
-  "snapshot_id": "44626516973-1",
-  "observed_at": "2026-11-19T22:13:31.207623+00:00",
-  "published_at": "2026-11-19T22:14:44.872033+00:00",
+  "snapshot_id": "44668015343-1",
+  "observed_at": "2026-11-20T03:29:11.939885+00:00",
+  "published_at": "2026-11-20T03:30:32.908956+00:00",
   "status": "PARTIAL",
   "files": {
     "report.json": {
-      "path": "snapshots/44626516973-1/report.json",
-      "sha256": "7e14e8e35275ebf267a12095e0815a22d5c0bc5c1f2ddec3dde7723e47c33bd7"
+      "path": "snapshots/44668015343-1/report.json",
+      "sha256": "e1ef28f45fd57da2507a1fc1cab4aba4ec46f5271e3094308b7ae97687348b7f"
     },
     "retail_source_context.json": {
-      "path": "snapshots/44626516973-1/retail_source_context.json",
-      "sha256": "0c42752e1e14a8d79e861a85f9c7c94c8977fe7e33f62d3f4a7ef08bdbf0dc2b"
+      "path": "snapshots/44668015343-1/retail_source_context.json",
+      "sha256": "9c1005dc80dfab9b90c742be6fa4823ef2fc87aac78c9003ed3dab3a40e35e8b"
     },
     "mri_cases.json": {
-      "path": "snapshots/44626516973-1/mri_cases.json",
-      "sha256": "5ea4769dde819628e4770bff58d56ddc5c03b207cd73042afa883ec6fa3b7eab"
+      "path": "snapshots/44668015343-1/mri_cases.json",
+      "sha256": "f305372b8a853511006b176090c0a12994215af9412bfb0ab0f208d486e5858f"
     },
     "collection_coverage.json": {
-      "path": "snapshots/44626516973-1/collection_coverage.json",
-      "sha256": "bf88c3a6e8a65fde514ddf83997f5f0061c7ae0eca7c43d6c340f97746628b58"
+      "path": "snapshots/44668015343-1/collection_coverage.json",
+      "sha256": "f616b341e997eece5a0a1fddb76a2d33b1c451e8c54feda0df460910946fc7b4"
     },
     "forecast_evaluations.json": {
-      "path": "snapshots/44626516973-1/forecast_evaluations.json",
-      "sha256": "a4dc9f9ca6f08df51ace56102c0c17f90a7dc0c23150eb175c51302cc2aa9950"
+      "path": "snapshots/44668015343-1/forecast_evaluations.json",
+      "sha256": "69b02aeb13bdca37d96d91f84c55728db3167a1da375bbddca4b3e65b0d3ef87"
     }
   },
   "data_kind": "OBSERVED_MARKET_DATA_WITH_SEPARATE_LABELLED_ESTIMATES",
