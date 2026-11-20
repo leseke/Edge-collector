@@ -25,11 +25,59 @@ function canonicalVariant(key){
      !/^(?:[1-9]|10)(?:\.5)?$/.test(score))return null;
   return {set,number,name,language,printing,grader,score};
 }
+// A sealed identity has exactly seven fields in the existing GCC ledger:
+// booster|coffret:pokemon:set:product-name:language:printing:scelle.
+// Only explicit single-booster or named-box labels qualify; mixed lots,
+// displays and bundles are not equated to a single sealed product.
+function sealedVariant(key){
+  if(typeof key!=="string"||key.length>240)return null;
+  const p=key.split(":");
+  if(p.length!==7||!["booster","coffret"].includes(p[0])||
+     p[1]!=="pokemon"||p[6]!=="scelle")return null;
+  const [, ,set,name,language,printing]=p;
+  if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(set)||
+     !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)||
+     !languages[language]||
+     !["unlimited","first-edition"].includes(printing))return null;
+  return {type:p[0],set,name,language,printing};
+}
+const sealedTerm=d=>["scelle","sealed","non ouvert","sous blister"].some(v=>includesPhrase(d,v));
+const printingTerm=(d,p)=>p==="unlimited"
+  ?includesPhrase(d,"unlimited")||includesPhrase(d,"sans edition")
+  :["1ere edition","first edition","1st edition"].some(v=>includesPhrase(d,v));
+const sealedMatch=(description,v)=>{
+  if(!includesPhrase(description,v.set.replaceAll("-"," "))||
+     !includesPhrase(description,v.name.replaceAll("-"," "))||
+     !languages[v.language].some(x=>includesPhrase(description,x))||
+     !printingTerm(description,v.printing)||!sealedTerm(description))return false;
+  // A plain word "booster" is not proof that this is one single booster.
+  if(v.type==="booster"){
+    if(!includesPhrase(description,"booster unitaire") &&
+       !includesPhrase(description,"1 booster") &&
+       !includesPhrase(description,"booster individuel"))return false;
+    if(["display","booster box","lot","bundle","pack de","coffret","etb",
+         "x 2","x 3","x 4","x 6","x 10","x 12","x 24","x 36"]
+         .some(v=>includesPhrase(description,v)))return false;
+  }else{
+    if(!includesPhrase(description,"coffret") ||
+       ["lot de coffrets","lot de","bundle","display","booster unitaire"]
+         .some(v=>includesPhrase(description,v)))return false;
+  }
+  return true;
+};
 export function verifiedSaleVariantForListing(title,keys){
   const description=normalize(title);
   if(!description||description.length>500||!Array.isArray(keys))return null;
   const matches=[];
   for(const key of new Set(keys.slice(0,1000))){
+    const sealed=sealedVariant(key);
+    if(sealed){
+      if(sealedMatch(description,sealed)){
+        matches.push(key);
+        if(matches.length>1)return null;
+      }
+      continue;
+    }
     const v=canonicalVariant(key);
     if(!v)continue;
     const cardNumber=v.number.replace("-","/");
