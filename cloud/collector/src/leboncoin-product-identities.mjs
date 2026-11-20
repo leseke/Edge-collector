@@ -16,7 +16,7 @@ const clean=v=>typeof v==="string"?v.normalize("NFKD")
   .replace(/[\u0300-\u036f]/g,"").toLowerCase()
   .replace(/[^a-z0-9]+/g," ").trim():"";
 const phrase=(text,needle)=>Boolean(needle)&&(" "+text+" ").includes(" "+needle+" ");
-const sealed=title=>["scelle","sealed","non ouvert","sous blister"]
+const sealed=title=>["scelle","scellee","sealed","non ouvert","sous blister"]
   .some(term=>phrase(title,term));
 function unpack(key){
   // Eight fields: kind:pokemon:set:product:lang:printing:units:scelle.
