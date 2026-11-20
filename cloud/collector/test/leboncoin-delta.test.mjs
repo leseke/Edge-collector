@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { syncLeboncoinDelta, validateGraphDeltaUrl } from "../src/leboncoin-delta.mjs";
+import { syncLeboncoinDelta, validateGraphDeltaUrl, verifiedLeboncoinSender } from "../src/leboncoin-delta.mjs";
 const NEXT="https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta?$skiptoken=abc";
 const DELTA="https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages/delta?$deltatoken=end";
 const MAIL={id:"id1",subject:"Pokémon 30 ans : 990 nouveaux résultats",
@@ -82,4 +82,45 @@ test("lost lease after immutable write does not advance cursor",async()=>{
   }),/outlook_run_lease_lost/);
   assert.equal(db.batches.length,1);
   assert.equal(saved,0);
+});
+
+test("Graph sender allowlist rejects spoofed subject, lookalike domain and delegated sender",async()=>{
+  const allowed=["notifications.example.test"];
+  const from=address=>({emailAddress:{address}});
+  const msg={from:from("alerts@notifications.example.test"),
+    sender:from("alerts@notifications.example.test")};
+  assert.equal(verifiedLeboncoinSender(msg,allowed),true);
+  assert.equal(verifiedLeboncoinSender({...msg,from:from("alerts@evil.test")},allowed),false);
+  assert.equal(verifiedLeboncoinSender({...msg,from:from("alerts@notifications.example.test.evil.test")},allowed),false);
+  assert.equal(verifiedLeboncoinSender({...msg,sender:from("forwarder@evil.test")},allowed),false);
+  assert.equal(verifiedLeboncoinSender({...msg,from:null},allowed),false);
+  assert.throws(()=>verifiedLeboncoinSender(msg,["example.test,evil.test"]),/invalid_outlook_sender_allowlist/);
+});
+test("unapproved sender is ignored before D1 insert, but Graph cursor still advances",async()=>{
+  const db=makeDB(),saved=[];
+  const forged={...MAIL,from:{emailAddress:{address:"attacker@evil.test"}}};
+  const result=await syncLeboncoinDelta({
+    token:"fixture",db,
+    allowedSenderDomains:["notifications.example.test"],
+    cursorStore:{load:async()=>null,save:async url=>saved.push(url)},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[forged],"@odata.deltaLink":DELTA})})
+  });
+  assert.equal(result.status,"EMPTY");
+  assert.equal(result.inserted_listings,0);
+  assert.equal(result.matching_alerts,0);
+  assert.equal(db.batches.length,0);
+  assert.deepEqual(saved,[DELTA]);
+});
+test("approved Graph sender is ingested and keeps listing unverified",async()=>{
+  const db=makeDB();
+  const authentic={...MAIL,
+    from:{emailAddress:{address:"alerts@notifications.example.test"}},
+    sender:{emailAddress:{address:"alerts@notifications.example.test"}}};
+  const result=await syncLeboncoinDelta({
+    token:"fixture",db,allowedSenderDomains:["notifications.example.test"],
+    cursorStore:{load:async()=>null,save:async()=>{}},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[authentic],"@odata.deltaLink":DELTA})})
+  });
+  assert.equal(result.inserted_listings,1);
+  assert.equal(result.matching_alerts,1);
 });
