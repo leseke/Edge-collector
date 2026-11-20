@@ -32,7 +32,9 @@ function sanitized(row,now){
     observed, freshness,canonical,
     alertHits:Number.isSafeInteger(row.alert_hits)&&row.alert_hits>0?row.alert_hits:1,
     emailExtracted:Number.isSafeInteger(row.extracted_count)&&row.extracted_count>=0?row.extracted_count:null,
-    emailAdvertised:Number.isSafeInteger(row.advertised_count)&&row.advertised_count>=0?row.advertised_count:null
+    emailAdvertised:Number.isSafeInteger(row.advertised_count)&&row.advertised_count>=0?row.advertised_count:null,
+    firstPrice:Number.isSafeInteger(row.first_price_cents)&&row.first_price_cents>=0?row.first_price_cents:null,
+    firstObserved:typeof row.first_observed_at==="string"&&Number.isFinite(Date.parse(row.first_observed_at))?row.first_observed_at:null
   };
 }
 const money=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
@@ -43,6 +45,10 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
     <h2>${escape(row.title)}</h2><strong class="price">${row.price===null?"Prix non renseigné":escape(money.format(row.price/100))}</strong>
     <div class="meta">${row.search?"Recherche : "+escape(row.search):"Recherche non renseignée"}${row.location?" · "+escape(row.location):""}</div>
     <div class="meta">Signalé le ${row.observed?escape(row.observed):"date inconnue"} · ${row.alertHits} alerte(s) distincte(s)</div>
+    ${row.alertHits>1 && row.price!==null && row.firstPrice!==null ?
+      `<div class="history">Prix signalé initialement : ${escape(money.format(row.firstPrice/100))} · Variation : ${escape(money.format((row.price-row.firstPrice)/100))}</div>`:""}
+    ${row.alertHits>1 && row.firstObserved?
+      `<div class="meta">Premier signalement : ${escape(row.firstObserved)}</div>`:""}
     <div class="meta">${row.emailExtracted!==null&&row.emailAdvertised!==null?escape(row.emailExtracted+" extraits sur "+row.emailAdvertised+" résultats annoncés dans le dernier email"):"Nombre de résultats du dernier email non disponible"}</div>
     <details><summary>Vérification & provenance</summary>
       <p>Prix demandé extrait d’un email. Annonce non revérifiée sur Leboncoin.
@@ -61,7 +67,7 @@ export function renderOutlookOffers(rows,{now=Date.now()}={}){
   .offer{background:#121a28;border:1px solid #283448;border-radius:13px;padding:22px;min-width:0;display:flex;flex-direction:column;gap:12px}
   .top{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.fresh{color:#e1bd8c}
   h2{font-size:17px;margin:1px 0 0;line-height:1.35}.price{font-size:24px;color:#bbebde}
-  .meta{font-size:12px;color:#9bacbf;line-height:1.6}details{border-top:1px solid #2e3b4f;padding-top:12px;color:#9eafc7;line-height:1.7}
+  .meta{font-size:12px;color:#9bacbf;line-height:1.6}.history{font-size:12px;color:#bde7cd;line-height:1.5}details{border-top:1px solid #2e3b4f;padding-top:12px;color:#9eafc7;line-height:1.7}
   summary{cursor:pointer;color:#cad7eb}a{margin-top:auto;color:#a4d7ec;font-weight:650;text-decoration:none}a:hover{text-decoration:underline}
   .empty{margin-top:28px;background:#121a28;border:1px dashed #344056;padding:25px;border-radius:12px;color:#aebbcf}
   </style></head><body><main><header><div><div class="eyebrow">EDGE / RADAR / SOURCES PRIVÉES</div>
@@ -108,6 +114,10 @@ export async function handleOutlookOffers({
       SELECT o.listing_id,o.observed_at,o.source_url,o.title,
         o.price_cents,o.location,m.search_name,m.advertised_count,
         m.extracted_count,COUNT(*) OVER (PARTITION BY o.listing_id) AS alert_hits,
+        MIN(o.observed_at) OVER (PARTITION BY o.listing_id) AS first_observed_at,
+        FIRST_VALUE(o.price_cents) OVER (
+          PARTITION BY o.listing_id ORDER BY o.observed_at ASC,o.message_id ASC
+        ) AS first_price_cents,
         ROW_NUMBER() OVER (
           PARTITION BY o.listing_id
           ORDER BY o.observed_at DESC,o.message_id DESC
@@ -116,7 +126,8 @@ export async function handleOutlookOffers({
       JOIN lbc_alert_messages m ON m.message_id=o.message_id
     )
     SELECT listing_id,observed_at,source_url,title,price_cents,location,
-      search_name,advertised_count,extracted_count,alert_hits
+      search_name,advertised_count,extracted_count,alert_hits,
+      first_observed_at,first_price_cents
     FROM ranked WHERE rn=1 ORDER BY observed_at DESC,listing_id DESC LIMIT 50`).all();
     if(!Array.isArray(data?.results)||data.results.length>50)throw Error("bad_d1_response");
     return new Response(renderOutlookOffers(data.results,{now:now()}),{status:200,headers:HEADERS});
