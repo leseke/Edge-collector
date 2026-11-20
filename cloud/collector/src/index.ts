@@ -1,11 +1,22 @@
 import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
 import { collectPublicGccLots } from "./gcc-public";
+import {handleOutlookWorkerRoute} from "./leboncoin-worker-http.mjs";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
   DB: D1Database;
   TRIGGER_SECRET?: string;
+  OUTLOOK_ROUTES_ENABLED?: string;
+  OUTLOOK_CONSENT_ENABLED?: string;
+  OUTLOOK_CLIENT_ID?: string;
+  OUTLOOK_CLIENT_SECRET?: string;
+  OUTLOOK_REDIRECT_URI?: string;
+  OUTLOOK_TENANT?: string;
+  OUTLOOK_ENCRYPTION_KEY?: string;
+  CF_ACCESS_TEAM_DOMAIN?: string;
+  CF_ACCESS_APP_AUD?: string;
+  CF_ACCESS_ALLOWED_SUBJECTS?: string;
 }
 type Target = { productId: string; url: string };
 const TARGETS: readonly Target[] = [
@@ -66,6 +77,10 @@ export async function collect(env: Env): Promise<void> {
 }
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    // Standalone development-only routes stay invisible unless both operator
+    // opt-in flags are set; Access JWT is verified by the route adapter.
+    const consentResponse = await handleOutlookWorkerRoute({request,env});
+    if(consentResponse)return consentResponse;
     const url = new URL(request.url);
     if (request.method === "POST" && url.pathname === "/internal/collect") {
       const supplied = request.headers.get("Authorization")?.replace(/^Bearer /, "") ?? "";
