@@ -238,3 +238,25 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   this V19 attaches them behind the new **second opt-in**. The complete
   operator authorization procedure must be verified before either flag
   is enabled on an approved deployment.
+
+## Private operator-initiated sync diagnostic (development V20)
+- The isolated Worker now routes `POST /internal/outlook/sync` through
+  `src/leboncoin-manual-sync.mjs`, which invokes the already-implemented
+  Outlook runner only after independently verifying the signed Cloudflare
+  Access operator JWT. The owner/mailbox key comes exclusively from this
+  signed identity, never a user-supplied request parameter.
+- Four flags must all be `true` before the route exists:
+  `OUTLOOK_ROUTES_ENABLED`, `OUTLOOK_CONSENT_ENABLED`,
+  `OUTLOOK_INGEST_ENABLED`, and `OUTLOOK_MANUAL_SYNC_ENABLED`.
+  By default it returns private 404 and does not touch D1 or Microsoft.
+- The request must be HTTPS, same-origin as the registered Microsoft
+  redirect host, POST with exactly `application/json`, a bounded
+  `{}` payload, and no custom credentials, owner key or query strings.
+- A run is bounded to three Graph Delta pages and still requires a
+  separately consented account and the atomic D1 lease. Only aggregated
+  results are returned; concurrent runs report BUSY; provider failures
+  are redacted.
+- This is a **disabled-by-default diagnostic bridge**, not a UI feature
+  or autonomous schedule. No server flags were enabled, no deployment or
+  remote migration executed, and no Outlook mailbox was accessed.
+  See ADR 031 before any infrastructure activation.
