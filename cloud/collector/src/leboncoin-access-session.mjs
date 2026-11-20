@@ -65,9 +65,17 @@ export async function verifyCloudflareAccessSession(request,{
     },false,["verify"]);
     if(!await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,b64dec(sig),enc.encode(h+"."+p)))fail();
   } catch {fail()}
-  // Session nonce binds OAuth start and callback to the same Access JWT.
-  // Account key remains stable across Access JWT rotations (sub + AUD).
-  const sessionId=(await hash(token)).slice(0,64);
+  // An authenticated Cloudflare identity_nonce is a signed identity cache
+  // key. Prefer it over the entire JWT so a token reissue retaining the
+  // identity session does not invalidate the OAuth callback. A changed
+  // nonce still fails closed; absent nonce retains strict JWT binding.
+  if(payload.identity_nonce!==undefined &&
+     (typeof payload.identity_nonce!=="string" ||
+      !/^[A-Za-z0-9_-]{8,256}$/.test(payload.identity_nonce)))fail();
+  const sessionMaterial=payload.identity_nonce
+    ? "access-session|"+issuer+"|"+audience+"|"+payload.sub+"|"+payload.identity_nonce
+    : "access-jwt|"+token;
+  const sessionId=(await hash(sessionMaterial)).slice(0,64);
   const ownerKey=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",
     enc.encode(issuer+"|"+audience+"|"+payload.sub)))).map(x=>x.toString(16).padStart(2,"0")).join("");
   return {authenticated:true,sessionId,ownerKey};
