@@ -52,6 +52,15 @@ test("method, cross-site origin, content type, request args and hidden owner are
     assert.equal(calls.verified,0);
   }
 });
+test("oversized sync body is rejected before identity validation",async()=>{
+  const calls=mocks();
+  const res=await handleOutlookManualSync({
+    request:request({body:"{}"+"x".repeat(4096)}),env,...calls
+  });
+  assert.equal(res.status,404);
+  assert.equal(calls.verified,0);
+  assert.equal(calls.ran,0);
+});
 test("signed identity, not request input, is passed to bounded collection runner",async()=>{
   const calls=mocks();
   const res=await handleOutlookManualSync({request:request(),env,...calls});
