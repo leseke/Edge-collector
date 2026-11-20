@@ -3,21 +3,21 @@
 // and must never promote a market candidate to VERIFIED automatically.
 export const officialPokemonResearchSources=Object.freeze([
   Object.freeze({
-    productFamily:"ETB",series:"prismatic-evolutions",
+    productFamily:"ETB",series:"prismatic-evolutions",productSlug:"elite-trainer-box",
     canonicalName:"Scarlet & Violet—Prismatic Evolutions Elite Trainer Box",
     announcedRelease:"2025-01-17",sourceLocale:"us-en",
     sourceUrl:"https://www.pokemon.com/us/pokemon-tcg/product-gallery/scarlet-violet-prismatic-evolutions-elite-trainer-box",
     referenceStatus:"OFFICIAL_PRODUCT_PAGE_ONLY"
   }),
   Object.freeze({
-    productFamily:"UPC",series:"celebrations",
+    productFamily:"UPC",series:"celebrations",productSlug:"ultra-premium-collection",
     canonicalName:"Celebrations Ultra-Premium Collection",
     announcedRelease:null,sourceLocale:"us-en",
     sourceUrl:"https://www.pokemon.com/us/pokemon-tcg/product-gallery/celebrations-ultra-premium-collection",
     referenceStatus:"OFFICIAL_PRODUCT_PAGE_ONLY"
   }),
   Object.freeze({
-    productFamily:"UPC",series:"mega-charizard-x",
+    productFamily:"UPC",series:"mega-charizard-x",productSlug:"ultra-premium-collection",
     canonicalName:"Mega Charizard X ex Ultra-Premium Collection",
     announcedRelease:"2025-11-14",sourceLocale:"us-en",
     sourceUrl:"https://www.pokemon.com/us/pokemon-tcg/product-gallery/pokemon-tcg-mega-charizard-x-ex-ultra-premium-collection",
@@ -35,6 +35,7 @@ export function officialResearchForCandidate(candidate,sources=officialPokemonRe
   return sources.filter(x=>
     x.referenceStatus==="OFFICIAL_PRODUCT_PAGE_ONLY" &&
     x.productFamily===type && x.series===candidate.series &&
+    x.productSlug===candidate.product &&
     x.sourceLocale===locale &&
     typeof x.canonicalName==="string" &&
     typeof x.sourceUrl==="string" &&
