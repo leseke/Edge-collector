@@ -29,6 +29,11 @@ function makeD1(){
         if(sql.includes("FROM lbc_graph_delta_cursor"))return state.cursor;
         if(sql.startsWith("SELECT 1 AS seen FROM lbc_alert_messages"))
           return state.messages.has(params[0]) ? {seen:1}:null;
+        if(sql.startsWith("SELECT m.extracted_count")){
+          const row=state.messages.get(params[0]);
+          return row?{expected_count:row[4],
+            actual_count:[...state.listings.keys()].filter(k=>k.startsWith(params[0]+"/")).length}:null;
+        }
         throw Error("unexpected_d1_first:"+sql);
       },
       async run(){
