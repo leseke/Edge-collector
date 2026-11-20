@@ -41,6 +41,29 @@ test("valid Cloudflare Access JWT produces stable owner and session-bound nonce"
   assert.equal(first.ownerKey,second.ownerKey);
   assert.equal(f.certificateRequests,2);
 });
+test("signed identity nonce survives reissued Access JWT but not a new login",async()=>{
+  const f=await fixture();
+  const base={...f.claims,identity_nonce:"login-nonce-A1234"};
+  const first=await f.verify(await f.sign(base));
+  const renewed=await f.verify(await f.sign({...base,iat:base.iat+60,exp:base.exp+60}));
+  assert.equal(first.sessionId,renewed.sessionId);
+  assert.equal(first.ownerKey,renewed.ownerKey);
+  const other=await f.verify(await f.sign({...base,identity_nonce:"login-nonce-B5678"}));
+  assert.notEqual(first.sessionId,other.sessionId);
+  assert.equal(first.ownerKey,other.ownerKey);
+});
+test("missing identity nonce keeps strict JWT session binding",async()=>{
+  const f=await fixture();
+  const first=await f.verify(await f.sign(f.claims));
+  const renewed=await f.verify(await f.sign({...f.claims,iat:f.claims.iat+60}));
+  assert.notEqual(first.sessionId,renewed.sessionId);
+});
+test("invalid signed identity nonce is rejected",async()=>{
+  const f=await fixture();
+  for(const identity_nonce of ["", "short", "../x", 10]){
+    await assert.rejects(f.verify(await f.sign({...f.claims,identity_nonce})),/invalid_access_identity/);
+  }
+});
 test("refuses forged JWT with a valid claim body but corrupt signature",async()=>{
   const f=await fixture(),token=await f.sign(f.claims);
   const [header,body,signature]=token.split(".");
