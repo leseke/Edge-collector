@@ -399,3 +399,15 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   original manufacturer references and product configurations have
   been independently verified; tests use explicitly synthetic examples
   only. There is no end-user form. See ADR 044.
+
+## Autonomous GCC-backed review candidates (development V34)
+- `leboncoin-product-candidates.mjs` identifies ETB, UPC, display and
+  sealed-box **candidates** from canonical paid GCC lot rows already
+  available in the bounded private read-only offers query.
+- Each candidate is `CANDIDATE_UNVERIFIED` with packaging type,
+  series, edition, language, quantity, count of distinct paid lots,
+  last paid date and explicitly missing manufacturer/identity proofs.
+- The signed-operator HTML view shows this research backlog automatically
+  with no form. Incomplete or unavailable GCC source is not reported as
+  an empty market, and candidates never enter the trusted reviewed
+  catalog or auto-trigger investment recommendations. See ADR 045.
