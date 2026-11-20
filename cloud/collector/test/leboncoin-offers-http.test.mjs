@@ -99,3 +99,21 @@ test("empty D1 feed states no imported offers, never fabricated examples",async(
   assert.match(html,/Aucune annonce importée/);
   assert.doesNotMatch(html,/Dracaufeu 30 ans/);
 });
+
+test("private offers HTML prioritizes price-drop investigations above one-off sightings",()=>{
+  const now=Date.parse("2026-11-20T08:00:00Z");
+  const unseen={...ROW,listing_id:"leboncoin:3312500758",
+    source_url:"https://www.leboncoin.fr/vi/3312500758.htm",
+    title:"Simple observation",alert_hits:1,
+    first_price_cents:15000,price_cents:15000};
+  const recurred={...ROW,listing_id:"leboncoin:3312500759",
+    source_url:"https://www.leboncoin.fr/vi/3312500759.htm",
+    title:"Annonce répétée",alert_hits:2,
+    first_price_cents:16000,price_cents:16000};
+  const html=renderOutlookOffers([unseen,recurred,ROW],{now});
+  assert.ok(html.indexOf("Dracaufeu 30 ans")<html.indexOf("Annonce répétée"));
+  assert.ok(html.indexOf("Annonce répétée")<html.indexOf("Simple observation"));
+  assert.match(html,/data-signal="PRICE_DROP"/);
+  assert.match(html,/data-signal="REPEATED"/);
+  assert.match(html,/data-signal="OBSERVED"/);
+});
