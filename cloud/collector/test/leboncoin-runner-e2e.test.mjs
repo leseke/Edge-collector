@@ -30,9 +30,10 @@ function makeD1(){
         if(sql.startsWith("SELECT 1 AS seen FROM lbc_alert_messages"))
           return state.messages.has(params[0]) ? {seen:1}:null;
         if(sql.startsWith("SELECT m.extracted_count")){
-          const row=state.messages.get(params[0]);
+          const row=state.messages.get(params.at(-1));
           return row?{expected_count:row[4],
-            actual_count:[...state.listings.keys()].filter(k=>k.startsWith(params[0]+"/")).length}:null;
+            actual_count:[...state.listings.keys()].filter(k=>k.startsWith(params.at(-1)+"/")).length,
+            matching_count:[...state.listings.keys()].filter(k=>k.startsWith(params.at(-1)+"/") && params.slice(0,-1).includes(k.split("/").at(-1))).length}:null;
         }
         throw Error("unexpected_d1_first:"+sql);
       },
