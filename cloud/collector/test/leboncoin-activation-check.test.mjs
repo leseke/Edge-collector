@@ -36,3 +36,10 @@ test("rejects non-HTTPS callback and multiple operator subjects",()=>{
   assert.ok(status.missing_or_invalid_bindings.includes("OUTLOOK_REDIRECT_URI"));
   assert.ok(status.missing_or_invalid_bindings.includes("CF_ACCESS_ALLOWED_SUBJECTS"));
 });
+
+test("fails closed when no trusted Outlook sender domains are configured",()=>{
+  const status=checkOutlookActivationReadiness({...config,
+    OUTLOOK_ALLOWED_SENDER_DOMAINS:""});
+  assert.equal(status.configured,false);
+  assert.ok(status.missing_or_invalid_bindings.includes("OUTLOOK_ALLOWED_SENDER_DOMAINS"));
+});
