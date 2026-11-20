@@ -11,6 +11,10 @@ SQL="""WITH ranked AS (
   SELECT o.listing_id,o.observed_at,o.source_url,o.title,
     o.price_cents,o.location,m.search_name,m.advertised_count,
     m.extracted_count,COUNT(*) OVER (PARTITION BY o.listing_id) AS alert_hits,
+    MIN(o.observed_at) OVER (PARTITION BY o.listing_id) AS first_observed_at,
+    FIRST_VALUE(o.price_cents) OVER (
+      PARTITION BY o.listing_id ORDER BY o.observed_at ASC,o.message_id ASC
+    ) AS first_price_cents,
     ROW_NUMBER() OVER (
       PARTITION BY o.listing_id
       ORDER BY o.observed_at DESC,o.message_id DESC
