@@ -10,6 +10,7 @@ const config={
   CF_ACCESS_TEAM_DOMAIN:"https://edge-team.cloudflareaccess.com",
   CF_ACCESS_APP_AUD:"edge-application-audience-123456",
   CF_ACCESS_ALLOWED_SUBJECTS:"operator-account-1",
+  OUTLOOK_ALLOWED_SENDER_DOMAINS:"notifications.example.test",
   OUTLOOK_CONSENT_ENABLED:"true",
   DB:{prepare(){},batch(){}}
 };
