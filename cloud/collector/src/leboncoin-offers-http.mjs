@@ -5,6 +5,7 @@ import {verifyCloudflareAccessSession} from "./leboncoin-access-session.mjs";
 import {scoreLeboncoinLead,sortLeboncoinLeads} from "./leboncoin-lead-triage.mjs";
 import {comparablePaidSales} from "./leboncoin-paid-comparables.mjs";
 import {discoverPackagedCandidates} from "./leboncoin-product-candidates.mjs";
+import {officialResearchForCandidate} from "./leboncoin-official-product-research.mjs";
 
 const HEADERS={
   "Content-Type":"text/html; charset=utf-8",
@@ -102,7 +103,7 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
   <p class="sub">Jusqu’à 50 annonces distinctes récentes, classées par signaux puis fraîcheur · Critère de tri : baisse d’au moins 5 % et 5 €, dernier signalement datant de moins de 48 h · Données issues des emails, sans vérification en direct.</p>
   <section class="candidate-section"><h2>Références scellées à vérifier</h2>
     <p class="sub">Candidats automatiquement découverts dans les identifiants de ventes GCC. Aucune identité constructeur vérifiée : ces entrées ne peuvent pas servir à établir une comparaison de prix.</p>
-    ${candidates.length?'<div class="candidate-list">'+candidates.map(item=>`<article class="candidate"><span class="eyebrow">CANDIDAT · NON VÉRIFIÉ</span><h3>${escape(item.packaging.toUpperCase()+" · "+item.product.replaceAll("-"," "))}</h3><div class="meta">Série : ${escape(item.series.replaceAll("-"," "))} · Langue : ${escape(item.language.toUpperCase())} · Édition : ${escape(item.edition)} · Quantité déclarée : ${item.units}</div><div class="meta">${item.paidLotCount} lot(s) GCC daté(s) · Dernière vente : ${escape(item.latestPaidDay)}</div><div class="meta">À vérifier : référence officielle, composition exacte, langue et identifiants produit.</div></article>`).join("")+'</div>':
+    ${candidates.length?'<div class="candidate-list">'+candidates.map(item=>`<article class="candidate"><span class="eyebrow">CANDIDAT · NON VÉRIFIÉ</span><h3>${escape(item.packaging.toUpperCase()+" · "+item.product.replaceAll("-"," "))}</h3><div class="meta">Série : ${escape(item.series.replaceAll("-"," "))} · Langue : ${escape(item.language.toUpperCase())} · Édition : ${escape(item.edition)} · Quantité déclarée : ${item.units}</div><div class="meta">${item.paidLotCount} lot(s) GCC daté(s) · Dernière vente : ${escape(item.latestPaidDay)}</div><div class="meta">À vérifier : référence officielle, composition exacte, langue et identifiants produit.</div>${officialResearchForCandidate(item).map(reference=>`<div class="meta">Piste constructeur (US/EN, correspondance non validée) : <a href="${escape(reference.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(reference.title)} ↗</a></div>`).join("")}</article>`).join("")+'</div>':
       (candidateDiscovery.status==="SOURCE_UNAVAILABLE_OR_INCOMPLETE"?'<div class="empty">Registre des ventes GCC indisponible ou incomplet : aucun candidat déclaré.</div>':'<div class="empty">Aucun candidat trouvé dans les ventes GCC accessibles. Aucun produit inventé.</div>')}
   </section>
   </main></body></html>`;
