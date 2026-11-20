@@ -19,6 +19,7 @@ function makeD1(){
   const db={
     state,
     prepare(sql){return {bind(...params){return {
+      sql,params,
       async first(){
         if(sql.startsWith("SELECT lease_id,expires_at_ms FROM lbc_sync_lease"))
           return state.lock ? {lease_id:state.lock.id,expires_at_ms:state.lock.expiry}:null;
