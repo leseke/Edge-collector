@@ -19,7 +19,8 @@ SQL="""WITH ranked AS (
   JOIN lbc_alert_messages m ON m.message_id=o.message_id
 )
 SELECT listing_id,observed_at,source_url,title,price_cents,location,
-  search_name,advertised_count,extracted_count,alert_hits
+  search_name,advertised_count,extracted_count,alert_hits,
+  first_observed_at,first_price_cents
 FROM ranked WHERE rn=1 ORDER BY observed_at DESC,listing_id DESC LIMIT 50"""
 
 class OffersViewTests(unittest.TestCase):
@@ -51,6 +52,8 @@ class OffersViewTests(unittest.TestCase):
         self.assertEqual(rows[0][4],14000)
         self.assertEqual(rows[0][7],1286)
         self.assertEqual(rows[0][9],2)
+        self.assertEqual(rows[0][10],"2026-11-19T05:21:31Z")
+        self.assertEqual(rows[0][11],15000)
     def test_distinct_listings_do_not_collapse(self):
         self.add("m1","leboncoin:3313155234",15000,"2026-11-19T05:21:31Z",990,1)
         self.add("m2","leboncoin:3313155235",20000,"2026-11-20T05:11:45Z",1286,1)
