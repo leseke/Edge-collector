@@ -36,7 +36,7 @@ test("uses one atomic batch and skips previously processed messages",async()=>{
       calls.push(statements);
       const mail=statements[0].params[0];
       seen.add(mail);
-      return statements.map(()=>({meta:{changes:1}}));
+      return statements.map((_,i)=>({meta:{changes:i===statements.length-1?0:1}}));
     }
   };
   const first=await persistLeboncoinAlerts(db,[sample()]);
