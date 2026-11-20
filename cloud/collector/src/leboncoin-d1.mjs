@@ -46,14 +46,23 @@ export async function persistLeboncoinAlerts(db, alerts, { clock = () => new Dat
       // A legacy or corrupt partially-written email must NOT be treated
       // as a safe duplicate: advancing the Graph cursor would lose data.
       // The append-only ledger cannot be repaired by updating its rows.
+      const ids=alert.listings.map(item=>item.id);
+      const matching=ids.length
+        ? `(SELECT COUNT(*) FROM lbc_listing_observations o
+            WHERE o.message_id=m.message_id AND o.listing_id IN
+            (${ids.map(()=>"?").join(",")}))`
+        : "0";
       const integrity=await db.prepare(`SELECT m.extracted_count AS expected_count,
         (SELECT COUNT(*) FROM lbc_listing_observations o
-         WHERE o.message_id = m.message_id) AS actual_count
+         WHERE o.message_id=m.message_id) AS actual_count,
+        ${matching} AS matching_count
         FROM lbc_alert_messages m WHERE m.message_id = ? LIMIT 1`)
-        .bind(alert.message_id).first();
+        .bind(...ids,alert.message_id).first();
       if(!integrity || !Number.isSafeInteger(integrity.expected_count) ||
          !Number.isSafeInteger(integrity.actual_count) ||
+         !Number.isSafeInteger(integrity.matching_count) ||
          integrity.expected_count!==integrity.actual_count ||
+         integrity.matching_count!==integrity.actual_count ||
          integrity.expected_count!==alert.listings.length)
         throw new Error("outlook_existing_message_incomplete_or_changed");
       skippedMessages++;
