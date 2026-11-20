@@ -20,6 +20,13 @@ function teamDomain(value) {
     return u.origin;
   } catch {fail()}
 }
+export async function deriveCloudflareAccessOwnerKey({teamUrl,audience,subject}) {
+  const issuer=teamDomain(teamUrl);
+  if(typeof audience!=="string" || !/^[A-Za-z0-9_-]{8,128}$/.test(audience) ||
+     typeof subject!=="string" || !subject || subject.length>256)fail();
+  return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",
+    enc.encode(issuer+"|"+audience+"|"+subject)))).map(x=>x.toString(16).padStart(2,"0")).join("");
+}
 export async function verifyCloudflareAccessSession(request,{
   teamUrl,audience,allowedSubjects,fetchImpl=fetch,clock=()=>Date.now()
 }) {
@@ -76,7 +83,6 @@ export async function verifyCloudflareAccessSession(request,{
     ? "access-session|"+issuer+"|"+audience+"|"+payload.sub+"|"+payload.identity_nonce
     : "access-jwt|"+token;
   const sessionId=(await hash(sessionMaterial)).slice(0,64);
-  const ownerKey=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",
-    enc.encode(issuer+"|"+audience+"|"+payload.sub)))).map(x=>x.toString(16).padStart(2,"0")).join("");
+  const ownerKey=await deriveCloudflareAccessOwnerKey({teamUrl:issuer,audience,subject:payload.sub});
   return {authenticated:true,sessionId,ownerKey};
 }
