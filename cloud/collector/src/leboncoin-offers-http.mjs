@@ -60,7 +60,7 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
     <div class="meta">${row.emailExtracted!==null&&row.emailAdvertised!==null?escape(row.emailExtracted+" extraits sur "+row.emailAdvertised+" résultats annoncés dans le dernier email"):"Nombre de résultats du dernier email non disponible"}</div>
     <div class="comparable">
       ${row.comparable.status==="COMPARABLE"
-        ? `<strong>Ventes payées GCC comparables · ${row.comparable.saleCount} transactions / 90 jours</strong><span>Médiane brute : ${escape(money.format(row.comparable.medianCents/100))} · Bas observé : ${escape(money.format(row.comparable.lowCents/100))}</span><small>Correspondance stricte de la variante déclarée, non vérifiée physiquement. Aucun frais ni transport déduit.</small>`
+        ? `<strong>Ventes payées GCC comparables · ${row.comparable.saleCount} transactions / 90 jours</strong><span>Médiane brute : ${escape(money.format(row.comparable.medianCents/100))} · Bas observé : ${escape(money.format(row.comparable.lowCents/100))}</span>${row.price!==null?`<span>Écart brut avec le bas des ventes : ${escape(money.format((row.comparable.lowCents-row.price)/100))} · hors frais, livraison et risque de variante</span>`:""}<small>Correspondance stricte de la variante déclarée, non vérifiée physiquement. Aucun frais ni transport déduit.</small>`
         : "<span>Ventes payées comparables non établies · Série, numéro, langue, édition et grade à vérifier.</span>"}
     </div>
     <details><summary>Vérification & provenance</summary>
