@@ -145,5 +145,7 @@ test("strict complete variant and 3 paid GCC sales reveal dated median, not a BU
   assert.match(html,/3 transactions \/ 90 jours/);
   assert.match(html,/Médiane brute : 250,00/);
   assert.match(html,/Bas observé : 200,00/);
+  assert.match(html,/Écart brut avec le bas des ventes : 40,00/);
+  assert.match(html,/hors frais, livraison et risque de variante/);
   assert.doesNotMatch(html,/ACHETER|BUY|rendement garanti/i);
 });
