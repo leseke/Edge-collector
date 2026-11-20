@@ -22,7 +22,7 @@ For an exact unique variant, only authorized `paid_market_sales` records
 with canonical GCC source links, positive integer paid prices,
 valid sale dates within the most recent 90 days and distinct lot IDs
 qualify. At least **three distinct transactions** are needed to show
-the gross EUR median and the lowest observed gross sale. Two sales
+the gross EUR median and the lowest observed gross sale. When an asking price is known, the view also shows the **gross difference** versus that lowest paid sale, without accounting for acquisition fees, delivery, resale costs or item condition: it is NOT net profit. Two sales
 or an incomplete variant are explicitly insufficient.
 
 The view performs a capped, read-only lookup of the existing
