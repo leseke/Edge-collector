@@ -42,3 +42,43 @@ test("ambiguous exact-variant matches are rejected instead of choosing cheaper r
   const another="carte:pokemon:evolving-skies:215-203:umbreon-vmax:en:unlimited:psa:10";
   assert.equal(verifiedSaleVariantForListing(title+" English",[key,another]),null);
 });
+
+const sealedKey="booster:pokemon:tempete-argentee:lugia:fr:unlimited:scelle";
+const boxKey="coffret:pokemon:celebrations:collection-pikachu:fr:unlimited:scelle";
+test("exact single sealed booster with full set name language and printing supports paid comparables",()=>{
+  const name="1 booster Pokémon Tempête Argentée Lugia Français Unlimited scellé";
+  assert.equal(verifiedSaleVariantForListing(name,[sealedKey]),sealedKey);
+  const sales=[2000,2700,3100].map((price,i)=>({...sale(i,price),variant_key:sealedKey}));
+  assert.deepEqual(comparablePaidSales(name,sales,now),{
+    status:"COMPARABLE",variant:sealedKey,saleCount:3,medianCents:2700,lowCents:2000
+  });
+});
+test("exact named sealed coffret can match three paid sales, never a bare brand label",()=>{
+  const name="Coffret Pokémon Celebrations Collection Pikachu Français Unlimited scellé";
+  assert.equal(verifiedSaleVariantForListing(name,[boxKey]),boxKey);
+  const sales=[4000,4900,6000].map((price,i)=>({...sale(i,price),variant_key:boxKey}));
+  assert.equal(comparablePaidSales(name,sales,now).medianCents,4900);
+});
+test("reject booster lots, displays, unsealed, unknown language, missing edition, or wrong product",()=>{
+  for(const title of [
+    "Booster Pokémon Tempête Argentée Lugia Français Unlimited scellé",
+    "Lot de 12 booster Pokémon Tempête Argentée Lugia Français Unlimited scellé",
+    "Display 1 booster Pokémon Tempête Argentée Lugia Français Unlimited scellé",
+    "1 booster Pokémon Tempête Argentée Lugia Unlimited scellé",
+    "1 booster Pokémon Tempête Argentée Lugia Français scellé",
+    "1 booster Pokémon Tempête Argentée Lugia Français Unlimited",
+    "1 booster Pokémon Tempête Argentée Gengar Français Unlimited scellé"
+  ])assert.equal(verifiedSaleVariantForListing(title,[sealedKey]),null,title);
+  assert.equal(verifiedSaleVariantForListing(
+    "Coffret Pokémon Celebrations Collection Pikachu Français Unlimited",
+    [boxKey]),null);
+  assert.equal(verifiedSaleVariantForListing(
+    "Lot de coffrets Pokémon Celebrations Collection Pikachu Français Unlimited scellé",
+    [boxKey]),null);
+});
+test("conflicting exact sealed variants remain ambiguous",()=>{
+  const en="booster:pokemon:tempete-argentee:lugia:en:unlimited:scelle";
+  assert.equal(verifiedSaleVariantForListing(
+    "1 booster Pokémon Tempête Argentée Lugia Français English Unlimited scellé",
+    [sealedKey,en]),null);
+});
