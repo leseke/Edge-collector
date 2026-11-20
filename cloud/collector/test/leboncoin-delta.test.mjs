@@ -126,3 +126,24 @@ test("approved Graph sender is ingested and keeps listing unverified",async()=>{
   assert.equal(result.inserted_listings,1);
   assert.equal(result.matching_alerts,1);
 });
+
+test("archived incomplete email blocks Graph delta checkpoint instead of disappearing",async()=>{
+  let saves=0,batches=0;
+  const db={
+    prepare(sql){return {bind(){return {
+      async first(){
+        if(sql.startsWith("SELECT 1 AS seen"))return {seen:1};
+        if(sql.startsWith("SELECT m.extracted_count"))
+          return {expected_count:1,actual_count:0,matching_count:0};
+        throw Error("unexpected_sql");
+      }
+    }}}},
+    async batch(){batches++;throw Error("must_not_write")}
+  };
+  await assert.rejects(syncLeboncoinDelta({
+    token:"fixture",db,cursorStore:{load:async()=>null,save:async()=>{saves++}},
+    fetchImpl:async()=>({ok:true,json:async()=>({value:[MAIL],"@odata.deltaLink":DELTA})})
+  }),/outlook_existing_message_incomplete_or_changed/);
+  assert.equal(saves,0);
+  assert.equal(batches,0);
+});
