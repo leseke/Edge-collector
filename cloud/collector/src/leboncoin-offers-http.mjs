@@ -48,7 +48,8 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
       return safe?{...safe,lead:scoreLeboncoinLead(row,now),
         comparable:comparablePaidSales(safe.title,paidSales,now)}:null;
     }).filter(Boolean);
-  const candidates=discoverPackagedCandidates(paidSales,{now}).candidates;
+  const candidateDiscovery=discoverPackagedCandidates(paidSales,{now});
+  const candidates=candidateDiscovery.candidates;
   const tiles=offers.map(row=>`<article class="offer">
     <div class="top"><span class="source">LEBONCOIN · EMAIL</span><span class="fresh">${escape(row.freshness)}</span></div>
     <div class="lead" data-signal="${escape(row.lead.kind)}">${escape(row.lead.label)}${row.lead.kind==="PRICE_DROP" ? " · "+escape(row.lead.changePercent.toFixed(1))+" %":""}</div>
@@ -102,7 +103,7 @@ export function renderOutlookOffers(rows,{now=Date.now(),paidSales=null}={}){
   <section class="candidate-section"><h2>Références scellées à vérifier</h2>
     <p class="sub">Candidats automatiquement découverts dans les identifiants de ventes GCC. Aucune identité constructeur vérifiée : ces entrées ne peuvent pas servir à établir une comparaison de prix.</p>
     ${candidates.length?'<div class="candidate-list">'+candidates.map(item=>`<article class="candidate"><span class="eyebrow">CANDIDAT · NON VÉRIFIÉ</span><h3>${escape(item.packaging.toUpperCase()+" · "+item.product.replaceAll("-"," "))}</h3><div class="meta">Série : ${escape(item.series.replaceAll("-"," "))} · Langue : ${escape(item.language.toUpperCase())} · Édition : ${escape(item.edition)} · Quantité déclarée : ${item.units}</div><div class="meta">${item.paidLotCount} lot(s) GCC daté(s) · Dernière vente : ${escape(item.latestPaidDay)}</div><div class="meta">À vérifier : référence officielle, composition exacte, langue et identifiants produit.</div></article>`).join("")+'</div>':
-      '<div class="empty">Aucun candidat vérifiable à partir des lignes GCC actuellement accessibles. Aucun produit inventé.</div>'}
+      (candidateDiscovery.status==="SOURCE_UNAVAILABLE_OR_INCOMPLETE"?'<div class="empty">Registre des ventes GCC indisponible ou incomplet : aucun candidat déclaré.</div>':'<div class="empty">Aucun candidat trouvé dans les ventes GCC accessibles. Aucun produit inventé.</div>')}
   </section>
   </main></body></html>`;
 }
