@@ -15,12 +15,12 @@ function fakeDb(active=true){
     return {sql,params};
   }}},async batch(stmts){
     calls.push(stmts);
-    for(const s of stmts){
+    for(const s of stmts.slice(0,-1)){
       assert.match(s.sql,/EXISTS \(SELECT 1 FROM lbc_sync_lease/);
       assert.deepEqual(s.params.slice(-3,-1),[lease.ownerKey,lease.leaseId]);
       assert.equal(Number.isSafeInteger(s.params.at(-1)),true);
     }
-    return stmts.map(()=>({meta:{changes:active?1:0}}));
+    return stmts.map((_,i)=>({meta:{changes:i===stmts.length-1?0:(active?1:0)}}));
   }};
 }
 test("append-only alerts and listings are fenced within each D1 INSERT",async()=>{
