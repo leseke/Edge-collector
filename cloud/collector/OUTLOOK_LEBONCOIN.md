@@ -307,3 +307,16 @@ Identity verification via Microsoft Graph /me requires delegated User.Read in ad
   authorization, then configure its exact validated domain(s) privately.
   This is a sender metadata gate, not SPF/DKIM/DMARC validation or
   evidence that a listing remains available. See ADR 034.
+
+## Atomic D1 completeness check (development V24)
+- Each new immutable alert and all extracted listing observations are saved
+  in a single D1 atomic batch. A final SQL assertion checks that the
+  message exists and every expected unique listing row was actually
+  inserted, rather than merely accepting a successful message INSERT.
+- If a lease expires between the message and listing statements or any
+  listing is missing, SQLite raises a deliberate constraint error,
+  rolling back the **entire batch** before the Graph Delta cursor can
+  advance. The email is then replayable on a later authorized run.
+- The successful SQL assertion changes zero rows and is not counted as
+  an extra observation. Real SQLite transaction rollback tests cover
+  the missing-listing and replaced-lease scenarios; see ADR 035.
