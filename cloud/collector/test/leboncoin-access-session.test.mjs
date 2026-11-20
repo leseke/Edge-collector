@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {webcrypto} from "node:crypto";
 import {verifyCloudflareAccessSession} from "../src/leboncoin-access-session.mjs";
+import {beginMicrosoftConsent,finishMicrosoftConsent} from "../src/leboncoin-consent.mjs";
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const enc=new TextEncoder();
 const b64=bytes=>btoa(String.fromCharCode(...bytes)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
