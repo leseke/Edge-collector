@@ -20,3 +20,12 @@ test("D1 provisioning cannot be activated by a push", () => {
   assert.match(content, /contents: read/);
   assert.doesNotMatch(content, /CLOUDFLARE_API_TOKEN|curl\b|wrangler|--remote|\-X POST|secrets\./);
 });
+
+test("Deployment review remains offline and cannot load cloud credentials", () => {
+  const content = read(".github/workflows/deployment-review.yml");
+  assert.match(content, /workflow_dispatch:/);
+  assert.match(content, /contents: read/);
+  assert.doesNotMatch(content, /^  push:|^  pull_request:/m);
+  assert.doesNotMatch(content, /CLOUDFLARE_API_TOKEN|secrets\.|wrangler deploy|wrangler d1|curl\b|\-X POST/);
+  assert.match(content, /"deployed":False/);
+});
