@@ -8,12 +8,14 @@ on:
       - 'package-lock.json'
       - 'package.json'
       - 'requirements.txt'
+      - 'requirements.lock'
       - '.github/workflows/security-audit.yml'
   pull_request:
     paths:
       - 'package-lock.json'
       - 'package.json'
       - 'requirements.txt'
+      - 'requirements.lock'
       - '.github/workflows/security-audit.yml'
 
 permissions:
