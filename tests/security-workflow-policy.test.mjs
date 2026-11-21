@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL("../" + path, import.meta.url), "utf8");
 
@@ -49,16 +49,17 @@ test("Scheduled collectors do not persist checkout credentials", () => {
   }
 });
 
-test("Outlook bootstrap must never deploy on a commit-message trigger", () => {
-  const path = new URL("../.github/workflows/outlook-bootstrap-deploy.yml", import.meta.url);
-  // The workflow exists on the PR target branch but has not yet been imported
-  // into this isolated branch. Enforce the rule when both lines converge.
-  if (!existsSync(path)) return;
+test("Outlook bootstrap is manual, revision-bound and environment-gated", () => {
   const content = read(".github/workflows/outlook-bootstrap-deploy.yml");
+  assert.match(content, /workflow_dispatch:/);
+  assert.match(content, /reviewed_commit_sha:/);
+  assert.match(content, /change_reference:/);
+  assert.match(content, /github\.event_name == 'workflow_dispatch'/);
+  assert.doesNotMatch(content, /^  push:/m);
   assert.doesNotMatch(content, /github\.event\.head_commit\.message/);
-  if (/wrangler deploy --config/.test(content)) {
-    assert.match(content, /workflow_dispatch:/);
-    assert.doesNotMatch(content, /^  push:/m);
-    assert.match(content, /environment:/);
-  }
+  assert.match(content, /name: edge-outlook-bootstrap/);
+  assert.match(content, /git rev-parse HEAD/);
+  assert.match(content, /persist-credentials: false/);
+  assert.match(content, /wrangler deploy --dry-run/);
+  assert.match(content, /wrangler deploy --config/);
 });
