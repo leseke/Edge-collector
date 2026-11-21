@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL("../" + path, import.meta.url), "utf8");
 
@@ -46,5 +46,19 @@ test("Scheduled collectors do not persist checkout credentials", () => {
     assert.match(workflow.slice(marker), /GH_PUSH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
     assert.match(workflow.slice(marker), /GIT_ASKPASS/);
     assert.match(workflow.slice(marker), /git push origin/);
+  }
+});
+
+test("Outlook bootstrap must never deploy on a commit-message trigger", () => {
+  const path = new URL("../.github/workflows/outlook-bootstrap-deploy.yml", import.meta.url);
+  // The workflow exists on the PR target branch but has not yet been imported
+  // into this isolated branch. Enforce the rule when both lines converge.
+  if (!existsSync(path)) return;
+  const content = read(".github/workflows/outlook-bootstrap-deploy.yml");
+  assert.doesNotMatch(content, /github\.event\.head_commit\.message/);
+  if (/wrangler deploy --config/.test(content)) {
+    assert.match(content, /workflow_dispatch:/);
+    assert.doesNotMatch(content, /^  push:/m);
+    assert.match(content, /environment:/);
   }
 });
