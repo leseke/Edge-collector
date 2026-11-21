@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt
+      - run: pip install --require-hashes -r requirements.lock
       - run: python -u diagnose_scavio.py
         env:
           SCAVIO_API_KEY: ${{ secrets.SCAVIO_API_KEY }}

@@ -1,0 +1,93 @@
+name: EDGE isolated dependency lock generation
+
+on:
+  push:
+    branches:
+      - edge/security-hardening-001
+    paths:
+      - '.github/workflows/dependency-lock.yml'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-security-lock-generation
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Resolve npm dependencies without lifecycle scripts
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm audit fix --package-lock-only --ignore-scripts --no-fund --audit-level=critical
+      - name: Verify generated lockfile
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs');
+          const manifest=JSON.parse(fs.readFileSync('package.json'));
+          const lock=JSON.parse(fs.readFileSync('package-lock.json'));
+          if(lock.lockfileVersion!==3 || lock.name!==manifest.name ||
+             JSON.stringify(Object.entries(lock.packages[''].dependencies || {}).sort())!==JSON.stringify(Object.entries(manifest.dependencies || {}).sort()) ||
+             JSON.stringify(Object.entries(lock.packages[''].devDependencies || {}).sort())!==JSON.stringify(Object.entries(manifest.devDependencies || {}).sort()))
+            throw new Error('lockfile_manifest_mismatch');
+          console.log('Generated reproducible npm dependency manifest');
+          JS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: edge-npm-lock
+          path: package-lock.json
+          if-no-files-found: error
+          retention-days: 7
+
+  commit-isolated-lock:
+    needs: resolve
+    if: github.event_name == 'push' && github.repository == 'leseke/Edge-collector' && github.ref == 'refs/heads/edge/security-hardening-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: edge/security-hardening-001
+          persist-credentials: true
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: edge-npm-lock
+          path: .
+      - name: Validate lockfile before committing
+        run: |
+          node - <<'JS'
+          const fs=require('node:fs');
+          const m=JSON.parse(fs.readFileSync('package.json'));
+          const l=JSON.parse(fs.readFileSync('package-lock.json'));
+          if(l.lockfileVersion!==3 || l.name!==m.name ||
+             JSON.stringify(Object.entries(l.packages[''].dependencies || {}).sort())!==JSON.stringify(Object.entries(m.dependencies || {}).sort()) ||
+             JSON.stringify(Object.entries(l.packages[''].devDependencies || {}).sort())!==JSON.stringify(Object.entries(m.devDependencies || {}).sort()))
+            throw new Error('lockfile_not_matching_manifest');
+          JS
+      - name: Write lockfile only to isolated development branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- package-lock.json
+          if git diff --cached --quiet; then
+            echo "Dependency lockfile unchanged."
+          else
+            git commit -m "chore(security): commit isolated reproducible npm lockfile"
+            git push origin HEAD:refs/heads/edge/security-hardening-001
+          fi

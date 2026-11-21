@@ -1,0 +1,70 @@
+name: EDGE deployment review package (no deployment)
+
+# This workflow produces an offline promotion dossier only. It cannot deploy.
+# A separately approved deployment workflow is required for any remote change.
+on:
+  workflow_dispatch:
+    inputs:
+      expected_commit_sha:
+        description: 'Reviewed full 40-character Git commit SHA'
+        required: true
+        type: string
+      change_reference:
+        description: 'Review or change ticket identifier, no credentials'
+        required: true
+        type: string
+      target:
+        description: 'Planned promotion target'
+        required: true
+        default: preview
+        type: choice
+        options: [preview, production]
+
+permissions:
+  contents: read
+
+jobs:
+  offline-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout requested reviewed revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require matching reviewed commit and safe metadata
+        env:
+          EXPECTED_COMMIT: ${{ inputs.expected_commit_sha }}
+          CHANGE_REFERENCE: ${{ inputs.change_reference }}
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Expected a full commit SHA"; exit 1; }
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_COMMIT" ]] || { echo "::error::Commit differs from reviewed revision"; exit 1; }
+          [[ "$CHANGE_REFERENCE" =~ ^[A-Za-z0-9._/-]{3,96}$ ]] || { echo "::error::Invalid change reference"; exit 1; }
+          [[ "$TARGET" == preview || "$TARGET" == production ]] || exit 1
+          python3 - <<'PY'
+          import json,os,pathlib
+          meta={"schema":"edge.deployment.review.v1","status":"REVIEW_ONLY",
+            "approved":False,"deployed":False,"cloudflare_mutations":False,
+            "commit":os.environ["EXPECTED_COMMIT"],
+            "target":os.environ["TARGET"],
+            "change_reference":os.environ["CHANGE_REFERENCE"],
+            "required_gates":[
+              "approved pull request and verified CI",
+              "effective main branch protection",
+              "GitHub protected environment with required reviewers",
+              "least privilege, scoped Cloudflare credentials",
+              "documented database migration and rollback plan",
+              "explicit separate deployment authorization"
+            ]}
+          pathlib.Path("deployment-review.json").write_text(json.dumps(meta,indent=2)+"\n")
+          print("Produced an offline review dossier. No deployment or cloud access.")
+          PY
+      - name: Upload review dossier only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: edge-deployment-review
+          path: deployment-review.json
+          retention-days: 14
+          if-no-files-found: error

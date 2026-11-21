@@ -5,6 +5,7 @@ __pycache__/
 config.private.json
 private/
 *.lock
+!requirements.lock
 .open-next/
 .wrangler/
 .dev.vars

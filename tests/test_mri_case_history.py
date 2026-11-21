@@ -96,9 +96,13 @@ class MriCaseTests(unittest.TestCase):
         self.assertEqual(m.build([c],source_context(market,AT),[market],{},AT,primary)['cases'],[])
 
     def test_capacity_preserves_total_source_limit(self):
-        self.assertEqual(research_capacity(8),8)
-        self.assertEqual(research_capacity(10),6)
-        self.assertEqual(research_capacity(16),0)
-        with self.assertRaises(ValueError):research_capacity(17)
+        from collection_policy import MAX_RESEARCH_TARGETS, MAX_TOTAL_TARGETS
+        self.assertEqual(MAX_RESEARCH_TARGETS, 8)
+        self.assertEqual(research_capacity(8), 8)
+        self.assertEqual(research_capacity(10), 8)
+        self.assertEqual(research_capacity(16), 4)
+        self.assertEqual(research_capacity(MAX_TOTAL_TARGETS), 0)
+        with self.assertRaises(ValueError):
+            research_capacity(MAX_TOTAL_TARGETS + 1)
 
 if __name__=='__main__':unittest.main()

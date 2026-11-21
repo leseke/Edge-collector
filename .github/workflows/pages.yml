@@ -1,20 +1,16 @@
 name: EDGE Pages publication
+# Publication is explicitly requested after review. Push cannot deploy.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'mri/**'
-      - 'radar.json'
-      - 'portfolio.json'
-      - '**.css'
-      - '**.js'
-      - 'assets/**'
-      - 'images/**'
-      - '_config.yml'
-      - '.github/workflows/pages.yml'
-      - 'tests/test_edge_live.mjs'
+    inputs:
+      reviewed_commit_sha:
+        description: 'Reviewed full 40-character commit SHA on main'
+        required: true
+        type: string
+      change_reference:
+        description: 'Approved change reference (no credentials)'
+        required: true
+        type: string
 permissions:
   contents: read
 concurrency:
@@ -22,17 +18,30 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
+    if: github.repository == 'leseke/Edge-collector' && github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
       pages: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Require reviewed main revision before preparing publication
+        env:
+          EXPECTED_SHA: ${{ inputs.reviewed_commit_sha }}
+          CHANGE_REFERENCE: ${{ inputs.change_reference }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Expected full commit SHA"; exit 1; }
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "::error::Not the approved commit"; exit 1; }
+          [[ "$CHANGE_REFERENCE" =~ ^[A-Za-z0-9._/-]{3,96}$ ]] || { echo "::error::Invalid change reference"; exit 1; }
+          echo "Publication review metadata matches the checkout. Environment approval is administered separately."
       - name: Test verified capture loading and unknown states
         run: node --test tests/test_edge_live.mjs
       - name: Read Pages configuration
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Record the source revision before the container build
         env:
           PUBLISHED_SOURCE_SHA: ${{ github.sha }}
@@ -105,11 +114,12 @@ jobs:
           print('Public HTML/JSON entry points verified.')
           PY
       - name: Upload public site artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:
           path: ./_site
   deploy:
     needs: build
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -122,4 +132,4 @@ jobs:
     steps:
       - name: Publish the verified artifact
         id: publication
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
