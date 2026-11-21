@@ -70,8 +70,8 @@ jobs:
           python-version: '3.12'
       - name: Install advisory scanner only
         run: python -m pip install pip-audit
-      - name: Check unpinned requirements (read-only)
-        run: pip-audit --requirement requirements.txt --progress-spinner off
+      - name: Check reproducible hashed requirements (read-only)
+        run: pip-audit --requirement requirements.lock --progress-spinner off
 
   secret-history:
     name: Check Git history for leaked credentials
