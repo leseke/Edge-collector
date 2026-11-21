@@ -101,3 +101,8 @@ html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
   .radar-zoom-dialog[open] { animation: radar-zoom-in .18s ease-out; }
   @keyframes radar-zoom-in { from { opacity: 0; transform: scale(.94); } }
 }
+
+/* Automatic Leboncoin monitoring: no manual listing submission. */
+.radar-data-pending{margin:18px 0;padding:20px 22px;border:1px solid #34425c;border-radius:12px;background:linear-gradient(130deg,#141d2c,#101722);color:#c8d4e8}
+.radar-data-pending strong{display:block;margin-bottom:8px;color:#f0d7ab;font-size:14px}
+.radar-data-pending p{max-width:780px;margin:0;color:#a3b2c9;font-size:12px;line-height:1.8}

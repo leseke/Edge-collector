@@ -1,0 +1,113 @@
+name: EDGE Outlook - operator-authorized bootstrap
+
+# The new workflow is deliberately branch-only; workflow_dispatch is not
+# available from GitHub UI until a workflow exists on the default branch.
+# A deliberately named operator commit is the only deployment trigger.
+on:
+  push:
+    branches:
+      - edge/outlook-leboncoin-ingestion-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: outlook-bootstrap-singleton
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    if: >-
+      github.repository == 'leseke/Edge-collector' &&
+      github.ref == 'refs/heads/edge/outlook-leboncoin-ingestion-001' &&
+      github.actor == 'leseke' &&
+      github.event_name == 'push' &&
+      github.event.head_commit.message == 'chore(outlook): authorize isolated bootstrap deployment'
+    environment:
+      name: edge-outlook-bootstrap
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout the exact authorized branch commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install locked dependencies without install scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check isolated bootstrap configuration before reading credentials
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          cfg=json.loads(Path("cloud/collector/wrangler.outlook.jsonc").read_text())
+          switches={
+              "OUTLOOK_ROUTES_ENABLED","OUTLOOK_CONSENT_ENABLED",
+              "OUTLOOK_DIAGNOSTICS_ENABLED","OUTLOOK_OFFERS_ENABLED",
+              "OUTLOOK_INGEST_ENABLED","OUTLOOK_MANUAL_SYNC_ENABLED",
+              "OUTLOOK_SCHEDULE_ENABLED"
+          }
+          assert cfg["name"]=="edge-outlook-collector"
+          assert cfg["main"]=="src/outlook-worker.ts"
+          assert cfg["workers_dev"] is True
+          assert cfg["preview_urls"] is False
+          assert set(cfg["vars"])==switches
+          assert all(value=="false" for value in cfg["vars"].values())
+          for key in ("triggers","d1_databases","routes","assets","unsafe","secrets"):
+              assert key not in cfg,key
+          source=Path("cloud/collector/src/outlook-worker.ts").read_text()
+          assert "handleOutlookWorkerRoute" in source
+          assert "scheduled(" not in source
+          print("Outlook-only default-off configuration verified")
+          PY
+      - name: Run isolated offline tests
+        run: node --experimental-strip-types --test cloud/collector/test/outlook-worker-isolation.test.mjs
+      - name: Bundle Wrangler only - no Cloudflare network or deploy
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx wrangler deploy --dry-run --config cloud/collector/wrangler.outlook.jsonc
+      - name: Check Cloudflare operator authorization and avoid replacing existing script
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "${CLOUDFLARE_ACCOUNT_ID:-}" =~ ^[0-9a-f]{32}$ ]]; then
+            echo "::error::Missing valid Outlook-only Cloudflare account ID in the approved GitHub environment"
+            exit 1
+          fi
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::Missing Outlook-only Cloudflare API token in the approved GitHub environment"
+            exit 1
+          fi
+          status=$(curl --silent --show-error --max-time 20 --output /dev/null --write-out '%{http_code}' \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/edge-outlook-collector")
+          case "${status}" in
+            404) echo "No existing Outlook script: first bootstrap allowed" ;;
+            200) echo "::error::Outlook Worker already exists; refuse replacement without explicit review"; exit 1 ;;
+            *) echo "::error::Cloudflare script existence preflight failed (HTTP ${status})"; exit 1 ;;
+          esac
+      - name: Publish isolated default-disabled Worker only
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx wrangler deploy --config cloud/collector/wrangler.outlook.jsonc
+      - name: Assert default-off OAuth endpoint is not usable
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          # Hostname must come from actual Cloudflare deployment, not a guessed URL.
+          # No OAuth/Graph request is initiated here.
+          echo "Bootstrap deployment requested. Verify the new Workers domain in Cloudflare."
+          echo "Outlook OAuth, data access, manual sync and cron remain DISABLED."

@@ -1,0 +1,148 @@
+name: EDGE Outlook D1 - isolated owner-authorized migration
+
+# Branch-only controlled migration. Workflow creation does not execute D1 writes.
+on:
+  push:
+    branches:
+      - edge/outlook-leboncoin-ingestion-001
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-outlook-d1-migrate-once
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: >-
+      github.repository == 'leseke/Edge-collector' &&
+      github.ref == 'refs/heads/edge/outlook-leboncoin-ingestion-001' &&
+      github.actor == 'leseke' &&
+      github.event_name == 'push' &&
+      github.event.head_commit.message == 'chore(outlook): authorize isolated d1 migration'
+    environment:
+      name: edge-outlook-d1-migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout authorized commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install locked tools
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify dedicated target and SQL migrations
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,re
+          config=json.loads(pathlib.Path('cloud/collector/wrangler.outlook.d1.staged.jsonc').read_text())
+          assert config['name']=='edge-outlook-collector'
+          assert config['main']=='src/outlook-worker.ts'
+          assert config['d1_databases']==[{
+            'binding':'DB',
+            'database_name':'edge-outlook-history',
+            'database_id':'e0ca923f-8af2-4182-9df8-c8ef05ce5000'
+          }]
+          assert 'triggers' not in config and 'routes' not in config
+          assert all(value == 'false' for value in config['vars'].values())
+          migrations=pathlib.Path('cloud/collector/migrations')
+          expected=['003_leboncoin_outlook.sql','004_outlook_delta_cursor.sql',
+                    '005_outlook_oauth_secure.sql','006_outlook_run_lease.sql']
+          for name in expected:
+              sql=(migrations/name).read_text()
+              assert sql.strip() and 'CREATE TABLE IF NOT EXISTS' in sql
+              statements='\n'.join(line for line in sql.splitlines() if not line.lstrip().startswith('--'))
+              assert not re.search(r'\b(?:DROP\s+TABLE|ALTER\s+TABLE|DELETE\s+FROM|UPDATE\s+\w+|ATTACH\s+DATABASE|DETACH\s+DATABASE)\b',statements,re.I),name
+          print('Dedicated Outlook D1 target, default-off flags and additive SQL verified')
+          PY
+      - name: Verify scoped D1 account, exact UUID and EMPTY schema
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_D1_MIGRATION_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_D1_MIGRATION_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,urllib.request,urllib.error
+          token=os.getenv('CLOUDFLARE_API_TOKEN','')
+          account=os.getenv('CLOUDFLARE_ACCOUNT_ID','')
+          database='e0ca923f-8af2-4182-9df8-c8ef05ce5000'
+          if not token or not re.fullmatch('[0-9a-f]{32}',account):
+              raise SystemExit('Missing dedicated D1 environment credential or account ID')
+          if account!='701b40ddbcb6c7b6f6ff9180e27f6648':
+              raise SystemExit('Unexpected Cloudflare account ID')
+          url=f'https://api.cloudflare.com/client/v4/accounts/{account}/d1/database/{database}'
+          def call(path,body=None):
+              req=urllib.request.Request(url+path,data=None if body is None else json.dumps(body).encode(),
+                headers={'Authorization':'Bearer '+token,'Accept':'application/json','Content-Type':'application/json'},
+                method='GET' if body is None else 'POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as response:
+                      obj=json.load(response)
+              except Exception:
+                  raise SystemExit('Cloudflare D1 preflight request failed') from None
+              if obj.get('success') is not True:
+                  raise SystemExit('Cloudflare D1 preflight API rejected request')
+              return obj['result']
+          meta=call('')
+          if not isinstance(meta,dict) or meta.get('name')!='edge-outlook-history' or meta.get('uuid')!=database:
+              raise SystemExit('Target D1 name or UUID mismatch')
+          if meta.get('jurisdiction') not in (None,'eu'):
+              raise SystemExit('Unexpected D1 jurisdiction')
+          response=call('/query',{'sql':"SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"})
+          if not isinstance(response,list) or len(response)!=1:
+              raise SystemExit('Unexpected D1 read-only schema response')
+          rows=response[0].get('results')
+          if not isinstance(rows,list) or rows:
+              raise SystemExit('D1 not empty: automatic migration refused; manual review required')
+          print('Verified exact Outlook D1 database and empty remote schema')
+          PY
+      - name: Apply Outlook migrations ONLY to new D1
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_D1_MIGRATION_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_D1_MIGRATION_CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          set -euo pipefail
+          for migration in 003_leboncoin_outlook.sql 004_outlook_delta_cursor.sql 005_outlook_oauth_secure.sql 006_outlook_run_lease.sql; do
+            npx --no-install wrangler d1 execute edge-outlook-history --remote --yes \
+              --config cloud/collector/wrangler.outlook.d1.staged.jsonc \
+              --file "cloud/collector/migrations/$migration"
+          done
+      - name: Check six Outlook tables and immutable-history triggers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_D1_MIGRATION_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_D1_MIGRATION_CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          python3 - <<'PY'
+          import json,os,urllib.request
+          token=os.environ['CLOUDFLARE_API_TOKEN']
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          db='e0ca923f-8af2-4182-9df8-c8ef05ce5000'
+          sql="SELECT type,name FROM sqlite_master WHERE type IN ('table','trigger') AND name LIKE 'lbc_%'"
+          req=urllib.request.Request(
+              f'https://api.cloudflare.com/client/v4/accounts/{account}/d1/database/{db}/query',
+              data=json.dumps({'sql':sql}).encode(),
+              headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+              method='POST')
+          try:
+              with urllib.request.urlopen(req,timeout=20) as resp: data=json.load(resp)
+          except Exception:
+              raise SystemExit('D1 verification request failed') from None
+          if data.get('success') is not True: raise SystemExit('D1 verification rejected')
+          try: items={(r['type'],r['name']) for r in data['result'][0]['results']}
+          except (KeyError,IndexError,TypeError): raise SystemExit('Unexpected D1 schema response')
+          tables={'lbc_alert_messages','lbc_listing_observations','lbc_graph_delta_cursor',
+                  'lbc_oauth_pending','lbc_oauth_credentials','lbc_sync_lease'}
+          triggers={'lbc_alert_messages_no_update','lbc_alert_messages_no_delete',
+                    'lbc_listing_observations_no_update','lbc_listing_observations_no_delete'}
+          if not all(('table',x) in items for x in tables) or not all(('trigger',x) in items for x in triggers):
+              raise SystemExit('Incomplete Outlook D1 migration; stop before Worker binding')
+          print('All six Outlook tables and four immutability triggers verified remotely')
+          PY
+          echo "Outlook D1 migration complete; NO Worker deployment or mailbox activation performed." >> "$GITHUB_STEP_SUMMARY"
