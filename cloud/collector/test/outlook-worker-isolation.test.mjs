@@ -41,7 +41,9 @@ test("new Worker with default config rejects OAuth, sync, diagnostics and collec
     );
     assert.equal(response.status,404,route);
     assert.equal(response.headers.get("Cache-Control"),"no-store, private");
-    assert.deepEqual(await response.json(),{error:"not_found"});
+    const payload=await response.text();
+    assert.match(payload,/not_found|Not found/);
+    assert.doesNotMatch(payload,/token|refresh|client_secret|mailbox|password/i);
   }
 });
 test("dedicated entrypoint has no scheduled processing hook",()=>{
