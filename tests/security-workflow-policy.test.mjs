@@ -29,3 +29,22 @@ test("Deployment review remains offline and cannot load cloud credentials", () =
   assert.doesNotMatch(content, /CLOUDFLARE_API_TOKEN|secrets\.|wrangler deploy|wrangler d1|curl\b|\-X POST/);
   assert.match(content, /"deployed":False/);
 });
+
+test("Scheduled collectors do not persist checkout credentials", () => {
+  for (const [filename, publishStep] of [
+    ["commercial-history.yml", "Append evidence to isolated data branch"],
+    ["tcgdex-research.yml", "Append verified snapshot to isolated history branch"],
+  ]) {
+    const workflow = read(".github/workflows/" + filename);
+    assert.match(workflow, /permissions:\n  contents: read/);
+    assert.match(workflow, /jobs:\n  collect:\n    permissions:\n      contents: write/);
+    assert.match(workflow, /persist-credentials: false/);
+    assert.doesNotMatch(workflow, /persist-credentials: true/);
+    const marker = workflow.indexOf("- name: " + publishStep);
+    assert.ok(marker > 0, filename + ": missing publish step");
+    assert.doesNotMatch(workflow.slice(0, marker), /GH_PUSH_TOKEN|secrets\.GITHUB_TOKEN/);
+    assert.match(workflow.slice(marker), /GH_PUSH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/);
+    assert.match(workflow.slice(marker), /GIT_ASKPASS/);
+    assert.match(workflow.slice(marker), /git push origin/);
+  }
+});
