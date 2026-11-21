@@ -30,7 +30,9 @@ jobs:
         with:
           node-version: '24'
       - name: Resolve npm dependencies without lifecycle scripts
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm audit fix --package-lock-only --ignore-scripts --no-fund --audit-level=critical
       - name: Verify generated lockfile
         run: |
           node - <<'JS'
