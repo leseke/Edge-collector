@@ -1,13 +1,19 @@
 name: EDGE Outlook - operator-authorized bootstrap
 
-# The new workflow is deliberately branch-only; workflow_dispatch is not
-# available from GitHub UI until a workflow exists on the default branch.
-# A deliberately named operator commit is the only deployment trigger.
+# Remote deployment is manual only. This workflow cannot run on push.
+# GitHub's Run workflow control may require a copy on the default branch;
+# this change does not publish or deploy the workflow.
 on:
-  push:
-    branches:
-      - edge/outlook-leboncoin-ingestion-001
   workflow_dispatch:
+    inputs:
+      reviewed_commit_sha:
+        description: 'Exact reviewed 40-character Git commit SHA'
+        type: string
+        required: true
+      change_reference:
+        description: 'Reviewed change ticket (no credentials)'
+        type: string
+        required: true
 
 permissions:
   contents: read
@@ -22,20 +28,29 @@ jobs:
       github.repository == 'leseke/Edge-collector' &&
       github.ref == 'refs/heads/edge/outlook-leboncoin-ingestion-001' &&
       github.actor == 'leseke' &&
-      github.event_name == 'push' &&
-      github.event.head_commit.message == 'chore(outlook): authorize isolated bootstrap deployment'
+      github.event_name == 'workflow_dispatch'
     environment:
       name: edge-outlook-bootstrap
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout the exact authorized branch commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
+      - name: Verify manually approved revision before reading credentials
+        env:
+          EXPECTED_SHA: ${{ inputs.reviewed_commit_sha }}
+          CHANGE_REFERENCE: ${{ inputs.change_reference }}
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Expected full commit SHA"; exit 1; }
+          [[ "$(git rev-parse HEAD)" == "$EXPECTED_SHA" ]] || { echo "::error::Reviewed SHA differs from checked-out commit"; exit 1; }
+          [[ "$CHANGE_REFERENCE" =~ ^[A-Za-z0-9._/-]{3,96}$ ]] || { echo "::error::Invalid change reference"; exit 1; }
+          echo "Reviewed revision and ticket match; protected environment approval must be configured separately."
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
       - name: Install locked dependencies without install scripts
