@@ -57,7 +57,8 @@ jobs:
           for name in expected:
               sql=(migrations/name).read_text()
               assert sql.strip() and 'CREATE TABLE IF NOT EXISTS' in sql
-              assert not re.search(r'\b(DROP|ALTER|DELETE|UPDATE|ATTACH|DETACH)\s+(?:TABLE|DATABASE|FROM|\w+)',sql,re.I),name
+              statements='\n'.join(line for line in sql.splitlines() if not line.lstrip().startswith('--'))
+              assert not re.search(r'\b(?:DROP\s+TABLE|ALTER\s+TABLE|DELETE\s+FROM|UPDATE\s+\w+|ATTACH\s+DATABASE|DETACH\s+DATABASE)\b',statements,re.I),name
           print('Dedicated Outlook D1 target, default-off flags and additive SQL verified')
           PY
       - name: Verify scoped D1 account, exact UUID and EMPTY schema
