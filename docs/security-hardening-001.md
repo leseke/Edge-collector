@@ -34,3 +34,11 @@ Revert the security commits on the isolated branch. Do not revert protections or
 - Generated lockfile resolves Wrangler/types consistently; npm audit fix --package-lock-only without --force eliminated the four high advisories observed in the original lockfile, but still reports 3 moderate advisories in OpenNext/glob/minimatch pending further triage. Do not force a potentially breaking dependency upgrade.
 - CI on the resulting lockfile and latest branch commit must be evaluated separately. Python requirements are still unpinned and require a subsequent reproducibility change.
 - Earlier targeted GitHub Actions Gitleaks and pip-audit jobs completed successfully; this is not proof of absence of all historical secrets or supply-chain vulnerabilities.
+
+## Credential isolation and deployment review — 2026-11-21
+
+- Removed `dsh-real-d1-readonly` and `verify-cloudflare-access` jobs from the general Cloudflare build workflow: neither PR code nor an ordinary development-branch push can acquire a Cloudflare token through this workflow.
+- The general Cloudflare build now has no `secrets.*` references; CI policy tests enforce this constraint.
+- Added `.github/workflows/deployment-review.yml`, a manual review-dossier workflow with read-only repository permissions, SHA matching, metadata validation, and zero Cloudflare secrets or deployment commands. It **cannot deploy**. Manual workflows must first be available on the default GitHub branch before GitHub exposes the Run workflow control.
+- Existing deployed infrastructure, account-side Cloudflare Access policy, and other branches remain unchanged. A separate protected-environment deployment procedure must be reviewed and authorized explicitly; this preparation does not grant deployment access.
+- The repository administration step is still pending: `main` remained unprotected at the last metadata check. See `docs/github-protection-proposal.md`.
