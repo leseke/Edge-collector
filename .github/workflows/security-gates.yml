@@ -1,0 +1,27 @@
+name: EDGE security workflow policy
+on:
+  push:
+    branches:
+      - edge/security-hardening-001
+    paths:
+      - '.github/workflows/**'
+      - 'tests/security-workflow-policy.test.mjs'
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'tests/security-workflow-policy.test.mjs'
+permissions:
+  contents: read
+jobs:
+  workflow-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify Cloudflare workflow is non-mutating
+        run: node --test tests/security-workflow-policy.test.mjs
