@@ -10,6 +10,7 @@ test("Cloudflare build cannot deploy, migrate or provision remotely", () => {
   assert.match(content, /npm run cf:build/);
   assert.doesNotMatch(content, /wrangler deploy(?!\s+--dry-run)|wrangler secret put|d1 execute[^\n]*--remote|provision-d1:|Publish the authorized isolated preview/);
   assert.doesNotMatch(content, /github\.event\.head_commit\.message\s*==/);
+  assert.doesNotMatch(content, /CLOUDFLARE_API_TOKEN|secrets\.|dsh-real-d1-readonly:|verify-cloudflare-access:/);
 });
 
 test("D1 provisioning cannot be activated by a push", () => {
