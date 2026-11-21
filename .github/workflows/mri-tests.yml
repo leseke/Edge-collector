@@ -11,6 +11,7 @@ on:
       - "intelligence/**"
       - "tests/**"
       - "requirements.txt"
+      - "requirements.lock"
       - ".github/workflows/mri-tests.yml"
   pull_request:
     paths:
@@ -20,6 +21,7 @@ on:
       - "intelligence/**"
       - "tests/**"
       - "requirements.txt"
+      - "requirements.lock"
       - ".github/workflows/mri-tests.yml"
 
 permissions:
