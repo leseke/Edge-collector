@@ -53,6 +53,10 @@ jobs:
           npx wrangler d1 execute edge-tcg-history-ci --local --config wrangler.ci.json --command "SELECT run_id,product_id,price_cents,price_kind FROM observations WHERE run_id='ci-run';"
       - name: Real Wrangler local D1 Outlook schema and lease smoke test (no remote access)
         run: bash cloud/collector/test/wrangler-outlook-d1-smoke.sh
+      - name: Dry-run isolated Outlook Worker bundle (never deploy)
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: npx wrangler deploy --dry-run --config cloud/collector/wrangler.outlook.jsonc
       - name: Typecheck isolated Cloudflare collector
         run: npx tsc --project cloud/collector/tsconfig.json
       - name: Type check
