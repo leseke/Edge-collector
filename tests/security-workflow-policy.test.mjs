@@ -63,3 +63,18 @@ test("Outlook bootstrap is manual, revision-bound and environment-gated", () => 
   assert.match(content, /wrangler deploy --dry-run/);
   assert.match(content, /wrangler deploy --config/);
 });
+
+test("GitHub Pages publication requires a reviewed manual SHA", () => {
+  const content = read(".github/workflows/pages.yml");
+  assert.match(content, /workflow_dispatch:/);
+  assert.doesNotMatch(content, /^  push:|^  pull_request:/m);
+  assert.match(content, /reviewed_commit_sha:/);
+  assert.match(content, /change_reference:/);
+  assert.match(content, /github\.ref == 'refs\/heads\/main'/);
+  assert.match(content, /github\.event_name == 'workflow_dispatch'/);
+  assert.match(content, /git rev-parse HEAD/);
+  assert.match(content, /persist-credentials: false/);
+  assert.match(content, /environment:\n      name: github-pages/);
+  assert.match(content, /actions\/deploy-pages@[a-f0-9]{40}/);
+  assert.doesNotMatch(content, /head_commit\.message|secrets\./);
+});
