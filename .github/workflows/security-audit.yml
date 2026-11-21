@@ -45,6 +45,12 @@ jobs:
           const report=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
           const n=report.metadata?.vulnerabilities||{};
           console.log('npm vulnerabilities by severity:',JSON.stringify(n));
+          for(const [name,v] of Object.entries(report.vulnerabilities||{})){
+            const causes=Array.isArray(v.via)?v.via.map(x=>typeof x==='string'?x:x.name).filter(Boolean):[];
+            console.log('advisory:',JSON.stringify({package:name,severity:v.severity,
+              direct:v.isDirect,causes:[...new Set(causes)],range:v.range,
+              fixAvailable:!!v.fixAvailable}));
+          }
           if(Number(process.argv[3])!==0) process.exitCode=1;
           JS
 
