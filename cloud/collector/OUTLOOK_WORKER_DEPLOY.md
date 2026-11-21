@@ -108,3 +108,66 @@ npx wrangler deploy --dry-run --config cloud/collector/wrangler.outlook.jsonc
 
 The CI tests run without accessing Cloudflare, Microsoft, or a real D1.
 A successful build or dry run is **not proof of deployment**.
+
+## Branch-only GitHub Actions deployment — prepared, not triggered (V37)
+
+The alternative controlled workflow is
+[`.github/workflows/outlook-bootstrap-deploy.yml`](../../.github/workflows/outlook-bootstrap-deploy.yml).
+
+The Cloudflare Git UI did not show an assured production branch. **Exit that
+wizard without pressing Deploy**; its use is not required for this route.
+
+This workflow runs a deployment job ONLY on an authorized `push` to
+`edge/outlook-leboncoin-ingestion-001` by GitHub actor `leseke` and ONLY
+when the last commit message is exactly:
+
+```text
+chore(outlook): authorize isolated bootstrap deployment
+```
+
+All other commits skip the job, including this workflow's creation. This is
+a deliberate commit-based approval mechanism, not a scheduled deployment.
+
+### One-time setup by the GitHub/Cloudflare account owner
+
+1. On the repository, open **Settings → Environments** and create
+   `edge-outlook-bootstrap`. Restrict deployment branches to the exact
+   `edge/outlook-leboncoin-ingestion-001` branch. Configure required reviewers
+   when available and suitable; a reviewer different from the initiator may
+   be required if self-review is disabled. Do not assume this protection
+   exists until you verify it in GitHub.
+2. In this environment **only**, configure secret
+   `OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN`: a dedicated, minimally scoped
+   Cloudflare API token that is allowed to create/edit Workers scripts in
+   the intended account. Do NOT reuse a general personal API key or paste
+   a token in chat, source, issue, PR, or workflow variable.
+3. Configure environment variable
+   `OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID` to the verified account
+   identifier (32 lowercase hex digits). This is not the tenant ID from
+   Microsoft. We never guess its value.
+4. Review the current branch commit and the dedicated config before any
+   deployment. Make an explicit operator-authored commit on this branch
+   with the EXACT message above when you decide to bootstrap. One safe
+   option is editing an innocuous documentation line via GitHub's web
+   editor and setting the commit message manually. **Do not create this
+   approval commit until the environment and token are verified.**
+
+The workflow then performs an exact-SHA checkout, `npm ci`, validates the
+Outlook-only config, runs offline isolation tests, and executes a real
+Wrangler dry-run. It requires the environment-scoped token and checks whether
+the new Worker script already exists. It **fails closed** on a missing
+token/account ID, API error, invalid config, different source branch or actor,
+or an existing `edge-outlook-collector` script. Only a first-time isolated
+Worker deployment is permitted. It never changes existing TCG Worker,
+D1 schemas, or Microsoft app settings.
+
+Even after this bootstrap, OAuth routes are disabled. The Cloudflare
+`workers.dev` URL must be read from the actual deployment and Cloudflare
+Access must be configured and validated before Microsoft authorization.
+
+**GitHub limitation:** a newly added `workflow_dispatch` button normally
+requires the workflow file on the repository's default branch (`main`).
+We deliberately do NOT modify `main`; use the controlled commit trigger
+instead, or obtain a separately reviewed deployment path later. This
+workflow cannot be activated solely by manually selecting a branch in the
+GitHub Actions UI at the current stage.
