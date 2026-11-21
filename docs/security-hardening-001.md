@@ -42,3 +42,10 @@ Revert the security commits on the isolated branch. Do not revert protections or
 - Added `.github/workflows/deployment-review.yml`, a manual review-dossier workflow with read-only repository permissions, SHA matching, metadata validation, and zero Cloudflare secrets or deployment commands. It **cannot deploy**. Manual workflows must first be available on the default GitHub branch before GitHub exposes the Run workflow control.
 - Existing deployed infrastructure, account-side Cloudflare Access policy, and other branches remain unchanged. A separate protected-environment deployment procedure must be reviewed and authorized explicitly; this preparation does not grant deployment access.
 - The repository administration step is still pending: `main` remained unprotected at the last metadata check. See `docs/github-protection-proposal.md`.
+
+## GitHub Pages publication gate — 2026-11-21
+
+- The repository Pages workflow previously deployed automatically on selected pushes to `main`. In this isolated security PR only, changed to a **manual `workflow_dispatch`** that requires an exact reviewed main-branch SHA and a safe change reference.
+- Checkout uses `persist-credentials: false`; the site remains built and validated before any publication job runs. All four Pages-related GitHub Actions are pinned to verified, immutable commit SHAs.
+- The deploy job still references GitHub's `github-pages` environment. An administrator must confirm it has independent required reviewers, restrictions and no bypass before any deployment. The manual trigger and SHA check do not independently guarantee a second person's approval.
+- **Current `main` still contains its existing Pages workflow**: no change takes effect on the default branch until separately approved integration. No deployment has been performed as part of this change. The scheduled independent market collection workflows are unaffected.
