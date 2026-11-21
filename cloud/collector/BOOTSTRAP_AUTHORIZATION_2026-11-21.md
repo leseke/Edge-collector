@@ -7,3 +7,7 @@ Scope: initial default-disabled Worker script only. Do not modify `main`, `edge-
 Deployment workflow must reject unexpected branch, actor, missing environment credentials, existing Worker script, config mismatches, or failed offline tests. If any gate fails, stop without retrying automatically.
 
 This note contains no secrets or account identifiers.
+
+## Controlled retry after dependency repair
+
+The prior bootstrap stopped at `npm ci` because the root lockfile was missing. The branch now includes a checked-in package-lock.json and aligned package.json. Re-run the same guarded bootstrap; if any guard, test or build fails, stop without repeated deployment attempts.
