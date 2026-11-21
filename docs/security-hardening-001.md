@@ -27,3 +27,10 @@ These changes affect this development branch only. Existing workflows and deploy
 
 ## Rollback
 Revert the security commits on the isolated branch. Do not revert protections or re-enable deployment on main without separate review.
+
+## Dependency remediation — 2026-11-21
+- GitHub Actions generated package-lock.json with npm v11 / Node 24; install steps use npm ci on primary Next.js and Cloudflare builds.
+- Wrangler changed 4.148.0 -> 4.165.0; @cloudflare/workers-types changed 5.20261115.1 -> 5.20261118.1 to satisfy Wrangler peer requirements.
+- Generated lockfile resolves Wrangler/types consistently; npm audit fix --package-lock-only without --force eliminated the four high advisories observed in the original lockfile, but still reports 3 moderate advisories in OpenNext/glob/minimatch pending further triage. Do not force a potentially breaking dependency upgrade.
+- CI on the resulting lockfile and latest branch commit must be evaluated separately. Python requirements are still unpinned and require a subsequent reproducibility change.
+- Earlier targeted GitHub Actions Gitleaks and pip-audit jobs completed successfully; this is not proof of absence of all historical secrets or supply-chain vulnerabilities.
