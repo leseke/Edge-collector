@@ -38,8 +38,8 @@ jobs:
           const manifest=JSON.parse(fs.readFileSync('package.json'));
           const lock=JSON.parse(fs.readFileSync('package-lock.json'));
           if(lock.lockfileVersion!==3 || lock.name!==manifest.name ||
-             JSON.stringify(lock.packages[''].dependencies)!==JSON.stringify(manifest.dependencies) ||
-             JSON.stringify(lock.packages[''].devDependencies)!==JSON.stringify(manifest.devDependencies))
+             JSON.stringify(Object.entries(lock.packages[''].dependencies || {}).sort())!==JSON.stringify(Object.entries(manifest.dependencies || {}).sort()) ||
+             JSON.stringify(Object.entries(lock.packages[''].devDependencies || {}).sort())!==JSON.stringify(Object.entries(manifest.devDependencies || {}).sort()))
             throw new Error('lockfile_manifest_mismatch');
           console.log('Generated reproducible npm dependency manifest');
           JS
@@ -73,8 +73,8 @@ jobs:
           const m=JSON.parse(fs.readFileSync('package.json'));
           const l=JSON.parse(fs.readFileSync('package-lock.json'));
           if(l.lockfileVersion!==3 || l.name!==m.name ||
-             JSON.stringify(l.packages[''].dependencies)!==JSON.stringify(m.dependencies) ||
-             JSON.stringify(l.packages[''].devDependencies)!==JSON.stringify(m.devDependencies))
+             JSON.stringify(Object.entries(l.packages[''].dependencies || {}).sort())!==JSON.stringify(Object.entries(m.dependencies || {}).sort()) ||
+             JSON.stringify(Object.entries(l.packages[''].devDependencies || {}).sort())!==JSON.stringify(Object.entries(m.devDependencies || {}).sort()))
             throw new Error('lockfile_not_matching_manifest');
           JS
       - name: Write lockfile only to isolated development branch
