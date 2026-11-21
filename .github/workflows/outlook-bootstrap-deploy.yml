@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - edge/outlook-leboncoin-ingestion-001
-    paths-ignore: []
   workflow_dispatch:
 
 permissions:
