@@ -44,6 +44,39 @@ Any activation must be a **new**, separately reviewed, single-purpose workflow w
 5. Verify encrypted credential storage, mailbox identity, no duplicate state consumption, and revocation/refresh behavior.
 6. Only after successful consent, separately approve one small real-message test with sender allowlist and deduplication; schedule a recurring collection as the final step.
 
+## Encryption-key provisioning (not activated)
+
+Implementation checked: `cloud/collector/src/leboncoin-oauth-store.mjs` and
+`cloud/collector/src/leboncoin-delta-store.mjs` each require a **64-character
+hexadecimal string** (32 cryptographically random bytes) imported into WebCrypto
+AES-256-GCM. Do not use ordinary passwords, hand-typed hex digits, UUIDs,
+Microsoft client secrets, or the same key for both purposes.
+
+The owner must generate two independent values with an OS cryptographic random
+generator or reputable password manager that supports 32 random bytes as hex.
+Store a recovery copy of each secret in a trusted encrypted password manager:
+if encrypted records are written and the key is irretrievably lost, those
+records cannot be decrypted. Never paste key values into issues, pull requests,
+workflow outputs, logs, chat, screenshots, or `wrangler.jsonc`.
+
+Add to Cloudflare production Worker `edge-outlook-collector` > Settings >
+Variables and Secrets as **Secret** bindings:
+
+- `OUTLOOK_ENCRYPTION_KEY` — 32 random bytes, encoded as 64 hex characters.
+- `OUTLOOK_DELTA_ENCRYPTION_KEY` — a separately generated 32-byte value.
+
+Before creating a secret, check its name is not already present.
+**Do not overwrite an existing key** without a deliberate migration and
+re-encryption procedure. Do not delete or overwrite `OUTLOOK_CLIENT_SECRET`.
+Changing a Worker secret can create/deploy a new Worker version, so confirm
+the D1 binding, Cloudflare Access protection and seven disabled flags remain
+unchanged after every secret update.
+
+Do not generate encryption keys in this repository or GitHub Actions as part
+of routine deployments: neither an accidental rotation nor an inaccessible
+recovery key is acceptable. The secure provisioning itself is an operator
+action and requires an independent verification of existence (name/type only).
+
 ## Production safety
 
 Do not modify `main`, the existing TCG worker/database, or the public application. Do not ask the operator to paste a client secret, access token, refresh token, PKCE verifier or one-time password in chat.
