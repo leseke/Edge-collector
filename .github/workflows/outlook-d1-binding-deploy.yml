@@ -59,9 +59,14 @@ jobs:
               'OUTLOOK_DIAGNOSTICS_ENABLED','OUTLOOK_OFFERS_ENABLED',
               'OUTLOOK_INGEST_ENABLED','OUTLOOK_MANUAL_SYNC_ENABLED',
               'OUTLOOK_SCHEDULE_ENABLED'}
-          assert set(stage['vars'])==flags|{'OUTLOOK_CLIENT_ID'}
+          nonsecret={'OUTLOOK_CLIENT_ID','CF_ACCESS_TEAM_DOMAIN',
+                     'OUTLOOK_REDIRECT_URI','OUTLOOK_TENANT'}
+          assert set(stage['vars'])==flags|nonsecret
           assert all(stage['vars'][flag]=='false' for flag in flags)
           assert stage['vars']['OUTLOOK_CLIENT_ID']=='833d8c27-5b85-4ce8-9fcd-b964341c632a'
+          assert stage['vars']['CF_ACCESS_TEAM_DOMAIN']=='https://royal-frog-df5c.cloudflareaccess.com'
+          assert stage['vars']['OUTLOOK_REDIRECT_URI']=='https://edge-outlook-collector.ylan-seke.workers.dev/auth/microsoft/callback'
+          assert stage['vars']['OUTLOOK_TENANT']=='consumers'
           for key in ('triggers','routes','unsafe','secrets','assets','services','kv_namespaces','r2_buckets'):
               assert key not in stage,key
           source=pathlib.Path('cloud/collector/src/outlook-worker.ts').read_text()
