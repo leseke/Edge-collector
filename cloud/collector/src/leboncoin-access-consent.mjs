@@ -2,12 +2,14 @@
 // Cloudflare Access must gate traffic AND its signed application JWT is
 // independently validated before EDGE owner-specific Microsoft consent.
 import { verifyCloudflareAccessSession } from "./leboncoin-access-session.mjs";
+import { resolveCloudflareAccessAudience } from "./leboncoin-access-audience.mjs";
 import { createD1OAuthStores } from "./leboncoin-oauth-store.mjs";
 import { createOutlookConsentHandler } from "./leboncoin-consent-http.mjs";
 
 export function createAccessProtectedOutlookConsent({env,fetchImpl=fetch}) {
+  const audience=resolveCloudflareAccessAudience(env);
   if (!env?.DB || !env?.OUTLOOK_ENCRYPTION_KEY || !env?.CF_ACCESS_TEAM_DOMAIN ||
-      !env?.CF_ACCESS_APP_AUD || !env?.OUTLOOK_CLIENT_ID ||
+      !audience || !env?.OUTLOOK_CLIENT_ID ||
       !env?.OUTLOOK_CLIENT_SECRET || !env?.OUTLOOK_REDIRECT_URI ||
       !env?.CF_ACCESS_ALLOWED_SUBJECTS)
     throw new Error("missing_outlook_consent_config");
@@ -27,7 +29,7 @@ export function createAccessProtectedOutlookConsent({env,fetchImpl=fetch}) {
     fetchImpl,
     verifySession:request=>verifyCloudflareAccessSession(request,{
       teamUrl:env.CF_ACCESS_TEAM_DOMAIN,
-      audience:env.CF_ACCESS_APP_AUD,allowedSubjects,fetchImpl
+      audience,allowedSubjects,fetchImpl
     }),
     getStores:session=>createD1OAuthStores({
       db:env.DB,mailboxKey:session.ownerKey,encryptionKey:env.OUTLOOK_ENCRYPTION_KEY
