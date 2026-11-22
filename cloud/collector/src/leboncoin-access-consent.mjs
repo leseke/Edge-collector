@@ -11,6 +11,12 @@ export function createAccessProtectedOutlookConsent({env,fetchImpl=fetch}) {
       !env?.OUTLOOK_CLIENT_SECRET || !env?.OUTLOOK_REDIRECT_URI ||
       !env?.CF_ACCESS_ALLOWED_SUBJECTS)
     throw new Error("missing_outlook_consent_config");
+  // A misconfigured OAuth redirect must never send authorization codes to
+  // another Worker, a preview host, or the public EDGE application.
+  // This check is independent of the Entra registration and fails closed.
+  const expectedRedirect="https://edge-outlook-collector.ylan-seke.workers.dev/auth/microsoft/callback";
+  if(env.OUTLOOK_REDIRECT_URI!==expectedRedirect)
+    throw new Error("invalid_outlook_redirect_uri");
   const allowedSubjects=env.CF_ACCESS_ALLOWED_SUBJECTS.split(",").map(s=>s.trim()).filter(Boolean);
   if(allowedSubjects.length!==1)throw new Error("operator_allowlist_required");
   return createOutlookConsentHandler({
