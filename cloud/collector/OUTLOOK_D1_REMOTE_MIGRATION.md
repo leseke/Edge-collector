@@ -52,3 +52,7 @@ The remote preflight rejected migration because the D1 schema was not empty. One
 ## Operator-authorized retry after reserved-table inventory — 2026-11-22
 
 Read-only remote inventory confirmed only the Cloudflare-reserved `_cf_KV` table. The corrected preflight allows that one reserved table but refuses all other pre-existing tables. Operator requested one controlled retry of the migrations 003–006 on `edge-outlook-history` only. If any step fails, stop: do not automatically re-run, reset the database, deploy the Worker, or enable mailbox ingestion.
+
+## Owner-authorized isolated D1 binding deployment — 2026-11-22
+
+Remote migration #10 reported six Outlook tables and four immutability triggers verified. Operator authorizes ONE guarded attempt to update the existing `edge-outlook-collector` with the sole `DB` binding to `edge-outlook-history`; all Outlook flags remain false. The new workflow verifies Worker existence and Access shielding before deployment, runs offline checks, then verifies D1 binding and shielding after deployment. Do not enable OAuth, mailbox reads, cron, TCG or main changes. On failure do not rerun automatically.
