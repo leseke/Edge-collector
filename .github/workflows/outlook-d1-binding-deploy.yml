@@ -59,8 +59,9 @@ jobs:
               'OUTLOOK_DIAGNOSTICS_ENABLED','OUTLOOK_OFFERS_ENABLED',
               'OUTLOOK_INGEST_ENABLED','OUTLOOK_MANUAL_SYNC_ENABLED',
               'OUTLOOK_SCHEDULE_ENABLED'}
-          assert set(stage['vars'])==flags
-          assert all(v=='false' for v in stage['vars'].values())
+          assert set(stage['vars'])==flags|{'OUTLOOK_CLIENT_ID'}
+          assert all(stage['vars'][flag]=='false' for flag in flags)
+          assert stage['vars']['OUTLOOK_CLIENT_ID']=='833d8c27-5b85-4ce8-9fcd-b964341c632a'
           for key in ('triggers','routes','unsafe','secrets','assets','services','kv_namespaces','r2_buckets'):
               assert key not in stage,key
           source=pathlib.Path('cloud/collector/src/outlook-worker.ts').read_text()
