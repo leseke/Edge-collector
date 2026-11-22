@@ -36,3 +36,7 @@ A preflight does not rule out a concurrent external database change between chec
 Verify the six tables again in the Cloudflare D1 console and keep automatic Outlook ingestion disabled. **Only in a separate, reviewed step** deploy the D1 binding with `cloud/collector/wrangler.outlook.d1.staged.jsonc`. Do not use the original bootstrap workflow; it is intentionally first-deploy-only and rejects an existing Worker.
 
 Do not configure Microsoft secrets or activate OAuth/Graph until Cloudflare Access JWT issuer/audience and trusted owner identity have been independently validated.
+
+## Operator-authorized execution — 2026-11-22
+
+The operator confirmed the dedicated `edge-outlook-d1-migration` GitHub environment, branch restriction, secret and account variable. This commit authorizes one guarded migration attempt on the isolated D1 target. Stop on any failed step; do not rerun failed/partially applied migrations automatically. No Worker deployment or Microsoft mailbox activation authorized.
