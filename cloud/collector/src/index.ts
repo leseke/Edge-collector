@@ -1,11 +1,30 @@
 import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
 import { collectPublicGccLots } from "./gcc-public";
+import {handleOutlookWorkerRoute} from "./leboncoin-worker-http.mjs";
+import {runScheduledOutlookCollection} from "./leboncoin-scheduled.mjs";
 // EDGE Cloud Collector — isolated Worker, not wired into the deployed Next.js app.
 // Explicit deployment and cron enablement are required after D1 provisioning.
 interface Env {
   DB: D1Database;
   TRIGGER_SECRET?: string;
+  OUTLOOK_ROUTES_ENABLED?: string;
+  OUTLOOK_DIAGNOSTICS_ENABLED?: string;
+  OUTLOOK_OFFERS_ENABLED?: string;
+  OUTLOOK_CONSENT_ENABLED?: string;
+  OUTLOOK_INGEST_ENABLED?: string;
+  OUTLOOK_ALLOWED_SENDER_DOMAINS?: string;
+  OUTLOOK_SCHEDULE_ENABLED?: string;
+  OUTLOOK_MANUAL_SYNC_ENABLED?: string;
+  OUTLOOK_DELTA_ENCRYPTION_KEY?: string;
+  OUTLOOK_CLIENT_ID?: string;
+  OUTLOOK_CLIENT_SECRET?: string;
+  OUTLOOK_REDIRECT_URI?: string;
+  OUTLOOK_TENANT?: string;
+  OUTLOOK_ENCRYPTION_KEY?: string;
+  CF_ACCESS_TEAM_DOMAIN?: string;
+  CF_ACCESS_APP_AUD?: string;
+  CF_ACCESS_ALLOWED_SUBJECTS?: string;
 }
 type Target = { productId: string; url: string };
 const TARGETS: readonly Target[] = [
@@ -66,6 +85,10 @@ export async function collect(env: Env): Promise<void> {
 }
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    // Standalone development-only routes stay invisible unless both operator
+    // opt-in flags are set; Access JWT is verified by the route adapter.
+    const consentResponse = await handleOutlookWorkerRoute({request,env});
+    if(consentResponse)return consentResponse;
     const url = new URL(request.url);
     if (request.method === "POST" && url.pathname === "/internal/collect") {
       const supplied = request.headers.get("Authorization")?.replace(/^Bearer /, "") ?? "";
@@ -80,6 +103,15 @@ export default {
     return Response.json({ service: "edge-tcg-collector", mode: "NO_PUBLIC_DATA", status: "CONFIGURATION_REQUIRED" }, { status: 503 });
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime)]));
+    ctx.waitUntil(Promise.all([
+      collect(env),
+      collectPublicGccLots(env, event.scheduledTime),
+      // No Outlook I/O without explicit deployment-side scheduling opt-in.
+      runScheduledOutlookCollection({env,scheduledTime:event.scheduledTime})
+        .then(result=>{
+          if(result.status!=="DISABLED")
+            console.log("outlook_scheduled_status",{status:result.status});
+        }).catch(()=>console.error("outlook_scheduled_failed"))
+    ]));
   },
 };

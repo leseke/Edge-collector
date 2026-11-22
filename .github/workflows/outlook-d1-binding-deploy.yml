@@ -1,0 +1,170 @@
+name: EDGE Outlook - owner-authorized D1 binding deployment
+
+# Branch-only, commit-authorized upgrade of the EXISTING Outlook Worker.
+# No D1 migration, TCG deployment, secrets management, or OAuth activation.
+on:
+  push:
+    branches:
+      - edge/outlook-leboncoin-ingestion-001
+
+permissions:
+  contents: read
+
+concurrency:
+  group: edge-outlook-worker-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-binding:
+    if: >-
+      github.repository == 'leseke/Edge-collector' &&
+      github.ref == 'refs/heads/edge/outlook-leboncoin-ingestion-001' &&
+      github.actor == 'leseke' &&
+      github.event_name == 'push' &&
+      github.event.head_commit.message == 'chore(outlook): authorize isolated d1 binding deployment'
+    environment:
+      name: edge-outlook-bootstrap
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact authorized commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify exact Outlook-only D1 binding, default-off options and source
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          base=json.loads(pathlib.Path('cloud/collector/wrangler.outlook.jsonc').read_text())
+          stage=json.loads(pathlib.Path('cloud/collector/wrangler.outlook.d1.staged.jsonc').read_text())
+          required={
+              'binding':'DB','database_name':'edge-outlook-history',
+              'database_id':'e0ca923f-8af2-4182-9df8-c8ef05ce5000'
+          }
+          assert stage.get('d1_databases')==[required]
+          assert 'd1_databases' not in base
+          assert set(stage)==set(base)|{'d1_databases'}
+          for key in base: assert stage[key]==base[key],key
+          assert stage['name']=='edge-outlook-collector'
+          assert stage['main']=='src/outlook-worker.ts'
+          assert stage['workers_dev'] is True and stage['preview_urls'] is False
+          flags={'OUTLOOK_ROUTES_ENABLED','OUTLOOK_CONSENT_ENABLED',
+              'OUTLOOK_DIAGNOSTICS_ENABLED','OUTLOOK_OFFERS_ENABLED',
+              'OUTLOOK_INGEST_ENABLED','OUTLOOK_MANUAL_SYNC_ENABLED',
+              'OUTLOOK_SCHEDULE_ENABLED'}
+          nonsecret={'OUTLOOK_CLIENT_ID','CF_ACCESS_TEAM_DOMAIN',
+                     'OUTLOOK_REDIRECT_URI','OUTLOOK_TENANT'}
+          assert set(stage['vars'])==flags|nonsecret
+          assert all(stage['vars'][flag]=='false' for flag in flags)
+          assert stage['vars']['OUTLOOK_CLIENT_ID']=='833d8c27-5b85-4ce8-9fcd-b964341c632a'
+          assert stage['vars']['CF_ACCESS_TEAM_DOMAIN']=='https://royal-frog-df5c.cloudflareaccess.com'
+          assert stage['vars']['OUTLOOK_REDIRECT_URI']=='https://edge-outlook-collector.ylan-seke.workers.dev/auth/microsoft/callback'
+          assert stage['vars']['OUTLOOK_TENANT']=='consumers'
+          for key in ('triggers','routes','unsafe','secrets','assets','services','kv_namespaces','r2_buckets'):
+              assert key not in stage,key
+          source=pathlib.Path('cloud/collector/src/outlook-worker.ts').read_text()
+          assert 'handleOutlookWorkerRoute' in source and 'scheduled(' not in source
+          print('Exact Outlook Worker + one D1 binding; all Outlook activity disabled')
+          PY
+      - name: Run isolation tests
+        run: node --experimental-strip-types --test cloud/collector/test/outlook-worker-isolation.test.mjs
+      - name: Wrangler dry-run bundle without Cloudflare publish
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx --no-install wrangler deploy --dry-run --config cloud/collector/wrangler.outlook.d1.staged.jsonc
+      - name: Verify existing Worker and Cloudflare Access shield BEFORE change
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          if [[ "${CLOUDFLARE_ACCOUNT_ID:-}" != '701b40ddbcb6c7b6f6ff9180e27f6648' ]]; then
+            echo "::error::Cloudflare account mismatch"; exit 1
+          fi
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "::error::Missing dedicated Worker-script token"; exit 1
+          fi
+          response=$(curl --silent --show-error --max-time 20 --output "$RUNNER_TEMP/existing-worker.json" --write-out '%{http_code}' \
+             -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+             "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/edge-outlook-collector")
+          if [[ "$response" != '200' ]]; then
+            echo "::error::Exact Outlook Worker existence could not be confirmed (HTTP $response)"; exit 1
+          fi
+          python3 - <<'PY'
+          import urllib.request,urllib.error
+          url='https://edge-outlook-collector.ylan-seke.workers.dev/'
+          req=urllib.request.Request(url,headers={'User-Agent':'EDGE-Outlook-Access-Preflight/1.0'})
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args,**kwargs): return None
+          try:
+              with urllib.request.build_opener(NoRedirect).open(req,timeout=20) as r:
+                  code=r.status; location=r.headers.get('Location','')
+          except urllib.error.HTTPError as e:
+              code=e.code; location=e.headers.get('Location','')
+          except Exception:
+              raise SystemExit('Access gate could not be verified; stop') from None
+          if code not in (302,303,307,308,401,403):
+              raise SystemExit('Unprotected or unexpected public response; stop before deployment')
+          if 300 <= code < 400 and '.cloudflareaccess.com' not in location:
+              raise SystemExit('Unexpected redirect destination; stop before deployment')
+          print('Unauthenticated request was blocked/challenged before deployment')
+          PY
+      - name: Publish D1 binding to existing Outlook Worker ONLY
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx --no-install wrangler deploy --config cloud/collector/wrangler.outlook.d1.staged.jsonc
+      - name: Recheck unauthenticated Cloudflare Access protection AFTER publish
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error
+          req=urllib.request.Request('https://edge-outlook-collector.ylan-seke.workers.dev/',
+              headers={'User-Agent':'EDGE-Outlook-PostDeploy-Access-Check/1.0'})
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args,**kwargs): return None
+          try:
+              with urllib.request.build_opener(NoRedirect).open(req,timeout=20) as resp:
+                  code=resp.status; location=resp.headers.get('Location','')
+          except urllib.error.HTTPError as err:
+              code=err.code; location=err.headers.get('Location','')
+          except Exception:
+              raise SystemExit('Unable to confirm Access protection after deployment') from None
+          if code not in (302,303,307,308,401,403):
+              raise SystemExit('Access protection NOT confirmed after deployment')
+          if 300<=code<400 and '.cloudflareaccess.com' not in location:
+              raise SystemExit('Unexpected redirect after deployment')
+          print('Cloudflare Access challenge preserved after deployment')
+          PY
+      - name: Verify D1 binding in deployed Worker settings (no mailbox queries)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json,os,urllib.request
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          token=os.environ['CLOUDFLARE_API_TOKEN']
+          url=f'https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts/edge-outlook-collector/settings'
+          req=urllib.request.Request(url,headers={'Authorization':'Bearer '+token,'Accept':'application/json'})
+          try:
+              with urllib.request.urlopen(req,timeout=20) as resp: data=json.load(resp)
+          except Exception:
+              raise SystemExit('Unable to verify deployed Worker binding') from None
+          if data.get('success') is not True: raise SystemExit('Worker binding verification refused')
+          bindings=(data.get('result') or {}).get('bindings')
+          if not isinstance(bindings,list): raise SystemExit('Missing Worker bindings result')
+          d1=[b for b in bindings if b.get('type')=='d1']
+          if len(d1)!=1 or d1[0].get('name')!='DB' or d1[0].get('id')!='e0ca923f-8af2-4182-9df8-c8ef05ce5000':
+              raise SystemExit('Unexpected deployed D1 binding')
+          print('Deployed isolated Outlook D1 binding verified')
+          PY
+          echo 'Outlook D1 binding deployed. No OAuth, collection, cron, or TCG changes authorized.' >> "$GITHUB_STEP_SUMMARY"

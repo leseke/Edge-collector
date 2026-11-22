@@ -7,13 +7,14 @@ import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { RadarSaleCard } from "./RadarSaleCard";
 import { GccAvailability } from "./GccAvailability";
 import { gccCursor, gccSeries } from "../lib/gcc-active-listings";
+import { verifiedOutlookOffersUrl } from "../lib/outlook-offers-link";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
 
 const radarShortcuts = [
-  { href: "#analyse-annonce", title: "Analyser une annonce", description: "Estimer la marge", icon: "⌕", tone: "gold" },
+  { href: "#analyse-annonce", title: "Surveillance Leboncoin", description: "Alertes Outlook automatisées", icon: "⌕", tone: "gold" },
   { href: "#ventes-payees", title: "Ventes payées", description: "Paiements vérifiés", icon: "✓", tone: "mint" },
   { href: "#gcc-closed", title: "Historique GCC", description: "Ventes par série", icon: "◷", tone: "lilac" },
   { href: "#disponibilite", title: "Offres ouvertes", description: "Enchères et prix fixes", icon: "≡", tone: "blue" },
@@ -29,6 +30,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
+  const offersUrl = verifiedOutlookOffersUrl(process.env.EDGE_OUTLOOK_OFFERS_URL);
   return <div className="native-dashboard radar-dashboard">
     <header className="radar-intro">
       <h1>Radar Pokémon</h1>
@@ -82,7 +84,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
       </details>
     </section>
 
-    <LeboncoinWatchPanel cards={sales.variants} />
+    <LeboncoinWatchPanel offersUrl={offersUrl} />
 
     <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
       <h2 id="radar-trends-title">Tendances du marché</h2>
