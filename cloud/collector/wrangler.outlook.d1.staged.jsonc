@@ -23,6 +23,9 @@
     "OUTLOOK_INGEST_ENABLED": "false",
     "OUTLOOK_MANUAL_SYNC_ENABLED": "false",
     "OUTLOOK_SCHEDULE_ENABLED": "false",
-    "OUTLOOK_CLIENT_ID": "833d8c27-5b85-4ce8-9fcd-b964341c632a"
+    "OUTLOOK_CLIENT_ID": "833d8c27-5b85-4ce8-9fcd-b964341c632a",
+    "CF_ACCESS_TEAM_DOMAIN": "https://royal-frog-df5c.cloudflareaccess.com",
+    "OUTLOOK_REDIRECT_URI": "https://edge-outlook-collector.ylan-seke.workers.dev/auth/microsoft/callback",
+    "OUTLOOK_TENANT": "consumers"
   }
 }
