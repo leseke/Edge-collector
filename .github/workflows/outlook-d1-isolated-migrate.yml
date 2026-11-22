@@ -58,7 +58,13 @@ jobs:
               sql=(migrations/name).read_text()
               assert sql.strip() and 'CREATE TABLE IF NOT EXISTS' in sql
               statements='\n'.join(line for line in sql.splitlines() if not line.lstrip().startswith('--'))
-              assert not re.search(r'\b(?:DROP\s+TABLE|ALTER\s+TABLE|DELETE\s+FROM|UPDATE\s+\w+|ATTACH\s+DATABASE|DETACH\s+DATABASE)\b',statements,re.I),name
+              assert not re.search(r'\b(?:DROP\s+TABLE|ALTER\s+TABLE|DELETE\s+FROM|UPDATE\s+(?!ON\b)\w+|ATTACH\s+DATABASE|DETACH\s+DATABASE)\b',statements,re.I),name
+          # Regression: DDL trigger declarations are permitted, DML denied.
+          forbidden=re.compile(r'\b(?:DROP\s+TABLE|ALTER\s+TABLE|DELETE\s+FROM|UPDATE\s+(?!ON\b)\w+|ATTACH\s+DATABASE|DETACH\s+DATABASE)\b',re.I)
+          assert not forbidden.search("CREATE TRIGGER t BEFORE UPDATE ON lbc_alert_messages BEGIN SELECT RAISE(ABORT,'immutable'); END;")
+          assert forbidden.search("UPDATE lbc_alert_messages SET received_at='changed';")
+          assert forbidden.search("DELETE FROM lbc_alert_messages;")
+          assert forbidden.search("DROP TABLE lbc_alert_messages;")
           print('Dedicated Outlook D1 target, default-off flags and additive SQL verified')
           PY
       - name: Verify scoped D1 account, exact UUID and EMPTY schema
