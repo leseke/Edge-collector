@@ -40,3 +40,7 @@ Do not configure Microsoft secrets or activate OAuth/Graph until Cloudflare Acce
 ## Operator-authorized execution — 2026-11-22
 
 The operator confirmed the dedicated `edge-outlook-d1-migration` GitHub environment, branch restriction, secret and account variable. This commit authorizes one guarded migration attempt on the isolated D1 target. Stop on any failed step; do not rerun failed/partially applied migrations automatically. No Worker deployment or Microsoft mailbox activation authorized.
+
+## Controlled retry after corrected SQL preflight — 2026-11-22
+
+Operator requested a single retry following the false-positive rejection of an immutable `BEFORE UPDATE ON` trigger. The previous run failed at static SQL verification, before any remote Cloudflare request. The migration remains conditioned on exact Cloudflare account, database UUID, empty schema and subsequent verification. Do not automatically rerun if any step fails; investigate before further authorization.
