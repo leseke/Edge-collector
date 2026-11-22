@@ -1,0 +1,43 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "AVAILABILITY_CHANGE",
+      "observation_id": "ldlc_discovered_42705",
+      "product_id": "lego_42705",
+      "seller": "LDLC",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "BACKORDER",
+      "window_start": "2026-11-22T15:26:27.792429+00:00",
+      "window_end": "2026-11-22T21:52:24.300007+00:00",
+      "previous_snapshot_at": "2026-11-22T15:26:15.703402+00:00",
+      "source_url": "https://www.ldlc.com/fiche/PB00743956.html",
+      "evidence_sha256": "20649bddfeeca2cbc78f8728eeca7255c7bc98dbc94ffb361fbbbbdb87648c14",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "8e757d823add0ac1f180366df530954e115483dd73cfef564dbff9fd810a5ccb",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "fb0585a5e4be098a2d72264c75d0c71664d09cc66ba48309f2d17ab49bba45d0"
+    },
+    {
+      "kind": "PRICE_CHANGE",
+      "observation_id": "ldlc_discovered_11380",
+      "product_id": "lego_11380",
+      "seller": "LDLC",
+      "field": "price",
+      "before": "112.94",
+      "after": "107.95",
+      "window_start": "2026-11-12T03:52:09.731166+00:00",
+      "window_end": "2026-11-22T21:52:40.830065+00:00",
+      "previous_snapshot_at": "2026-11-12T03:51:43.993988+00:00",
+      "source_url": "https://www.ldlc.com/fiche/PB00743955.html",
+      "evidence_sha256": "41635ac356d3b5c3a29cc59202951f823d024ddca07b2a0190063d715e463838",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "fc107ada538503e2b104b8cad1fd01519a1ff9e8f92bbc608994254f08886747",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "edef4b9dac244f3221d9e49e5850f51db7867d710a83d4c513cb8c4da35e0a51"
+    }
+  ]
+}
