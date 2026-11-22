@@ -2,6 +2,7 @@
 // No D1 SQL, Graph, Azure or Cloudflare management requests. Missing external
 // verification is explicitly UNKNOWN, not inferred from environment variables.
 import {verifyCloudflareAccessSession} from "./leboncoin-access-session.mjs";
+import {resolveCloudflareAccessAudience} from "./leboncoin-access-audience.mjs";
 import {checkOutlookActivationReadiness} from "./leboncoin-activation-check.mjs";
 const privateJson=(body,status)=>new Response(JSON.stringify(body),{
   status,headers:{"Content-Type":"application/json; charset=utf-8",
@@ -24,12 +25,13 @@ export async function handleOutlookReadiness({
   if(expected.protocol!=="https:" || url.origin!==expected.origin)return hidden();
   const subjects=typeof env.CF_ACCESS_ALLOWED_SUBJECTS==="string"
     ?env.CF_ACCESS_ALLOWED_SUBJECTS.split(",").map(x=>x.trim()).filter(Boolean):[];
-  if(subjects.length!==1 || !env.CF_ACCESS_TEAM_DOMAIN || !env.CF_ACCESS_APP_AUD)
+  const audience=resolveCloudflareAccessAudience(env);
+  if(subjects.length!==1 || !env.CF_ACCESS_TEAM_DOMAIN || !audience)
     return hidden();
   try{
     const identity=await verifySession(request,{
       teamUrl:env.CF_ACCESS_TEAM_DOMAIN,
-      audience:env.CF_ACCESS_APP_AUD,
+      audience,
       allowedSubjects:subjects,fetchImpl
     });
     if(identity?.authenticated!==true || !/^[0-9a-f]{64}$/i.test(identity.ownerKey||""))
