@@ -77,6 +77,40 @@ of routine deployments: neither an accidental rotation nor an inaccessible
 recovery key is acceptable. The secure provisioning itself is an operator
 action and requires an independent verification of existence (name/type only).
 
+## Cloudflare Access AUD naming and first-owner identity bootstrap
+
+The operator configured `CF_ACCESS_AUD` through the Cloudflare UI.
+The runtime previously required `CF_ACCESS_APP_AUD`. Both names are now
+supported through `resolveCloudflareAccessAudience()`, but two different
+values deliberately fail closed. Do **not** copy an incomplete/truncated AUD
+from screenshots into Wrangler or logs. Never configure an invented value.
+
+The Cloudflare Access team domain is now staged in Wrangler as the exact
+HTTPS URL `https://royal-frog-df5c.cloudflareaccess.com` — the JWT verifier
+requires this URL form, not the bare hostname. The redirect URI and Microsoft
+consumer authority are likewise staged, while all seven enable flags remain
+`false`. Review these nonsecret values against the Cloudflare and Entra
+dashboards before any redeploy. Since dashboard changes may create a new
+Worker version, review live bindings and secret presence independently.
+
+### First-owner `sub` discovery is not yet implemented or deployed
+
+The existing `/internal/outlook/readiness` endpoint is intentionally
+allowlist-protected and cannot discover an unknown initial `sub`: it
+requires `CF_ACCESS_ALLOWED_SUBJECTS` first. Never claim it can bootstrap
+the first subject or bypass this guard.
+
+A separately authorized bootstrap may verify a **real** Cloudflare Access
+JWT's RS256 signature, `iss`, `aud`, timestamps and `type=app`
+against the pinned issuer JWKS; only then retrieve the opaque `sub` over
+the authenticated owner's Access-protected browser session. It must have an
+independent, default-off, one-time activation gate and no Microsoft OAuth,
+mailbox or D1 writes. It must never return full JWTs, cookies, raw provider
+tokens or keys, and must be disabled immediately after setting the exact
+`CF_ACCESS_ALLOWED_SUBJECTS` Worker **Secret**. This bootstrap is **not**
+part of the current release and must be reviewed/tested independently
+before deploying.
+
 ## Production safety
 
 Do not modify `main`, the existing TCG worker/database, or the public application. Do not ask the operator to paste a client secret, access token, refresh token, PKCE verifier or one-time password in chat.
