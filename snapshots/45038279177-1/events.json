@@ -1,0 +1,43 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "AVAILABILITY_CHANGE",
+      "observation_id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "seller": "JoueClub",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "window_start": "2026-11-22T06:59:22.964221+00:00",
+      "window_end": "2026-11-22T15:26:18.446318+00:00",
+      "previous_snapshot_at": "2026-11-22T06:59:20.378846+00:00",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "evidence_sha256": "b6786608a1d03e750db93a714041df442bae9641eea534e94ade2dd6b18784c2",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "8eff7ae0fc1846b1a470f4b519a6934b51c95dabef30ca785c111c6defea27de",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "fe56b2ec8d96901e6b2078ae4c5fbe48d42e0a9cba98f50be61576d31775269f"
+    },
+    {
+      "kind": "PRICE_CHANGE",
+      "observation_id": "brickshop_11388",
+      "product_id": "lego_11388",
+      "seller": "BRICKshop",
+      "field": "price",
+      "before": "599.99",
+      "after": "539.99",
+      "window_start": "2026-11-22T06:59:30.760517+00:00",
+      "window_end": "2026-11-22T15:26:26.694514+00:00",
+      "previous_snapshot_at": "2026-11-22T06:59:20.378846+00:00",
+      "source_url": "https://www.brickshop.eu/lego/lego-icons/lego-11388-venetian-neighbourhood.html",
+      "evidence_sha256": "b49a2c5af988f7a33e050282402a22f7f7f056a75295466087f9f6e500b762b5",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "54e688e82cee34ea3a5c037be33707c7c85f510b0723b6f4957b29568783d787",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "313c588687ac4a1b1d8783184d2fac3165e58e752d3ce7dfc38fa277beb2e58c"
+    }
+  ]
+}
