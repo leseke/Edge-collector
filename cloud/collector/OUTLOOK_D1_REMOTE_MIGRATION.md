@@ -48,3 +48,7 @@ Operator requested a single retry following the false-positive rejection of an i
 ## Read-only table inventory authorization — 2026-11-22
 
 The remote preflight rejected migration because the D1 schema was not empty. One read-only diagnostic run is authorized to list table names only from the exact Outlook D1 database. It must not run SQL migrations, modify workers, or read mailbox content. Any migration retry is forbidden pending inventory review.
+
+## Operator-authorized retry after reserved-table inventory — 2026-11-22
+
+Read-only remote inventory confirmed only the Cloudflare-reserved `_cf_KV` table. The corrected preflight allows that one reserved table but refuses all other pre-existing tables. Operator requested one controlled retry of the migrations 003–006 on `edge-outlook-history` only. If any step fails, stop: do not automatically re-run, reset the database, deploy the Worker, or enable mailbox ingestion.
