@@ -1,3 +1,4 @@
+import {resolveCloudflareAccessAudience} from "./leboncoin-access-audience.mjs";
 // Readiness diagnostics: return boolean configuration states, never secret values.
 // Offline-safe: no Microsoft, Cloudflare, D1, or mailbox request.
 const required=[
@@ -23,7 +24,9 @@ const validate=(key,val)=>{
 };
 export function checkOutlookActivationReadiness(env={}) {
   // Never echo the content of environment variables.
-  const configuration=Object.fromEntries(required.map(k=>[k,validate(k,env[k])]));
+  const configuration=Object.fromEntries(required.map(k=>[
+    k,k==="CF_ACCESS_APP_AUD" ? Boolean(resolveCloudflareAccessAudience(env)) : validate(k,env[k])
+  ]));
   const missing=required.filter(k=>!configuration[k]);
   const d1=Boolean(env.DB && typeof env.DB.prepare==="function" && typeof env.DB.batch==="function");
   const consentEnabled=env.OUTLOOK_CONSENT_ENABLED==="true";
