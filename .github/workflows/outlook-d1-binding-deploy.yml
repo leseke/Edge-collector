@@ -117,6 +117,27 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_BOOTSTRAP_CLOUDFLARE_ACCOUNT_ID }}
           WRANGLER_SEND_METRICS: 'false'
         run: npx --no-install wrangler deploy --config cloud/collector/wrangler.outlook.d1.staged.jsonc
+      - name: Recheck unauthenticated Cloudflare Access protection AFTER publish
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error
+          req=urllib.request.Request('https://edge-outlook-collector.ylan-seke.workers.dev/',
+              headers={'User-Agent':'EDGE-Outlook-PostDeploy-Access-Check/1.0'})
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,*args,**kwargs): return None
+          try:
+              with urllib.request.build_opener(NoRedirect).open(req,timeout=20) as resp:
+                  code=resp.status; location=resp.headers.get('Location','')
+          except urllib.error.HTTPError as err:
+              code=err.code; location=err.headers.get('Location','')
+          except Exception:
+              raise SystemExit('Unable to confirm Access protection after deployment') from None
+          if code not in (302,303,307,308,401,403):
+              raise SystemExit('Access protection NOT confirmed after deployment')
+          if 300<=code<400 and '.cloudflareaccess.com' not in location:
+              raise SystemExit('Unexpected redirect after deployment')
+          print('Cloudflare Access challenge preserved after deployment')
+          PY
       - name: Verify D1 binding in deployed Worker settings (no mailbox queries)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_BOOTSTRAP_CLOUDFLARE_API_TOKEN }}
