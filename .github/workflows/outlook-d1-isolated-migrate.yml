@@ -99,13 +99,27 @@ jobs:
               raise SystemExit('Target D1 name or UUID mismatch')
           if meta.get('jurisdiction') not in (None,'eu'):
               raise SystemExit('Unexpected D1 jurisdiction')
+          # Cloudflare D1 provisions the reserved _cf_KV table even on a
+          # new empty database. Never inspect, change or delete that table.
+          # Fail closed if ANY other non-SQLite table is present.
           response=call('/query',{'sql':"SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"})
-          if not isinstance(response,list) or len(response)!=1:
+          if not isinstance(response,list) or len(response)!=1 or not isinstance(response[0],dict):
               raise SystemExit('Unexpected D1 read-only schema response')
           rows=response[0].get('results')
-          if not isinstance(rows,list) or rows:
-              raise SystemExit('D1 not empty: automatic migration refused; manual review required')
-          print('Verified exact Outlook D1 database and empty remote schema')
+          if not isinstance(rows,list) or any(
+              not isinstance(row,dict) or not isinstance(row.get('name'),str)
+              for row in rows
+          ):
+              raise SystemExit('Unexpected D1 table inventory')
+          names=[row['name'] for row in rows]
+          unexpected=sorted(name for name in names if name!='_cf_KV')
+          if unexpected:
+              raise SystemExit('D1 contains preexisting user tables: migration refused')
+          # Validate the table-inventory policy against actual and adversarial cases.
+          assert [name for name in ['_cf_KV'] if name!='_cf_KV']==[]
+          assert [name for name in ['_cf_KV','lbc_alert_messages'] if name!='_cf_KV']==['lbc_alert_messages']
+          assert [name for name in ['some_other_table'] if name!='_cf_KV']==['some_other_table']
+          print('Verified exact Outlook D1 database; only reserved _cf_KV table permitted')
           PY
       - name: Apply Outlook migrations ONLY to new D1
         env:
