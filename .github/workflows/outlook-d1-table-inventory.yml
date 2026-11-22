@@ -1,0 +1,71 @@
+name: EDGE Outlook D1 - read-only table inventory
+
+# This is a diagnostic only; it never runs migrations or writes SQL.
+on:
+  push:
+    branches:
+      - edge/outlook-leboncoin-ingestion-001
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    if: >-
+      github.repository == 'leseke/Edge-collector' &&
+      github.ref == 'refs/heads/edge/outlook-leboncoin-ingestion-001' &&
+      github.actor == 'leseke' &&
+      github.event_name == 'push' &&
+      github.event.head_commit.message == 'chore(outlook): authorize read-only d1 inventory'
+    environment:
+      name: edge-outlook-d1-migration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inventory ONLY the verified Outlook D1 database
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.OUTLOOK_D1_MIGRATION_CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.OUTLOOK_D1_MIGRATION_CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python3 - <<'PY'
+          import json,os,re,urllib.request,urllib.error
+          account=os.getenv('CLOUDFLARE_ACCOUNT_ID','')
+          token=os.getenv('CLOUDFLARE_API_TOKEN','')
+          database='e0ca923f-8af2-4182-9df8-c8ef05ce5000'
+          if account!='701b40ddbcb6c7b6f6ff9180e27f6648' or not token:
+              raise SystemExit('Missing or unexpected dedicated Cloudflare credentials')
+          base=f'https://api.cloudflare.com/client/v4/accounts/{account}/d1/database/{database}'
+          def call(path,body=None):
+              req=urllib.request.Request(
+                  base+path,
+                  data=None if body is None else json.dumps(body).encode('utf-8'),
+                  headers={'Authorization':'Bearer '+token,'Accept':'application/json','Content-Type':'application/json'},
+                  method='GET' if body is None else 'POST')
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as response: data=json.load(response)
+              except Exception:
+                  raise SystemExit('Cloudflare D1 read-only inventory request failed') from None
+              if not isinstance(data,dict) or data.get('success') is not True:
+                  raise SystemExit('Cloudflare D1 read-only inventory rejected') 
+              return data.get('result')
+          meta=call('')
+          if not isinstance(meta,dict) or meta.get('uuid')!=database or meta.get('name')!='edge-outlook-history':
+              raise SystemExit('D1 name/UUID mismatch')
+          sql="SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+          blocks=call('/query',{'sql':sql})
+          if not isinstance(blocks,list) or len(blocks)!=1 or not isinstance(blocks[0],dict):
+              raise SystemExit('Unexpected D1 schema response')
+          rows=blocks[0].get('results')
+          if not isinstance(rows,list) or any(not isinstance(x,dict) or not isinstance(x.get('name'),str) for x in rows):
+              raise SystemExit('Unexpected D1 table inventory format')
+          names=[x['name'] for x in rows]
+          print('Verified Outlook-only D1 table count:',len(names))
+          for name in names: print('TABLE:',name)
+          summary=os.getenv('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary,'a') as f:
+                  f.write('## EDGE Outlook D1 read-only inventory\n\n')
+                  f.write(f'Found {len(names)} non-sqlite tables.\n\n')
+                  for name in names: f.write('- `'+name+'`\n')
+                  f.write('\nNo migrations, schema changes or mailbox reads were executed.\n')
+          PY
