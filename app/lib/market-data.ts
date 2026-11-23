@@ -37,6 +37,7 @@ export type TcgCard = {
   low: number | null; average: number | null; trend: number | null; currency: string;
   observedAt: string; sourceUpdatedAt: string | null; source: string;
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
+  snapshotId: string; reportSha256: string; rawSha256: string;
 };
 export type MarketSnapshot = {
   observedAt: string; status: string; cards: TcgCard[];
@@ -96,6 +97,7 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
           sourceUpdatedAt: item.source_updated_at || pricing?.updated || null, source: item.seller,
           availability: item.availability, languageVerified: item.market_language_verified === true,
           priceKind: item.price_kind, image: safeImage(card.image),
+          snapshotId: pointer.snapshot_id, reportSha256: reportEntry.sha256, rawSha256: item.body_sha256!,
         };
       } catch { return null; }
     }));
