@@ -3,6 +3,10 @@
 These fixtures are explicitly synthetic *test inputs*, never market observations.
 """
 import copy
+import json
+import shutil
+import subprocess
+from pathlib import Path
 import unittest
 
 from intelligence.corpus import CorpusRejected, load_corpus_dict
@@ -49,6 +53,20 @@ def sample_export():
 
 
 class TcgCorpusHandoffTests(unittest.TestCase):
+    def test_production_typescript_output(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("Node.js 24 required for TypeScript contract test")
+        major = int(subprocess.check_output([node, "--version"], text=True).strip().lstrip("v").split(".")[0])
+        if major < 24:
+            self.skipTest("Node.js 24 required for TypeScript contract test")
+        root = Path(__file__).resolve().parents[1]
+        output = subprocess.check_output([node, str(root / "tests/tcg_corpus_contract.mjs")], cwd=root, text=True, timeout=20)
+        priced, missing = map(load_corpus_dict, json.loads(output))
+        self.assertEqual(priced.datasets["ds_indicative"]["points"][0]["status"], "estimated")
+        self.assertEqual(priced.datasets["ds_indicative"]["measure"], "other")
+        self.assertEqual(missing.datasets, {})
+
     def test_export_contract_is_accepted_by_real_validator(self):
         corpus = load_corpus_dict(sample_export())
         self.assertEqual(corpus.corpus_id, "tcg_20261120-1234")
