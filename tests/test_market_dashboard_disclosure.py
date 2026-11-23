@@ -47,6 +47,18 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("reportSha256: reportEntry.sha256", source)
         self.assertIn("rawSha256: item.body_sha256!", source)
 
+    def test_corpus_export_does_not_fabricate_sales_or_sources(self):
+        component = (Path(__file__).resolve().parents[1] / "app/components/TcgCorpusDownload.tsx").read_text(encoding="utf-8")
+        self.assertIn('corpus_schema: "edge.corpus.v1"', component)
+        self.assertIn('simulated: false', component)
+        self.assertIn('tier: "unverified"', component)
+        self.assertIn('measure: "other"', component)
+        self.assertIn('status: "estimated"', component)
+        self.assertIn('extracts: []', component)
+        self.assertIn('Aucune preuve de transaction', component)
+        self.assertIn("card.reportSha256", component)
+        self.assertIn("card.rawSha256", component)
+
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
         self.assertIn("completedSales: number | null", source)
