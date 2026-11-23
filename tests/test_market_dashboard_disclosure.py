@@ -17,6 +17,14 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("Zéro ne prouve pas une absence de transactions", component)
         self.assertNotIn("<strong>0</strong><small>Aucune transaction vérifiée", component)
 
+    def test_evidence_dossier_exposes_only_observation_metadata(self):
+        component = (Path(__file__).resolve().parents[1] / "app/components/MarketDashboard.tsx").read_text(encoding="utf-8")
+        self.assertIn('<details className="tcg-evidence-details">', component)
+        self.assertIn("<summary>Consulter le dossier de preuves</summary>", component)
+        self.assertIn("{card.productId}", component)
+        self.assertIn("Aucune preuve de transaction indépendante associée", component)
+        self.assertIn("Absence de preuve ne signifie pas absence de ventes", component)
+
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
         self.assertIn("completedSales: number | null", source)
