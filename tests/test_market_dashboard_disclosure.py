@@ -58,6 +58,8 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn('Aucune preuve de transaction', component)
         self.assertIn("card.reportSha256", component)
         self.assertIn("card.rawSha256", component)
+        self.assertIn("Date de relevé invalide", component)
+        self.assertIn("parsed.getTime() > Date.now()", component)
 
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
