@@ -3,8 +3,10 @@
 import type { TcgCard } from "../lib/market-data";
 
 function makeCorpus(card: TcgCard) {
-  const day = new Date(card.observedAt).toISOString().slice(0, 10);
-  const observed = new Date(card.observedAt).toISOString();
+  const parsed = new Date(card.observedAt);
+  if (Number.isNaN(parsed.getTime()) || parsed.getTime() > Date.now()) throw new Error("Date de relevé invalide");
+  const day = parsed.toISOString().slice(0, 10);
+  const observed = parsed.toISOString();
   const sourceId = "src_capture";
   const hasPrice = card.low !== null && Number.isFinite(card.low) && card.low > 0;
   const datasetId = "ds_indicative";
@@ -48,7 +50,9 @@ function makeCorpus(card: TcgCard) {
 
 export function TcgCorpusDownload({ card }: { card: TcgCard }) {
   function download() {
-    const corpus = makeCorpus(card);
+    let corpus;
+    try { corpus = makeCorpus(card); }
+    catch { window.alert("Export impossible : date de relevé invalide."); return; }
     const blob = new Blob([JSON.stringify(corpus, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
