@@ -33,6 +33,9 @@ function CardTile({ card }: { card: TcgCard }) {
         <summary>Consulter le dossier de preuves</summary>
         <dl>
           <dt>Identifiant du produit</dt><dd>{card.productId}</dd>
+          <dt>Identifiant du relevé</dt><dd>{card.snapshotId}</dd>
+          <dt>SHA-256 du rapport contrôlé</dt><dd><code>{card.reportSha256}</code></dd>
+          <dt>SHA-256 des données brutes contrôlées</dt><dd><code>{card.rawSha256}</code></dd>
           <dt>Source déclarée</dt><dd>{card.source || "Non renseignée"}</dd>
           <dt>Observation</dt><dd>{date(card.observedAt)}</dd>
           <dt>Mise à jour de la source</dt><dd>{card.sourceUpdatedAt ? date(card.sourceUpdatedAt) : "Non disponible"}</dd>
@@ -41,7 +44,7 @@ function CardTile({ card }: { card: TcgCard }) {
           <dt>Langue</dt><dd>{card.languageVerified ? "Déclarée vérifiée" : "Non vérifiée"}</dd>
           <dt>Vente réalisée</dt><dd>Aucune preuve de transaction indépendante associée à cette fiche.</dd>
         </dl>
-        <p>Fiabilité non vérifiée. Ce dossier présente les métadonnées du relevé et non une enquête indépendante. Absence de preuve ne signifie pas absence de ventes.</p>
+        <p>Fiabilité non vérifiée. Les empreintes attestent la concordance avec les fichiers du relevé, pas la véracité commerciale des informations. Ce dossier présente les métadonnées du relevé et non une enquête indépendante. Absence de preuve ne signifie pas absence de ventes.</p>
         <Link className="tcg-investigate-link" href={`/local?product=${encodeURIComponent(card.productId)}&name=${encodeURIComponent(card.name)}`}>Préparer une enquête locale sur cette carte</Link>
         <p>Cette action prépare uniquement la question : aucun corpus ni modèle n’est connecté automatiquement.</p>
       </details>
