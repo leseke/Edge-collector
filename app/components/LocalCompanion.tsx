@@ -139,7 +139,25 @@ export function LocalCompanion() {
     if (!product || !/^pokemon_card_[a-zA-Z0-9_.-]{1,120}$/.test(product)) return;
     const label = name && name.length <= 160 ? name : product;
     setQuestion(`Examiner les preuves disponibles pour ${label} (identifiant ${product}). Distinguer prix affichés, ventes conclues, inconnues et signaux faibles. Ne conclure ni à une causalité ni à une opportunité sans preuves.`);
-    setStatusMessage("Question préparée depuis le tableau de bord. Ajoute un corpus EDGE réel et vérifie le service local avant de lancer l’enquête.");
+    let transferred = false;
+    try {
+      const key = "edge.local.pending-corpus.v1";
+      const raw = window.sessionStorage.getItem(key);
+      window.sessionStorage.removeItem(key);
+      if (raw && new TextEncoder().encode(raw).byteLength <= 5 * 1024 * 1024) {
+        const pending = JSON.parse(raw) as { productId?: string; corpus?: Record<string, unknown> };
+        const corpus = pending.corpus;
+        if (pending.productId === product && corpus?.corpus_schema === "edge.corpus.v1" && corpus.simulated === false &&
+            Array.isArray(corpus.entities) && corpus.entities.includes(label) &&
+            Array.isArray(corpus.sources) && Array.isArray(corpus.datasets)) {
+          setFile(new File([JSON.stringify(corpus)], "edge-corpus-transfere.json", { type: "application/json" }));
+          transferred = true;
+        }
+      }
+    } catch { /* No persistent storage or automatic execution; manual import remains available. */ }
+    setStatusMessage(transferred
+      ? "Corpus préchargé depuis le tableau de bord : vérification finale par le service local obligatoire avant toute enquête."
+      : "Question préparée depuis le tableau de bord. Ajoute un corpus EDGE réel et vérifie le service local avant de lancer l’enquête.");
   }, []);
 
   useEffect(() => {
@@ -292,7 +310,7 @@ export function LocalCompanion() {
           <label htmlFor="local-question">Question TCG</label>
           <textarea id="local-question" value={question} onChange={e => setQuestion(e.target.value)} maxLength={2000} required rows={5} placeholder="Ex. : Quels signaux d’offre, de demande et de catalyseurs ressortent de ce corpus Pokémon ?" />
           <label htmlFor="local-corpus">Corpus EDGE (JSON)</label>
-          <input id="local-corpus" type="file" accept=".json,application/json" required onChange={e => setFile(e.target.files?.[0] ?? null)} />
+          <input id="local-corpus" type="file" accept=".json,application/json" required={!file} onChange={e => setFile(e.target.files?.[0] ?? null)} />
           <small>Maximum 5 Mio. Le format et les références sont contrôlés côté service.</small>
           <div className="local-form-actions"><button type="submit" disabled={running}>{running ? "Enquête en cours…" : "Lancer l’enquête locale"}</button><span>{file ? file.name : "Aucun corpus sélectionné"}</span></div>
         </form>
