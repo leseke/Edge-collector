@@ -28,8 +28,7 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("pas la véracité commerciale", component)
         self.assertIn("Aucune preuve de transaction indépendante associée", component)
         self.assertIn("Absence de preuve ne signifie pas absence de ventes", component)
-        self.assertIn("Préparer une enquête locale sur cette carte", component)
-        self.assertIn("encodeURIComponent(card.productId)", component)
+        self.assertIn("<TcgCorpusDownload card={card} />", component)
 
     def test_local_inquiry_prefill_requires_tcg_id_and_does_not_autorun(self):
         component = (Path(__file__).resolve().parents[1] / "app/components/LocalCompanion.tsx").read_text(encoding="utf-8")
