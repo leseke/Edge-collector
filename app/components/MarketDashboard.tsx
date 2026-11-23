@@ -43,7 +43,7 @@ export async function MarketDashboard() {
       <div className="dashboard-metric"><span>Lignes de cartes dans ce relevé</span><strong>{snapshot.cards.length}</strong><small>Observations affichables après contrôle d’intégrité.</small></div>
       <div className="dashboard-metric"><span>Observations reçues</span><strong>{snapshot.successfulCount}</strong><small>Réponses de collecte avec statut OK, pas des ventes.</small></div>
       <div className="dashboard-metric"><span>Observations en échec</span><strong>{snapshot.failedCount}</strong><small>Collectes non concluantes ou données non exploitables.</small></div>
-      <div className="dashboard-metric"><span>Ventes conclues signalées</span><strong>0</strong><small>Aucune transaction vérifiée dans cet écran.</small></div>
+      <div className="dashboard-metric"><span>Transactions déclarées dans le relevé</span><strong>{snapshot.completedSales}</strong><small>Indicateur de source non vérifié : ne constitue pas une preuve de vente conclue. Zéro ne prouve pas une absence de transactions.</small></div>
     </section>
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">OBSERVATIONS SOURCÉES</p><h2>Cartes suivies</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
