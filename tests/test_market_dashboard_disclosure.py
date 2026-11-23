@@ -24,6 +24,16 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("{card.productId}", component)
         self.assertIn("Aucune preuve de transaction indépendante associée", component)
         self.assertIn("Absence de preuve ne signifie pas absence de ventes", component)
+        self.assertIn("Préparer une enquête locale sur cette carte", component)
+        self.assertIn("encodeURIComponent(card.productId)", component)
+
+    def test_local_inquiry_prefill_requires_tcg_id_and_does_not_autorun(self):
+        component = (Path(__file__).resolve().parents[1] / "app/components/LocalCompanion.tsx").read_text(encoding="utf-8")
+        self.assertIn('params.get("product")', component)
+        self.assertIn('params.get("name")', component)
+        self.assertIn("pokemon_card_", component)
+        self.assertIn("setQuestion(`Examiner les preuves disponibles", component)
+        self.assertIn("Ajoute un corpus EDGE réel", component)
 
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
