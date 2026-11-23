@@ -9,6 +9,10 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("Fiabilité non vérifiée", component)
         self.assertIn("pas une vente conclue", component)
         self.assertIn("Langue non vérifiée", component)
+        self.assertIn("snapshot.completedSales", component)
+        self.assertIn("Transactions déclarées dans le relevé", component)
+        self.assertIn("Zéro ne prouve pas une absence de transactions", component)
+        self.assertNotIn("<strong>0</strong><small>Aucune transaction vérifiée", component)
 
 
 if __name__ == "__main__":
