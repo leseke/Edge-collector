@@ -61,6 +61,20 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("Date de relevé invalide", component)
         self.assertIn("parsed.getTime() > Date.now()", component)
 
+    def test_one_time_handoff_is_bounded_and_never_executes_automatically(self):
+        root = Path(__file__).resolve().parents[1]
+        export = (root / "app/components/TcgCorpusDownload.tsx").read_text(encoding="utf-8")
+        local = (root / "app/components/LocalCompanion.tsx").read_text(encoding="utf-8")
+        self.assertIn('window.sessionStorage.setItem(TRANSFER_KEY, raw)', export)
+        self.assertIn('new TextEncoder().encode(raw).byteLength > 5 * 1024 * 1024', export)
+        self.assertIn('window.sessionStorage.removeItem(key)', local)
+        self.assertIn('pending.productId === product', local)
+        self.assertIn('corpus?.corpus_schema === "edge.corpus.v1"', local)
+        self.assertIn('corpus.simulated === false', local)
+        self.assertIn('setFile(new File(', local)
+        self.assertIn('required={!file}', local)
+        self.assertIn('onSubmit={submit}', local)
+
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
         self.assertIn("completedSales: number | null", source)
