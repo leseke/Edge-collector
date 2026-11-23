@@ -25,8 +25,9 @@ function CardTile({ card }: { card: TcgCard }) {
         <span>Moyenne indicative <strong>{money(card.average, card.currency)}</strong></span>
         <span>Tendance indicative <strong>{money(card.trend, card.currency)}</strong></span>
       </div>
-      <div className="tcg-source-row"><span>Source : {card.source}</span><span>{card.availability === "UNKNOWN" ? "Disponibilité inconnue" : card.availability}</span></div>
+      <div className="tcg-source-row"><span>Source déclarée : {card.source}</span><span>{card.availability === "UNKNOWN" ? "Disponibilité inconnue" : card.availability}</span></div>
       <div className="tcg-source-row"><span>Relevé : {date(card.observedAt)}</span><span>{card.languageVerified ? "Langue vérifiée" : "Langue non vérifiée"}</span></div>
+      <div className="tcg-source-row"><span>Nature du prix : {card.priceKind || "Non renseignée"}</span><span>Source mise à jour : {card.sourceUpdatedAt ? date(card.sourceUpdatedAt) : "Non disponible"}</span></div>
       <p className="tcg-caveat">Fiabilité non vérifiée : ce montant est une indication de prix, pas une vente conclue. Variante, langue et état exacts non confirmés.</p>
     </div>
   </article>;
