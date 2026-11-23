@@ -28,6 +28,20 @@ function CardTile({ card }: { card: TcgCard }) {
       <div className="tcg-source-row"><span>Source déclarée : {card.source}</span><span>{card.availability === "UNKNOWN" ? "Disponibilité inconnue" : card.availability}</span></div>
       <div className="tcg-source-row"><span>Relevé : {date(card.observedAt)}</span><span>{card.languageVerified ? "Langue vérifiée" : "Langue non vérifiée"}</span></div>
       <div className="tcg-source-row"><span>Nature du prix : {card.priceKind || "Non renseignée"}</span><span>Source mise à jour : {card.sourceUpdatedAt ? date(card.sourceUpdatedAt) : "Non disponible"}</span></div>
+      <details className="tcg-evidence-details">
+        <summary>Consulter le dossier de preuves</summary>
+        <dl>
+          <dt>Identifiant du produit</dt><dd>{card.productId}</dd>
+          <dt>Source déclarée</dt><dd>{card.source || "Non renseignée"}</dd>
+          <dt>Observation</dt><dd>{date(card.observedAt)}</dd>
+          <dt>Mise à jour de la source</dt><dd>{card.sourceUpdatedAt ? date(card.sourceUpdatedAt) : "Non disponible"}</dd>
+          <dt>Nature du prix</dt><dd>{card.priceKind || "Non renseignée"}</dd>
+          <dt>Disponibilité</dt><dd>{card.availability === "UNKNOWN" ? "Non vérifiée" : card.availability}</dd>
+          <dt>Langue</dt><dd>{card.languageVerified ? "Déclarée vérifiée" : "Non vérifiée"}</dd>
+          <dt>Vente réalisée</dt><dd>Aucune preuve de transaction indépendante associée à cette fiche.</dd>
+        </dl>
+        <p>Fiabilité non vérifiée. Ce dossier présente les métadonnées du relevé et non une enquête indépendante. Absence de preuve ne signifie pas absence de ventes.</p>
+      </details>
       <p className="tcg-caveat">Fiabilité non vérifiée : ce montant est une indication de prix, pas une vente conclue. Variante, langue et état exacts non confirmés.</p>
     </div>
   </article>;
