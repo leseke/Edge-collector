@@ -47,7 +47,7 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("rawSha256: item.body_sha256!", source)
 
     def test_corpus_export_does_not_fabricate_sales_or_sources(self):
-        component = (Path(__file__).resolve().parents[1] / "app/components/TcgCorpusDownload.tsx").read_text(encoding="utf-8")
+        component = (Path(__file__).resolve().parents[1] / "app/lib/tcg-corpus.ts").read_text(encoding="utf-8")
         self.assertIn('corpus_schema: "edge.corpus.v1"', component)
         self.assertIn('simulated: false', component)
         self.assertIn('tier: "unverified"', component)
