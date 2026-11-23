@@ -133,6 +133,16 @@ export function LocalCompanion() {
   useEffect(() => { void checkHealth(); }, [checkHealth]);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get("product");
+    const name = params.get("name");
+    if (!product || !/^pokemon_card_[a-zA-Z0-9_.-]{1,120}$/.test(product)) return;
+    const label = name && name.length <= 160 ? name : product;
+    setQuestion(`Examiner les preuves disponibles pour ${label} (identifiant ${product}). Distinguer prix affichés, ventes conclues, inconnues et signaux faibles. Ne conclure ni à une causalité ni à une opportunité sans preuves.`);
+    setStatusMessage("Question préparée depuis le tableau de bord. Ajoute un corpus EDGE réel et vérifie le service local avant de lancer l’enquête.");
+  }, []);
+
+  useEffect(() => {
     try {
       const raw = window.localStorage.getItem(HISTORY_KEY);
       if (!raw) return;
