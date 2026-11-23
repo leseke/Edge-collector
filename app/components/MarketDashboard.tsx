@@ -1,6 +1,7 @@
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
 import { EvidenceGuide } from "./EvidenceGuide";
 import Link from "next/link";
+import { TcgCorpusDownload } from "./TcgCorpusDownload";
 
 function date(value: string): string {
   if (!value) return "Date non disponible";
@@ -45,6 +46,7 @@ function CardTile({ card }: { card: TcgCard }) {
           <dt>Vente réalisée</dt><dd>Aucune preuve de transaction indépendante associée à cette fiche.</dd>
         </dl>
         <p>Fiabilité non vérifiée. Les empreintes attestent la concordance avec les fichiers du relevé, pas la véracité commerciale des informations. Ce dossier présente les métadonnées du relevé et non une enquête indépendante. Absence de preuve ne signifie pas absence de ventes.</p>
+        <TcgCorpusDownload card={card} />
         <Link className="tcg-investigate-link" href={`/local?product=${encodeURIComponent(card.productId)}&name=${encodeURIComponent(card.name)}`}>Préparer une enquête locale sur cette carte</Link>
         <p>Cette action prépare uniquement la question : aucun corpus ni modèle n’est connecté automatiquement.</p>
       </details>
