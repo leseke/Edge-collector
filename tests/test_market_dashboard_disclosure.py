@@ -22,6 +22,10 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn('<details className="tcg-evidence-details">', component)
         self.assertIn("<summary>Consulter le dossier de preuves</summary>", component)
         self.assertIn("{card.productId}", component)
+        self.assertIn("{card.snapshotId}", component)
+        self.assertIn("{card.reportSha256}", component)
+        self.assertIn("{card.rawSha256}", component)
+        self.assertIn("pas la véracité commerciale", component)
         self.assertIn("Aucune preuve de transaction indépendante associée", component)
         self.assertIn("Absence de preuve ne signifie pas absence de ventes", component)
         self.assertIn("Préparer une enquête locale sur cette carte", component)
@@ -34,6 +38,14 @@ class MarketDashboardDisclosureTests(unittest.TestCase):
         self.assertIn("pokemon_card_", component)
         self.assertIn("setQuestion(`Examiner les preuves disponibles", component)
         self.assertIn("Ajoute un corpus EDGE réel", component)
+
+    def test_hashes_are_taken_from_integrity_checked_sources(self):
+        source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
+        self.assertIn("sha256(reportText) !== reportEntry.sha256", source)
+        self.assertIn("sha256(rawText) !== item.body_sha256", source)
+        self.assertIn("snapshotId: pointer.snapshot_id", source)
+        self.assertIn("reportSha256: reportEntry.sha256", source)
+        self.assertIn("rawSha256: item.body_sha256!", source)
 
     def test_unavailable_snapshot_has_unknown_sales_count(self):
         source = (Path(__file__).resolve().parents[1] / "app/lib/market-data.ts").read_text(encoding="utf-8")
