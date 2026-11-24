@@ -1,3 +1,4 @@
+import { MarketPatternPanel } from "./MarketPatternPanel";
 import { LearningPanel } from "./LearningPanel";
 import { ResearchAlertInbox } from "./ResearchAlertInbox";
 import { OfferPriceSignals } from "./OfferPriceSignals";
@@ -90,6 +91,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     {tab === "signaux" && <Suspense fallback={<p>Chargement des notifications…</p>}><ResearchAlertInbox params={params} /></Suspense>}
 
     {tab === "signaux" && <Suspense fallback={<p>Analyse des offres GCC en cours…</p>}><OpportunityScanner variants={sales.variants} archiveOnly={sales.archiveOnly} /></Suspense>}
+
+    {tab === "signaux" && <Suspense fallback={<p>Recherche des configurations…</p>}><MarketPatternPanel variants={sales.variants} /></Suspense>}
 
     {tab === "signaux" && <Suspense fallback={<p>Recherche des variations de prix…</p>}><OfferPriceSignals variants={sales.variants} /></Suspense>}
 
