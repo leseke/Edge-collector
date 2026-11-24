@@ -1,6 +1,11 @@
 // Retrospective, not a simulated trade. One first signal per exact variant and reason.
 type Db={prepare(sql:string):{bind(...args:string[]):{all<T>():Promise<{results:T[]}>}}};
 type Outcome={reason:string;lot_id:string;variant_key:string;observed_at:string;median_cents:number;future_count:number;future_median:number|null};
+export const learningHorizons=[7,30,90,365] as const;
+export type LearningHorizon=typeof learningHorizons[number];
+export function learningHorizon(value:unknown):LearningHorizon {
+ return learningHorizons.find(n=>String(n)===value)??30;
+}
 export const learningQuery=`
 WITH eligible AS (
  SELECT a.reason,a.lot_id,a.observed_at,e.variant_key,e.median_cents,
@@ -15,7 +20,7 @@ WITH eligible AS (
  ROW_NUMBER() OVER(PARTITION BY c.reason,c.variant_key ORDER BY s.price_cents,s.lot_id) AS position,
  COUNT(*) OVER(PARTITION BY c.reason,c.variant_key) AS n
  FROM cohort c JOIN paid_market_sales s ON s.variant_key=c.variant_key
- WHERE s.sold_day>substr(c.observed_at,1,10) AND s.sold_day<=date(c.observed_at,'+30 days')
+ WHERE s.sold_day>substr(c.observed_at,1,10) AND s.sold_day<=date(c.observed_at,?)
  AND s.collected_at<=? AND s.lot_id<>'gcc-'||c.lot_id AND s.price_cents>0
  AND s.source_url='https://gradedcardcenter.com/item/'||substr(s.lot_id,5) AND s.lot_id LIKE 'gcc-%'
 ), medians AS (
@@ -41,14 +46,14 @@ export function summarizeOutcomes(rows:Outcome[]){
   return {...g,medianChange:n?(changes[Math.floor((n-1)/2)]+changes[Math.floor(n/2)])/2:null};
  });
 }
-export async function getLearningReport(now=new Date()){
+export async function getLearningReport(horizon:LearningHorizon=30,now=new Date()){
  try{
   const {getCloudflareContext}=await import("@opennextjs/cloudflare");
   const {env}=await getCloudflareContext({async:true});
   const db=(env as {SALES_DB?:Db}).SALES_DB;if(!db)return null;
-  const start=new Date(+now-180*86400000).toISOString();
-  const cutoff=new Date(+now-31*86400000).toISOString();
-  const {results}=await db.prepare(learningQuery).bind(start,cutoff,now.toISOString()).all<Outcome>();
+  const start=new Date(+now-(180+horizon)*86400000).toISOString();
+  const cutoff=new Date(+now-(horizon+1)*86400000).toISOString();
+  const {results}=await db.prepare(learningQuery).bind(start,cutoff,'+'+horizon+' days',now.toISOString()).all<Outcome>();
   return {groups:summarizeOutcomes(results.slice(0,100)),partial:results.length>100};
  }catch{return null;}
 }
