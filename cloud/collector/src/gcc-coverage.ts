@@ -1,3 +1,5 @@
+import { prepareOpportunityEvents } from "./gcc-opportunity-memory";
+import { resaleFeePercent } from "../../../app/lib/listing-analysis";
 import { gccCursor, gccPageUrl, readGccPage, type GccListingKind } from "../../../app/lib/gcc-active-listings.ts";
 import { readBoundedText } from "./bounded.mjs";
 
@@ -35,6 +37,15 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
       json_extract(value,'$.cents'),json_extract(value,'$.ends'),json_extract(value,'$.source')
       FROM json_each(?) WHERE ${exists}`)
       .bind(kind, now.toISOString(), state.cycle + Number(Boolean(state.finished)), page.page, JSON.stringify(observations), ...args));
+  }
+  if (kind === "fixed") {
+    const events = await prepareOpportunityEvents(db, page.items, now.toISOString());
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_opportunity_events
+      (lot_id,cycle,page,observed_at,variant_key,title,asking_cents,median_cents,comparable_count,headroom_cents,status,evidence_json,resale_fee_percent)
+      SELECT json_extract(value,'$.id'),?,?,?,json_extract(value,'$.variant'),json_extract(value,'$.title'),
+      json_extract(value,'$.ask'),json_extract(value,'$.median'),json_extract(value,'$.count'),json_extract(value,'$.headroom'),
+      json_extract(value,'$.status'),json_extract(value,'$.evidence'),? FROM json_each(?) WHERE ${exists}`)
+      .bind(state.cycle + Number(Boolean(state.finished)),page.page,now.toISOString(),resaleFeePercent,JSON.stringify(events),...args));
   }
   const count = "(SELECT count(*) FROM gcc_coverage_ids WHERE kind=?)";
   const announced = first ? page.total : state.announced;
