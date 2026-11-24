@@ -106,6 +106,7 @@ jobs:
           npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/007_gcc_complete_cycles.sql --yes
           npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/008_catalyst_discoveries.sql --yes
           npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/009_catalyst_investigations.sql --yes
+          npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/010_commercial_research.sql --yes
           npm exec -- wrangler deploy --config "$preview_config" --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
           preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
           curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-max-time 65 --retry-all-errors \
@@ -624,6 +625,7 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/007_gcc_complete_cycles.sql --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/008_catalyst_discoveries.sql --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/009_catalyst_investigations.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/010_commercial_research.sql --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT reason,COUNT(*) AS total FROM gcc_research_alerts GROUP BY reason;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT event,COUNT(*) AS total FROM gcc_lifecycle_events GROUP BY event;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS opportunity_events FROM gcc_opportunity_events;" --yes
