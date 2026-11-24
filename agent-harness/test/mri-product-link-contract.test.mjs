@@ -19,7 +19,17 @@ test("radar links source publications but does not imply causality", () => {
   assert.match(radar, /pokemonCases\.map/);
   assert.match(radar, /publication\.url/);
   assert.match(radar, /aria-label="Rubriques du Radar"/);
-  for (const anchor of ["analyse-annonce", "ventes-payees", "gcc-closed", "disponibilite"]) {
-    assert.ok(radar.includes(`href: "#${anchor}"`));
+  for (const tab of ["signaux", "offres", "ventes", "marche"]) {
+    assert.ok(radar.includes(`id: "${tab}"`), `Missing Radar tab: ${tab}`);
   }
+  assert.ok(radar.includes('href={`/mri?tab=${item.id}`}'));
+  assert.ok(radar.includes('aria-current={tab === item.id ? "page" : undefined}'));
+  for (const section of ["ventes-payees", "gcc-closed", "disponibilite", "gcc-auction", "gcc-fixed"]) {
+    assert.ok(radar.includes(`id="${section}"`), `Missing section: ${section}`);
+  }
+  assert.match(radar, /tab === "ventes" &&/);
+  assert.match(radar, /tab === "offres" &&/);
+  assert.match(radar, /tab === "marche" &&/);
+  assert.match(radar, /Son impact commercial reste à vérifier/);
+  assert.match(radar, /Aucun rendement présumé/);
 });
