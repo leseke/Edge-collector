@@ -101,3 +101,6 @@ html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
   .radar-zoom-dialog[open] { animation: radar-zoom-in .18s ease-out; }
   @keyframes radar-zoom-in { from { opacity: 0; transform: scale(.94); } }
 }
+
+.radar-price-comparison{display:grid;gap:.25rem;margin-top:.4rem;padding:.65rem;border:1px solid #38577d;border-radius:.55rem;background:#10243c;overflow-wrap:anywhere}
+.radar-price-comparison strong{font-size:.85rem;color:#dceeff}.radar-price-comparison small{font-size:.72rem;line-height:1.4;color:#bacbe2}
