@@ -17,7 +17,7 @@ export async function OpportunityScanner({ variants, archiveOnly }: { variants: 
     if (!page) { partial = true; break; }
     pages++;
     if (index === 0) total = page.total;
-    checkedAt = checkedAt && checkedAt < page.checkedAt ? checkedAt : page.checkedAt;
+    checkedAt = [checkedAt ?? page.checkedAt, page.checkedAt].sort()[0];
     for (const offer of page.items) if (!offers.has(offer.id)) offers.set(offer.id, offer);
     if (!page.nextCursor) break;
     if (cursors.has(page.nextCursor)) { partial = true; break; }
