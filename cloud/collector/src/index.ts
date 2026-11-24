@@ -1,3 +1,4 @@
+import {collectCommercialOffers} from "./commercial-offers";
 import {collectCommercialResearch} from "./commercial-research";
 import {investigateCatalysts} from "./catalyst-investigation";
 import {collectCatalysts} from "./catalyst-discovery";
@@ -88,6 +89,6 @@ export default {
       ctx.waitUntil(collectCoverage(env.DB));
       return;
     }
-    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime), collectCatalysts(env.DB).then(()=>investigateCatalysts(env.DB)), collectCommercialResearch(env.DB)]));
+    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime), Promise.all([collectCatalysts(env.DB).then(()=>investigateCatalysts(env.DB)), collectCommercialResearch(env.DB)]).then(()=>collectCommercialOffers(env.DB))]));
   },
 };
