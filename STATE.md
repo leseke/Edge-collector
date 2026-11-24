@@ -176,3 +176,5 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 - Four URL-addressable Radar views implemented (2dc48ec); preview smoke checks adapted (bd40d31, d2a9d12).
 - User screenshot confirms manual GCC preview runs #1 (1m28s) and #2 (1m14s) succeeded; exact run SHA not visible. Browser validation of the four new views remains pending.
 - Next: verify navigation and pagination on mobile, then connect the investor home to qualified signals. No D1 schema change or production promotion.
+
+- Mobile screenshots supplied by user at 15:31–15:32 confirm rendering of all four Radar views, auction cards, paid sales, closed history and liquidity. GCC reported 4,203 auctions and 173,609 closed results; these are provider counts, not ingestion coverage. Pagination interaction and fixed-price list not independently verified. Remaining defects: oversized sticky header, missing paid-sale images, tall cards, sparse signals. Next scope: compact mobile shell and investor home, then evidence-labelled early signals independent of confirmed 30-day trends.
