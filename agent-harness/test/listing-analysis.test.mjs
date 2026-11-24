@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { analyzeListing, estimateListingMarket, euroCents, rankFixedOffers } from "../../app/lib/listing-analysis.ts";
+import { analyzeListing, estimateListingMarket, euroCents, rankFixedOffers, assessPriceDrop } from "../../app/lib/listing-analysis.ts";
 
 test("parses euro cents without rounding or treating missing data as free", () => {
   assert.equal(euroCents(" 4,48 "), 448);
@@ -56,4 +56,21 @@ test("scanner does not fabricate a reference from a single or stale sale", () =>
   const offers = [{id:"one",variantKey:"exact",cents:100}];
   const paidSales = [{id:"a",day:"2026-11-20",cents:1000,source:"https://example.com/a"},{id:"b",day:"2026-05-01",cents:2000,source:"https://example.com/b"}];
   assert.deepEqual(rankFixedOffers(offers,[{key:"exact",paidSales}],"2026-11-24"),[]);
+});
+
+
+test("price drops retain weak signals and distinguish thin margins from discounts", () => {
+  const paidSales = [
+    {id:"a",day:"2026-11-15",cents:18000,source:"https://example.com/a"},
+    {id:"b",day:"2026-11-10",cents:22000,source:"https://example.com/b"},
+    {id:"future",day:"2026-11-25",cents:100000,source:"https://example.com/future"},
+    {id:"gcc-self",day:"2026-11-21",cents:500,source:"https://gradedcardcenter.com/item/self"},
+  ];
+  const variants = [{key:"exact",paidSales}];
+  const offer = {id:"self",variantKey:"exact",cents:14000};
+  const assess = (patch) => assessPriceDrop({...offer,...patch},variants,"2026-11-24");
+  assert.deepEqual(assess({}),{status:"INVESTIGATE",count:2,median:20000,gapPercent:30,headroom:2200});
+  assert.equal(assess({cents:17000}).status,"THIN_MARGIN");
+  assert.equal(assess({cents:20000}).status,"NO_DISCOUNT");
+  assert.equal(assess({variantKey:null}).status,"INSUFFICIENT");
 });
