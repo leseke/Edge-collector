@@ -605,6 +605,8 @@ jobs:
           trap 'rm -f wrangler.history-ci.json' EXIT
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/003_gcc_offer_observations.sql --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/004_gcc_opportunity_events.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/005_gcc_lifecycle.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT event,COUNT(*) AS total FROM gcc_lifecycle_events GROUP BY event;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS opportunity_events FROM gcc_opportunity_events;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS observations FROM gcc_offer_observations;" --yes
           npx wrangler deploy --config wrangler.history-ci.json --keep-vars
