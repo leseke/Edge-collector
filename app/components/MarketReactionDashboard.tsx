@@ -12,12 +12,12 @@ const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const signed = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" });
 
-const radarShortcuts = [
-  { href: "#analyse-annonce", title: "Analyser une annonce", description: "Estimer la marge", icon: "⌕", tone: "gold" },
-  { href: "#ventes-payees", title: "Ventes payées", description: "Paiements vérifiés", icon: "✓", tone: "mint" },
-  { href: "#gcc-closed", title: "Historique GCC", description: "Ventes par série", icon: "◷", tone: "lilac" },
-  { href: "#disponibilite", title: "Offres ouvertes", description: "Enchères et prix fixes", icon: "≡", tone: "blue" },
-];
+const radarTabs = [
+  { id: "signaux", title: "Signaux" },
+  { id: "offres", title: "Offres" },
+  { id: "ventes", title: "Ventes" },
+  { id: "marche", title: "Marché" },
+] as const;
 
 function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"] }) {
   return <ul className="radar-sales">
@@ -26,6 +26,7 @@ function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPai
 }
 
 export async function MarketReactionDashboard({ params = {} }: { params?: Record<string, unknown> }) {
+  const tab = radarTabs.find(item => item.id === params.tab)?.id ?? (params.closed || params.serie ? "ventes" : params.auction || params.fixed ? "offres" : "signaux");
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
@@ -33,17 +34,12 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     <header className="radar-intro">
       <h1>Radar Pokémon</h1>
       <p>Suivre les prix du marché et évaluer une annonce.</p>
-      <nav className="radar-shortcuts" aria-label="Rubriques du Radar">
-        {radarShortcuts.map(({ href, title, description, icon, tone }) => <a
-          key={href} href={href} className="radar-shortcut" data-tone={tone}>
-          <span className="radar-shortcut-icon" aria-hidden="true">{icon}</span>
-          <span className="radar-shortcut-arrow" aria-hidden="true">↘</span>
-          <strong>{title}</strong>
-          <small>{description}</small>
-        </a>)}
+      <nav aria-label="Rubriques du Radar" style={{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:6,marginTop:16}}>
+        {radarTabs.map(item => <Link key={item.id} href={`/mri?tab=${item.id}`} aria-current={tab === item.id ? "page" : undefined} style={{textAlign:"center",padding:"12px 2px",borderRadius:10,fontWeight:700,fontSize:13,background:tab === item.id ? "#ffcf21" : "#102c50",color:tab === item.id ? "#08224a" : "#eaf2ff"}}>{item.title}</Link>)}
       </nav>
     </header>
 
+    {tab === "ventes" && <>
     <section id="ventes-payees" className="dashboard-section radar-section" aria-labelledby="radar-sales-title">
       <h2 id="radar-sales-title" className="radar-section-title" data-tone="mint">{sales.archiveOnly ? "Ventes payées archivées" : "Dernières ventes payées"}</h2>
       <p className="radar-sales-description">{sales.archiveOnly ?
@@ -63,6 +59,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
       </Suspense>
     </section>
 
+    </>}
+    {tab === "offres" && <>
     <section id="disponibilite" className="dashboard-section radar-section" aria-labelledby="radar-availability-title">
       <h2 id="radar-availability-title" className="radar-section-title" data-tone="blue">Offres ouvertes</h2>
       <p className="radar-sales-description">Parcours les annonces Pokémon ouvertes sur Graded Card Center. Les prix sont ceux du relevé et peuvent évoluer.</p>
@@ -83,9 +81,11 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     </section>
 
     <LeboncoinWatchPanel cards={sales.variants} />
+    </>}
 
-    <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
-      <h2 id="radar-trends-title">Tendances du marché</h2>
+    {(tab === "signaux" || tab === "marche") && <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
+      <h2 id="radar-trends-title">{tab === "signaux" ? "Signaux à investiguer" : "Tendances du marché"}</h2>
+      {tab === "signaux" && <p>Les tendances observées sont des pistes de recherche, pas des recommandations d’achat.</p>}
       {sales.trends.length === 0 && <p>Pas assez de ventes payées comparables pour mesurer une tendance sur 30 jours.</p>}
       {sales.trends.slice(0, 12).map(trend => {
         const variant = sales.variants.find(item => item.key === trend.key);
@@ -104,6 +104,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
           {" · "}{lead.category.toLowerCase()}{" · "}{lead.first_seen_day}
         </li>)}</ul>
       </details>}
+      {tab === "marche" && <>
+      <CardLiquidityPanel cards={sales.cards} scan={sales.scan} />
       <details className="radar-disclosure">
         <summary>Événements et sources Pokémon</summary>
         {pokemonCases.length === 0 && <p>Aucun événement Pokémon relié à un mouvement de marché dans le dernier relevé.</p>}
@@ -135,6 +137,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         <summary>Comment lire les tendances</summary>
         <p>EDGE compare les prix médians de deux périodes de 30 jours, avec au moins trois ventes par période pour la même variante. Les publications servent à dater un événement. Il faut ensuite des prix, des ventes ou des relevés d’offre comparables pour mesurer la réaction du marché.</p>
       </details>
-    </section>
+      </>}
+    </section>}
   </div>;
 }
