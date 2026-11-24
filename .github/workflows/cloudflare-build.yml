@@ -604,6 +604,8 @@ jobs:
           cd cloud/collector
           trap 'rm -f wrangler.history-ci.json' EXIT
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/003_gcc_offer_observations.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --file migrations/004_gcc_opportunity_events.sql --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS opportunity_events FROM gcc_opportunity_events;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS observations FROM gcc_offer_observations;" --yes
           npx wrangler deploy --config wrangler.history-ci.json --keep-vars
           echo "Collector deployment completed; scheduled observation ingestion must be verified separately."
