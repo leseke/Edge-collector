@@ -42,6 +42,7 @@ function CardTile({ card }: { card: TcgCard }) {
 }
 export async function MarketDashboard() {
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales().catch(() => null)]);
+  const earlyCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_") && item.publications.length > 0);
   const freshDate = snapshot.observedAt ? date(snapshot.observedAt) : "Non disponible";
   return <div className="native-dashboard edge-investor-home">
     <section className="edge-home-heading">
@@ -51,17 +52,27 @@ export async function MarketDashboard() {
     <section aria-label="Synthèse du marché" style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginBottom:20}}>
       {[
         {label:"Tendances mesurées",value:sales?.trends.length ?? "—",href:"/mri?tab=signaux",note:"Variantes comparables"},
-        {label:"Pistes à vérifier",value:sales?.leads.length ?? "—",href:"/mri?tab=signaux",note:"Publications et annonces"},
+        {label:"Pistes à vérifier",value:sales || snapshot.status !== "UNAVAILABLE" ? (sales?.leads.length ?? 0) + earlyCases.length : "—",href:"/mri?tab=signaux",note:"Dossiers et liens à vérifier"},
         {label:"Ventes payées affichées",value:sales ? sales.recentSales.length + sales.otherSales.length : "—",href:"/mri?tab=ventes",note:sales?.archiveOnly ? "Archive disponible" : "Échantillon documenté"},
         {label:"Offres ouvertes",value:"Consulter",href:"/mri?tab=offres",note:"Enchères et prix fixes"},
       ].map(item => <Link key={item.label} href={item.href} style={{display:"grid",gap:6,padding:14,border:"1px solid var(--line)",borderRadius:12,background:"#101e34"}}>
         <span style={{fontSize:12,color:"var(--muted)"}}>{item.label}</span><strong style={{fontSize:22,color:"var(--accent)"}}>{item.value}</strong><small>{item.note} →</small>
       </Link>)}
     </section>
-    <section className="edge-home-ai" aria-label="Priorités de recherche">
+    <section className="edge-home-priorities" aria-label="Priorités de recherche">
       <div><p className="native-eyebrow">RADAR · PRIORITÉS</p><h2>À investiguer</h2>
-      <p>{!sales ? "Les données du Radar sont indisponibles." : sales.leads.length || sales.trends.length ? "Des observations méritent une analyse complémentaire." : "Aucune piste documentée dans ce relevé. Cela ne signifie pas que le marché ne présente aucune opportunité."}</p>
+      <p>{earlyCases.length || sales?.leads.length || sales?.trends.length ? "Des observations méritent une analyse complémentaire." : !sales && snapshot.status === "UNAVAILABLE" ? "Les données du Radar sont indisponibles." : "Aucune piste documentée dans ce relevé. Cela ne signifie pas que le marché ne présente aucune opportunité."}</p>
       <span className="edge-ai-state">Les pistes ne constituent pas des recommandations d’achat.</span></div>
+      {earlyCases.length > 0 && <div className="edge-priority-grid">{earlyCases.slice(0, 4).map(item => {
+        const card = snapshot.cards.find(entry => entry.productId === item.productId);
+        const publication = item.publications[0];
+        return <article className="edge-priority-card" key={item.productId}>
+          <AssetImage src={card?.image ?? null} name={card?.name ?? "Carte Pokémon"} />
+          <div><small>SIGNAL FAIBLE · IMPACT NON ÉTABLI</small><h3>{card?.name ?? "Publication liée à une carte Pokémon"}</h3>
+          <p>{publication.title}</p><p>{date(publication.publishedAt)} · {item.publications.length} source(s) affichée(s)</p>
+          <a href={publication.url} target="_blank" rel="noopener noreferrer">Source ↗</a> · <Link href={`/explorer/${encodeURIComponent(item.productId)}`}>Examiner</Link></div>
+        </article>;
+      })}</div>}
       <Link href="/mri?tab=signaux" className="edge-ai-link">Ouvrir les signaux →</Link>
     </section>
     <section className="edge-home-market" aria-labelledby="edge-market-title">
