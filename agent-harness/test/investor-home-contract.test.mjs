@@ -30,3 +30,13 @@ test("mobile layout and reduced backoffice are intentional", () => {
   assert.match(css, /@media\(max-width:760px\)/);
   assert.doesNotMatch(dashboard, /collection_runs|collection_errors|SQLite|auth\.token|Ollama/);
 });
+
+
+test("early research signals do not require a confirmed sales trend", () => {
+  assert.match(dashboard, /snapshot\.reactionCases\.filter/);
+  assert.match(dashboard, /item\.publications\.length > 0/);
+  assert.match(dashboard, /SIGNAL FAIBLE · IMPACT NON ÉTABLI/);
+  assert.match(dashboard, /publication\.url/);
+  assert.match(dashboard, /date\(publication\.publishedAt\)/);
+  assert.match(css, /\.edge-priority-grid/);
+});
