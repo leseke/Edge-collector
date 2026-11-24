@@ -28,6 +28,15 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  <h3>{p.title}</h3>
  <p>{p.publisher} · Repérée le {p.first_seen_at.slice(0,10)} (date de publication non vérifiée).</p>
  <p>Investigation : {questions[p.kind]}</p>
+ <details className="radar-disclosure"><summary>Dossier d’investigation</summary>
+ <p>{p.investigation_status==="READ"?"Métadonnées de la publication consultées":p.investigation_status==="FAILED"?"Consultation échouée · nouvelle tentative prévue":"En attente de consultation"}</p>
+ {p.headline&&<p>{p.headline}</p>}
+ {p.description&&<p>{p.description}</p>}
+ {p.published_at&&<p>Date indiquée par l’éditeur : {p.published_at.slice(0,10)}</p>}
+ {p.investigated_at&&<p>Dernière investigation : {p.investigated_at.slice(0,10)}</p>}
+ <p>Informations déclarées par l’éditeur, non corroborées indépendamment.</p>
+ <p>À rechercher : identité exacte, disponibilité française, prix d’entrée, distribution, rareté et éléments contraires à la thèse.</p>
+ </details>
  <p>Produit exact, prix d’entrée et disponibilité en France à confirmer. Pas de décision d’achat automatique.</p>
  <a href={p.source_url} target="_blank" rel="noopener noreferrer">Source éditeur ↗</a>
  </article>)}</>}
