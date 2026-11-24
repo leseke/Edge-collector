@@ -105,6 +105,16 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
       FROM classified WHERE alert_reason IS NOT NULL`)
       .bind(cycle,page.page,...args));
   }
+  if (kind !== "closed" && !page.nextCursor && announced !== null) {
+    const cycle = state.cycle + Number(Boolean(state.finished));
+    // Verify the observation archive itself contains every distinct lot, including
+    // cycles that started before the observation migration was activated.
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_complete_cycles(kind,cycle,completed_at,announced)
+      SELECT ?,?,?,? WHERE ${exists}
+      AND (SELECT COUNT(*) FROM gcc_coverage_ids WHERE kind=?)=?
+      AND (SELECT COUNT(DISTINCT lot_id) FROM gcc_offer_observations WHERE kind=? AND cycle=?)=?`)
+      .bind(kind,cycle,now.toISOString(),announced,...args,kind,announced,kind,cycle,announced));
+  }
   batch.push(db.prepare(`UPDATE gcc_coverage SET cycle=?,page=?,cursor=?,announced=?,observed=${count},checked_at=?,finished=?,
     last_complete=CASE WHEN ? AND ${count}=? THEN ? ELSE last_complete END WHERE ${guard}`)
     .bind(state.cycle + Number(Boolean(state.finished)), page.page, page.nextCursor, announced, kind, now.toISOString(),
