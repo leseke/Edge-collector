@@ -93,7 +93,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
 
     {tab === "signaux" && <Suspense fallback={<p>Recherche des variations de prix…</p>}><OfferPriceSignals variants={sales.variants} /></Suspense>}
 
-    {tab === "marche" && <Suspense fallback={<p>Évaluation des signaux…</p>}><LearningPanel /></Suspense>}
+    {tab === "marche" && <Suspense fallback={<p>Évaluation des signaux…</p>}><LearningPanel horizonValue={params.horizon} /></Suspense>}
 
     {(tab === "signaux" || tab === "marche") && <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
       <h2 id="radar-trends-title">{tab === "signaux" ? "Signaux à investiguer" : "Tendances du marché"}</h2>
