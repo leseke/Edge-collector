@@ -49,6 +49,29 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
   }
   const count = "(SELECT count(*) FROM gcc_coverage_ids WHERE kind=?)";
   const announced = first ? page.total : state.announced;
+  // A missing lot is only a visibility observation after a count-matched full cycle.
+  // Only previously observed lots qualify; absence is never a paid-sale assertion.
+  if (kind === "fixed") {
+    const cycle = state.cycle + Number(Boolean(state.finished));
+    const seen = JSON.stringify(page.items.map(item => item.id));
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_lifecycle_events(lot_id,cycle,observed_at,event)
+      SELECT value,?,?,'FIRST_SEEN' FROM json_each(?) WHERE ${exists}
+      AND NOT EXISTS (SELECT 1 FROM gcc_offer_observations o WHERE o.kind='fixed' AND o.lot_id=value AND (o.cycle<? OR (o.cycle=? AND o.page<?)))`)
+      .bind(cycle,now.toISOString(),seen,...args,cycle,cycle,page.page));
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_lifecycle_events(lot_id,cycle,observed_at,event)
+      SELECT value,?,?,'REAPPEARED' FROM json_each(?) WHERE ${exists}
+      AND (SELECT event FROM gcc_lifecycle_events e WHERE e.lot_id=value AND e.cycle<? ORDER BY e.cycle DESC LIMIT 1)='NOT_SEEN'`)
+      .bind(cycle,now.toISOString(),seen,...args,cycle));
+    if (!page.nextCursor && announced !== null && cycle > 1) {
+      batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_lifecycle_events(lot_id,cycle,observed_at,event)
+        SELECT DISTINCT o.lot_id,?,?,'NOT_SEEN' FROM gcc_offer_observations o
+        WHERE o.kind='fixed' AND o.cycle=? AND ${exists}
+        AND (SELECT count(*) FROM gcc_coverage_ids WHERE kind='fixed')=?
+        AND NOT EXISTS (SELECT 1 FROM gcc_coverage_ids i WHERE i.kind='fixed' AND i.lot_id=o.lot_id)
+        AND NOT EXISTS (SELECT 1 FROM paid_market_sales s WHERE s.lot_id='gcc-'||o.lot_id)`)
+        .bind(cycle,now.toISOString(),cycle-1,...args,announced));
+    }
+  }
   batch.push(db.prepare(`UPDATE gcc_coverage SET cycle=?,page=?,cursor=?,announced=?,observed=${count},checked_at=?,finished=?,
     last_complete=CASE WHEN ? AND ${count}=? THEN ? ELSE last_complete END WHERE ${guard}`)
     .bind(state.cycle + Number(Boolean(state.finished)), page.page, page.nextCursor, announced, kind, now.toISOString(),
