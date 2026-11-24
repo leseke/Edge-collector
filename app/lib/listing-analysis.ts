@@ -74,3 +74,17 @@ export function rankFixedOffers<T extends OpportunityOffer>(
   }).sort((a,b) => Number(b.headroomCents > 0) - Number(a.headroomCents > 0) ||
     b.gapPercent - a.gapPercent || b.comparableCount - a.comparableCount || a.offer.id.localeCompare(b.offer.id));
 }
+
+
+export function assessPriceDrop(offer: OpportunityOffer, variants: { key: string; paidSales: MarketSale[] }[], asOf: string) {
+  const matching = offer.variantKey ? variants.find(v => v.key === offer.variantKey) : undefined;
+  const market = estimateListingMarket((matching?.paidSales ?? []).filter(s =>
+    s.id !== "gcc-" + offer.id && s.source !== "https://gradedcardcenter.com/item/" + offer.id), asOf);
+  if (offer.cents === null || offer.cents <= 0 || market.medianGross === null || market.conservativeNet === null) {
+    return { status: "INSUFFICIENT" as const, count: market.recent.length, median: null, gapPercent: null, headroom: null };
+  }
+  const gapPercent = 100 * (market.medianGross - offer.cents) / market.medianGross;
+  const headroom = market.conservativeNet - offer.cents;
+  return { status: headroom > 0 ? "INVESTIGATE" as const : gapPercent > 0 ? "THIN_MARGIN" as const : "NO_DISCOUNT" as const,
+    count: market.recent.length, median: market.medianGross, gapPercent, headroom };
+}
