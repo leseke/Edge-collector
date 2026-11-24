@@ -169,3 +169,10 @@ The live runner completed an expanded verification of 105 GCC item pages and D1 
 
 - Radar paginates all three public Pokémon feeds using the upstream cursor, 24 lots per source page. Closed lots are grouped by set and can be filtered across the upstream catalogue using the exact set label.
 - GCC’s reported sale state and waiting-for-payment state remain separate from EDGE’s verified paid history.
+
+
+## 2026-11-24 — Radar navigation
+- Removed duplicate top navigation (082cf37); isolated GCC preview workflow added (fa28ec3).
+- Four URL-addressable Radar views implemented (2dc48ec); preview smoke checks adapted (bd40d31, d2a9d12).
+- User screenshot confirms manual GCC preview runs #1 (1m28s) and #2 (1m14s) succeeded; exact run SHA not visible. Browser validation of the four new views remains pending.
+- Next: verify navigation and pagination on mobile, then connect the investor home to qualified signals. No D1 schema change or production promotion.
