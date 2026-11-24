@@ -88,3 +88,20 @@ html,body{background:var(--app-bg)}
  .breadcrumb{font-size:8px}
  .edge-admin-link{font-size:8px;padding-inline:5px}
 }
+
+/* Compact mobile shell: keep installation accessible without wrapping the header. */
+@media(max-width:760px){
+ .app-topbar{grid-template-columns:auto minmax(0,1fr);min-height:60px;padding:7px 12px;column-gap:12px}
+ .edge-top-brand{grid-column:1;justify-self:start;padding-top:10px;gap:0}
+ .edge-top-brand strong{font-size:24px}
+ .edge-top-brand small{display:none}
+ .edge-top-brand::before{width:18px;height:9px}
+ .edge-top-brand::after{top:5px;width:7px;height:7px}
+ .breadcrumb{display:none}
+ .topbar-right{grid-column:2;display:flex;align-items:center;justify-content:flex-end;gap:6px;min-width:0}
+ .edge-admin-link,.pwa-install button{min-height:40px;padding:6px 9px;font-size:10px;white-space:nowrap}
+ .sidebar{height:calc(60px + env(safe-area-inset-bottom));padding-bottom:calc(5px + env(safe-area-inset-bottom))}
+ .app-main{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
+ .side-link{min-height:44px}
+ .radar-section,.radar-offer-list{scroll-margin-top:72px}
+}
