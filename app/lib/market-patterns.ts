@@ -1,4 +1,4 @@
-import {median} from "./edge-learning";
+import {median} from "./edge-learning.ts";
 type Db={prepare(sql:string):{bind(...args:string[]):{all<T>():Promise<{results:T[]}>}}};
 export type PatternSale={lot_id:string;variant_key:string;sold_day:string;price_cents:number;collected_at:string};
 export const patternQuery=`
