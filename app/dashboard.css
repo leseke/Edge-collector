@@ -261,3 +261,12 @@
 .edge-product-detail .edge-catalogue-facts-grid>div{background:#10325f;border-color:#355e94}
 .edge-product-detail .edge-catalogue-facts-heading>span{color:#ffcf21}
 .edge-product-detail .edge-catalogue-intelligence>a{border-color:#5577a7;color:#ffdc69}
+
+/* Evidence-led investor priorities */
+.edge-home-priorities{display:grid;gap:12px;margin:0 0 20px;padding:clamp(14px,3vw,24px);background:#101e34;border:1px solid var(--line);border-radius:14px;min-width:0}
+.edge-home-priorities h2,.edge-home-priorities h3,.edge-home-priorities p{margin:0;overflow-wrap:anywhere}
+.edge-home-priorities p{font-size:.85rem;line-height:1.5;color:var(--muted)}
+.edge-priority-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px}
+.edge-priority-card{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;padding:12px;background:#142744;border:1px solid var(--line);border-radius:10px;align-items:start}
+.edge-priority-card img{width:100%;aspect-ratio:5/7;object-fit:contain;border-radius:5px}
+.edge-priority-card h3{font-size:1rem;margin:4px 0}.edge-priority-card small{font-size:.66rem;color:var(--accent);font-weight:700}.edge-priority-card a{display:inline-flex;align-items:center;min-height:44px;color:#c4e4ff;text-decoration:underline;font-size:.8rem}
