@@ -1,3 +1,4 @@
+import { ResearchAlertInbox } from "./ResearchAlertInbox";
 import { OfferPriceSignals } from "./OfferPriceSignals";
 import { OpportunityScanner } from "./OpportunityScanner";
 import { Suspense } from "react";
@@ -84,6 +85,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
 
     <LeboncoinWatchPanel cards={sales.variants} />
     </>}
+
+    {tab === "signaux" && <Suspense fallback={<p>Chargement des notifications…</p>}><ResearchAlertInbox params={params} /></Suspense>}
 
     {tab === "signaux" && <Suspense fallback={<p>Analyse des offres GCC en cours…</p>}><OpportunityScanner variants={sales.variants} archiveOnly={sales.archiveOnly} /></Suspense>}
 
