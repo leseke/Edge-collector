@@ -50,3 +50,27 @@ export function estimateListingMarket(sales: MarketSale[], asOf: string) {
   const historicalLow = horizonSupported ? Math.min(...history.map(sale => sale.cents)) : null;
   return { recent, history, conservativeGross, medianGross, conservativeNet, historicalLow };
 }
+
+
+// A market-only shortlist: capital never filters discovery.
+export type OpportunityOffer = { id: string; variantKey: string | null; cents: number | null };
+export function rankFixedOffers<T extends OpportunityOffer>(
+  offers: T[], variants: { key: string; paidSales: MarketSale[] }[], asOf: string,
+) {
+  const byKey = new Map(variants.map(v => [v.key, v.paidSales]));
+  const seen = new Set<string>();
+  return offers.flatMap(offer => {
+    if (seen.has(offer.id)) return [];
+    seen.add(offer.id);
+    if (!offer.variantKey || offer.cents === null || !Number.isSafeInteger(offer.cents) || offer.cents <= 0) return [];
+    const source = "https://gradedcardcenter.com/item/" + offer.id;
+    const market = estimateListingMarket((byKey.get(offer.variantKey) ?? []).filter(s => s.source !== source && s.id !== "gcc-" + offer.id), asOf);
+    if (market.medianGross === null || market.conservativeNet === null || offer.cents >= market.medianGross) return [];
+    const gapPercent = 100 * (market.medianGross - offer.cents) / market.medianGross;
+    const headroomCents = market.conservativeNet - offer.cents;
+    return [{ offer, gapPercent, headroomCents, medianCents: market.medianGross,
+      ceilingBeforeAcquisitionFees: market.conservativeNet, comparableCount: market.recent.length,
+      latestSaleDay: market.recent[0].day, evidence: market.recent }];
+  }).sort((a,b) => Number(b.headroomCents > 0) - Number(a.headroomCents > 0) ||
+    b.gapPercent - a.gapPercent || b.comparableCount - a.comparableCount || a.offer.id.localeCompare(b.offer.id));
+}
