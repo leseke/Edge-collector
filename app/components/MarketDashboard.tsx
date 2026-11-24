@@ -1,5 +1,5 @@
 import { TcgExplorer } from "./TcgExplorer";
-import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
+import { getTcgMarketSnapshot, type TcgCard, type CommercialRow } from "../lib/market-data";
 import { EvidenceGuide } from "./EvidenceGuide";
 import { TcgCorpusDownload } from "./TcgCorpusDownload";
 
@@ -9,10 +9,11 @@ function date(value: string): string {
   return Number.isNaN(parsed.getTime()) ? "Date non disponible" : new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(parsed);
 }
 function money(value: number | null, currency: string): string {
-  if (value === null) return "Non établi";
+  if (value === null || !Number.isFinite(value)) return "Non établi";
+  if (!/^[A-Z]{3}$/.test(currency)) return `${value} (devise inconnue)`;
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency, maximumFractionDigits: 2 }).format(value);
 }
-function CardTile({ card }: { card: TcgCard }) {
+function CardTile({ card, commercial }: { card: TcgCard; commercial: CommercialRow[] }) {
   return <article className="tcg-card">
     <div className="tcg-card-visual">
       {card.image ? <img src={card.image} alt={`Illustration de ${card.name}`} loading="lazy" /> : <span>TCG</span>}
@@ -30,6 +31,16 @@ function CardTile({ card }: { card: TcgCard }) {
       <div className="tcg-source-row"><span>Source déclarée : {card.source}</span><span>{card.availability === "UNKNOWN" ? "Disponibilité inconnue" : card.availability}</span></div>
       <div className="tcg-source-row"><span>Relevé : {date(card.observedAt)}</span><span>{card.languageVerified ? "Langue vérifiée" : "Langue non vérifiée"}</span></div>
       <div className="tcg-source-row"><span>Nature du prix : {card.priceKind || "Non renseignée"}</span><span>Source mise à jour : {card.sourceUpdatedAt ? date(card.sourceUpdatedAt) : "Non disponible"}</span></div>
+      <details className="tcg-evidence-details">
+        <summary>Observations commerciales</summary>
+        {["ASKING_PRICE","DECLARED_SALE","AGGREGATED_INDICATIVE_LOW"].map(kind => {
+          const rows = commercial.filter(row => row.kind === kind);
+          return <section key={kind}><h4>{kind === "ASKING_PRICE" ? "Offres observées" : kind === "DECLARED_SALE" ? "Ventes déclarées (non vérifiées)" : "Prix agrégés indicatifs"}</h4>
+            {rows.length ? rows.map((row,i) => <p key={i}>{row.url ? <a href={row.url} target="_blank" rel="noopener noreferrer">{row.source}</a> : row.source} · {money(row.price,row.currency || "")} · {row.availability} · {date(row.observedAt)} · {row.status}</p>) : <p>Couverture non établie pour ce relevé.</p>}
+          </section>;
+        })}
+        <p>Enchères : aucune couverture établie. Une offre observée ne garantit pas sa disponibilité actuelle.</p>
+      </details>
       <details className="tcg-evidence-details">
         <summary>Consulter le dossier de preuves</summary>
         <dl>
@@ -69,7 +80,7 @@ export async function MarketDashboard() {
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">OBSERVATIONS SOURCÉES</p><h2>Cartes suivies</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
       {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
-      <TcgExplorer cards={snapshot.cards} tiles={snapshot.cards.map((card, i) => <CardTile key={i} card={card} />)} />
+      <TcgExplorer cards={snapshot.cards} tiles={snapshot.cards.map((card, i) => <CardTile key={i} card={card} commercial={snapshot.commercial.filter(row => row.productId === card.productId)} />)} />
     </section>
     <EvidenceGuide />
     <section className="dashboard-method">
