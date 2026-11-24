@@ -53,6 +53,16 @@ def sample_export():
 
 
 class TcgCorpusHandoffTests(unittest.TestCase):
+    def test_history_typescript_contract(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("Node.js 24 required")
+        major = int(subprocess.check_output([node, "--version"], text=True).strip().lstrip("v").split(".")[0])
+        if major < 24:
+            self.skipTest("Node.js 24 required")
+        root = Path(__file__).resolve().parents[1]
+        subprocess.run([node, str(root / "tests/tcg_history_contract.mjs")], cwd=root, check=True, timeout=20)
+
     def test_production_typescript_output(self):
         node = shutil.which("node")
         if not node:
