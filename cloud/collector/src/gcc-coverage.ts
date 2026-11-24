@@ -72,6 +72,39 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
         .bind(cycle,now.toISOString(),cycle-1,...args,announced));
     }
   }
+  if (kind === "fixed") {
+    const cycle = state.cycle + Number(Boolean(state.finished));
+    // Compare with the last alerted price as well as the previous evaluation:
+    // a series of small reductions can accumulate into a meaningful signal.
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_research_alerts
+      (lot_id,cycle,page,observed_at,reason,asking_cents,previous_cents,status)
+      WITH candidates AS (
+        SELECT e.*,
+          (SELECT p.status FROM gcc_opportunity_events p WHERE p.lot_id=e.lot_id
+           AND (p.cycle<e.cycle OR (p.cycle=e.cycle AND p.page<e.page))
+           ORDER BY p.cycle DESC,p.page DESC LIMIT 1) AS prior_status,
+          (SELECT a.asking_cents FROM gcc_research_alerts a WHERE a.lot_id=e.lot_id
+           ORDER BY a.cycle DESC,a.page DESC LIMIT 1) AS alerted_price,
+          (SELECT p.asking_cents FROM gcc_opportunity_events p WHERE p.lot_id=e.lot_id
+           AND (p.cycle<e.cycle OR (p.cycle=e.cycle AND p.page<e.page))
+           ORDER BY p.cycle DESC,p.page DESC LIMIT 1) AS prior_price
+        FROM gcc_opportunity_events e WHERE e.cycle=? AND e.page=? AND ${exists}
+      ), classified AS (
+        SELECT *, CASE
+          WHEN status='INVESTIGATE' AND alerted_price IS NULL THEN 'NEW_OPPORTUNITY'
+          WHEN status='INVESTIGATE' AND prior_status IS NOT NULL AND prior_status<>'INVESTIGATE' THEN 'STATUS_IMPROVED'
+          WHEN status IN ('INVESTIGATE','THIN_MARGIN') AND EXISTS (
+            SELECT 1 FROM gcc_lifecycle_events l WHERE l.lot_id=candidates.lot_id AND l.cycle=candidates.cycle AND l.event='REAPPEARED'
+          ) AND NOT EXISTS (SELECT 1 FROM gcc_research_alerts a WHERE a.lot_id=candidates.lot_id AND a.cycle=candidates.cycle AND a.reason='REAPPEARED') THEN 'REAPPEARED'
+          WHEN COALESCE(alerted_price,prior_price)-asking_cents>=500
+            AND asking_cents<=COALESCE(alerted_price,prior_price)*0.9 THEN 'PRICE_DROP'
+        END AS alert_reason FROM candidates
+      )
+      SELECT lot_id,cycle,page,observed_at,alert_reason,asking_cents,
+        CASE WHEN alert_reason='PRICE_DROP' THEN COALESCE(alerted_price,prior_price) ELSE prior_price END,status
+      FROM classified WHERE alert_reason IS NOT NULL`)
+      .bind(cycle,page.page,...args));
+  }
   batch.push(db.prepare(`UPDATE gcc_coverage SET cycle=?,page=?,cursor=?,announced=?,observed=${count},checked_at=?,finished=?,
     last_complete=CASE WHEN ? AND ${count}=? THEN ? ELSE last_complete END WHERE ${guard}`)
     .bind(state.cycle + Number(Boolean(state.finished)), page.page, page.nextCursor, announced, kind, now.toISOString(),
