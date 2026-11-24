@@ -18,9 +18,11 @@ from intelligence.agent_v2 import CONTRACT as V2, analysis_schema, convert, plan
 from intelligence.compliance import check_agent_output, suspicious
 from intelligence.offline_agent import OfflineAgentProvider
 from intelligence.planner import norm, plan_question
+from intelligence.agent_team import TCGScopeError, build_team_plan
 from intelligence.store import PublishRefused, next_version
 from intelligence.validator import assess, content_sha256, timeliness
 from investigation.spend import SpendNotAuthorized
+from intelligence.subscription_entitlements import (resolve_entitlements, authorize_agent_provider, EntitlementError)
 
 EDGE_DECISION_NOT_EVALUATED = {"decision": "NOT_EVALUATED", "decided_by": "none", "rules_applied": [],
                                "evidence_refs": [], "decided_at": None}
@@ -38,12 +40,18 @@ def _result(status, **kw):
             "violations": [], **kw}
 
 
-def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=None, send=None, max_operations=1):
+def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=None, send=None, max_operations=1, subscription_claim=None):
+    """subscription_claim must be injected by trusted server-side billing code, never copied from client input."""
     now = now or datetime.now(timezone.utc)
+    entitlements = resolve_entitlements(subscription_claim, now=now)
     plan = plan_question(question, corpora)
     if plan["status"] != "OK":
         return _result(plan["status"], plan=plan)
     corpus = next(c for c in corpora if c.corpus_id == plan["corpus_id"])
+    try:
+        team_plan = build_team_plan(corpus.subject, plan["subquestions"])
+    except TCGScopeError as e:
+        return _result("OUT_OF_SCOPE", plan=plan, reason=str(e))
 
     # --- inventaire : uniquement le corpus autorise, extraits suspects ecartes
     topics = [sq["topic_id"] for sq in plan["subquestions"]]
@@ -58,6 +66,27 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
             extracts.append(e)
     ds_ids = sorted({i for t in topics for i in (d["dataset_id"] for d in corpus.datasets_for(t))})
     datasets = [corpus.datasets[i] for i in ds_ids]
+    # Le plan d'equipe ne transporte pas les donnees : il reference les pieces
+    # du dossier partage, sous-question par sous-question.
+    for task in team_plan["tasks"]:
+        topic_id = task["topic_id"]
+        task_extracts = [e for e in extracts if e["topic_id"] == topic_id]
+        task_datasets = corpus.datasets_for(topic_id)
+        task_source_ids = sorted(
+            {e["source_id"] for e in task_extracts}
+            | {source_id for d in task_datasets for source_id in d["provenance"]["source_ids"]}
+        )
+        task["evidence_refs"] = {
+            "extract_ids": sorted(e["extract_id"] for e in task_extracts),
+            "dataset_ids": sorted(d["dataset_id"] for d in task_datasets),
+            "source_ids": task_source_ids,
+        }
+        task["evidence_status"] = "available" if task_source_ids else "no_data"
+
+    # Exécute le moteur local sans adaptateur : la trace expose explicitement
+    # les rôles non configurés, sans fabriquer de résultats ni appeler un fournisseur.
+    from intelligence.multi_agent_runtime import Coordinator
+    team_execution = Coordinator().run(team_plan)
     coverage = {d["dataset_id"]: sum(1 for p in d["points"] if p["value"] is not None) for d in datasets}
     answered = {t: bool([e for e in extracts if e["topic_id"] == t] or
                         [d for d in corpus.datasets_for(t) if coverage.get(d["dataset_id"])]) for t in topics}
@@ -80,7 +109,8 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "data_as_of": corpus.data_as_of, "economics": economics,
                "edge_decision": copy.deepcopy(EDGE_DECISION_NOT_EVALUATED)}
     agent_input = build_agent_input(context)
-    agent_input.update({"question": question, "plan": plan, "simulated": corpus.simulated,
+    agent_input.update({"question": question, "plan": plan, "agent_team": copy.deepcopy(team_plan),
+                        "simulated": corpus.simulated,
                         "dataset_topics": corpus.dataset_topics, "dataset_coverage": coverage,
                         "timeliness": {"status": tl["status"]}, "excluded_count": len(excluded),
                         "extracts": [{"extract_id": e["extract_id"], "source_id": e["source_id"],
@@ -97,6 +127,10 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
 
     # --- agent (gratuit : direct ; payant : activation + verrou R4.2 obligatoires)
     provider = provider or OfflineAgentProvider()
+    try:
+        authorize_agent_provider(entitlements, provider)
+    except EntitlementError as e:
+        return _result("REJECTED", plan=plan, violations=[f"abonnement EDGE : {e}"])
     if getattr(provider, "paid", False) and hasattr(provider, "enabled"):
         ok, why = provider.enabled()
         if not ok:
@@ -178,6 +212,9 @@ def run_inquiry(question, corpora, store, now=None, provider=None, spend_guard=N
                "agent": provider.name, "corpus": {"corpus_id": corpus.corpus_id, "sha256": corpus.sha256,
                                                   "simulated": corpus.simulated},
                "plan": plan,
+               "subscription": {"plan": entitlements["plan"], "status": entitlements["status"],
+                                "paid_provider_access": entitlements["paid_provider_access"]},
+               "agent_team": {**team_plan, "execution_trace": team_execution},
                "inventory": {"sources": src_ids, "datasets": [{"dataset_id": i, "points_with_data": coverage[i]} for i in ds_ids],
                              "extracts_used": [e["extract_id"] for e in extracts], "excluded_extracts": excluded},
                "contradictions": contradictions,

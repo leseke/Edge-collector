@@ -106,7 +106,7 @@ class CatalystTests(unittest.TestCase):
 class ReportTests(unittest.TestCase):
     def inv(self):
         s = sold([100, 105, 110])
-        return {"product_key": "lego:1", "strategy": "FLIP", "sold": s, "sold_all": s,
+        return {"product_key": "pokemon:1", "strategy": "FLIP", "sold": s, "sold_all": s,
                 "buyable": [], "trend": [], "best_offer": None,
                 "liquidity": {"months_of_supply": None}, "history": [], "scenarios": None,
                 "confidence": {"level": "LOW", "points": 1, "why": ["x"]},
@@ -134,18 +134,30 @@ class SearchLabTests(unittest.TestCase):
         eol = plan("Produits dont la fabrication s'arrête prochainement")
         self.assertEqual(eol["family"], "end_of_life")
         self.assertNotIn("Produits dont la fabrication s'arrête prochainement", eol["queries"])
-        self.assertEqual(plan("Consoles sous-évaluées")["family"], "price_anomaly")
+        with self.assertRaisesRegex(ValueError, "hors perimetre EDGE TCG"):
+            plan("Consoles sous-évaluées")
 
     def test_set_number_triggers_sold_source(self):
-        p = plan("LEGO 10316")
+        p = plan("Pokemon 151")
         self.assertIn("ebay_sold", p["sources"])
-        self.assertIn("LEGO 10316", p["queries"])
+        self.assertIn("Pokemon 151", p["queries"])
 
     def test_deterministic_id_and_validation(self):
-        self.assertEqual(plan("LEGO Pokémon")["id"], plan("LEGO Pokémon")["id"])
+        self.assertEqual(plan("Pokémon")["id"], plan("Pokémon")["id"])
+        with self.assertRaisesRegex(ValueError, "hors perimetre EDGE TCG"):
+            plan("LEGO Pokémon")
         for bad in ("", "  ", "x" * 300):
             with self.assertRaises(ValueError):
                 plan(bad)
+
+    def test_tcg_catalogue_and_custom_universe_guard(self):
+        yugioh = plan("Yu-Gi-Oh! cartes rares")
+        self.assertIn("Yu-Gi-Oh!", yugioh["detected"]["entities"])
+        self.assertIn("Yu-Gi-Oh!", yugioh["queries"][0])
+        with self.assertRaisesRegex(ValueError, "univers de recherche"):
+            plan("cartes rares", universe=["LEGO"])
+        with self.assertRaisesRegex(ValueError, "univers TCG vide"):
+            plan("cartes rares", universe=[])
 
     def test_query_cap(self):
         self.assertLessEqual(len(plan("collection rare promo nouveau fin de serie")["queries"]), 6)
@@ -154,7 +166,7 @@ class SearchLabTests(unittest.TestCase):
         from searchlab.__main__ import main
         fix = os.path.join(os.path.dirname(__file__), "..", "discovery", "fixtures", "demo_observations.json")
         with tempfile.TemporaryDirectory() as d:
-            main(["LEGO 10399", "--mode", "investigation", "--fixtures", fix,
+            main(["Pokemon coffret", "--mode", "investigation", "--fixtures", fix,
                   "--as-of", "2026-10-18T09:00:00+00:00", "--out-dir", d,
                   "--store-dir", os.path.join(d, "s"), "--private-dir", os.path.join(d, "p")])
             import json

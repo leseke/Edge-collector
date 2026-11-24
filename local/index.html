@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0a0b12">
+  <title>EDGE — Enquête locale</title>
+  <link rel="stylesheet" href="../assets/edge-live.css">
+  <script type="module" src="../assets/edge-local-ui.mjs"></script>
+  <style>
+    .local-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);gap:16px}
+    .local-field{display:grid;gap:7px;margin:15px 0}
+    .local-field label{font-size:13px;color:var(--muted)}
+    .local-field input,.local-field textarea{width:100%;background:#101421;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;font:inherit}
+    .local-field textarea{min-height:120px;resize:vertical}
+    .local-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}
+    .local-result{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:var(--muted)}
+    .local-result ul{padding-left:20px}
+    .local-result li{margin:10px 0}
+    @media(max-width:760px){.local-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="../" aria-label="EDGE accueil">EDGE<span>MARKET INTELLIGENCE</span></a>
+    <nav aria-label="Navigation principale">
+      <a href="../">Marché</a>
+      <a href="../mri/">Analyses de marché</a>
+      <a class="selected" href="./" aria-current="page">Enquête locale</a>
+    </nav>
+  </header>
+  <main>
+    <div class="intro">
+      <p class="eyebrow">EDGE LOCAL INTELLIGENCE</p>
+      <h1>Enquêter avec un modèle local.</h1>
+      <p class="muted">Le moteur tourne sur votre ordinateur via Ollama. Aucune API IA distante n'est appelée par cette passerelle.</p>
+    </div>
+    <section id="local-status" class="notice" role="status" aria-live="polite">
+      Vérification du service local…
+    </section>
+    <div class="local-grid">
+      <section class="card">
+        <h2>Nouvelle enquête</h2>
+        <p class="muted">Charge un corpus EDGE réel au format <code>edge.corpus.v1</code>. Les données de démonstration ne doivent pas être présentées comme des observations réelles.</p>
+        <form id="inquiry-form">
+          <div class="local-field">
+            <label for="local-token">Jeton du service local</label>
+            <input id="local-token" type="password" autocomplete="off" spellcheck="false" required minlength="32" placeholder="Lire data/local/auth.token">
+            <small>Utilisé en mémoire uniquement ; jamais enregistré par cette page.</small>
+          </div>
+          <div class="local-field">
+            <label for="local-question">Question TCG</label>
+            <textarea id="local-question" maxlength="2000" required placeholder="Ex. : Quels signaux d'offre, de demande et de catalyseurs ressortent de ce corpus Pokémon ?"></textarea>
+          </div>
+          <div class="local-field">
+            <label for="local-corpus">Corpus EDGE (JSON)</label>
+            <input id="local-corpus" type="file" accept=".json,application/json" required>
+            <small>Maximum 5 Mio. Le corpus est validé côté service avant toute analyse.</small>
+          </div>
+          <div class="local-actions">
+            <button id="run-inquiry" type="submit">Lancer l'enquête locale</button>
+            <button id="check-local" type="button">Vérifier Ollama</button>
+          </div>
+        </form>
+      </section>
+      <aside class="card">
+        <h2>Limites actuelles</h2>
+        <p class="muted">Cette passerelle est mono-installation et Free local. Elle ne représente pas encore un compte EDGE cloud ni un abonnement Premium.</p>
+        <div class="publication"><strong>Fournisseur</strong><small>Ollama local uniquement, modèle et licence explicitement configurés.</small></div>
+        <div class="publication"><strong>Quotas</strong><small>3 tentatives par jour, stockées localement dans SQLite.</small></div>
+        <div class="publication"><strong>Persistance</strong><small>Rapports et historique conservés sur cet ordinateur.</small></div>
+        <div class="publication"><strong>Preuves</strong><small>Le modèle ne peut pas inventer de prix ou de preuves ; les sorties restent soumises aux validateurs EDGE.</small></div>
+      </aside>
+    </div>
+    <section id="inquiry-result" class="card" style="margin-top:18px" hidden>
+      <h2>Résultat de l'enquête</h2>
+      <div id="result-content" class="local-result" aria-live="polite"></div>
+    </section>
+  </main>
+  <footer>EDGE · Le modèle local ne vérifie pas indépendamment les sources. Une sortie IA ne transforme jamais une affirmation en fait vérifié.</footer>
+</body>
+</html>

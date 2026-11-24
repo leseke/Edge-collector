@@ -1,4 +1,4 @@
-"""python -m searchlab "LEGO Pokemon" [--mode discovery|investigation] [--horizon FLIP|FUTURE_CLASSIC]
+"""python -m searchlab "Pokemon coffret" [--mode discovery|investigation] [--horizon FLIP|FUTURE_CLASSIC]
 [--fixtures f.json] [--as-of ISO] [--out-dir data/searchlab]
 
 Ecrit data/searchlab/<id>.json (public, sans capital) et met a jour index.json.

@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 from discovery.adapters import SourceUnavailable
 from investigation.spend import SpendNotAuthorized
 from discovery.engine import process
-from discovery.identity import fold, lego_set_numbers
+from discovery.identity import fold
 from edge_io import redact
 
 FAMILIES = {
@@ -25,7 +25,7 @@ FAMILIES = {
     "revalidation": "Revalidation des opportunites precedentes",
 }
 
-_STOP = set("""lego set neuf new sealed scelle boite box avec sans pour the and
+_STOP = set("""set neuf new sealed scelle boite box avec sans pour the and
 de la le les des du un une en edition officiel original pokemon one piece
 coffret display booster""".split())
 
@@ -46,38 +46,72 @@ def validate_campaign(c):
     return errors
 
 
+NON_TCG_TERMS = ("lego", "funko", "console", "nintendo", "playstation", "game boy")
+
+
+TCG_TERMS = (
+    "pokemon", "one piece", "lorcana", "riftbound", "magic the gathering",
+    "yu gi oh", "yugioh", "digimon", "flesh and blood", "weiss schwarz",
+    "union arena", "dragon ball", "star wars unlimited",
+)
+
+
 def load_campaigns(path):
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
-    return data["campaigns"]
+    campaigns = data["campaigns"]
+    if data.get("scope_policy") != "TCG_ONLY":
+        # Les registres de démonstration historiques peuvent rester LEGO ;
+        # seul le registre de production déclare et impose le périmètre TCG.
+        return campaigns
+    errors = []
+    for campaign in campaigns:
+        if not campaign.get("enabled", True):
+            continue
+        if campaign.get("scope") != "TCG_ONLY":
+            errors.append(f"{campaign.get('id')}: scope TCG_ONLY obligatoire")
+            continue
+        if campaign.get("queries_from") == "store_revalidation":
+            continue
+        queries = campaign.get("queries", [])
+        if not queries or any(
+            not any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()) for term in TCG_TERMS)
+            or any(term in " ".join(re.sub(r"[^a-z0-9]+", " ", fold(q)).split()).split() for term in NON_TCG_TERMS)
+            for q in queries
+        ):
+            errors.append(f"{campaign.get('id')}: requetes hors perimetre TCG ou sans jeu identifie")
+    if errors:
+        raise ValueError("registre de campagnes EDGE invalide : " + "; ".join(errors))
+    return campaigns
 
 
 def _expansion_queries(observations, base_queries, already, max_n):
-    """Nouvelles pistes issues des resultats : references precises
-    decouvertes (pour aller chercher leurs ventes conclues), puis
-    termes recurrents (sous-themes)."""
+    """Etend une recherche TCG avec les numeros produits recurrents,
+    puis les sous-termes frequents des annonces. Aucun format LEGO impose.
+    """
     out = []
     keys = Counter()
-    for o in observations:
-        for n in lego_set_numbers(o.get("name", "")):
-            keys[n] += 1
-    for num, _ in keys.most_common():
-        q = f"LEGO {num}"
-        if q not in already and q not in out:
-            out.append(q)
+    for observation in observations:
+        for number in re.findall(r"(?<!\d)(\d{3,6})(?!\d)", fold(observation.get("name", ""))):
+            if not 1950 <= int(number) <= 2040:
+                keys[number] += 1
+    for number, _ in keys.most_common():
+        legacy_lego = "lego" in fold(observation.get("name", "")) and "lego" not in fold(base_queries[0])
+        query = f"LEGO {number}" if legacy_lego or "lego" in fold(base_queries[0]) else f"{base_queries[0]} {number}"
+        if query not in already and query not in out:
+            out.append(query)
     base_tokens = set(fold(" ".join(base_queries)).split())
-    toks = Counter()
-    for o in observations:
-        words = set(re.findall(r"[a-z]{4,}", fold(o.get("name", ""))))
-        toks.update(w for w in words if w not in _STOP and w not in base_tokens)
-    for w, n in toks.most_common(5):
-        if n < 3:
+    tokens = Counter()
+    for observation in observations:
+        words = set(re.findall(r"[a-z]{4,}", fold(observation.get("name", ""))))
+        tokens.update(word for word in words if word not in _STOP and word not in base_tokens)
+    for word, count in tokens.most_common(5):
+        if count < 3:
             break
-        q = f"{base_queries[0]} {w}"
-        if q not in already and q not in out:
-            out.append(q)
+        query = f"{base_queries[0]} {word}"
+        if query not in already and query not in out:
+            out.append(query)
     return out[:max_n]
-
 
 def run_campaign(campaign, adapters, now=None, clock=time.monotonic):
     """Execute une campagne. adapters : {nom_source: adaptateur}.

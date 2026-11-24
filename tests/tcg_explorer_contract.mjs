@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import {filterCards} from "../app/lib/tcg-explorer.ts";
+const a={name:"Évoli",setName:"Série A",number:"12",rarity:"Rare",productId:"a",low:10,currency:"EUR"};
+const b={...a,name:"Pikachu",productId:"b",low:null};
+const c={...a,name:"Mew",productId:"c",setName:"B",low:5};
+const cards=[a,b,c];
+assert.deepEqual(filterCards(cards,"evoli 12","Série A","name"),[a]);
+assert.deepEqual(filterCards(cards,"","","low"),[c,a,b]);
+assert.deepEqual(filterCards(cards,"","","high"),[a,c,b]);
+assert.deepEqual(filterCards(cards,"absent","","name"),[]);
+assert.deepEqual(cards,[a,b,c]);
