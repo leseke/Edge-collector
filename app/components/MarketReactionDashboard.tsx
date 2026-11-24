@@ -1,3 +1,4 @@
+import { CatalystPanel } from "./CatalystPanel";
 import { MarketPatternPanel } from "./MarketPatternPanel";
 import { LearningPanel } from "./LearningPanel";
 import { ResearchAlertInbox } from "./ResearchAlertInbox";
@@ -87,6 +88,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
 
     <LeboncoinWatchPanel cards={sales.variants} />
     </>}
+
+    {tab === "signaux" && <CatalystPanel snapshot={snapshot} />}
 
     {tab === "signaux" && <Suspense fallback={<p>Chargement des notifications…</p>}><ResearchAlertInbox params={params} /></Suspense>}
 
