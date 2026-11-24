@@ -27,6 +27,15 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
   if (first) batch.push(db.prepare("DELETE FROM gcc_coverage_ids WHERE kind=? AND " + exists).bind(kind, ...args));
   batch.push(db.prepare("INSERT OR IGNORE INTO gcc_coverage_ids(kind,lot_id) SELECT ?,value FROM json_each(?) WHERE " + exists)
     .bind(kind, JSON.stringify(page.items.map(item => item.id)), ...args));
+  if (kind !== "closed") {
+    const observations = page.items.map(item => ({ ...item, source: "https://gradedcardcenter.com/item/" + item.id }));
+    batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_offer_observations
+      (kind,lot_id,observed_at,cycle,page,variant_key,title,price_cents,ends_at,source_url)
+      SELECT ?,json_extract(value,'$.id'),?,?,?,json_extract(value,'$.variantKey'),json_extract(value,'$.title'),
+      json_extract(value,'$.cents'),json_extract(value,'$.ends'),json_extract(value,'$.source')
+      FROM json_each(?) WHERE ${exists}`)
+      .bind(kind, now.toISOString(), state.cycle + Number(Boolean(state.finished)), page.page, JSON.stringify(observations), ...args));
+  }
   const count = "(SELECT count(*) FROM gcc_coverage_ids WHERE kind=?)";
   const announced = first ? page.total : state.announced;
   batch.push(db.prepare(`UPDATE gcc_coverage SET cycle=?,page=?,cursor=?,announced=?,observed=${count},checked_at=?,finished=?,
