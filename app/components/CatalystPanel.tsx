@@ -35,6 +35,10 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  {p.published_at&&<p>Date indiquée par l’éditeur : {p.published_at.slice(0,10)}</p>}
  {p.investigated_at&&<p>Dernière investigation : {p.investigated_at.slice(0,10)}</p>}
  <p>Informations déclarées par l’éditeur, non corroborées indépendamment.</p>
+ <h4>Correspondances commerciales à vérifier</h4>
+ <p>{discoveries.commercial?("Catalogue Playin relevé le "+discoveries.commercial.observedAt.slice(0,10)+" · "+(discoveries.commercial.status==="READ"?"Consulté":"Collecte échouée")):"Catalogue commercial non encore relevé."}</p>
+ {p.commercialCandidates.length===0?<p>Aucune correspondance candidate dans ce relevé.</p>:<ul>{p.commercialCandidates.map(c=><li key={c.url}><a href={c.url} target="_blank" rel="noopener noreferrer">{c.title}</a> · Mots communs : {c.overlap.join(", ")}</li>)}</ul>}
+ <p>Correspondances textuelles uniquement : aucun prix, stock, livraison ou identité exacte confirmé.</p>
  <p>À rechercher : identité exacte, disponibilité française, prix d’entrée, distribution, rareté et éléments contraires à la thèse.</p>
  </details>
  <p>Produit exact, prix d’entrée et disponibilité en France à confirmer. Pas de décision d’achat automatique.</p>
