@@ -1,3 +1,4 @@
+import { estimateListingMarket } from "../lib/listing-analysis";
 import { GccCoverage } from "./GccCoverage";
 import type { SaleVariant } from "../lib/radar-paid-sales";
 import { GccProductImage, RadarProductZoom } from "./RadarProductZoom";
@@ -63,6 +64,9 @@ export async function GccAvailability({ kind, variants, cursor = null, series = 
           const matches = ((item.variantKey && byKey.get(item.variantKey)) || [])
             .filter(sale => sale.source !== `https://gradedcardcenter.com/item/${item.id}`)
             .sort((a, b) => b.day.localeCompare(a.day));
+          const market = estimateListingMarket(matches, new Date().toISOString().slice(0, 10));
+          const median = market.medianGross;
+          const gap = !closed && !auction && item.cents !== null && median !== null ? (median - item.cents) / median * 100 : null;
           return <li key={item.id}>
           <RadarProductZoom name={item.title} details={<section aria-label="Ventes comparables">
             <h3>Ventes payées comparables</h3>
@@ -83,6 +87,12 @@ export async function GccAvailability({ kind, variants, cursor = null, series = 
                 <strong>{item.cents === null ? "Prix indisponible" : euros.format(item.cents / 100)}</strong>
                 <span>{auction ? "Enchère affichée" : closed ? "Prix indiqué par GCC" : "Prix demandé"}</span>
               </div>
+              {gap !== null && <div className="radar-price-comparison">
+                <strong>{gap > 0 ? `${Math.round(gap)} % sous la médiane` : gap < 0 ? `${Math.round(-gap)} % au-dessus de la médiane` : "Au niveau de la médiane"}</strong>
+                <small>{euros.format(median! / 100)} · {market.recent.length} ventes payées comparables sur 90 jours</small>
+                <small>Écart brut, hors frais et livraison. Revente non garantie.</small>
+              </div>}
+              {!closed && !auction && gap === null && <small className="radar-sale-variant">Comparaison récente insuffisante</small>}
               {item.ends && <p className="radar-sale-variant">Fin le {date.format(new Date(item.ends))}</p>}
               {closed && <p className="radar-sale-variant">{item.awaitingPayment ? "En attente de paiement" : "Vendu selon GCC"}
                 {item.soldAt && <> · {date.format(new Date(item.soldAt))}</>}
