@@ -26,10 +26,19 @@ Deliver a complete, professional, autonomous TCG market-intelligence web applica
 ## Resume
 A bare “Go” authorizes continuing the highest-priority safe development task, not restarting planning. Read the canonical state and inspect actual HEAD. If they disagree, reconcile from repository evidence.
 
-## Token economy — mandatory response and execution budget
-- Default final report: at most 120 words AND 900 characters (excluding essential evidence links). For a substantial delivery or blocker, at most 220 words AND 1600 characters. Exceed only for explicit requests for detail or necessary safety/correctness disclosures.
-- Use at most four compact fields: Delivered, Validation, Blockers, Next. Omit empty fields. No generic progress narration, repeated context, praise, decorative diagrams, redundant tables, repeated plans or restatement of owner instructions.
-- Spend effort on implementation, not explaining intentions. Batch related tool calls; retrieve targeted files/ranges, summarize tool output, avoid rereading unchanged files and repeated polling. Never omit necessary tests or evidence merely to save tokens.
-- For "Go", proceed directly; no confirmation or roadmap repetition. Report only actual delta and actionable blockers.
-- Before sending, remove every sentence that does not communicate a new result, evidence, decision, limitation or necessary next action. Keep durable technical detail in repository handoff files rather than chat.
-- Character/word limits are portable proxies, not exact token counts. Actual model token budgets depend on provider and tokenizer; do not claim control over ChatGPT quotas or hidden reasoning. For application-owned agents, enforce provider-supported input/output limits, bounded retries and measured usage separately.
+## Token economy — optimize waste, never quality
+
+### Priority hierarchy (mandatory)
+Correctness, security, data integrity, functional completeness and maintainability outrank token savings. Then optimize execution efficiency, then communication brevity. Never reduce implementation scope, necessary investigation, reasoning depth, tests, accessibility, error handling or documentation merely to meet a token target. Do not choose an inferior solution because it is shorter. Avoid unnecessary complexity as well as premature simplification.
+
+### Separate budgets
+- Communication: target 900 characters / 120 words for routine reports; 1600 characters / 220 words for substantial deliveries. These are soft ceilings, not truncation rules. Exceed whenever necessary for accuracy, material risks, blockers, decisions, evidence or an explicit request for detail. Use compact Delivered / Validation / Blockers / Next fields; omit empty fields. No filler, repeated context, decorative diagrams or repeated plans.
+- Exploration: retrieve targeted context and batch independent reads when safe. Reuse verified unchanged information, but re-read whenever correctness, concurrent changes, unfamiliar code or stale context warrants it. Never assume unseen code or skip relevant dependencies.
+- Production and reasoning: no arbitrary character, token, file, commit, test or tool-call cap. Use the effort needed to deliver the complete vertical slice. Prefer coherent changes over artificial micro-deliveries. Run appropriate unit, integration and user-journey tests; disclose unexecuted checks. Do not weaken tests to pass.
+- Durable handoff: no chat-length cap applies to code, tests, technical documentation or PROJECT_STATE.md. Preserve enough evidence and context for another agent to resume independently.
+
+### Resource exhaustion
+If a real provider quota, context limit or execution budget approaches, preserve coherent work, record exact progress, unfinished tasks and validation in the canonical handoff, and resume from there. Never silently downgrade quality, fake completion, truncate essential code or omit validation. For application-owned agents, measure input/output usage and use task-specific budgets, bounded retries and explicit escalation; never silently truncate evidence or substitute a cheaper model where it fails quality criteria. Do not claim control of external ChatGPT quotas or hidden reasoning.
+
+### Final quality gate
+Before finishing, ask: is the requested outcome actually usable, are important failure paths covered, and could another agent reproduce or resume the work? If not, continue when feasible or report the precise blocker. Then remove only redundant communication. A bare "Go" means execute, not repeat the roadmap. Token efficiency is measured per successfully delivered outcome, not per short response.
