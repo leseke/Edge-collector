@@ -1,3 +1,4 @@
+import {collectCatalysts} from "./catalyst-discovery";
 import { collectCoverage } from "./gcc-coverage";
 import { parseIndicativePrice } from "./parse.mjs";
 import { readBoundedText } from "./bounded.mjs";
@@ -85,6 +86,6 @@ export default {
       ctx.waitUntil(collectCoverage(env.DB));
       return;
     }
-    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime)]));
+    ctx.waitUntil(Promise.all([collect(env), collectPublicGccLots(env, event.scheduledTime), collectCatalysts(env.DB)]));
   },
 };
