@@ -1,10 +1,13 @@
-import {getLearningReport} from "../lib/edge-learning";
+import Link from "next/link";
+import {getLearningReport,learningHorizon,learningHorizons} from "../lib/edge-learning";
 const labels:Record<string,string>={NEW_OPPORTUNITY:"Nouvelle opportunité",STATUS_IMPROVED:"Valorisation améliorée",PRICE_DROP:"Baisse significative",REAPPEARED:"Réapparition"};
-export async function LearningPanel(){
- const report=await getLearningReport();
- return <section className="dashboard-section radar-section" aria-labelledby="learning-title">
+export async function LearningPanel({horizonValue}:{horizonValue?:unknown}){
+ const horizon=learningHorizon(horizonValue);
+ const report=await getLearningReport(horizon);
+ return <section id="edge-learning" className="dashboard-section radar-section" aria-labelledby="learning-title">
  <h2 id="learning-title">Pertinence des signaux</h2>
- <p>Comparaison des médianes de ventes payées avant le signal et sur les 30 jours suivants, pour une même variante. Ce n’est pas un rendement d’investissement.</p>
+ <nav className="radar-offer-links" aria-label="Horizon d’évaluation">{learningHorizons.map(n=><Link key={n} href={`/mri?tab=marche&horizon=${n}#edge-learning`} aria-current={n===horizon?"page":undefined}>J+{n}</Link>)}</nav>
+ <p>Comparaison des médianes de ventes payées avant le signal et sur les {horizon} jours suivants, pour une même variante. Ce n’est pas un rendement d’investissement.</p>
  {report===null?<p>Évaluation momentanément indisponible.</p>:report.groups.length===0?<p>Aucune cohorte arrivée à maturité avec référence initiale suffisante.</p>:<>
  {report.partial&&<p>Échantillon limité aux 100 cohortes les plus récentes.</p>}
  {report.groups.map(g=><article className="edge-mri-case" key={g.reason}>
@@ -15,6 +18,6 @@ export async function LearningPanel(){
  <p>{g.up} en hausse (&gt;5 %) · {g.flat} stables · {g.down} en baisse (&gt;5 %).</p>
  </>}
  </article>)}</>}
- <p className="radar-sales-description">Une première alerte par variante et motif sur 180 jours, fenêtre de suivi achevée et trois ventes ultérieures au minimum. Pas de classement automatique des stratégies ni d’inférence causale.</p>
+ <p className="radar-sales-description">Une première alerte par variante et motif sur une fenêtre de 180 jours de signaux arrivés à maturité, fenêtre de suivi achevée et trois ventes ultérieures au minimum. Pas de classement automatique des stratégies ni d’inférence causale.</p>
  </section>;
 }
