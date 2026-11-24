@@ -86,6 +86,18 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     {(tab === "signaux" || tab === "marche") && <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
       <h2 id="radar-trends-title">{tab === "signaux" ? "Signaux à investiguer" : "Tendances du marché"}</h2>
       {tab === "signaux" && <p>Les tendances observées sont des pistes de recherche, pas des recommandations d’achat.</p>}
+      {tab === "signaux" && <section aria-label="Signaux précoces">
+        <h3>Pistes avant confirmation du marché</h3>
+        <p>Une publication peut déclencher une investigation sans historique de ventes suffisant. Son impact commercial reste à vérifier.</p>
+        {pokemonCases.filter(item => item.publications.length > 0).map(item => <article className="edge-mri-case" key={item.productId}>
+          <small>SIGNAL FAIBLE · À INVESTIGUER</small>
+          <h3>{snapshot.cards.find(card => card.productId === item.productId)?.name ?? item.productId}</h3>
+          <ul>{item.publications.map(publication => <li key={publication.url}><a href={publication.url} target="_blank" rel="noopener noreferrer">{publication.title}</a></li>)}</ul>
+          <p>Hypothèse à tester : évolution de la demande, de la disponibilité ou des prix après publication. Aucun rendement présumé.</p>
+          <Link href={`/explorer/${encodeURIComponent(item.productId)}`}>Examiner le produit →</Link>
+        </article>)}
+        {!pokemonCases.some(item => item.publications.length > 0) && <p>Aucune publication liée à un produit dans le relevé actuel.</p>}
+      </section>}
       {sales.trends.length === 0 && <p>Pas assez de ventes payées comparables pour mesurer une tendance sur 30 jours.</p>}
       {sales.trends.slice(0, 12).map(trend => {
         const variant = sales.variants.find(item => item.key === trend.key);
