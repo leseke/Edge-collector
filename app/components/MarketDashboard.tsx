@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getRadarPaidSales } from "../lib/radar-paid-sales";
 import { AssetImage } from "./AssetImage";
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
 
@@ -40,12 +41,28 @@ function CardTile({ card }: { card: TcgCard }) {
   </article>;
 }
 export async function MarketDashboard() {
-  const snapshot = await getTcgMarketSnapshot();
+  const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales().catch(() => null)]);
   const freshDate = snapshot.observedAt ? date(snapshot.observedAt) : "Non disponible";
   return <div className="native-dashboard edge-investor-home">
     <section className="edge-home-heading">
-      <div><p className="native-eyebrow">EDGE · DÉCOUVERTE</p><h1>Le marché, sous un autre angle<span>.</span></h1><p>Explore les produits et repère les pistes à investiguer.</p></div>
+      <div><p className="native-eyebrow">EDGE · ESPACE INVESTISSEUR</p><h1>Votre tableau de bord<span>.</span></h1><p>Les observations du marché, les pistes à approfondir et les transactions documentées.</p></div>
       <Link href="/mri" className="edge-home-action">Voir les analyses <span aria-hidden="true">↗</span></Link>
+    </section>
+    <section aria-label="Synthèse du marché" style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginBottom:20}}>
+      {[
+        {label:"Tendances mesurées",value:sales?.trends.length ?? "—",href:"/mri?tab=signaux",note:"Variantes comparables"},
+        {label:"Pistes à vérifier",value:sales?.leads.length ?? "—",href:"/mri?tab=signaux",note:"Publications et annonces"},
+        {label:"Ventes payées affichées",value:sales ? sales.recentSales.length + sales.otherSales.length : "—",href:"/mri?tab=ventes",note:sales?.archiveOnly ? "Archive disponible" : "Échantillon documenté"},
+        {label:"Offres ouvertes",value:"Consulter",href:"/mri?tab=offres",note:"Enchères et prix fixes"},
+      ].map(item => <Link key={item.label} href={item.href} style={{display:"grid",gap:6,padding:14,border:"1px solid var(--line)",borderRadius:12,background:"#101e34"}}>
+        <span style={{fontSize:12,color:"var(--muted)"}}>{item.label}</span><strong style={{fontSize:22,color:"var(--accent)"}}>{item.value}</strong><small>{item.note} →</small>
+      </Link>)}
+    </section>
+    <section className="edge-home-ai" aria-label="Priorités de recherche">
+      <div><p className="native-eyebrow">RADAR · PRIORITÉS</p><h2>À investiguer</h2>
+      <p>{!sales ? "Les données du Radar sont indisponibles." : sales.leads.length || sales.trends.length ? "Des observations méritent une analyse complémentaire." : "Aucune piste documentée dans ce relevé. Cela ne signifie pas que le marché ne présente aucune opportunité."}</p>
+      <span className="edge-ai-state">Les pistes ne constituent pas des recommandations d’achat.</span></div>
+      <Link href="/mri?tab=signaux" className="edge-ai-link">Ouvrir les signaux →</Link>
     </section>
     <section className="edge-home-market" aria-labelledby="edge-market-title">
       <div className="edge-home-section-head"><div><p className="native-eyebrow">01 / EXPLORER</p><h2 id="edge-market-title">Produits observés <span>{snapshot.cards.length}</span></h2></div><div className="edge-home-section-actions"><span className="edge-home-updated">Relevé : {freshDate}</span><Link href="/explorer" className="edge-explore-link">Tout explorer →</Link></div></div>
