@@ -99,6 +99,7 @@ jobs:
           config["d1_databases"] = [{"binding": "SALES_DB", "database_name": database_name, "database_id": database_id}]
           Path(sys.argv[2]).write_text(json.dumps(config))
           PY
+          npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/003_gcc_offer_observations.sql --yes
           npm exec -- wrangler deploy --config "$preview_config" --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
           preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
           curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-max-time 65 --retry-all-errors \
@@ -119,6 +120,9 @@ jobs:
               for link in pages:
                   assert f'/mri?tab={link}' in html, (tab, link)
           assert "Signaux à investiguer" in pages["signaux"]
+          assert "Scanner d’opportunités" in pages["signaux"]
+          assert "Baisses de prix observées" in pages["signaux"]
+          assert "Historique momentanément indisponible" not in pages["signaux"]
           assert 'id="ventes-payees"' not in pages["signaux"]
           assert 'id="ventes-payees"' in pages["ventes"] and 'id="gcc-closed"' in pages["ventes"]
           assert "Graded Card Center" in pages["ventes"]
