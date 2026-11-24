@@ -20,6 +20,8 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  <a href={p.url} target="_blank" rel="noopener noreferrer">Consulter la publication ↗</a>
  {snapshot.cards.some(c=>c.productId===p.productId)&&<p><Link href={"/explorer/"+encodeURIComponent(p.productId)}>Examiner le produit</Link></p>}
  </article>)}
+ <h3>Comparaisons interboutiques</h3>
+ {discoveries===null?<p>Comparaison indisponible.</p>:discoveries.comparisons.length===0?<p>Aucune paire d’offres fraîches de même GTIN et de même disponibilité.</p>:discoveries.comparisons.map((g:{key:string;spreadCents:number;offers:{merchant:string;url:string;name?:string;priceCents:number;availability:string;observedAt:string}[]})=><article className="edge-mri-case" key={g.key}><h4>{g.offers[0].name??g.key}</h4><p>Écart affiché hors livraison : {(g.spreadCents/100).toFixed(2)} €</p><ul>{g.offers.map(o=><li key={o.url}><a href={o.url} target="_blank" rel="noopener noreferrer">{o.merchant}</a> · {(o.priceCents/100).toFixed(2)} € · {o.availability} · {o.observedAt.slice(0,10)}</li>)}</ul><p>GTIN déclaré identique ; langue, contenu et livraison à confirmer avant achat.</p></article>)}
  <h3>Découvertes autonomes des éditeurs</h3>
  {discoveries===null?<p>Collecte des éditeurs momentanément indisponible.</p>:<>
  <p>{discoveries.scan?("Dernier passage : "+new Date(discoveries.scan.observed_at).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})+" · "+(discoveries.scan.status==="FAILED"?"Source inaccessible ou extraction impossible":discoveries.scan.status==="EMPTY"?"Aucune nouvelle publication":"Nouvelles publications : "+discoveries.scan.discovered)):"Aucun passage enregistré."}</p>
@@ -36,7 +38,7 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  {p.investigated_at&&<p>Dernière investigation : {p.investigated_at.slice(0,10)}</p>}
  <p>Informations déclarées par l’éditeur, non corroborées indépendamment.</p>
  <h4>Correspondances commerciales à vérifier</h4>
- <p>{discoveries.commercial?("Catalogue Playin relevé le "+discoveries.commercial.observedAt.slice(0,10)+" · "+(discoveries.commercial.status==="READ"?"Consulté":"Collecte échouée")):"Catalogue commercial non encore relevé."}</p>
+ <p>{discoveries.commercial.length?discoveries.commercial.map(m=>`${m.merchant} : ${m.observedAt.slice(0,10)} · ${m.status==="READ"?"Consulté":"Collecte échouée"}`).join(" / "):"Catalogues non encore relevés."}</p>
  {p.commercialCandidates.length===0?<p>Aucune correspondance candidate dans ce relevé.</p>:<ul>{p.commercialCandidates.map(c=><li key={c.url}><a href={c.url} target="_blank" rel="noopener noreferrer">{c.title}</a> · Mots communs : {c.overlap.join(", ")}{c.offer?.status==="READ"?<div><p>{c.offer.name??"Nom non renseigné"} {c.offer.sku&&`· SKU ${c.offer.sku}`}</p><p>{typeof c.offer.priceCents==="number"&&c.offer.currency?`${(c.offer.priceCents/100).toFixed(2)} ${c.offer.currency}`:"Prix non renseigné"} · {c.offer.availability??"UNKNOWN"}</p><p>Relevé du {c.offer.observedAt.slice(0,10)}{!c.offer.fresh?" · ancien, à revérifier":""}</p></div>:<p>{c.offer?"Extraction échouée":"Fiche non consultée"}</p>}</li>)}</ul>}
  <p>Prix et disponibilité éventuellement déclarés par le marchand sur la fiche candidate. Correspondance exacte avec la publication et livraison non confirmées.</p>
  <p>À rechercher : identité exacte, disponibilité française, prix d’entrée, distribution, rareté et éléments contraires à la thèse.</p>
