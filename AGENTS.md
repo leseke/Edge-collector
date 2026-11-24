@@ -25,3 +25,11 @@ Deliver a complete, professional, autonomous TCG market-intelligence web applica
 
 ## Resume
 A bare “Go” authorizes continuing the highest-priority safe development task, not restarting planning. Read the canonical state and inspect actual HEAD. If they disagree, reconcile from repository evidence.
+
+## Token economy — mandatory response and execution budget
+- Default final report: at most 120 words AND 900 characters (excluding essential evidence links). For a substantial delivery or blocker, at most 220 words AND 1600 characters. Exceed only for explicit requests for detail or necessary safety/correctness disclosures.
+- Use at most four compact fields: Delivered, Validation, Blockers, Next. Omit empty fields. No generic progress narration, repeated context, praise, decorative diagrams, redundant tables, repeated plans or restatement of owner instructions.
+- Spend effort on implementation, not explaining intentions. Batch related tool calls; retrieve targeted files/ranges, summarize tool output, avoid rereading unchanged files and repeated polling. Never omit necessary tests or evidence merely to save tokens.
+- For "Go", proceed directly; no confirmation or roadmap repetition. Report only actual delta and actionable blockers.
+- Before sending, remove every sentence that does not communicate a new result, evidence, decision, limitation or necessary next action. Keep durable technical detail in repository handoff files rather than chat.
+- Character/word limits are portable proxies, not exact token counts. Actual model token budgets depend on provider and tokenizer; do not claim control over ChatGPT quotas or hidden reasoning. For application-owned agents, enforce provider-supported input/output limits, bounded retries and measured usage separately.
