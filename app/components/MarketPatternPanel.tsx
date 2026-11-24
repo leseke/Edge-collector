@@ -1,9 +1,10 @@
+import {getAbsorptionReport,absorptionRate} from "../lib/market-absorption";
 import {getSupplyPatterns,supplyContraction} from "../lib/supply-patterns";
 import {getMarketPatterns} from "../lib/market-patterns";
 import type {SaleVariant} from "../lib/radar-paid-sales";
 const euros=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"});
 export async function MarketPatternPanel({variants}:{variants:SaleVariant[]}){
- const [report,supply]=await Promise.all([getMarketPatterns(),getSupplyPatterns()]);
+ const [report,supply,absorption]=await Promise.all([getMarketPatterns(),getSupplyPatterns(),getAbsorptionReport()]);
  return <section className="dashboard-section radar-section" aria-labelledby="pattern-title">
  <h2 id="pattern-title">Configurations précurseurs</h2>
  <p>Accélération des ventes payées relevées sans hausse significative du prix médian. Hypothèse à investiguer, pas une prévision.</p>
@@ -33,6 +34,20 @@ export async function MarketPatternPanel({variants}:{variants:SaleVariant[]}){
  <p>Une disparition ne prouve pas une vente. Les enchères ne sont pas incluses.</p>
  </article>;
  })}
+ <h3>Absorption commerciale à 14 jours</h3>
+ <p>Part des annonces nouvellement observées dont une vente payée a été documentée dans les 14 jours suivants. Une première observation n’est pas une date de publication certaine.</p>
+ {absorption===null?<p>Analyse de l’absorption momentanément indisponible.</p>:absorption.length===0?<p>Historique arrivé à maturité encore insuffisant.</p>:absorption.slice(0,15).map(a=>{
+ const v=variants.find(v=>v.key===a.variant_key);
+ return <article className="edge-mri-case" key={"absorption-"+a.variant_key}>
+ <h3>{v?.name??a.title}</h3>
+ {v&&<p>{v.variant}</p>}
+ <div className="radar-sale-price"><strong>{absorptionRate(a)?.toFixed(1)} %</strong><span>Ventes payées documentées</span></div>
+ <p>{a.paid_count} sur {a.cohort_count} annonces suivies.</p>
+ <p>{a.median_delay_days===null?"Aucun délai de vente documenté":`Délai médian parmi les ventes documentées : ${a.median_delay_days.toFixed(1)} jours`}</p>
+ <p>{a.cohort_count-a.paid_count} sans preuve de vente dans la fenêtre ; leur issue reste indéterminée.</p>
+ </article>;
+ })}
+ <p>Échantillon : premières observations précédées d’un parcours complet récent, cohortes âgées de 15 à 75 jours et au moins cinq annonces par variante. Ventes du jour initial exclues faute d’heure fiable. Le taux est un minimum documenté, pas une probabilité de revente.</p>
  <p className="radar-sales-description">Critères exploratoires : au moins 3 puis 5 ventes relevées, hausse du volume d’au moins 50 %, médiane dans ±5 %. La couverture historique peut être incomplète ; les volumes relevés ne représentent pas nécessairement le marché entier.</p>
  </section>;
 }
