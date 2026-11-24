@@ -1,3 +1,4 @@
+import {exactGtin} from "./commercial-parser.mjs";
 // Accept only a single identifiable Product with a single explicit Offer.
 export function productOffer(html){
  const products=[];
@@ -15,5 +16,7 @@ export function productOffer(html){
  const cents=typeof price==="number"||typeof price==="string"&&/^\d+(?:\.\d{1,2})?$/.test(price)?Math.round(Number(price)*100):null;
  const valid=Number.isSafeInteger(cents)&&cents>0&&typeof currency==="string"&&/^[A-Z]{3}$/.test(currency);
  const availability=typeof offer?.availability==="string"?offer.availability.replace(/^https?:\/\/schema\.org\//,""):"";
- return {name:p.name.trim().slice(0,300),sku:typeof p.sku==="string"?p.sku.slice(0,100):null,priceCents:valid?cents:null,currency:valid?currency:null,availability:["InStock","OutOfStock","PreOrder","BackOrder","SoldOut","LimitedAvailability"].includes(availability)?availability:"UNKNOWN"};
+ const ids=[p.gtin,p.gtin8,p.gtin12,p.gtin13,p.gtin14].filter(x=>x!=null).map(exactGtin);
+ const gtin=ids.length&&ids.every(x=>x!==null&&x===ids[0])?ids[0]:null;
+ return {gtin,name:p.name.trim().slice(0,300),sku:typeof p.sku==="string"?p.sku.slice(0,100):null,priceCents:valid?cents:null,currency:valid?currency:null,availability:["InStock","OutOfStock","PreOrder","BackOrder","SoldOut","LimitedAvailability"].includes(availability)?availability:"UNKNOWN"};
 }
