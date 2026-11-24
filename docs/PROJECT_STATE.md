@@ -20,3 +20,9 @@ Each session records actual delivered outcomes, code commit IDs, validation evid
 - Connected latest verified snapshot to interactive search (accent insensitive, name/number/rarity/series), series filter, currency-grouped indicative price sorting, reset and progressive display. Existing evidence details retained. Explicit partial catalog and unknown offer/sale coverage.
 - Code commits: 35a75d2a7ef63a622fca0f7d7a3a21840bf90ac0, 9061ce8f151670e5e0818ddcbaf2649cb6eb3665, bd85cfe90327bed838c64f1159fdfdcf0f88bd9d, b980d48f1d2b64c2cfaf7bdbc38dc50133c7d044, 864b9137e27068757328bc8cd4b810cd6988f209.
 - Node contract added; execution, final CI and browser preview not yet confirmed. PR #5 confirmed open draft before changes. No production deployment.
+
+## Delivery — commercial observations
+- Data adapter exposes exact product-ID matched observations, source URL (HTTPS only), price, currency, date, availability and collection status. Product cards separate asking prices, declared sales and indicative aggregates. Commits bc87c2af0552d44dae62a15e28bb6f7346be1b62 and 66a6e0b5ce9a82ee2410458d2eeae7039354e550.
+- Actual capture 45380419399-1 (2026-11-24): 16 observations across categories, no declared completed sales. Auction coverage remains unknown. No independent transaction verification.
+- CI at interface commit: [{"name":"Next.js build","status":"completed","conclusion":"success","id":45402073665},{"name":"EDGE MRI offline tests","status":"completed","conclusion":"success","id":45402073828}]. Browser not verified.
+- Next: inspect existing listing collectors and connect real TCG listings and auctions; add production-code contract tests for classification and unknown coverage. No production deployment.
