@@ -13,7 +13,7 @@ export async function OpportunityScanner({ variants, archiveOnly }: { variants: 
   const cursors = new Set<string>();
   let cursor: string | null = null, pages = 0, total: number | null = null, partial = false, checkedAt: string | null = null;
   for (let index = 0; index < maxPages; index++) {
-    const page = await getGccActiveListings("fixed", cursor);
+    const page: Awaited<ReturnType<typeof getGccActiveListings>> = await getGccActiveListings("fixed", cursor);
     if (!page) { partial = true; break; }
     pages++;
     if (index === 0) total = page.total;
