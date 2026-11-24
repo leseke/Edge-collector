@@ -1,3 +1,4 @@
+import { TcgExplorer } from "./TcgExplorer";
 import { getTcgMarketSnapshot, type TcgCard } from "../lib/market-data";
 import { EvidenceGuide } from "./EvidenceGuide";
 import { TcgCorpusDownload } from "./TcgCorpusDownload";
@@ -68,7 +69,7 @@ export async function MarketDashboard() {
     <section className="dashboard-section">
       <div className="dashboard-section-heading"><div><p className="native-eyebrow">OBSERVATIONS SOURCÉES</p><h2>Cartes suivies</h2></div><span className="dashboard-date">Dernier relevé : {freshDate}</span></div>
       {snapshot.warning && <div className="dashboard-warning" role="status">{snapshot.warning}</div>}
-      {snapshot.cards.length ? <div className="tcg-card-grid">{snapshot.cards.map((card) => <CardTile key={card.productId} card={card} />)}</div> : <div className="dashboard-empty">Aucune observation TCG vérifiable n’est disponible dans le dernier relevé.</div>}
+      <TcgExplorer cards={snapshot.cards} tiles={snapshot.cards.map((card, i) => <CardTile key={i} card={card} />)} />
     </section>
     <EvidenceGuide />
     <section className="dashboard-method">
