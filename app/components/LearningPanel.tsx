@@ -10,12 +10,14 @@ export async function LearningPanel({horizonValue}:{horizonValue?:unknown}){
  <p>Comparaison des médianes de ventes payées avant le signal et sur les {horizon} jours suivants, pour une même variante. Ce n’est pas un rendement d’investissement.</p>
  {report===null?<p>Évaluation momentanément indisponible.</p>:report.groups.length===0?<p>Aucune cohorte arrivée à maturité avec référence initiale suffisante.</p>:<>
  {report.partial&&<p>Échantillon limité aux 100 cohortes les plus récentes.</p>}
+ <p>Comparaison relative : {report.controlSample} signaux examinés, avec jusqu’à dix variantes témoins sélectionnées avant le signal.</p>
  {report.groups.map(g=><article className="edge-mri-case" key={g.reason}>
  <h3>{labels[g.reason]??g.reason}</h3>
  <p>{g.evaluable} cohortes évaluables sur {g.eligible} éligibles.</p>
  {g.medianChange===null?<p>Ventes ultérieures insuffisantes.</p>:<>
  <p>Variation médiane : {g.medianChange.toFixed(1)} %</p>
  <p>{g.up} en hausse (&gt;5 %) · {g.flat} stables · {g.down} en baisse (&gt;5 %).</p>
+ {report.relative.filter(r=>r.reason===g.reason).map(r=><p key={r.reason}>{r.paired} comparaisons documentées · {r.medianExcess===null?"Témoins insuffisants":`Écart médian au groupe témoin : ${r.medianExcess.toFixed(1)} points`}</p>)}
  </>}
  </article>)}</>}
  <p className="radar-sales-description">Une première alerte par variante et motif sur une fenêtre de 180 jours de signaux arrivés à maturité, fenêtre de suivi achevée et trois ventes ultérieures au minimum. Pas de classement automatique des stratégies ni d’inférence causale.</p>
