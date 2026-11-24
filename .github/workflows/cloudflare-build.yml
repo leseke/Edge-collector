@@ -126,6 +126,8 @@ jobs:
           assert "Signaux à investiguer" in pages["signaux"]
           assert "Scanner d’opportunités" in pages["signaux"]
           assert "Centre de notifications" in pages["signaux"]
+          assert "Absorption commerciale" in pages["signaux"]
+          assert "Analyse de l’absorption momentanément indisponible" not in pages["signaux"]
           assert "Centre de notifications momentanément indisponible" not in pages["signaux"]
           assert "Pertinence des signaux" in pages["marche"]
           assert "Évaluation momentanément indisponible" not in pages["marche"]
