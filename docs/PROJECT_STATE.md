@@ -11,7 +11,12 @@ Updated 2026-11-24. Development branch: edge/tcg-multi-agent-orchestration-001. 
 - No full audit or production readiness claim. Active offers, completed sales coverage, autonomous discovery, portfolio and full UI integration need verification.
 
 ## Next executable delivery
-Market Explorer vertical slice: inspect existing routes and collectors, then implement a connected searchable/filterable product catalog and detailed product view with actual available data. Reuse existing code and expose missing offers/sales honestly. Inspect historical publisher to connect real historical data rather than invent an index. Group changes, test and update this file.
+Market Explorer: connect actual active offers and completed sales to product detail, inspect existing collectors and routes first. Verify the new explorer in browser and wire its Node contract into CI if not already executed. Inspect historical publisher to connect real historical data rather than invent an index.
 
 ## Handoff discipline
 Each session records actual delivered outcomes, code commit IDs, validation evidence, pending tests, known blockers and next executable task here. Reconcile against current HEAD, including automation commits. No conversation memory is required.
+
+## Delivery — Market Explorer search
+- Connected latest verified snapshot to interactive search (accent insensitive, name/number/rarity/series), series filter, currency-grouped indicative price sorting, reset and progressive display. Existing evidence details retained. Explicit partial catalog and unknown offer/sale coverage.
+- Code commits: 35a75d2a7ef63a622fca0f7d7a3a21840bf90ac0, 9061ce8f151670e5e0818ddcbaf2649cb6eb3665, bd85cfe90327bed838c64f1159fdfdcf0f88bd9d, b980d48f1d2b64c2cfaf7bdbc38dc50133c7d044, 864b9137e27068757328bc8cd4b810cd6988f209.
+- Node contract added; execution, final CI and browser preview not yet confirmed. PR #5 confirmed open draft before changes. No production deployment.
