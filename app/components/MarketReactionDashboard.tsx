@@ -1,3 +1,4 @@
+import { OpportunityScanner } from "./OpportunityScanner";
 import { Suspense } from "react";
 import Link from "next/link";
 import { getTcgMarketSnapshot } from "../lib/market-data";
@@ -82,6 +83,8 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
 
     <LeboncoinWatchPanel cards={sales.variants} />
     </>}
+
+    {tab === "signaux" && <Suspense fallback={<p>Analyse des offres GCC en cours…</p>}><OpportunityScanner variants={sales.variants} archiveOnly={sales.archiveOnly} /></Suspense>}
 
     {(tab === "signaux" || tab === "marche") && <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
       <h2 id="radar-trends-title">{tab === "signaux" ? "Signaux à investiguer" : "Tendances du marché"}</h2>
