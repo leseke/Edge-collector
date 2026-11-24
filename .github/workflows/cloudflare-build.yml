@@ -100,6 +100,9 @@ jobs:
           Path(sys.argv[2]).write_text(json.dumps(config))
           PY
           npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/003_gcc_offer_observations.sql --yes
+          npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/004_gcc_opportunity_events.sql --yes
+          npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/005_gcc_lifecycle.sql --yes
+          npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/006_gcc_research_alerts.sql --yes
           npm exec -- wrangler deploy --config "$preview_config" --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
           preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
           curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-max-time 65 --retry-all-errors \
@@ -121,6 +124,10 @@ jobs:
                   assert f'/mri?tab={link}' in html, (tab, link)
           assert "Signaux à investiguer" in pages["signaux"]
           assert "Scanner d’opportunités" in pages["signaux"]
+          assert "Centre de notifications" in pages["signaux"]
+          assert "Centre de notifications momentanément indisponible" not in pages["signaux"]
+          assert "Pertinence des signaux" in pages["marche"]
+          assert "Évaluation momentanément indisponible" not in pages["marche"]
           assert "Baisses de prix observées" in pages["signaux"]
           assert "Historique momentanément indisponible" not in pages["signaux"]
           assert 'id="ventes-payees"' not in pages["signaux"]
