@@ -10,7 +10,8 @@ type Pointer = {
   status: "OK" | "PARTIAL" | "FAILED" | "EMPTY";
   files: Record<string, { path: string; sha256: string }>;
 };
-type Observation = {
+export type Observation = {
+  url?: string;
   product_id: string;
   seller: string;
   status: string;
@@ -39,7 +40,9 @@ export type TcgCard = {
   availability: string; languageVerified: boolean; priceKind: string; image: string | null;
   snapshotId: string; reportSha256: string; rawSha256: string;
 };
+export type CommercialRow = { productId: string; source: string; url: string | null; price: number | null; currency: string | null; observedAt: string; availability: string; kind: string; status: string };
 export type MarketSnapshot = {
+  commercial: CommercialRow[];
   observedAt: string; status: string; cards: TcgCard[];
   observationCount: number; successfulCount: number; failedCount: number;
   warning: string | null; reactionCaseCount: number; publishedEventCount: number; completedSales: number | null;
@@ -102,6 +105,12 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       } catch { return null; }
     }));
     return {
+      commercial: report.observations.filter(item => item.product_id?.startsWith("pokemon_card_")).map(item => {
+        let url: string | null = null;
+        try { const parsed = new URL(item.url || ""); if (parsed.protocol === "https:" && !parsed.username && !parsed.password) url = parsed.href; } catch {}
+        const price = Number(item.price);
+        return { productId: item.product_id, source: item.seller, url, price: item.status === "OK" && Number.isFinite(price) && price > 0 ? price : null, currency: item.currency || null, observedAt: item.observed_at, availability: item.availability, kind: item.completed_sale === true ? "DECLARED_SALE" : item.price_kind, status: item.status };
+      }),
       observedAt: report.observed_at, status: report.status, cards: cards.filter((card): card is TcgCard => card !== null),
       observationCount: observations.length, successfulCount: observations.filter((item) => item.status === "OK").length,
       failedCount: observations.filter((item) => item.status !== "OK").length,
@@ -111,6 +120,6 @@ export async function getTcgMarketSnapshot(): Promise<MarketSnapshot> {
       completedSales: report.observations.filter((item) => item.product_id?.startsWith("pokemon_card_") && item.completed_sale === true).length,
     };
   } catch {
-    return { observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel.", reactionCaseCount: 0, publishedEventCount: 0, completedSales: null };
+    return { commercial: [], observedAt: "", status: "UNAVAILABLE", cards: [], observationCount: 0, successfulCount: 0, failedCount: 0, warning: "Le dernier relevé vérifiable n’a pas pu être chargé. Aucun prix n’est affiché comme actuel.", reactionCaseCount: 0, publishedEventCount: 0, completedSales: null };
   }
 }
