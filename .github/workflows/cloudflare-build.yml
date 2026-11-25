@@ -13,7 +13,7 @@ permissions:
 jobs:
   cloudflare:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -168,6 +168,25 @@ jobs:
           PY
           fi
           echo "Verified Cloudflare preview: $preview_url/mri"
+      - name: Install visual audit browser
+        if: github.event_name == 'push' && github.ref == 'refs/heads/edge/gcc-comparables' && (github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview' || github.event.head_commit.message == 'chore(ci): release EDGE Cloudflare stack')
+        run: |
+          npm install --no-save --ignore-scripts --no-audit --no-fund playwright@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Audit the newly published EDGE V3 preview
+        if: github.event_name == 'push' && github.ref == 'refs/heads/edge/gcc-comparables' && (github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview' || github.event.head_commit.message == 'chore(ci): release EDGE Cloudflare stack')
+        env:
+          EDGE_EXPECTED_REVISION: ${{ github.sha }}
+        run: node agent-harness/ui-visual-audit.mjs
+      - name: Preserve deployed V3 screenshots and report
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/edge/gcc-comparables' && (github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview' || github.event.head_commit.message == 'chore(ci): release EDGE Cloudflare stack')
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-v3-deployed-audit
+          path: edge-ui-report/
+          retention-days: 7
+          if-no-files-found: warn
+
 
   dsh-plugin-runtime:
     name: DeepSeek Harness native tool runtime smoke
