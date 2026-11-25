@@ -104,3 +104,38 @@ html:has(.radar-zoom-dialog[open]) { overflow: hidden; }
 
 .radar-price-comparison{display:grid;gap:.25rem;margin-top:.4rem;padding:.65rem;border:1px solid #38577d;border-radius:.55rem;background:#10243c;overflow-wrap:anywhere}
 .radar-price-comparison strong{font-size:.85rem;color:#dceeff}.radar-price-comparison small{font-size:.72rem;line-height:1.4;color:#bacbe2}
+
+/* Product cards — consistent hierarchy, comfortable touch targets, immersive detail. */
+.radar-sales{gap:12px}
+.radar-sales>li{background:#102641;border-color:#345478;border-radius:16px;box-shadow:0 8px 24px #0002}
+.radar-sale-card{grid-template-columns:clamp(92px,29vw,132px) minmax(0,1fr);padding:13px;gap:14px;align-items:center}
+.radar-sale-art{padding:5px;background:radial-gradient(ellipse at 50% 40%,#28496d,#0b1e36 75%);border-radius:10px}
+.radar-sale-art img{background:transparent;filter:drop-shadow(0 4px 8px #0006)}
+.radar-sale-main{gap:5px}
+.radar-sale-main h3,.radar-sale-main .radar-gcc-lot-title{font-size:clamp(15px,3.8vw,18px);font-weight:800}
+.radar-sale-price{gap:4px 9px;margin-top:5px}
+.radar-sale-price strong{font-size:clamp(21px,5.5vw,28px);font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.radar-sale-source{min-height:38px;font-size:12px}
+.radar-zoom-trigger{grid-column:1/-1;justify-self:stretch;display:flex;align-items:center;justify-content:space-between;min-height:42px;padding:9px 12px;border:1px solid #395c82;border-radius:9px;background:#173756;color:#e0edff;font-weight:700;font-size:12px}
+.radar-zoom-trigger:hover{border-color:#ffcf21;color:#ffcf21}
+.radar-zoom-dialog{width:min(94vw,42rem);max-height:92dvh;border-radius:20px;background:#0c203b}
+.radar-zoom-content header{background:#102b4b;padding:14px 16px}
+.radar-zoom-content header>div{min-width:0;display:grid;gap:5px}
+.radar-zoom-eyebrow{font-size:9px;letter-spacing:.12em;color:#adc3df}
+.radar-zoom-content header strong{font-size:17px;line-height:1.3}
+.radar-zoom-detail{gap:16px;padding:16px}
+.radar-zoom-detail .radar-sale-art{min-height:220px;padding:14px}
+.radar-zoom-detail .radar-sale-art img{max-height:42dvh;aspect-ratio:auto}
+.radar-zoom-detail .radar-sale-main{gap:8px}
+.radar-zoom-detail .radar-sale-main h3,.radar-zoom-detail .radar-gcc-lot-title{font-size:22px}
+.radar-zoom-detail .radar-sale-price strong{font-size:34px}
+.radar-zoom-evidence{margin:0 16px 20px;padding:16px;border:1px solid #38577d;border-radius:12px;background:#102a47}
+.radar-zoom-evidence h3{margin-top:0;font-size:16px}
+.radar-zoom-evidence a{color:#b9ddff;text-decoration:underline;text-underline-offset:3px}
+.radar-zoom-evidence li{margin:10px 0;line-height:1.5}
+@media(max-width:760px){
+ .radar-sale-card{gap:10px;padding:10px}
+ .radar-zoom-dialog{inset:auto 0 0;width:100%;max-width:100%;margin:0;max-height:94dvh;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom)}
+ .radar-zoom-detail .radar-sale-art{min-height:180px}
+}
+@media(max-width:360px){.radar-sale-card{grid-template-columns:84px minmax(0,1fr)}}
