@@ -14,49 +14,37 @@ function money(value: number | null, currency: string): string {
   catch { return "—"; }
 }
 function CardTile({ card }: { card: TcgCard }) {
-  return <article className="edge-asset-card">
-    <div className="edge-asset-art">
-      <AssetImage src={card.image} name={card.name} />
-      <span className="edge-asset-category">POKÉMON · CARTE</span>
-    </div>
-    <div className="edge-asset-content">
-      <div className="edge-asset-series">{card.setName} · #{card.number}</div>
-      <h3>{card.name}</h3>
-      <p className="edge-asset-rarity">{card.rarity}</p>
-      <div className="edge-asset-value"><span>Prix indicatif bas</span><strong>{money(card.low, card.currency)}</strong></div>
-      <span className="edge-asset-uncertainty">◌ Variante et état à confirmer</span>
-      <details className="edge-asset-details">
-        <summary>Prix & sources <span aria-hidden="true">＋</span></summary>
-        <dl>
-          <div><dt>Moyenne indicative</dt><dd>{money(card.average, card.currency)}</dd></div>
-          <div><dt>Tendance indicative</dt><dd>{money(card.trend, card.currency)}</dd></div>
-          <div><dt>Origine</dt><dd>{card.source}</dd></div>
-          <div><dt>Relevé</dt><dd>{date(card.observedAt)}</dd></div>
-          <div><dt>Langue</dt><dd>{card.languageVerified ? "Vérifiée" : "Non vérifiée"}</dd></div>
-          <div><dt>Disponibilité</dt><dd>{card.availability === "UNKNOWN" ? "Inconnue" : card.availability}</dd></div>
-        </dl>
-        <p>Prix indicatifs, pas des ventes conclues. La variante, la langue et l'état peuvent changer la valeur.</p>
-      </details>
-    </div>
+  return <article className="edge-home-tile">
+    <Link href={`/explorer/${encodeURIComponent(card.productId)}`} className="edge-home-tile-link" aria-label={`Consulter ${card.name}, ${card.setName}`}>
+      <div className="edge-home-tile-art"><AssetImage src={card.image} name={card.name}/><span className="edge-home-tile-price">{money(card.low,card.currency)}</span></div>
+      <h3>{card.name}</h3><p>{card.setName} · #{card.number}</p>
+    </Link>
+    <details className="edge-home-tile-meta">
+      <summary>Prix & sources</summary>
+      <dl><div><dt>Prix bas indicatif</dt><dd>{money(card.low,card.currency)}</dd></div><div><dt>Moyenne indicative</dt><dd>{money(card.average,card.currency)}</dd></div><div><dt>Tendance indicative</dt><dd>{money(card.trend,card.currency)}</dd></div><div><dt>Rareté</dt><dd>{card.rarity}</dd></div><div><dt>Source</dt><dd>{card.source}</dd></div><div><dt>Relevé</dt><dd>{date(card.observedAt)}</dd></div><div><dt>Langue</dt><dd>{card.languageVerified?"Vérifiée":"Non vérifiée"}</dd></div><div><dt>Disponibilité</dt><dd>{card.availability==="UNKNOWN"?"Inconnue":card.availability}</dd></div></dl>
+      <p>Prix indicatifs, non des ventes conclues. Variante et état à confirmer.</p>
+    </details>
   </article>;
 }
+
 export async function MarketDashboard() {
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales().catch(() => null)]);
   const earlyCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_") && item.publications.length > 0);
   const freshDate = snapshot.observedAt ? date(snapshot.observedAt) : "Non disponible";
   return <div className="native-dashboard edge-investor-home">
     <section className="edge-home-heading">
-      <div><p className="native-eyebrow">EDGE · ESPACE INVESTISSEUR</p><h1>Votre tableau de bord<span>.</span></h1><p>Les observations du marché, les pistes à approfondir et les transactions documentées.</p></div>
+      <div><p className="native-eyebrow">ESPACE INVESTISSEUR</p><h1>Vue d’ensemble<span>.</span></h1><p>Votre accès aux marchés des collectibles.</p></div>
       <Link href="/mri" className="edge-home-action">Voir les analyses <span aria-hidden="true">↗</span></Link>
     </section>
-    <section aria-label="Synthèse du marché" style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10,marginBottom:20}}>
+    <form className="edge-home-search" action="/explorer"><label className="edge-sr-only" htmlFor="edge-home-query">Rechercher une carte</label><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="edge-home-query" name="catalogue" placeholder="Rechercher une carte…" required maxLength={100}/><input type="hidden" name="lang" value="fr"/><button type="submit">Rechercher</button></form>
+    <section aria-label="Synthèse du marché" className="edge-home-metrics">
       {[
         {label:"Tendances mesurées",value:sales?.trends.length ?? "—",href:"/mri?tab=signaux",note:"Variantes comparables"},
         {label:"Pistes à vérifier",value:sales || snapshot.status !== "UNAVAILABLE" ? (sales?.leads.length ?? 0) + earlyCases.length : "—",href:"/mri?tab=signaux",note:"Dossiers et liens à vérifier"},
         {label:"Ventes payées affichées",value:sales ? sales.recentSales.length + sales.otherSales.length : "—",href:"/mri?tab=ventes",note:sales?.archiveOnly ? "Archive disponible" : "Échantillon documenté"},
         {label:"Offres ouvertes",value:"Consulter",href:"/mri?tab=offres",note:"Enchères et prix fixes"},
-      ].map(item => <Link key={item.label} href={item.href} style={{display:"grid",gap:6,padding:14,border:"1px solid var(--line)",borderRadius:12,background:"#101e34"}}>
-        <span style={{fontSize:12,color:"var(--muted)"}}>{item.label}</span><strong style={{fontSize:22,color:"var(--accent)"}}>{item.value}</strong><small>{item.note} →</small>
+      ].map(item => <Link key={item.label} href={item.href} className="edge-home-metric">
+        <span>{item.label}</span><strong>{item.value}</strong><small>{item.note} →</small>
       </Link>)}
     </section>
     <section className="edge-home-priorities" aria-label="Priorités de recherche">
@@ -77,7 +65,7 @@ export async function MarketDashboard() {
     </section>
     <section className="edge-home-market" aria-labelledby="edge-market-title">
       <div className="edge-home-section-head"><div><p className="native-eyebrow">01 / EXPLORER</p><h2 id="edge-market-title">Produits observés <span>{snapshot.cards.length}</span></h2></div><div className="edge-home-section-actions"><span className="edge-home-updated">Relevé : {freshDate}</span><Link href="/explorer" className="edge-explore-link">Tout explorer →</Link></div></div>
-      {snapshot.cards.length ? <div className="edge-asset-grid">{snapshot.cards.map(card => <CardTile key={card.productId} card={card}/>)}</div> : <div className="edge-home-empty"><strong>Aucun produit disponible actuellement</strong><p>Les produits apparaîtront ici lorsqu'un relevé vérifiable sera accessible. Aucun prix n'est simulé.</p></div>}
+      {snapshot.cards.length ? <div className="edge-home-gallery">{snapshot.cards.map(card => <CardTile key={card.productId} card={card}/>)}</div> : <div className="edge-home-empty"><strong>Aucun produit disponible actuellement</strong><p>Les produits apparaîtront ici lorsqu'un relevé vérifiable sera accessible. Aucun prix n'est simulé.</p></div>}
       {snapshot.warning && <details className="edge-home-data-note"><summary>État des données</summary><p>{snapshot.warning}</p></details>}
     </section>
     <section className="edge-home-ai" aria-label="Intelligence EDGE">
