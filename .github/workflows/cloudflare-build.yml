@@ -60,7 +60,7 @@ jobs:
         run: npm run cf:build
       - name: Publish the authorized isolated preview
         if: >-
-          github.event_name == 'push' && (github.ref == 'refs/heads/edge/cloudflare-migration-001' || github.ref == 'refs/heads/edge/gcc-comparables') && github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview'
+          github.event_name == 'push' && ((github.ref == 'refs/heads/edge/cloudflare-migration-001' || github.ref == 'refs/heads/edge/gcc-comparables') && github.event.head_commit.message == 'chore(ci): publish isolated EDGE Cloudflare preview' || github.ref == 'refs/heads/edge/gcc-comparables' && github.event.head_commit.message == 'chore(ci): release EDGE Cloudflare stack')
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           WRANGLER_SEND_METRICS: 'false'
@@ -130,6 +130,8 @@ jobs:
           assert "Scanner d’opportunités" in pages["signaux"]
           assert "Centre de notifications" in pages["signaux"]
           assert "Découvertes autonomes des éditeurs" in pages["signaux"]
+          assert "Comparaisons interboutiques" in pages["signaux"]
+          assert "Comparaison indisponible." not in pages["signaux"]
           assert "Collecte des éditeurs momentanément indisponible" not in pages["signaux"]
           assert "Absorption commerciale" in pages["signaux"]
           assert "Analyse de l’absorption momentanément indisponible" not in pages["signaux"]
@@ -533,7 +535,7 @@ jobs:
     name: Activate existing GCC history collector
     needs: cloudflare
     if: >-
-      github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/gcc-comparables' && github.event.head_commit.message == 'chore(ci): activate GCC offer history collector'
+      github.repository == 'leseke/Edge-collector' && github.event_name == 'push' && github.ref == 'refs/heads/edge/gcc-comparables' && (github.event.head_commit.message == 'chore(ci): activate GCC offer history collector' || github.event.head_commit.message == 'chore(ci): release EDGE Cloudflare stack')
     concurrency:
       group: edge-cloudflare-d1-deployment
       cancel-in-progress: false
@@ -630,5 +632,6 @@ jobs:
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT event,COUNT(*) AS total FROM gcc_lifecycle_events GROUP BY event;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS opportunity_events FROM gcc_opportunity_events;" --yes
           npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS observations FROM gcc_offer_observations;" --yes
+          npx wrangler d1 execute edge-tcg-history --remote --config wrangler.history-ci.json --command "SELECT COUNT(*) AS catalyst_discoveries FROM catalyst_discoveries; SELECT COUNT(*) AS investigations FROM catalyst_investigations; SELECT merchant,status,COUNT(*) AS observations FROM commercial_research_observations GROUP BY merchant,status;" --yes
           npx wrangler deploy --config wrangler.history-ci.json --keep-vars
           echo "Collector deployment completed; scheduled observation ingestion must be verified separately."
