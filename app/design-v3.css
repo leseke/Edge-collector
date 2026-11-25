@@ -71,3 +71,42 @@
  .edge-home-tile-meta summary{font-size:10px}
 }
 @media(max-width:350px){.edge-home-gallery{gap:7px}.edge-home-search button{padding-inline:8px}.topbar-right .pwa-install button{padding-inline:5px;font-size:9px}}
+
+
+/* Explorer: image-first grid, financial list, shared real catalogue. */
+.edge-explorer-premium{max-width:1120px}
+.edge-explorer-premium h1{font-size:clamp(29px,5vw,40px);letter-spacing:-.045em;color:var(--text)}
+.edge-explorer-premium h1 span,.edge-explorer-premium .native-eyebrow{color:var(--accent)}
+.edge-explorer-premium .edge-explorer-intro{color:var(--muted);font-size:13px}
+.edge-explorer-premium .edge-explorer-tabs{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
+.edge-explorer-premium .edge-explorer-tabs button.active{background:var(--accent);color:#080e19;box-shadow:none}
+.edge-explorer-premium .edge-explorer-tabs button.active span{background:#080e1920;color:#080e19}
+.edge-view-switch{display:flex;justify-content:flex-end;gap:4px;margin:12px 0}
+.edge-view-switch button{display:flex;align-items:center;gap:7px;padding:9px 13px;min-height:44px;background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:10px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer}
+.edge-view-switch button[aria-pressed=true]{color:var(--accent);border-color:#78643d;background:var(--surface-raised)}
+.edge-view-switch svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.edge-explorer-premium .edge-explorer-filters input,.edge-explorer-premium .edge-explorer-filters select,.edge-explorer-premium .edge-catalogue-controls input,.edge-explorer-premium .edge-catalogue-language select,.edge-explorer-premium .edge-catalogue-set-filter input{min-height:44px;background:var(--surface);border-color:var(--line);color:var(--text);font-size:16px;border-radius:12px}
+.edge-explorer-premium .edge-series-card,.edge-explorer-premium .edge-catalogue-search,.edge-explorer-premium .edge-catalogue-set-tile{background:var(--surface);border-color:var(--line)}
+.edge-explorer-premium .edge-series-art,.edge-explorer-premium .edge-catalogue-set-art{background:var(--surface-raised)}
+.edge-explorer-premium .edge-catalogue-mode button,.edge-explorer-premium .edge-catalogue-back,.edge-explorer-premium .edge-reset-filters{background:var(--surface-raised);border-color:var(--line);color:var(--text);min-height:44px}
+.edge-explorer-premium .edge-catalogue-mode button[aria-pressed=true]{color:var(--accent);border-color:#78643d}
+.edge-explorer-premium .edge-catalogue-search{padding:clamp(12px,3vw,20px)}
+.edge-explorer-premium .edge-explorer-grid,.edge-explorer-premium .edge-catalogue-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+.edge-explorer-premium .edge-explorer-tile,.edge-explorer-premium .edge-catalogue-card{min-width:0;display:flex;flex-direction:column;background:transparent;border:0;border-radius:12px;padding:0;box-shadow:none;overflow:hidden;gap:7px}
+.edge-explorer-premium .edge-explorer-image,.edge-explorer-premium .edge-catalogue-image{display:grid;place-items:center;position:relative;height:auto;min-height:0;aspect-ratio:5/7;border-radius:10px;background:var(--surface);padding:0;overflow:hidden}
+.edge-explorer-premium .edge-explorer-image img,.edge-explorer-premium .edge-catalogue-image img{display:block;max-height:none;max-width:100%;width:100%;height:100%;object-fit:contain}
+.edge-explorer-premium .edge-explorer-body{padding:0;min-width:0;display:flex;flex-direction:column;gap:4px}
+.edge-explorer-premium .edge-explorer-body h2,.edge-explorer-premium .edge-catalogue-card strong{font-size:13px;line-height:1.4;color:var(--text);margin:0;overflow-wrap:anywhere}
+.edge-explorer-premium .edge-explorer-body>strong{font-size:17px;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.025em}
+.edge-explorer-premium .edge-explorer-body p,.edge-explorer-premium .edge-explorer-body>span,.edge-explorer-premium .edge-explorer-body small,.edge-explorer-premium .edge-catalogue-card small{color:var(--muted);font-size:10px;margin:0;overflow-wrap:anywhere}
+.edge-explorer-premium .edge-product-open{display:flex;min-height:44px;align-items:center;color:var(--accent);background:transparent;border:0;padding:0;font-size:11px}
+.edge-explorer-premium[data-view=list] .edge-explorer-grid,.edge-explorer-premium[data-view=list] .edge-catalogue-results{grid-template-columns:1fr;gap:0}
+.edge-explorer-premium[data-view=list] .edge-explorer-tile,.edge-explorer-premium[data-view=list] .edge-catalogue-card{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);border-radius:0}
+.edge-explorer-premium[data-view=list] .edge-explorer-image,.edge-explorer-premium[data-view=list] .edge-catalogue-image{grid-row:1/5;width:64px}
+.edge-explorer-premium[data-view=list] .edge-explorer-body{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+.edge-explorer-premium[data-view=list] .edge-explorer-body>span,.edge-explorer-premium[data-view=list] .edge-explorer-body h2,.edge-explorer-premium[data-view=list] .edge-explorer-body p,.edge-explorer-premium[data-view=list] .edge-explorer-body small{grid-column:1}
+.edge-explorer-premium[data-view=list] .edge-explorer-body>strong{grid-column:2;grid-row:1/4;justify-self:end;text-align:right;font-size:18px;max-width:120px;overflow-wrap:anywhere}
+.edge-explorer-premium[data-view=list] .edge-product-open{grid-column:1/-1}
+.edge-explorer-premium[data-view=list] .edge-catalogue-card>strong,.edge-explorer-premium[data-view=list] .edge-catalogue-card>small,.edge-explorer-premium[data-view=list] .edge-catalogue-card>span{grid-column:2}
+.edge-explorer-premium .edge-asset-placeholder{max-width:100%;text-align:center;padding:4px}
+@media(max-width:760px){.edge-explorer-premium .edge-explorer-grid,.edge-explorer-premium .edge-catalogue-results{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.edge-explorer-premium .edge-explorer-body h2,.edge-explorer-premium .edge-catalogue-card strong{font-size:12px}.edge-explorer-premium .edge-explorer-body>strong{font-size:14px}.edge-explorer-premium .edge-explorer-filters{gap:8px}.edge-explorer-premium .edge-explorer-body>span,.edge-explorer-premium .edge-explorer-body small{font-size:10px}.edge-explorer-premium[data-view=list] .edge-explorer-grid,.edge-explorer-premium[data-view=list] .edge-catalogue-results{grid-template-columns:1fr}.edge-explorer-premium[data-view=list] .edge-explorer-body h2{font-size:14px}}
