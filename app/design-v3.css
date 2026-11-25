@@ -168,3 +168,23 @@
 .edge-portfolio-panel li>div{display:grid;gap:5px;min-width:0;overflow-wrap:anywhere}
 .edge-portfolio-panel li small{color:var(--muted)}
 @media(max-width:760px){.side-nav{grid-template-columns:repeat(4,minmax(0,1fr))}.side-link{font-size:9px}.edge-portfolio{padding:20px 15px 30px}}
+
+
+/* Automatic follow — evidence-led financial watchlist. */
+.edge-follow{max-width:1000px}
+.edge-follow-panel{margin:20px 0;padding:clamp(16px,3vw,24px);background:var(--surface);border:1px solid var(--line);border-radius:18px}
+.edge-follow-panel h2{margin:0 0 8px;font-size:21px;letter-spacing:-.03em}
+.edge-follow-panel p{color:var(--muted);font-size:13px;line-height:1.6}
+.edge-follow-list{display:grid;gap:12px;margin:16px 0}
+.edge-follow-card{min-width:0;padding:16px;background:var(--surface-raised);border:1px solid var(--line);border-radius:14px;overflow-wrap:anywhere}
+.edge-follow-card h3{font-size:16px;line-height:1.4;margin:8px 0}
+.edge-follow-card small,.edge-follow-prices span{font-size:11px;color:var(--muted)}
+.edge-follow-state{font-size:11px;color:var(--accent);font-weight:700}
+.edge-follow-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:14px 0}
+.edge-follow-prices>div{display:grid;gap:6px;min-width:0}
+.edge-follow-prices strong{font-size:clamp(14px,3vw,22px);font-variant-numeric:tabular-nums}
+.edge-follow-card details{border-top:1px solid var(--line);margin:8px 0}
+.edge-follow-card summary{min-height:44px;padding:12px 0;cursor:pointer;font-size:13px;color:var(--text)}
+.edge-follow-card a,.edge-follow-panel>a,.edge-follow-pages a{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-size:12px;font-weight:700}
+.edge-follow-pages{display:flex;gap:16px}
+@media(max-width:760px){.side-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.side-link{min-width:0;font-size:9px}.edge-follow{padding:20px 15px 30px}.edge-follow-card{padding:12px}.edge-follow-prices{gap:6px}}
