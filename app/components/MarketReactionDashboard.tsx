@@ -36,10 +36,10 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
-  return <div className="native-dashboard radar-dashboard">
+  return <div className="native-dashboard radar-dashboard edge-radar-premium">
     <header className="radar-intro">
-      <h1>Radar Pokémon</h1>
-      <p>Détecter les opportunités, suivre les transactions et anticiper les mouvements du marché.</p>
+      <p className="native-eyebrow">MARKET INTELLIGENCE</p><h1>Radar Pokémon<span>.</span></h1>
+      <p>Opportunités, transactions et mouvements du marché.</p>
       <nav aria-label="Rubriques du Radar" className="edge-radar-tabs">
         {radarTabs.map(item => <Link key={item.id} href={`/mri?tab=${item.id}`} aria-current={tab === item.id ? "page" : undefined} className="edge-radar-tab">{item.title}</Link>)}
       </nav>
@@ -127,7 +127,7 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
         if (!variant) return null;
         return <article className="edge-mri-case" key={trend.key}>
           <h3>{variant.name} · {variant.variant}</h3>
-          <p>Prix médian {signed.format(trend.priceChange)} % · {trend.priorCount} puis {trend.recentCount} ventes sur deux périodes de 30 jours.</p>
+          <div className="edge-trend-metric"><strong data-direction={trend.priceChange>0?"up":trend.priceChange<0?"down":"flat"}>{signed.format(trend.priceChange)} %</strong><span>Variation de la médiane</span></div><p>{trend.priorCount} puis {trend.recentCount} ventes sur deux périodes de 30 jours.</p>
           {trend.scenario !== "INDETERMINE" && <p>Scénario {trend.scenario.toLowerCase()} si le mouvement se poursuit.</p>}
           {trend.analogues > 0 && <p>Le mouvement s’est poursuivi dans {trend.continued} cas similaires sur {trend.analogues} observés pour cette variante.</p>}
         </article>;
