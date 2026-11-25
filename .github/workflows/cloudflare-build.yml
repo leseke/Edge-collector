@@ -57,6 +57,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
       - name: Build for Cloudflare Workers
+        env:
+          NEXT_PUBLIC_EDGE_REVISION: ${{ github.sha }}
         run: npm run cf:build
       - name: Publish the authorized isolated preview
         if: >-
@@ -109,6 +111,7 @@ jobs:
           npm exec -- wrangler d1 execute edge-tcg-history --remote --config "$preview_config" --file cloud/collector/migrations/010_commercial_research.sql --yes
           npm exec -- wrangler deploy --config "$preview_config" --name edge-radar-preview-1c14d55 | tee "$RUNNER_TEMP/edge-preview.log"
           preview_url=$(grep -Eo 'https://edge-radar-preview-1c14d55\.[a-z0-9.-]+\.workers\.dev' "$RUNNER_TEMP/edge-preview.log" | head -n 1)
+          curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-all-errors "$preview_url/api/version" | python3 -c 'import json,os,sys; v=json.load(sys.stdin); assert v["design"]=="v3" and v["revision"]==os.environ["GITHUB_SHA"], v; print("Verified deployed revision:",v["revision"])'
           curl --fail --silent --show-error --max-time 20 --retry 8 --retry-delay 5 --retry-max-time 65 --retry-all-errors \
             "$preview_url/api/catalog/price?lang=fr&id=ecard1-20" | python3 -c 'import json,sys; p=json.load(sys.stdin).get("price"); assert p and p["low"] > 0 and p["updatedAt"], "Expected a dated TCGdex price"'
           curl --fail --silent --show-error --max-time 30 "$preview_url/explorer?catalogue=Mewtwo&lang=fr" -o /dev/null
