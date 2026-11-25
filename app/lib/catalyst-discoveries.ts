@@ -28,7 +28,7 @@ export async function getCatalystDiscoveries(now=new Date()){
  if(o.status==="READ"){try{evidence=JSON.parse(o.evidence_json);}catch{}}
  return [o.source_url,{...evidence,merchant:o.merchant,url:o.source_url,observedAt:o.observed_at,status:o.status,fresh:+now-Date.parse(o.observed_at)<=48*3600000}] as const;
  }));
- const items=leads.results.filter(p=>/^https:\/\/magic\.wizards\.com\/en\/news\/(?:announcements|feature)\/[a-z0-9-]+$/.test(p.source_url)&&/^[a-f0-9]{64}$/.test(p.payload_sha256)).map(p=>({...p,kind:classifyCatalyst(p.title),commercialCandidates:candidateMatches(p.headline??p.title,candidates).map((c:{url:string;title:string;overlap:string[]})=>({...c,offer:verified.get(c.url)??null}))}));
+ const items=leads.results.filter(p=>/^https:\/\/magic\.wizards\.com\/en\/news\/(?:announcements|feature)\/[a-z0-9-]+$/.test(p.source_url)&&/^[a-f0-9]{64}$/.test(p.payload_sha256)).map(p=>({...p,kind:classifyCatalyst(p.title),commercialCandidates:(candidateMatches(p.headline??p.title,candidates) as {url:string;title:string;overlap:string[]}[]).map(c=>({...c,offer:verified.get(c.url)??null}))}));
  return {items,scan:scans.results[0]??null,commercial:commercial.results.map(m=>({merchant:m.merchant,observedAt:m.observed_at,status:m.status})),comparisons:comparableOffers([...verified.values()].filter(o=>merchantSources.some(s=>s.merchant===o.merchant&&s.product.test(o.url))))};
  }catch{return null;}
 }
