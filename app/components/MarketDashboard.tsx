@@ -16,10 +16,10 @@ function money(value: number | null, currency: string): string {
 function CardTile({ card }: { card: TcgCard }) {
  return <article className="edge-v3-asset">
    <Link href={"/explorer/"+encodeURIComponent(card.productId)} className="edge-v3-asset-link" aria-label={card.name+" · "+card.setName+" · Voir la fiche"}>
-    <div className="edge-v3-asset-art"><AssetImage src={card.image} name={card.name}/><span className="edge-v3-price-overlay">{money(card.low,card.currency)}</span></div>
+    <div className="edge-v3-asset-art"><AssetImage src={card.image} name={card.name}/><span className="edge-v3-price-overlay" title="Prix indicatif bas" aria-label={"Prix indicatif bas : "+money(card.low,card.currency)}>{money(card.low,card.currency)}</span></div>
     <h3>{card.name}</h3><p>{card.setName} · #{card.number}</p>
    </Link>
-   <details className="edge-v3-asset-source"><summary>Prix & source</summary><dl><dt>Prix bas indicatif</dt><dd>{money(card.low,card.currency)}</dd><dt>Moyenne indicative</dt><dd>{money(card.average,card.currency)}</dd><dt>Tendance indicative</dt><dd>{money(card.trend,card.currency)}</dd><dt>Source</dt><dd>{card.source}</dd><dt>Relevé</dt><dd>{date(card.observedAt)}</dd><dt>Langue</dt><dd>{card.languageVerified?"Vérifiée":"Non vérifiée"}</dd><dt>Disponibilité</dt><dd>{card.availability==="UNKNOWN"?"Inconnue":card.availability}</dd></dl><p>Variante et état à confirmer. Prix indicatifs, pas des ventes conclues.</p></details>
+   <details className="edge-v3-asset-source"><summary>Prix & sources</summary><dl><dt>Prix indicatif bas</dt><dd>{money(card.low,card.currency)}</dd><dt>Moyenne indicative</dt><dd>{money(card.average,card.currency)}</dd><dt>Tendance indicative</dt><dd>{money(card.trend,card.currency)}</dd><dt>Source</dt><dd>{card.source}</dd><dt>Relevé</dt><dd>{date(card.observedAt)}</dd><dt>Langue</dt><dd>{card.languageVerified?"Vérifiée":"Non vérifiée"}</dd><dt>Disponibilité</dt><dd>{card.availability==="UNKNOWN"?"Inconnue":card.availability}</dd></dl><p>Variante et état à confirmer. Prix indicatifs, pas des ventes conclues.</p></details>
  </article>;
 }
 export async function MarketDashboard() {
