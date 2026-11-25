@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   cloudflare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -148,6 +148,22 @@ jobs:
           assert "Prix indicatifs Cardmarket" in pages["marche"]
           assert "Événements et sources Pokémon" in pages["marche"]
           PY
+          if [ "${GITHUB_REF}" = "refs/heads/edge/gcc-comparables" ]; then
+            for route in portfolio follow; do
+              curl --fail --silent --show-error --max-time 60 "$preview_url/$route" -o "$RUNNER_TEMP/edge-$route.html"
+            done
+            curl --fail --silent --show-error --max-time 60 "$preview_url/" -o "$RUNNER_TEMP/edge-home.html"
+            python3 - "$RUNNER_TEMP" <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          for route,heading in [("portfolio","Mes acquisitions"),("follow","Opportunités mémorisées"),("home","Vue d’ensemble")]:
+              html=(root/f"edge-{route}.html").read_text()
+              assert heading in html, f"V3 route mismatch: {route}"
+              assert 'href="/portfolio"' in html and 'href="/follow"' in html, f"Old navigation: {route}"
+          print("V3 routes and navigation confirmed")
+          PY
+          fi
           echo "Verified Cloudflare preview: $preview_url/mri"
 
   dsh-plugin-runtime:
