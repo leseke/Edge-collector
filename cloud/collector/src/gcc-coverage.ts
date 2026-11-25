@@ -1,5 +1,5 @@
-import { prepareOpportunityEvents } from "./gcc-opportunity-memory";
-import { resaleFeePercent } from "../../../app/lib/listing-analysis";
+import { prepareOpportunityEvents } from "./gcc-opportunity-memory.ts";
+import { resaleFeePercent } from "../../../app/lib/listing-analysis.ts";
 import { gccCursor, gccPageUrl, readGccPage, type GccListingKind } from "../../../app/lib/gcc-active-listings.ts";
 import { readBoundedText } from "./bounded.mjs";
 
