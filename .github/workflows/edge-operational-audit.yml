@@ -1,0 +1,32 @@
+name: EDGE operational audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [edge/gcc-comparables]
+    paths: [agent-harness/operational-audit.mjs, .github/workflows/edge-operational-audit.yml]
+permissions:
+  contents: read
+jobs:
+  read-only-audit:
+    if: github.repository == 'leseke/Edge-collector' && github.ref == 'refs/heads/edge/gcc-comparables'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Query aggregate real D1 metrics
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node agent-harness/operational-audit.mjs "$RUNNER_TEMP/edge-operational-audit.json"
+      - name: Save aggregate audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: edge-operational-audit
+          path: ${{ runner.temp }}/edge-operational-audit.json
+          if-no-files-found: warn
+          retention-days: 7
