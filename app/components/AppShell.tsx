@@ -8,6 +8,7 @@ const navigation = [
   { href: "/", label: "Accueil", short: "Accueil", icon: "home" },
   { href: "/explorer", label: "Explorer", short: "Explorer", icon: "search" },
   { href: "/mri", label: "Radar", short: "Radar", icon: "radar" },
+  { href: "/portfolio", label: "Portefeuille", short: "Portefeuille", icon: "wallet" },
 ];
 const administration = { href: "/local", label: "Laboratoire local", short: "Laboratoire", icon: "settings" };
 
@@ -16,6 +17,7 @@ function NavIcon({name}:{name:string}) {
  home:<><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></>,
  search:<><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>,
  radar:<><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="m12 12 7-7"/><circle cx="12" cy="12" r="1"/></>,
+ wallet:<><rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 8h18m0 4h-6a2 2 0 0 0 0 4h6"/><circle cx="16" cy="14" r=".5"/></>,
  settings:<><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/></>,
  bell:<><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5z"/><path d="M10 20h4"/></>
  };
