@@ -1,5 +1,5 @@
-import { assessPriceDrop, resaleFeePercent } from "../../../app/lib/listing-analysis";
-import type { getGccActiveListings } from "../../../app/lib/gcc-active-listings";
+import { assessPriceDrop, resaleFeePercent } from "../../../app/lib/listing-analysis.ts";
+import type { getGccActiveListings } from "../../../app/lib/gcc-active-listings.ts";
 
 type Lot = NonNullable<Awaited<ReturnType<typeof getGccActiveListings>>>["items"][number];
 type SaleRow = { lot_id: string; sold_day: string; price_cents: number; source_url: string; variant_key: string };
