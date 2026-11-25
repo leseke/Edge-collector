@@ -11,17 +11,6 @@ const navigation = [
 ];
 const administration = { href: "/local", label: "Laboratoire local", short: "Laboratoire", icon: "settings" };
 
-function NavIcon({name}:{name:string}){
- const paths:Record<string,ReactNode>={
- home:<><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></>,
- search:<><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></>,
- radar:<><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="m12 12 7-7"/><circle cx="12" cy="12" r=".8"/></>,
- settings:<><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></>,
- bell:<><path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5zM10 21h4"/></>
- };
- return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]??paths.settings}</svg>;
-}
-
 function NavIcon({name}:{name:string}) {
  const paths:Record<string,ReactNode>={
  home:<><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></>,
