@@ -16,3 +16,10 @@ test("only accepted Philibert product routes are extracted",()=>{
  assert.equal(philibertCandidates('<a href="/fr/magic/123-example-4006381333931.html">Example sealed collection</a>').length,1);
  assert.deepEqual(philibertCandidates('<a href="https://example.org/fr/magic/123-example-4006381333931.html">Example sealed collection</a>'),[]);
 });
+
+test("same merchant duplicates retain the cheapest valid offer regardless of order",()=>{
+ const cheaper={...row,priceCents:700},other={...row,merchant:"Philibert",priceCents:900};
+ for(const input of [[row,cheaper,other],[cheaper,row,other]]){
+ const [g]=comparableOffers(input);assert.equal(g.spreadCents,200);assert.equal(g.offers[0].priceCents,700);assert.equal(g.offers.length,2);
+ }
+});
