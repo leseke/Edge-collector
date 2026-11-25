@@ -110,3 +110,36 @@
 .edge-explorer-premium[data-view=list] .edge-catalogue-card>strong,.edge-explorer-premium[data-view=list] .edge-catalogue-card>small,.edge-explorer-premium[data-view=list] .edge-catalogue-card>span{grid-column:2}
 .edge-explorer-premium .edge-asset-placeholder{max-width:100%;text-align:center;padding:4px}
 @media(max-width:760px){.edge-explorer-premium .edge-explorer-grid,.edge-explorer-premium .edge-catalogue-results{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.edge-explorer-premium .edge-explorer-body h2,.edge-explorer-premium .edge-catalogue-card strong{font-size:12px}.edge-explorer-premium .edge-explorer-body>strong{font-size:14px}.edge-explorer-premium .edge-explorer-filters{gap:8px}.edge-explorer-premium .edge-explorer-body>span,.edge-explorer-premium .edge-explorer-body small{font-size:10px}.edge-explorer-premium[data-view=list] .edge-explorer-grid,.edge-explorer-premium[data-view=list] .edge-catalogue-results{grid-template-columns:1fr}.edge-explorer-premium[data-view=list] .edge-explorer-body h2{font-size:14px}}
+
+
+/* V3 financial detail — real transaction observations, no synthetic chart. */
+.edge-product-detail{max-width:1000px}
+.edge-product-detail .edge-product-visual{background:radial-gradient(ellipse at 50% 40%,#263b56,var(--surface) 75%);border-color:var(--line)}
+.edge-product-detail .edge-product-overview h1{color:var(--text);font-size:clamp(27px,5vw,42px);letter-spacing:-.045em}
+.edge-product-detail .edge-product-primary strong,.edge-product-detail .native-eyebrow,.edge-product-detail .edge-product-kicker{color:var(--accent)}
+.edge-product-detail .edge-catalogue-facts,.edge-product-detail .edge-catalogue-intelligence,.edge-product-detail .edge-product-panel{background:var(--surface);border-color:var(--line);border-radius:16px}
+.edge-product-detail .edge-catalogue-facts-grid>div{background:var(--surface-raised);border-color:var(--line)}
+.edge-financial-history{margin:22px 0;padding:clamp(14px,3vw,24px);border:1px solid var(--line);border-radius:18px;background:var(--surface);min-width:0}
+.edge-financial-history header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.edge-financial-history h2{margin:4px 0;font-size:21px;letter-spacing:-.03em}
+.edge-history-source{font-size:11px;color:var(--muted)}
+.edge-history-variant{display:grid;gap:6px;font-size:12px;color:var(--muted)}
+.edge-history-variant select{min-height:44px;width:100%;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-raised);color:var(--text);font:inherit;font-size:16px}
+.edge-history-horizons{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:15px 0;padding:4px;border-radius:12px;background:var(--app-bg)}
+.edge-history-horizons button{min-height:44px;border:0;background:transparent;border-radius:8px;color:var(--muted);font:700 12px Manrope,system-ui,sans-serif;cursor:pointer}
+.edge-history-horizons button[aria-pressed=true]{background:var(--accent);color:var(--app-bg)}
+.edge-history-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.edge-history-metrics>div{display:grid;gap:5px;min-width:0}
+.edge-history-metrics span{color:var(--muted);font-size:11px;line-height:1.4}
+.edge-history-metrics strong{font-size:clamp(15px,3vw,23px);letter-spacing:-.04em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.edge-history-chart{background:var(--app-bg);padding:8px;border-radius:12px}
+.edge-history-chart svg{display:block;width:100%;height:auto;max-height:280px}
+.edge-history-axis{display:flex;justify-content:space-between;gap:8px;padding:0 6px 8px;color:var(--muted);font-size:10px}
+.edge-history-axis span{text-align:center}
+.edge-history-empty,.edge-history-note{color:var(--muted);font-size:12px;line-height:1.6}
+.edge-history-empty{padding:18px;background:var(--app-bg);border-radius:12px}
+.edge-history-sales summary{min-height:44px;display:list-item;padding:12px 0;color:var(--accent);cursor:pointer;font-size:13px}
+.edge-history-sales ul{list-style:none;margin:0;padding:0}
+.edge-history-sales li{display:flex;justify-content:space-between;gap:8px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}
+.edge-history-sales a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:760px){.edge-history-metrics{gap:7px}.edge-history-axis{font-size:9px}.edge-history-metrics strong{font-size:16px}}
