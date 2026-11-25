@@ -105,3 +105,31 @@ html,body{background:var(--app-bg)}
  .side-link{min-height:44px}
  .radar-section,.radar-offer-list{scroll-margin-top:72px}
 }
+
+/* Radar navigation: action-first, touch-friendly, scoped to the investor workspace. */
+.edge-radar-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:18px;padding:4px;border:1px solid #294d78;border-radius:14px;background:#081e3c}
+.edge-radar-tab{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 3px;border-radius:10px;font-weight:800;font-size:13px;color:#b9cbe4;transition:background .15s,color .15s}
+.edge-radar-tab:hover{background:#15375e;color:#fff}
+.edge-radar-tab[aria-current="page"]{background:#ffcf21;color:#08224a}
+.edge-radar-shortcuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:9px;margin:16px 0 24px}
+.edge-radar-shortcuts>a{position:relative;display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:76px;padding:13px 28px 13px 14px;border:1px solid #2c5079;border-radius:13px;background:#102c50;transition:border-color .15s,background .15s}
+.edge-radar-shortcuts>a:first-child{border-color:#b99b35;background:#173450}
+.edge-radar-shortcuts>a:hover{border-color:#ffcf21;background:#193d65}
+.edge-radar-shortcuts strong{font-size:13px;color:#f5f8ff}
+.edge-radar-shortcuts small{font-size:11px;color:#b5c6df;line-height:1.4}
+.edge-radar-shortcuts span{position:absolute;right:10px;top:13px;color:#ffcf21;font-size:14px}
+.edge-radar-module{min-width:0;scroll-margin-top:112px}
+.edge-radar-module>.radar-section{margin-top:16px}
+.edge-radar-module .edge-mri-case{min-width:0;overflow-wrap:anywhere;border-radius:14px}
+.edge-radar-module .edge-mri-case h3{line-height:1.4}
+.edge-radar-module .radar-disclosure>summary{min-height:44px;display:list-item;cursor:pointer;padding-block:12px}
+@media(max-width:760px){
+ .edge-radar-tabs{margin-top:12px}
+ .edge-radar-tab{font-size:12px}
+ .edge-radar-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 18px}
+ .edge-radar-shortcuts>a{min-height:70px;padding:12px 23px 12px 11px}
+ .edge-radar-shortcuts>a:first-child{grid-column:1/-1}
+ .edge-radar-shortcuts small{font-size:11px}
+ .edge-radar-module{scroll-margin-top:78px}
+}
+@media(prefers-reduced-motion:reduce){.edge-radar-tab,.edge-radar-shortcuts>a{transition:none}}
