@@ -52,7 +52,9 @@ export function comparableOffers(rows){
   if(!gtin||!row.fresh||row.status!=="READ"||row.currency!=="EUR"||!Number.isSafeInteger(row.priceCents)||row.priceCents<=0||!["InStock","PreOrder"].includes(row.availability))continue;
   const key=gtin+"|"+row.availability;
   const group=groups.get(key)??[];
-  if(!group.some(x=>x.merchant===row.merchant))group.push(row);
+  const i=group.findIndex(x=>x.merchant===row.merchant);
+  if(i<0)group.push(row);
+  else if(row.priceCents<group[i].priceCents)group[i]=row;
   groups.set(key,group);
  }
  return [...groups.entries()].filter(([,g])=>g.length>=2).map(([key,g])=>({key,offers:g.sort((a,b)=>a.priceCents-b.priceCents),spreadCents:Math.max(...g.map(x=>x.priceCents))-Math.min(...g.map(x=>x.priceCents))}));
