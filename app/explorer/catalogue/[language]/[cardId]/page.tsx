@@ -7,6 +7,7 @@ import { getRadarPaidSales } from "../../../../lib/radar-paid-sales";
 import { notFound } from "next/navigation";
 import { MarketplaceSearch } from "../../../../components/MarketplaceSearch";
 import { AssetImage } from "../../../../components/AssetImage";
+import { ProductSalesHistory } from "../../../../components/ProductSalesHistory";
 import { CardmarketOffers } from "../../../../components/CardmarketOffers";
 import "../../../../dashboard.css";
 
@@ -15,8 +16,6 @@ export const runtime = "nodejs";
 type Card = { pricing?: unknown; id?: unknown; name?: unknown; localId?: unknown; image?: unknown; rarity?: unknown; category?: unknown; illustrator?: unknown; hp?: unknown; types?: unknown; set?: { name?: unknown; id?: unknown; releaseDate?: unknown; cardCount?: { official?: unknown } } };
 
 const sourceDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" });
-const saleDate = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
-const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 
 function imageUrl(value: unknown): string | null {
   if (typeof value !== "string") return null;
@@ -86,15 +85,7 @@ export default async function CatalogueCardPage({ params, searchParams }: {
         </div>
       </div>
     </div>
-    {languageSales.length > 0 && <section className="edge-product-panel" aria-label="Ventes documentées dans la langue de la fiche">
-      <h2>Ventes documentées · {language.toUpperCase()}</h2>
-      {languageSales.map(variant => <div key={variant.key}>
-        <h3>{variant.variant}</h3>
-        <ul>{[...variant.paidSales].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 3).map(sale => <li key={sale.id}>
-          {euros.format(sale.cents / 100)} · <a href={sale.source}>{saleDate.format(new Date(sale.day))}</a>
-        </li>)}</ul>
-      </div>)}
-    </section>}
+    <ProductSalesHistory variants={languageSales} asOf={new Date().toISOString().slice(0,10)} archiveOnly={paid.archiveOnly}/>
     <CardmarketOffers key={cardId + ":" + language} cardId={cardId} language={language} />
     <MarketplaceSearch query={marketplaceQuery} />
     <section className="edge-catalogue-facts" aria-label="Caractéristiques de la carte">
