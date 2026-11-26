@@ -1,0 +1,43 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "INDICATIVE_PRICE_CHANGE",
+      "observation_id": "tcgdex_base1-4",
+      "product_id": "pokemon_card_base1-4",
+      "seller": "Cardmarket indication via TCGdex",
+      "field": "price",
+      "before": "89.95",
+      "after": "49.99",
+      "window_start": "2026-11-25T15:43:34.195157+00:00",
+      "window_end": "2026-11-26T00:29:23.229672+00:00",
+      "previous_snapshot_at": "2026-11-25T15:43:33.361625+00:00",
+      "source_url": "https://api.tcgdex.net/v2/fr/cards/base1-4",
+      "evidence_sha256": "1bb60cb2a96f5d8761070f85745e8a92bb271b5660135a5ed7b3f16040addb4a",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "ba497fc61fb3b35a7532b9f509c94fa12cf3a95458b606894464039c9cca945d",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "562023ea32bd9e67bbb44067acd948e6233f4adbc8e7d02427850a025087c53e"
+    },
+    {
+      "kind": "RESTOCK_OBSERVED",
+      "observation_id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "seller": "JoueClub",
+      "field": "availability",
+      "before": "OUT_OF_STOCK",
+      "after": "IN_STOCK",
+      "window_start": "2026-11-25T15:43:35.153769+00:00",
+      "window_end": "2026-11-26T00:29:24.989726+00:00",
+      "previous_snapshot_at": "2026-11-25T15:43:33.361625+00:00",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "evidence_sha256": "0b7bd343dc71992aef8353f2054f498588cd777966d24bf3b718ba1674c5fbe6",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "9c546ee52b553fc12291dc66b26805edc73f5f2191eae36cba52ef85d2389196",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "3b20785e9fe075211becb6bda464021d3dc80ee293e73e55bdbbacfc7a337f68"
+    }
+  ]
+}
