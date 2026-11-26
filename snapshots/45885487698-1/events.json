@@ -1,0 +1,24 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "AVAILABILITY_CHANGE",
+      "observation_id": "ldlc_discovered_42179",
+      "product_id": "lego_42179",
+      "seller": "LDLC",
+      "field": "availability",
+      "before": "BACKORDER",
+      "after": "OUT_OF_STOCK",
+      "window_start": "2026-11-26T09:38:35.839496+00:00",
+      "window_end": "2026-11-26T19:41:38.780704+00:00",
+      "previous_snapshot_at": "2026-11-26T09:38:18.789938+00:00",
+      "source_url": "https://www.ldlc.com/fiche/PB00731483.html",
+      "evidence_sha256": "8c8c79951379f28dc5a37c27fe34d864e2e741a35006f334529b315545b97442",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "805fe9cfabac8b36c146680464396ceb9ca6688d912adff4860ae2470d566361",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "a1f7190a233021b9137fe8846c101c67685a9bb7d0b56192c59a579ca1b4444b"
+    }
+  ]
+}
