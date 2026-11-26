@@ -20,7 +20,7 @@ export function RadarSaleCard({ sale, lotImage }: { sale: RadarSale; lotImage?: 
   return <RadarProductZoom name={sale.name}>
     <div className="radar-sale-art">
       {lotImage ? <GccProductImage src={lotImage} name={sale.name} /> : <AssetImage src={art?.image ?? null} name={sale.name + (art?.language === "en" ? " (édition anglaise)" : "")} />}
-      {lotImage ? <small>Photo du lot GCC</small> : art && <small>}{art.language === "en" ? "Visuel catalogue EN" : "Visuel catalogue FR"}</small>}
+      {lotImage ? <small>Photo du lot GCC</small> : art && <small>{art.language === "en" ? "Visuel catalogue EN" : "Visuel catalogue FR"}</small>}
     </div>
     <div className="radar-sale-main">
       <h3>{sale.name}</h3>
