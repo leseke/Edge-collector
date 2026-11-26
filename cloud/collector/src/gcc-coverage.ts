@@ -29,6 +29,9 @@ export async function advanceCoverage(db: D1Database, kind: GccListingKind, requ
   if (first) batch.push(db.prepare("DELETE FROM gcc_coverage_ids WHERE kind=? AND " + exists).bind(kind, ...args));
   batch.push(db.prepare("INSERT OR IGNORE INTO gcc_coverage_ids(kind,lot_id) SELECT ?,value FROM json_each(?) WHERE " + exists)
     .bind(kind, JSON.stringify(page.items.map(item => item.id)), ...args));
+  batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_lot_images(lot_id,image_url,observed_at)
+    SELECT json_extract(value,'$.id'),json_extract(value,'$.image'),? FROM json_each(?) WHERE ${exists}`)
+    .bind(now.toISOString(),JSON.stringify(page.items.filter(item=>item.image)),...args));
   if (kind !== "closed") {
     const observations = page.items.map(item => ({ ...item, source: "https://gradedcardcenter.com/item/" + item.id }));
     batch.push(db.prepare(`INSERT OR IGNORE INTO gcc_offer_observations
