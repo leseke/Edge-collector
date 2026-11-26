@@ -12,7 +12,7 @@ import { LeboncoinWatchPanel } from "./LeboncoinWatchPanel";
 import { CardLiquidityPanel } from "./CardLiquidityPanel";
 import { RadarSaleCard } from "./RadarSaleCard";
 import { GccAvailability } from "./GccAvailability";
-import { gccCursor, gccSeries } from "../lib/gcc-active-listings";
+import { gccCursor, gccSeries, getGccActiveListings } from "../lib/gcc-active-listings";
 
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
@@ -25,9 +25,9 @@ const radarTabs = [
   { id: "marche", title: "Marché" },
 ] as const;
 
-function PaidSalesList({ sales }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"] }) {
+function PaidSalesList({ sales, images }: { sales: Awaited<ReturnType<typeof getRadarPaidSales>>["recentSales"]; images: Map<string,string> }) {
   return <ul className="radar-sales">
-    {sales.map(sale => <li key={sale.id}><RadarSaleCard sale={sale} /></li>)}
+    {sales.map(sale => <li key={sale.id}><RadarSaleCard sale={sale} lotImage={images.get(sale.id)} /></li>)}
   </ul>;
 }
 
@@ -36,6 +36,18 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   const [snapshot, sales] = await Promise.all([getTcgMarketSnapshot(), getRadarPaidSales()]);
   const pokemonCases = snapshot.reactionCases.filter(item => item.productId.startsWith("pokemon_card_"));
   const guides = snapshot.cards.filter(card => card.guideWindow);
+  const images = new Map<string,string>();
+  if(tab==="ventes"){
+    const paid=new Map([...sales.recentSales,...sales.otherSales].map(s=>[s.id,s]));
+    let cursor:string|null=null;
+    for(let i=0;i<3;i++){
+      const page=await getGccActiveListings("closed",cursor);
+      if(!page)break;
+      for(const lot of page.items){const sale=paid.get("gcc-"+lot.id);if(sale&&sale.source==="https://gradedcardcenter.com/item/"+lot.id&&lot.image&&!lot.awaitingPayment)images.set(sale.id,lot.image);}
+      if(!page.nextCursor||page.nextCursor===cursor||images.size===paid.size)break;
+      cursor=page.nextCursor;
+    }
+  }
   return <div className="native-dashboard radar-dashboard edge-radar-premium">
     <header className="radar-intro">
       <p className="native-eyebrow">MARKET INTELLIGENCE</p><h1>Radar Pokémon<span>.</span></h1>
@@ -51,10 +63,10 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
       <p className="radar-sales-description">{sales.archiveOnly ?
         "Les ventes déjà documentées restent consultables pendant l’indisponibilité de la collecte." :
         "Transactions payées que EDGE a pu vérifier. La liste couvre une partie des ventes de Graded Card Center."}</p>
-      {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} /> : <p>Aucune vente payée documentée pour le moment.</p>}
+      {sales.recentSales.length ? <PaidSalesList sales={sales.recentSales} images={images} /> : <p>Aucune vente payée documentée pour le moment.</p>}
       {sales.otherSales.length > 0 && <details className="radar-disclosure">
         <summary>Autres ventes relevées ({sales.otherSales.length})</summary>
-        <PaidSalesList sales={sales.otherSales} />
+        <PaidSalesList sales={sales.otherSales} images={images} />
       </details>}
     </section>
 
