@@ -1,4 +1,4 @@
-import { RadarProductZoom } from "./RadarProductZoom";
+import { RadarProductZoom, GccProductImage } from "./RadarProductZoom";
 import { AssetImage } from "./AssetImage";
 import type { RadarSale } from "../lib/radar-paid-sales";
 
@@ -10,17 +10,17 @@ const catalogueArt = {
 const euros = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" });
 const date = new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "UTC" });
 
-export function RadarSaleCard({ sale }: { sale: RadarSale }) {
+export function RadarSaleCard({ sale, lotImage }: { sale: RadarSale; lotImage?: string }) {
   const id = sale.key.split(":")[0];
   const art = catalogueArt[id as keyof typeof catalogueArt];
   const host = new URL(sale.source).hostname;
   const platform = host === "gradedcardcenter.com" ? "Graded Card Center" : host;
   const variant = sale.variant.replace(/\bFR\b/, "Français").replace(/\bIT\b/, "Italien")
-    .replace(/\bEN\b/, "Anglais");
+    .replace(/\bEN\b/, "Anglais").replace(/\bJA\b/, "Japonais");
   return <RadarProductZoom name={sale.name}>
     <div className="radar-sale-art">
-      <AssetImage src={art?.image ?? null} name={sale.name + (art?.language === "en" ? " (édition anglaise)" : "")} />
-      {art && <small>{art.language === "en" ? "Visuel catalogue EN" : "Visuel catalogue FR"}</small>}
+      {lotImage ? <GccProductImage src={lotImage} name={sale.name} /> : <AssetImage src={art?.image ?? null} name={sale.name + (art?.language === "en" ? " (édition anglaise)" : "")} />}
+      {lotImage ? <small>Photo du lot GCC</small> : art && <small>}{art.language === "en" ? "Visuel catalogue EN" : "Visuel catalogue FR"}</small>}
     </div>
     <div className="radar-sale-main">
       <h3>{sale.name}</h3>
