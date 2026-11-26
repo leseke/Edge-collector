@@ -36,6 +36,15 @@ try{
     const geometry=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,nav:[...document.querySelectorAll(".side-nav a")].map(a=>({text:a.textContent.trim(),width:a.getBoundingClientRect().width,height:a.getBoundingClientRect().height})),palette:getComputedStyle(document.documentElement).getPropertyValue("--app-bg").trim()}));
     result.geometry=geometry;
     result.checks.push(["http",result.status===200],["no horizontal overflow",geometry.scroll<=geometry.width+1],["five navigation destinations",geometry.nav.length===5],["V3 palette",geometry.palette==="#080e19"],["touch targets",viewport.width!==390||geometry.nav.every(a=>a.width>=44&&a.height>=44)]);
+    if(name==="home"){
+     const layout=await page.evaluate(()=>{
+      const search=document.querySelector(".edge-v3-search"),input=search?.querySelector("input"),metrics=document.querySelector(".edge-v3-metrics"),summary=document.querySelector(".edge-v3-market-summary"),tiles=[...document.querySelectorAll(".edge-v3-metrics>a")];
+      const display=e=>e?getComputedStyle(e).display:null;
+      return {searchDisplay:display(search),searchWidth:search?.getBoundingClientRect().width??0,inputWidth:input?.getBoundingClientRect().width??0,summaryBorder:summary?parseFloat(getComputedStyle(summary).borderTopWidth):0,metricsDisplay:display(metrics),tileDisplays:tiles.map(display),tileCount:tiles.length,art:[...document.querySelectorAll(".edge-v3-asset-art")].map(e=>{const b=e.getBoundingClientRect();return {width:b.width,height:b.height};})};
+     });
+     result.homeLayout=layout;
+     result.checks.push(["home search styled",layout.searchDisplay==="flex"&&layout.searchWidth>=250&&layout.inputWidth>=120],["home summary styled",layout.summaryBorder>=1],["home metrics grid",layout.metricsDisplay==="grid"&&layout.tileCount===3&&layout.tileDisplays.every(d=>d==="flex")],["home artwork proportions",layout.art.every(a=>a.width>0&&Math.abs(a.height/a.width-1.4)<0.12)]);
+    }
     if(name==="explorer"){await page.getByRole("button",{name:"Liste",exact:true}).click();result.checks.push(["list mode",await page.locator(".edge-explorer-premium").getAttribute("data-view")==="list"]);await page.getByRole("button",{name:"Grille",exact:true}).click();result.checks.push(["grid mode",await page.locator(".edge-explorer-premium").getAttribute("data-view")==="grid"]);}
    }catch(e){errors.push(String(e));}
    finally{try{await page.screenshot({path:out+"/"+viewport.width+"-"+name+".png",animations:"disabled",timeout:20000});}catch(e){errors.push("Screenshot: "+String(e));}}
