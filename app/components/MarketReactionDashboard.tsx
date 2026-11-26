@@ -39,8 +39,17 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
   const images = new Map<string,string>();
   if(tab==="ventes"){
     const paid=new Map([...sales.recentSales,...sales.otherSales].map(s=>[s.id,s]));
+    try{
+      const {getCloudflareContext}=await import("@opennextjs/cloudflare");
+      const {env}=await getCloudflareContext({async:true});
+      const db=(env as {SALES_DB?:{prepare(sql:string):{bind(ids:string):{all<T>():Promise<{results:T[]}>}}}}).SALES_DB;
+      if(db){
+        const {results}=await db.prepare(`SELECT lot_id,image_url FROM (SELECT lot_id,image_url,ROW_NUMBER() OVER(PARTITION BY lot_id ORDER BY observed_at DESC,image_url) AS rn FROM gcc_lot_images WHERE lot_id IN (SELECT value FROM json_each(?))) WHERE rn=1`).bind(JSON.stringify([...paid.keys()].filter(id=>id.startsWith("gcc-")).map(id=>id.slice(4)))).all<{lot_id:string;image_url:string}>();
+        for(const row of results){const sale=paid.get("gcc-"+row.lot_id);if(sale&&sale.source==="https://gradedcardcenter.com/item/"+row.lot_id&&/^https:\/\/cdn\.gradedcardcenter\.com\/image\/width=300,fit=contain,format=webp,quality=65\/item\/[A-Za-z0-9_-]{1,120}$/.test(row.image_url))images.set(sale.id,row.image_url);}
+      }
+    }catch{/* Archive not yet available: retain bounded live fallback. */}
     let cursor:string|null=null;
-    for(let i=0;i<3;i++){
+    for(let i=0;i<3&&images.size<paid.size;i++){
       const page=await getGccActiveListings("closed",cursor);
       if(!page)break;
       for(const lot of page.items){const sale=paid.get("gcc-"+lot.id);if(sale&&sale.source==="https://gradedcardcenter.com/item/"+lot.id&&lot.image&&!lot.awaitingPayment)images.set(sale.id,lot.image);}
