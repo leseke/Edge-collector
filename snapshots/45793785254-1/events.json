@@ -1,0 +1,24 @@
+{
+  "schema": "edge.commercial.events.v1",
+  "events": [
+    {
+      "kind": "AVAILABILITY_CHANGE",
+      "observation_id": "joueclub_10365",
+      "product_id": "lego_10365",
+      "seller": "JoueClub",
+      "field": "availability",
+      "before": "IN_STOCK",
+      "after": "OUT_OF_STOCK",
+      "window_start": "2026-11-26T00:29:24.989726+00:00",
+      "window_end": "2026-11-26T09:38:21.747715+00:00",
+      "previous_snapshot_at": "2026-11-26T00:29:22.410212+00:00",
+      "source_url": "https://www.joueclub.fr/jeux-de-constructions-maquettes/lego-icons-10365-le-bateau-pirate-du-capitaine-jack-sparrow-5702017829203.html",
+      "evidence_sha256": "84bd60790e22eaf1a12e79eed86d9c62d014caa4e98b636f28b9efe958d0d92f",
+      "fact_type": "OBSERVED_TRANSITION",
+      "previous_evidence_sha256": "0b7bd343dc71992aef8353f2054f498588cd777966d24bf3b718ba1674c5fbe6",
+      "causality_proven": false,
+      "buy_signal": false,
+      "id": "786716bab82eb70d5e9ec6980b9b9f17a5c6ebbf36089e42387c4b936fbfdee0"
+    }
+  ]
+}
