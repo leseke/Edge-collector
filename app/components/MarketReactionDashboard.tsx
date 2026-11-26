@@ -89,24 +89,29 @@ export async function MarketReactionDashboard({ params = {} }: { params?: Record
     <LeboncoinWatchPanel cards={sales.variants} />
     </>}
 
-    {tab === "signaux" && <nav className="edge-radar-shortcuts" aria-label="Accès rapide aux analyses">
-      {[
-        ["edge-radar-opportunities","Opportunités","Offres à examiner"],
-        ["edge-radar-notifications","Alertes","Signaux documentés"],
-        ["edge-radar-catalysts","Catalyseurs","Événements et comparaisons"],
-        ["edge-radar-patterns","Précurseurs","Volume, offre et absorption"],
-        ["edge-radar-price","Prix","Variations observées"]
-      ].map(([id,title,subtitle])=><a key={id} href={"#"+id}><strong>{title}</strong><small>{subtitle}</small><span aria-hidden="true">↗</span></a>)}
-    </nav>}
-    {tab === "signaux" && <div id="edge-radar-opportunities" className="edge-radar-module"><Suspense fallback={<p>Analyse des offres GCC en cours…</p>}><OpportunityScanner variants={sales.variants} archiveOnly={sales.archiveOnly} /></Suspense></div>}
-    {tab === "signaux" && <div id="edge-radar-notifications" className="edge-radar-module"><Suspense fallback={<p>Chargement des notifications…</p>}><ResearchAlertInbox params={params} /></Suspense></div>}
-    {tab === "signaux" && <div id="edge-radar-catalysts" className="edge-radar-module"><Suspense fallback={<p>Recherche des catalyseurs…</p>}><CatalystPanel snapshot={snapshot} /></Suspense></div>}
-    {tab === "signaux" && <div id="edge-radar-patterns" className="edge-radar-module"><Suspense fallback={<p>Recherche des configurations…</p>}><MarketPatternPanel variants={sales.variants} /></Suspense></div>}
-    {tab === "signaux" && <div id="edge-radar-price" className="edge-radar-module"><Suspense fallback={<p>Recherche des variations de prix…</p>}><OfferPriceSignals variants={sales.variants} /></Suspense></div>}
-
+    {tab === "signaux" && <div className="edge-signal-workspace">
+      <section className="edge-signal-overview" aria-label="Synthèse des signaux">
+        <div className="edge-signal-heading"><div><p className="native-eyebrow">RADAR · RECHERCHE</p><h2>Centre de décision</h2></div><Link href="/follow">Suivi ↗</Link></div>
+        <div className="edge-signal-stats">
+          <div><strong>{snapshot.status==="UNAVAILABLE"?"—":pokemonCases.filter(p=>p.publications.length>0).length}</strong><span>Produits Pokémon cités</span></div>
+          <div><strong>{sales.archiveOnly?"—":sales.leads.length}</strong><span>Sources à vérifier</span></div>
+          <div><strong>{sales.archiveOnly?"—":sales.trends.length}</strong><span>Tendances mesurées</span></div>
+        </div>
+        <p>Indices de recherche, distincts des opportunités d’achat. {sales.archiveOnly?"Ventes archivées uniquement.":"Échantillons documentés, couverture non exhaustive."}</p>
+      </section>
+      <nav className="edge-signal-nav" aria-label="Analyses des signaux">
+        {[["opportunites","Opportunités","edge-radar-opportunities"],["alertes","Alertes","edge-radar-notifications"],["catalyseurs","Catalyseurs","edge-radar-catalysts"],["precurseurs","Précurseurs","edge-radar-patterns"],["prix","Prix","edge-radar-price"],["pistes","Pistes","edge-radar-early"]].map(([key,title,id])=><a key={key} href={"#"+id}>{title}</a>)}
+      </nav>
+      <div id="edge-radar-opportunities" className="edge-radar-module"><Suspense fallback={<p>Analyse des offres GCC en cours…</p>}><OpportunityScanner variants={sales.variants} archiveOnly={sales.archiveOnly} /></Suspense></div>
+      <div id="edge-radar-notifications" className="edge-radar-module"><Suspense fallback={<p>Chargement des notifications…</p>}><ResearchAlertInbox params={params} /></Suspense></div>
+      <details id="edge-radar-catalysts" className="edge-signal-fold" open={params.alert===undefined && params.signal==="catalyseurs"?true:undefined}><summary><span><strong>Catalyseurs</strong><small>Publications, événements et comparaisons</small></span></summary><Suspense fallback={<p>Recherche des catalyseurs…</p>}><CatalystPanel snapshot={snapshot} /></Suspense></details>
+      <details id="edge-radar-patterns" className="edge-signal-fold"><summary><span><strong>Précurseurs</strong><small>Volume, offre et absorption</small></span></summary><Suspense fallback={<p>Recherche des configurations…</p>}><MarketPatternPanel variants={sales.variants} /></Suspense></details>
+      <details id="edge-radar-price" className="edge-signal-fold"><summary><span><strong>Mouvements de prix</strong><small>Variations observées</small></span></summary><Suspense fallback={<p>Recherche des variations de prix…</p>}><OfferPriceSignals variants={sales.variants} /></Suspense></details>
+    </div>}
+    
     {tab === "marche" && <Suspense fallback={<p>Évaluation des signaux…</p>}><LearningPanel horizonValue={params.horizon} /></Suspense>}
 
-    {(tab === "signaux" || tab === "marche") && <section className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
+    {(tab === "signaux" || tab === "marche") && <section id={tab==="signaux"?"edge-radar-early":undefined} className="dashboard-section radar-section" aria-labelledby="radar-trends-title">
       <h2 id="radar-trends-title">{tab === "signaux" ? "Signaux à investiguer" : "Tendances du marché"}</h2>
       {tab === "signaux" && <p>Les tendances observées sont des pistes de recherche, pas des recommandations d’achat.</p>}
       {tab === "signaux" && <section aria-label="Signaux précoces">
