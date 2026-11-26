@@ -7,6 +7,7 @@ import { advanceCoverage } from "../src/gcc-coverage.ts";
 test("coverage deduplicates across pages, survives retries, and retains the last confirmed completion", async () => {
   const sqlite = new DatabaseSync(":memory:");
   sqlite.exec(readFileSync(new URL("../schema.sql", import.meta.url), "utf8"));
+  sqlite.exec(readFileSync(new URL("../migrations/011_gcc_lot_images.sql", import.meta.url), "utf8"));
   const db = {
     prepare(sql) { return { bind(...args) { const stmt = sqlite.prepare(sql);
       return { run: () => stmt.run(...args), first: () => stmt.get(...args) }; } }; },
@@ -14,7 +15,7 @@ test("coverage deduplicates across pages, survives retries, and retains the last
       catch (error) { sqlite.exec("ROLLBACK"); throw error; } },
   };
   const row = n => ({ id: "01234567-89ab-4cde-8fab-" + String(n).padStart(12,"0"), item: {
-    title: "Carte", collectible: { category: "Pokemon" } }, status: "SOLD" });
+    title: "Carte", rectoImageKey: "item/photo-"+n, collectible: { category: "Pokemon" } }, status: "SOLD" });
   const page = (currentPage, nextCursor, ids, total) => async () => Response.json({
     info: { currentPage, nextCursor, counts: { total } }, results: ids.map(row),
   });
@@ -26,6 +27,9 @@ test("coverage deduplicates across pages, survives retries, and retains the last
   assert.equal(read().page,1);
   await advanceCoverage(db,"closed",page(2,null,[2,3]));
   assert.equal(read().observed,3);
+  assert.equal(sqlite.prepare("SELECT count(*) AS n FROM gcc_lot_images").get().n,3);
+  assert.match(sqlite.prepare("SELECT image_url FROM gcc_lot_images ORDER BY lot_id LIMIT 1").get().image_url,/\/item\/photo-1$/);
+  assert.throws(()=>sqlite.exec("DELETE FROM gcc_lot_images"),/immutable_lot_image/);
   const completed = read().last_complete;
   assert.ok(completed);
   await advanceCoverage(db,"closed",page(1,null,[4],7));
