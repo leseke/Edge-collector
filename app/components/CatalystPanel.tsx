@@ -14,9 +14,8 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  <small>{labels[p.kind]} · SIGNAL À VÉRIFIER</small>
  <h3>{p.title}</h3>
  <p>{p.host} · {p.publishedAt?p.publishedAt.slice(0,10):"Date non confirmée"}</p>
- <p>Produit lié par le relevé : {snapshot.cards.find(c=>c.productId===p.productId)?.name??p.productId} · {p.relationship}</p>
- <p>Investigation : {questions[p.kind]}</p>
- <p>Son impact commercial reste à vérifier. Aucun rendement présumé.</p>
+ <p>{snapshot.cards.find(c=>c.productId===p.productId)?.name??(/^lego_\d+$/.test(p.productId)?"LEGO · set "+p.productId.slice(5):"Produit à identifier")} · {p.relationship==="EXPLICIT_REFERENCE_NOT_PROVEN_CAUSE"?"Produit cité, impact non confirmé":"Lien commercial à vérifier"}</p>
+ <details className="radar-disclosure"><summary>Analyse à approfondir</summary><p>{questions[p.kind]}</p><p>Son impact commercial reste à vérifier. Aucun rendement présumé.</p></details>
  <a href={p.url} target="_blank" rel="noopener noreferrer">Consulter la publication ↗</a>
  {snapshot.cards.some(c=>c.productId===p.productId)&&<p><Link href={"/explorer/"+encodeURIComponent(p.productId)}>Examiner le produit</Link></p>}
  </article>)}
@@ -26,7 +25,7 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  {discoveries===null?<p>Collecte des éditeurs momentanément indisponible.</p>:<>
  <p>{discoveries.scan?("Dernier passage : "+new Date(discoveries.scan.observed_at).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})+" · "+(discoveries.scan.status==="FAILED"?"Source inaccessible ou extraction impossible":discoveries.scan.status==="EMPTY"?"Aucune nouvelle publication":"Nouvelles publications : "+discoveries.scan.discovered)):"Aucun passage enregistré."}</p>
  {discoveries.items.length===0?<p>Aucune découverte enregistrée.</p>:discoveries.items.map(p=><article className="edge-mri-case" key={p.source_url}>
- <small>{labels[p.kind]} · WATCH</small>
+ <small>{labels[p.kind]} · À SURVEILLER</small>
  <h3>{p.title}</h3>
  <p>{p.publisher} · Repérée le {p.first_seen_at.slice(0,10)} (date de publication non vérifiée).</p>
  <p>Investigation : {questions[p.kind]}</p>
@@ -39,7 +38,7 @@ export async function CatalystPanel({snapshot}:{snapshot:MarketSnapshot}){
  <p>Informations déclarées par l’éditeur, non corroborées indépendamment.</p>
  <h4>Correspondances commerciales à vérifier</h4>
  <p>{discoveries.commercial.length?discoveries.commercial.map(m=>`${m.merchant} : ${m.observedAt.slice(0,10)} · ${m.status==="READ"?"Consulté":"Collecte échouée"}`).join(" / "):"Catalogues non encore relevés."}</p>
- {p.commercialCandidates.length===0?<p>Aucune correspondance candidate dans ce relevé.</p>:<ul>{p.commercialCandidates.map(c=><li key={c.url}><a href={c.url} target="_blank" rel="noopener noreferrer">{c.title}</a> · Mots communs : {c.overlap.join(", ")}{c.offer?.status==="READ"?<div><p>{c.offer.name??"Nom non renseigné"} {c.offer.sku&&`· SKU ${c.offer.sku}`}</p><p>{typeof c.offer.priceCents==="number"&&c.offer.currency?`${(c.offer.priceCents/100).toFixed(2)} ${c.offer.currency}`:"Prix non renseigné"} · {c.offer.availability??"UNKNOWN"}</p><p>Relevé du {c.offer.observedAt.slice(0,10)}{!c.offer.fresh?" · ancien, à revérifier":""}</p></div>:<p>{c.offer?"Extraction échouée":"Fiche non consultée"}</p>}</li>)}</ul>}
+ {p.commercialCandidates.length===0?<p>Aucune correspondance candidate dans ce relevé.</p>:<ul>{p.commercialCandidates.map(c=><li key={c.url}><a href={c.url} target="_blank" rel="noopener noreferrer">{c.title}</a> · Mots communs : {c.overlap.join(", ")}{c.offer?.status==="READ"?<div><p>{c.offer.name??"Nom non renseigné"} {c.offer.sku&&`· SKU ${c.offer.sku}`}</p><p>{typeof c.offer.priceCents==="number"&&c.offer.currency?`${(c.offer.priceCents/100).toFixed(2)} ${c.offer.currency}`:"Prix non renseigné"} · {c.offer.availability==="IN_STOCK"?"En stock":c.offer.availability==="PREORDER"?"Précommande":c.offer.availability==="OUT_OF_STOCK"?"Épuisé":"Disponibilité à confirmer"}</p><p>Relevé du {c.offer.observedAt.slice(0,10)}{!c.offer.fresh?" · ancien, à revérifier":""}</p></div>:<p>{c.offer?"Extraction échouée":"Fiche non consultée"}</p>}</li>)}</ul>}
  <p>Prix et disponibilité éventuellement déclarés par le marchand sur la fiche candidate. Correspondance exacte avec la publication et livraison non confirmées.</p>
  <p>À rechercher : identité exacte, disponibilité française, prix d’entrée, distribution, rareté et éléments contraires à la thèse.</p>
  </details>
