@@ -14,9 +14,11 @@ export class JobLeases {
  async completeWithResult(scope:string,id:string,token:string,now:number,resultJson:string){
   this.validate(scope,id,token,now);
   JSON.parse(resultJson);
-  const r=await this.db.prepare("INSERT INTO ecosystem_job_result(scope,job_id,token,completed_at,result_json) SELECT scope,job_id,token,?,? FROM ecosystem_job_lease WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>? ON CONFLICT(scope,job_id) DO NOTHING").bind(now,resultJson,scope,id,token,now).run();
-  if(!r.success||typeof r.meta?.changes!=="number")throw new Error("result commit failed");
-  return r.meta.changes===1;
+  const r=await this.db.prepare("INSERT INTO ecosystem_job_result(scope,job_id,token,completed_at,result_json) SELECT scope,job_id,token,?,? FROM ecosystem_job_lease WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>? ON CONFLICT(scope,job_id) DO NOTHING RETURNING job_id,token").bind(now,resultJson,scope,id,token,now).all<{job_id:string;token:string}>();
+  if(!r.success||!Array.isArray(r.results))throw new Error("result commit failed");
+  if(r.results.length===0)return false;
+  if(r.results.length!==1||r.results[0].job_id!==id||r.results[0].token!==token)throw new Error("unexpected result identity");
+  return true;
  }
  async complete(scope:string,id:string,token:string,now:number){
   this.validate(scope,id,token,now);
