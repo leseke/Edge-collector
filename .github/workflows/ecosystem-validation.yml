@@ -22,3 +22,10 @@ jobs:
           "${RUNNER_TEMP}/edge-validation/node_modules/.bin/tsc" --strict --target ES2022 --module commonjs --moduleResolution node --types node --typeRoots "${RUNNER_TEMP}/edge-validation/node_modules/@types" --outDir "${RUNNER_TEMP}/edge-compiled" ecosystem/*.ts
       - name: Execute ecosystem tests
         run: node --test "${RUNNER_TEMP}"/edge-compiled/*.test.js
+      - name: Install isolated Cloudflare runtime
+        run: npm install --prefix "${RUNNER_TEMP}/edge-validation" --no-audit --no-fund miniflare@4.20260205.0
+      - name: Validate local D1 binding
+        env:
+          EDGE_VALIDATION_PREFIX: ${{ runner.temp }}/edge-validation
+          EDGE_COMPILED: ${{ runner.temp }}/edge-compiled
+        run: node ecosystem/d1-runtime-check.cjs
