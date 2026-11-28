@@ -37,3 +37,31 @@ export async function pullCommercial(store:MemoryStore,now:number,fetcher:typeof
  if(!/^\d+-\d+$/.test(p.snapshot_id))throw Error("invalid snapshot ID");
  return ingestCommercial(pointer,await read(`snapshots/${p.snapshot_id}/report.json`),store,now);
 }
+
+/** Replay immutable publisher commits, using the original pointer and report.
+ * The cursor is supplied by the caller; a bounded page never silently skips failures.
+ */
+export async function pullCommercialHistory(store:MemoryStore,now:number,commits:readonly string[],fetcher:typeof fetch=fetch){
+ if(commits.length>20||commits.some(sha=>!/^[a-f0-9]{40}$/.test(sha))||new Set(commits).size!==commits.length)throw Error("invalid history page");
+ const results:Awaited<ReturnType<typeof ingestCommercial>>[]=[];
+ const failures:{commit:string;reason:string}[]=[];
+ for(const commit of commits){
+  try{
+   const root="https://raw.githubusercontent.com/leseke/Edge-collector/"+commit+"/";
+   const read=async(path:string)=>{const response=await fetcher(root+path,{redirect:"error",cache:"no-store",signal:AbortSignal.timeout(10000)});if(!response.ok)throw Error("history unavailable: "+response.status);const value=await response.text();if(Buffer.byteLength(value)>5_000_000)throw Error("history too large");return value;};
+   const pointer=await read("latest.json"),p=JSON.parse(pointer);
+   if(!/^\d+-\d+$/.test(p.snapshot_id))throw Error("invalid snapshot ID");
+   results.push(await ingestCommercial(pointer,await read(`snapshots/${p.snapshot_id}/report.json`),store,now));
+  }catch(error){failures.push({commit,reason:error instanceof Error?error.message:"unknown failure"});}
+ }
+ return {results,failures,subjects:[...new Set(results.flatMap(r=>r.subjects))].sort()};
+}
+export async function discoverCommercialHistory(page:number,fetcher:typeof fetch=fetch):Promise<string[]>{
+ if(!Number.isSafeInteger(page)||page<1||page>1000)throw Error("invalid history page");
+ const url="https://api.github.com/repos/leseke/Edge-collector/commits?sha=edge%2Fcommercial-history&path=latest.json&per_page=10&page="+page;
+ const response=await fetcher(url,{redirect:"error",headers:{Accept:"application/vnd.github+json"},signal:AbortSignal.timeout(10000)});
+ if(!response.ok)throw Error("history index unavailable: "+response.status);
+ const rows:unknown=await response.json();
+ if(!Array.isArray(rows)||rows.length>10||rows.some(r=>!r||typeof r.sha!=="string"||!/^[a-f0-9]{40}$/.test(r.sha)))throw Error("invalid history index");
+ return [...new Set(rows.map(r=>r.sha as string))];
+}
