@@ -53,6 +53,7 @@ jobs:
         run: |
           npm install --prefix "${RUNNER_TEMP}/edge-validation" --no-audit --no-fund --ignore-scripts typescript@5.9.3 @types/node@24.10.0
           "${RUNNER_TEMP}/edge-validation/node_modules/.bin/tsc" --strict --target ES2022 --module commonjs --moduleResolution node --types node --typeRoots "${RUNNER_TEMP}/edge-validation/node_modules/@types" --outDir "${RUNNER_TEMP}/edge-compiled" ecosystem/*.ts
+      # Explicit staging opt-in confirmed by repository owner.
       - name: Verify dedicated remote staging D1
         env:
           EDGE_COMPILED: ${{ runner.temp }}/edge-compiled
