@@ -20,17 +20,22 @@ async function dispatchUnlocked(db:Database,scope:string,id:string,token:string,
  if(!await leases.claim(scope,id,token,now,ttl))return {status:"busy" as const};
  const reserved=await store.reserveAttempt(scope,id,now,policy.maxAttempts);
  if(!reserved)return {status:"not_ready" as const};
+ const active=async(at:number)=>Number.isSafeInteger(at)&&at>=now&&!!await db.prepare("SELECT 1 AS ok FROM ecosystem_dispatch_lock WHERE scope=? AND token=? AND expires_at>?").bind(scope,token,at).first<{ok:number}>();
+ if(!await active(clock()))return {status:"lease_lost" as const};
  const execution=await executeReservedAttempt(reserved.work,reserved.state.sources,adapter,now,policy);
  const finished=clock();
  if(!Number.isSafeInteger(finished)||finished<now)throw new Error("invalid completion clock");
+ if(!await active(finished))return {status:"lease_lost" as const};
  const state={work:reserved.state.work.map(w=>w.id===id?execution.work:w),sources:execution.sources};
  if(execution.resultJson!==null){
   if(!await leases.completeWithResult(scope,id,token,finished,execution.resultJson))return {status:"lease_lost" as const};
-  const saved=await store.save(scope,reserved.version,state);
+  const savedResult=await db.prepare("UPDATE ecosystem_recovery_state SET version=version+1,state_json=? WHERE scope=? AND version=? AND EXISTS (SELECT 1 FROM ecosystem_dispatch_lock WHERE scope=? AND token=? AND expires_at>?)").bind(JSON.stringify(state),scope,reserved.version,scope,token,clock()).run();
+  if(!savedResult.success||typeof savedResult.meta?.changes!=="number")throw new Error("recovery reconciliation failed");
+  const saved=savedResult.meta.changes===1;
   return {status:"completed" as const,resultJson:execution.resultJson,stateReconciled:saved};
  }
  // Failure transition must be fenced by both the recovery version and current lease.
- const r=await db.prepare("UPDATE ecosystem_recovery_state SET version=version+1,state_json=? WHERE scope=? AND version=? AND EXISTS (SELECT 1 FROM ecosystem_job_lease WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>?)").bind(JSON.stringify(state),scope,reserved.version,scope,id,token,finished).run();
+ const r=await db.prepare("UPDATE ecosystem_recovery_state SET version=version+1,state_json=? WHERE scope=? AND version=? AND EXISTS (SELECT 1 FROM ecosystem_job_lease WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>?) AND EXISTS (SELECT 1 FROM ecosystem_dispatch_lock WHERE scope=? AND token=? AND expires_at>?)").bind(JSON.stringify(state),scope,reserved.version,scope,id,token,finished,scope,token,finished).run();
  if(!r.success||typeof r.meta?.changes!=="number")throw new Error("recovery transition failed");
  if(r.meta.changes!==1)return {status:"transition_conflict" as const};
  const release=await db.prepare("UPDATE ecosystem_job_lease SET expires_at=? WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>?").bind(finished,scope,id,token,finished).run();
