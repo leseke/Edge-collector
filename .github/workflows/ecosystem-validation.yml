@@ -1,0 +1,24 @@
+name: Ecosystem validation
+on:
+  push:
+    branches: ['edge/autonomous-ecosystem-001']
+  pull_request:
+    paths: ['ecosystem/**', '.github/workflows/ecosystem-validation.yml']
+permissions:
+  contents: read
+jobs:
+  ecosystem:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install isolated test compiler
+        run: npm install --prefix "${RUNNER_TEMP}/edge-validation" --no-audit --no-fund --ignore-scripts typescript@5.9.3 @types/node@24.10.0
+      - name: Compile ecosystem strictly
+        run: |
+          "${RUNNER_TEMP}/edge-validation/node_modules/.bin/tsc" --strict --target ES2022 --module commonjs --moduleResolution node --types node --typeRoots "${RUNNER_TEMP}/edge-validation/node_modules/@types" --outDir "${RUNNER_TEMP}/edge-compiled" ecosystem/*.ts
+      - name: Execute ecosystem tests
+        run: node --test "${RUNNER_TEMP}"/edge-compiled/*.test.js
