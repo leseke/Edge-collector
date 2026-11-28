@@ -69,6 +69,11 @@ const {dispatchRead}=require(resolve(compiled,"persistent-dispatcher.js"));
   const replay=await pullCommercial(memory,Date.now());
   if(replay.snapshotId===imported.snapshotId){assert.equal(replay.inserted,0);assert.equal(replay.duplicate,imported.inserted);}
   console.log("[D1] Published capture summary",JSON.stringify(imported));
+  const {commercialVariations}=require(resolve(compiled,"commercial-variation.js"));
+  const variations=[];
+  for(const subject of imported.subjects) variations.push(...await commercialVariations(memory,subject,Date.now()));
+  console.log("[D1] Historical variation summary",JSON.stringify({subjects:imported.subjects.length,variations:variations.length,coverage:"current capture only; no historical movement implied"}));
+  for(const v of variations){assert.equal(v.executionAllowed,false);assert.ok(await memory.get(v.previousEvidenceId));assert.ok(await memory.get(v.currentEvidenceId));}
   console.log("D1 local runtime integration passed");
  }catch(error){console.error("[D1] Integration failure:",error);if(error?.cause)console.error("[D1] Underlying cause:",error.cause);throw error;}finally{await mf.dispose();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
