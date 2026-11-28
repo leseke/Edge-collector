@@ -10,7 +10,7 @@ import type { CycleState } from "./homeostasis";
 function database(){
  const sqlite=new DatabaseSync(":memory:");
  sqlite.exec("PRAGMA foreign_keys=ON");
- for(const f of ["memory.sql","checkpoint.sql","job-lease.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
+ for(const f of ["memory.sql","checkpoint.sql","job-lease.sql","job-result.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
  type V=string|number|null;
  class Query implements Statement{
   constructor(readonly sql:string,readonly args:V[]=[]){}
@@ -35,3 +35,8 @@ test("expired lease can be recovered and stale owner cannot complete",async()=>{
 test("completed jobs cannot be completed twice or reclaimed",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);assert.equal(await l.complete("edge","j","a",11),true);assert.equal(await l.complete("edge","j","a",12),false);assert.equal(await l.claim("edge","j","b",100,20),false);}finally{sqlite.close();}});
 test("leases are scoped by ecosystem and job identity",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);assert.equal(await l.claim("edge","j","a",10,20),true);assert.equal(await l.claim("other","j","b",10,20),true);assert.equal(await l.claim("edge","k","c",10,20),true);}finally{sqlite.close();}});
 test("invalid lease duration and completion without ownership are rejected",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await assert.rejects(l.claim("edge","j","a",10,0));assert.equal(await l.complete("edge","j","a",10),false);await l.claim("edge","j","b",10,20);assert.equal(await l.complete("edge","j","a",11),false);}finally{sqlite.close();}});
+
+test("result and completion are committed together and replay is harmless",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);assert.equal(await l.completeWithResult("edge","j","a",11,'{"value":1}'),true);assert.equal(await l.completeWithResult("edge","j","a",12,'{"value":2}'),false);assert.equal(await l.claim("edge","j","b",40,20),false);assert.equal(sqlite.prepare("SELECT result_json FROM ecosystem_job_result").get()?.result_json,'{"value":1}');assert.equal(sqlite.prepare("SELECT completed_at FROM ecosystem_job_lease").get()?.completed_at,11);}finally{sqlite.close();}});
+test("expired or superseded owners cannot publish results",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);assert.equal(await l.completeWithResult("edge","j","a",30,"{}"),false);await l.claim("edge","j","b",30,20);assert.equal(await l.completeWithResult("edge","j","a",31,"{}"),false);assert.equal(await l.completeWithResult("edge","j","b",31,"{}"),true);}finally{sqlite.close();}});
+test("invalid JSON cannot mark a task complete",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await assert.rejects(l.completeWithResult("edge","j","a",11,"invalid"));assert.equal(sqlite.prepare("SELECT completed_at FROM ecosystem_job_lease").get()?.completed_at,null);assert.equal(await l.completeWithResult("edge","j","a",12,"{}"),true);}finally{sqlite.close();}});
+test("stored results are immutable",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await l.completeWithResult("edge","j","a",11,"{}");assert.throws(()=>sqlite.exec("UPDATE ecosystem_job_result SET result_json='null'"));assert.throws(()=>sqlite.exec("DELETE FROM ecosystem_job_result"));}finally{sqlite.close();}});
