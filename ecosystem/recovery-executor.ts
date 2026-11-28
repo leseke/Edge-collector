@@ -17,6 +17,13 @@ export async function executeRecoveryStep(work:Work,sources:readonly SourceHealt
  if(!source)throw new Error("unknown source");
  if(source.disabled||source.blockedUntil>now)return unchanged("source_unavailable");
  const attempt={...work,attempts:work.attempts+1};
+ return executeReservedAttempt(attempt,sources,adapter,now,policy);
+}
+/** Execute a previously counted attempt; the caller must hold a valid lease. */
+export async function executeReservedAttempt(attempt:Work,sources:readonly SourceHealth[],adapter:ReadAdapter,now:number,policy:RetryPolicy):Promise<Execution>{
+ if(attempt.status!=="pending"||attempt.dueAt>now||!Number.isSafeInteger(attempt.attempts)||attempt.attempts<1||attempt.attempts>policy.maxAttempts)throw new Error("invalid reserved attempt");
+ const source=sources.find(s=>s.id===attempt.sourceId&&s.capability===attempt.capability);
+ if(!source||source.disabled||source.blockedUntil>now)throw new Error("reserved source unavailable");
  // Transport exceptions are intentionally propagated; unknown outcomes must not be assumed successful.
  const response=await adapter.read(attempt);
  if(response.ok){
