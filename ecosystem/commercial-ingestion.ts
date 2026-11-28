@@ -11,7 +11,8 @@ export async function ingestCommercial(pointerText:string,reportText:string,stor
  if(p.schema!=="edge.public.live_capture.v1"||!/^\d+-\d+$/.test(p.snapshot_id)||ref?.path!==`snapshots/${p.snapshot_id}/report.json`||digest(reportText)!==ref.sha256||r.schema!=="edge.commercial.snapshot.v1"||r.status!==p.status||r.observed_at!==p.observed_at||!Array.isArray(r.observations)||!["OK","PARTIAL","EMPTY","FAILED"].includes(p.status))throw Error("invalid published capture");
  const captured=Date.parse(p.observed_at);
  if(!Number.isFinite(captured)||captured>now)throw Error("invalid capture time");
- const summary={snapshotId:p.snapshot_id,status:p.status,inserted:0,duplicate:0,excluded:0,invalid:0,indicative:0,asking:0,declaredSales:0};
+ const summary={snapshotId:p.snapshot_id,status:p.status,inserted:0,duplicate:0,excluded:0,invalid:0,indicative:0,asking:0,declaredSales:0,subjects:[] as string[]};
+ const subjects=new Set<string>();
  for(const row of r.observations as Row[]){
   if(!str(row.product_id)||!/^pokemon_card_[a-zA-Z0-9_.-]+$/.test(row.product_id)){summary.excluded++;continue;}
   if(!str(row.id)||!str(row.seller)||!str(row.url)||!str(row.observed_at)||row.status!=="OK"){summary.invalid++;continue;}
@@ -24,9 +25,10 @@ export async function ingestCommercial(pointerText:string,reportText:string,stor
   const id=JSON.stringify(["commercial-capture",p.snapshot_id,row.id]);
   const old=await store.get(id);
   const entry={id,subject:row.product_id,kind:"observation" as const,recordedAt:old?.recordedAt??now,occurredAt:at,sourceUrl:url.href,evidenceIds:[],statement:JSON.stringify({schema:"edge.ecosystem.commercial.v1",snapshotId:p.snapshot_id,reportSha256:ref.sha256,source:row.seller,priceMinor:price,currency:"EUR",priceKind:kind,marketLanguage:"UNKNOWN",marketLanguageVerified:row.market_language_verified===true,availability:str(row.availability)?row.availability:"UNKNOWN",sourceUpdatedAt:str(row.source_updated_at)?row.source_updated_at:null,independentlyVerified:false})};
-  const result=await remember(store,entry,now);summary[result]++;
+  const result=await remember(store,entry,now);summary[result]++;subjects.add(row.product_id);
   if(kind==="indicative")summary.indicative++;else if(kind==="asking")summary.asking++;else summary.declaredSales++;
  }
+ summary.subjects=[...subjects].sort();
  return summary;
 }
 export async function pullCommercial(store:MemoryStore,now:number,fetcher:typeof fetch=fetch){
