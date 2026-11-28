@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { D1Memory, D1Checkpoints, type Database, type Statement } from "./d1-store";
 import { remember } from "./memory";
 import { JobLeases } from "./job-lease";
+import { executeExternal } from "./external-operation";
 import { RecoveryStore } from "./recovery-store";
 import { dispatchRead } from "./persistent-dispatcher";
 import { persistentCycle } from "./persistent-cycle";
@@ -13,7 +14,7 @@ import type { CycleState } from "./homeostasis";
 function database(){
  const sqlite=new DatabaseSync(":memory:");
  sqlite.exec("PRAGMA foreign_keys=ON");
- for(const f of ["memory.sql","checkpoint.sql","job-lease.sql","job-result.sql","recovery-state.sql","dispatch-lock.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
+ for(const f of ["memory.sql","checkpoint.sql","job-lease.sql","job-result.sql","recovery-state.sql","dispatch-lock.sql","external-operation.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
  type V=string|number|null;
  class Query implements Statement{
   constructor(readonly sql:string,readonly args:V[]=[]){}
@@ -65,3 +66,10 @@ test("expired shared lock can be reclaimed after a crash",async()=>{const {db,sq
 test("dispatch lock is released after transport exception",async()=>{const {db,sqlite}=database();try{await new RecoveryStore(db).save("edge",null,recoveryState);await assert.rejects(dispatchRead(db,"edge","read","a",{async read(){throw new Error("transport");}},()=>10,100,dispatchPolicy));assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM ecosystem_dispatch_lock").get()?.n,0);}finally{sqlite.close();}});
 
 test("superseded dispatcher cannot modify recovery state or release new lock",async()=>{const {db,sqlite}=database();try{const store=new RecoveryStore(db);await store.save("edge",null,{...recoveryState,work:[...recoveryState.work,{...recoveryState.work[0],id:"second"}]});let now=10;let entered!:()=>void,resume!:()=>void;const started=new Promise<void>(r=>{entered=r;});const paused=new Promise<void>(r=>{resume=r;});const old=dispatchRead(db,"edge","read","old",{async read(){entered();await paused;return {ok:false as const,failure:"permanent" as const};}},()=>now,100,dispatchPolicy);await started;now=110;let enteredNew!:()=>void,resumeNew!:()=>void;const startedNew=new Promise<void>(r=>{enteredNew=r;});const pausedNew=new Promise<void>(r=>{resumeNew=r;});const fresh=dispatchRead(db,"edge","second","fresh",{async read(){enteredNew();await pausedNew;return {ok:true as const,resultJson:"{}"};}},()=>now,100,dispatchPolicy);await startedNew;resume();try{assert.equal((await old).status,"lease_lost");assert.equal(sqlite.prepare("SELECT token FROM ecosystem_dispatch_lock WHERE scope='edge'").get()?.token,"fresh");assert.equal((await store.load("edge"))?.state.sources[0].disabled,false);}finally{resumeNew();}assert.equal((await fresh).status,"completed");assert.deepEqual((await store.load("edge"))?.state.work.map(w=>w.attempts),[1,1]);}finally{sqlite.close();}});
+
+const externalRequest={scope:"edge",id:"analysis-v1",fingerprint:"model+input+policy-v1",token:"a"};
+test("external result is reused without a second call",async()=>{const {db,sqlite}=database();try{let calls=0;const invoke=async()=>{calls++;return '{"answer":1}';};assert.equal((await executeExternal(db,externalRequest,()=>10,invoke)).status,"completed");const cached=await executeExternal(db,{...externalRequest,token:"b"},()=>11,invoke);assert.equal(cached.status,"cached");assert.equal(calls,1);}finally{sqlite.close();}});
+test("ambiguous external outcome is never automatically replayed",async()=>{const {db,sqlite}=database();try{await assert.rejects(executeExternal(db,externalRequest,()=>10,async()=>{throw new Error("response lost");}));const r=await executeExternal(db,{...externalRequest,token:"b"},()=>100,async()=>{throw new Error("must not call");});assert.equal(r.status,"unresolved");}finally{sqlite.close();}});
+test("concurrent external requests invoke provider at most once",async()=>{const {db,sqlite}=database();try{let calls=0;const invoke=async()=>{calls++;return "{}";};const results=await Promise.all([executeExternal(db,externalRequest,()=>10,invoke),executeExternal(db,{...externalRequest,token:"b"},()=>10,invoke)]);assert.equal(calls,1);assert.equal(results.filter(r=>r.status==="completed").length,1);}finally{sqlite.close();}});
+test("operation ID cannot be reused with different input fingerprint",async()=>{const {db,sqlite}=database();try{await executeExternal(db,externalRequest,()=>10,async()=>"{}");await assert.rejects(executeExternal(db,{...externalRequest,fingerprint:"different"},()=>11,async()=>{throw new Error("must not call");}),/identity conflict/);}finally{sqlite.close();}});
+test("completed external result cannot be changed or deleted",async()=>{const {db,sqlite}=database();try{await executeExternal(db,externalRequest,()=>10,async()=>"{}");assert.throws(()=>sqlite.exec("UPDATE ecosystem_external_operation SET result_json='null'"));assert.throws(()=>sqlite.exec("DELETE FROM ecosystem_external_operation"));}finally{sqlite.close();}});
