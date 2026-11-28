@@ -5,13 +5,14 @@ import { readFileSync } from "node:fs";
 import { D1Memory, D1Checkpoints, type Database, type Statement } from "./d1-store";
 import { remember } from "./memory";
 import { JobLeases } from "./job-lease";
+import { RecoveryStore } from "./recovery-store";
 import { persistentCycle } from "./persistent-cycle";
 import type { MemoryEntry } from "./memory";
 import type { CycleState } from "./homeostasis";
 function database(){
  const sqlite=new DatabaseSync(":memory:");
  sqlite.exec("PRAGMA foreign_keys=ON");
- for(const f of ["memory.sql","checkpoint.sql","job-lease.sql","job-result.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
+ for(const f of ["memory.sql","checkpoint.sql","job-lease.sql","job-result.sql","recovery-state.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
  type V=string|number|null;
  class Query implements Statement{
   constructor(readonly sql:string,readonly args:V[]=[]){}
@@ -46,3 +47,8 @@ const emptyCycle={observations:[],previous:[],references:[],signals:[],marketSig
 const cyclePolicy={costs:{collect:10,verify:10,archive:5,analyze:20},ttlMs:1000,marketWindowMs:1000,adaptation:{windowMs:1000,minSamples:5,minIntervalMs:10,maxIntervalMs:1000}};
 test("restart reconciles a committed result even when checkpoint still lists the job",async()=>{const {db,sqlite}=database();try{await new D1Checkpoints(db).save("edge",null,state,10);const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await l.completeWithResult("edge","j","a",11,"{}");const r=await persistentCycle(db,"edge",state,emptyCycle,12,cyclePolicy);assert.ok(r.committed);if(r.committed)assert.deepEqual(r.result.state.outstanding,[]);assert.equal((await new D1Checkpoints(db).load("edge"))?.state.outstanding.length,0);}finally{sqlite.close();}});
 test("restart preserves unfinished jobs and results belonging to another scope",async()=>{const {db,sqlite}=database();try{await new D1Checkpoints(db).save("edge",null,state,10);const l=new JobLeases(db);await l.claim("other","j","a",10,20);await l.completeWithResult("other","j","a",11,"{}");const r=await persistentCycle(db,"edge",state,emptyCycle,12,cyclePolicy);assert.ok(r.committed);if(r.committed)assert.deepEqual(r.result.state.outstanding,state.outstanding);}finally{sqlite.close();}});
+
+const recoveryState:import("./recovery-store").RecoveryState={work:[{id:"read",sourceId:"a",capability:"sold",attempts:0,dueAt:0,status:"pending"}],sources:[{id:"a",capability:"sold",failures:2,blockedUntil:0,disabled:false}]};
+test("attempt reserved before read survives restart and counts toward limit",async()=>{const {db,sqlite}=database();try{const a=new RecoveryStore(db);assert.equal(await a.save("edge",null,recoveryState),true);assert.equal((await a.reserveAttempt("edge","read",10,2))?.work.attempts,1);const b=new RecoveryStore(db);assert.equal((await b.load("edge"))?.state.sources[0].failures,2);assert.equal((await b.reserveAttempt("edge","read",11,2))?.work.attempts,2);assert.equal(await b.reserveAttempt("edge","read",12,2),null);}finally{sqlite.close();}});
+test("concurrent reservations cannot overwrite the same recovery version",async()=>{const {db,sqlite}=database();try{const a=new RecoveryStore(db),b=new RecoveryStore(db);await a.save("edge",null,recoveryState);const r=await Promise.all([a.reserveAttempt("edge","read",10,3),b.reserveAttempt("edge","read",10,3)]);assert.equal(r.filter(Boolean).length,1);assert.equal((await a.load("edge"))?.state.work[0].attempts,1);}finally{sqlite.close();}});
+test("blocked sources and stale recovery writes cannot consume attempts",async()=>{const {db,sqlite}=database();try{const a=new RecoveryStore(db);await a.save("edge",null,{...recoveryState,sources:[{...recoveryState.sources[0],blockedUntil:100}]});assert.equal(await a.reserveAttempt("edge","read",99,3),null);assert.equal((await a.reserveAttempt("edge","read",100,3))?.work.attempts,1);assert.equal(await a.save("edge",0,recoveryState),false);}finally{sqlite.close();}});
