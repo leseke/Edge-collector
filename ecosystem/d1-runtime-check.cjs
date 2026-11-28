@@ -62,6 +62,13 @@ const {dispatchRead}=require(resolve(compiled,"persistent-dispatcher.js"));
   const policy={baseMs:100,maxDelayMs:1000,maxAttempts:3,circuitThreshold:2,cooldownMs:5000};
   assert.equal((await dispatchRead(db,"test","read","read-token",{async read(){return {ok:true,resultJson:"{}"};}},()=>10,100,policy)).status,"completed");
   assert.equal((await store.load("test")).state.work[0].attempts,1);
+  console.log("[D1] Import current published commercial capture");
+  const {pullCommercial}=require(resolve(compiled,"commercial-ingestion.js"));
+  const imported=await pullCommercial(memory,Date.now());
+  assert.ok(imported.inserted>0,"published capture contains no usable TCG observations");
+  const replay=await pullCommercial(memory,Date.now());
+  if(replay.snapshotId===imported.snapshotId){assert.equal(replay.inserted,0);assert.equal(replay.duplicate,imported.inserted);}
+  console.log("[D1] Published capture summary",JSON.stringify(imported));
   console.log("D1 local runtime integration passed");
  }catch(error){console.error("[D1] Integration failure:",error);if(error?.cause)console.error("[D1] Underlying cause:",error.cause);throw error;}finally{await mf.dispose();}
 })().catch(e=>{console.error(e);process.exitCode=1;});
