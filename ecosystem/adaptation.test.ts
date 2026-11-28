@@ -1,0 +1,14 @@
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { adapt, type Feedback, type Policy, type Channel } from "./adaptation";
+const channels:Channel[]=[{id:"a",lastProbeAt:0,baselineIntervalMs:1000}];
+const policy:Policy={windowMs:10000,minSamples:5,minIntervalMs:500,maxIntervalMs:1500};
+const feedback=(outcome:Feedback["outcome"],n=10):Feedback[]=>Array.from({length:n},(_,i)=>({id:String(i),channel:"a",recordedAt:100,outcome,evidenceId:"e"+i}));
+test("productive channels are prioritized",()=>{const r=adapt(channels,feedback("useful"),100,policy)[0];assert.ok(r.intervalMs<1000);assert.ok(r.priority>50);});
+test("unproductive channels retain bounded exploration",()=>{const r=adapt(channels,feedback("not_useful"),100,policy)[0];assert.ok(r.intervalMs>1000&&r.intervalMs<=1500);assert.ok(r.priority>=25);});
+test("uncertainty and outages do not penalize market relevance",()=>{for(const k of ["inconclusive","source_error"] as const){const r=adapt(channels,feedback(k),100,policy)[0];assert.equal(r.intervalMs,1000);assert.equal(r.samples,0);}});
+test("small samples preserve baseline",()=>assert.equal(adapt(channels,feedback("useful",4),100,policy)[0].intervalMs,1000));
+test("duplicates cannot inflate yield",()=>{const f=feedback("useful",1);assert.equal(adapt(channels,[...f,...f],100,policy)[0].samples,1);});
+test("expired feedback no longer influences adaptation",()=>assert.equal(adapt(channels,feedback("useful"),20000,policy)[0].samples,0));
+test("conflicting or future evidence is rejected",()=>{const f=feedback("useful",1);assert.throws(()=>adapt(channels,[...f,{...f[0],outcome:"not_useful"}],100,policy));assert.throws(()=>adapt(channels,f,99,policy));});
+test("hard interval bounds apply",()=>{assert.equal(adapt(channels,[],100,{...policy,minIntervalMs:1200})[0].intervalMs,1200);});
