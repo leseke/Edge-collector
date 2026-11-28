@@ -1,0 +1,13 @@
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { inspect, type Observation, type Reference } from "./immune-system";
+const o:Observation={id:"one",source:"market",listingId:"listing",subject:"product",observedAt:10,priceMinor:1000,currency:"EUR",language:"FR",condition:"sealed",url:"https://example.com/listing",priceKind:"asking"};
+const r:Reference={subject:"product",currency:"EUR",language:"FR",condition:"sealed",priceKind:"asking",medianMinor:10000,sampleSize:10};
+test("outlier is retained for review, not rejected",()=>{const v=inspect(o,[],[r],20,100);assert.equal(v.status,"review");assert.ok(v.reasons.includes("price_outlier"));assert.equal(v.signal,null);});
+test("language and price type stay separate",()=>{assert.equal(inspect(o,[],[{...r,language:"IT"},{...r,priceKind:"sold"}],20,100).status,"accepted");});
+test("missing price remains reviewable",()=>assert.equal(inspect({...o,priceMinor:null},[],[],20,100).status,"review"));
+test("invalid prices are rejected and emit a rejection signal",()=>{const v=inspect({...o,priceMinor:-1},[],[],20,100);assert.equal(v.status,"rejected");assert.equal(v.signal?.kind,"evidence.rejected");});
+test("duplicate differs from conflicting observation",()=>{assert.equal(inspect(o,[o],[],20,100).status,"duplicate");assert.equal(inspect(o,[{...o,priceMinor:2000}],[],20,100).status,"review");});
+test("new historical snapshot is not a duplicate",()=>assert.equal(inspect({...o,observedAt:11},[o],[],20,100).status,"accepted"));
+test("structural acceptance never claims independent verification",()=>assert.equal(inspect(o,[],[],20,100).signal,null));
+test("small reference samples cannot flag anomalies",()=>assert.equal(inspect(o,[],[{...r,sampleSize:4}],20,100).status,"accepted"));
