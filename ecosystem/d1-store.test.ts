@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { D1Memory, D1Checkpoints, type Database, type Statement } from "./d1-store";
 import { remember } from "./memory";
 import { JobLeases } from "./job-lease";
+import { persistentCycle } from "./persistent-cycle";
 import type { MemoryEntry } from "./memory";
 import type { CycleState } from "./homeostasis";
 function database(){
@@ -40,3 +41,8 @@ test("result and completion are committed together and replay is harmless",async
 test("expired or superseded owners cannot publish results",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);assert.equal(await l.completeWithResult("edge","j","a",30,"{}"),false);await l.claim("edge","j","b",30,20);assert.equal(await l.completeWithResult("edge","j","a",31,"{}"),false);assert.equal(await l.completeWithResult("edge","j","b",31,"{}"),true);}finally{sqlite.close();}});
 test("invalid JSON cannot mark a task complete",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await assert.rejects(l.completeWithResult("edge","j","a",11,"invalid"));assert.equal(sqlite.prepare("SELECT completed_at FROM ecosystem_job_lease").get()?.completed_at,null);assert.equal(await l.completeWithResult("edge","j","a",12,"{}"),true);}finally{sqlite.close();}});
 test("stored results are immutable",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await l.completeWithResult("edge","j","a",11,"{}");assert.throws(()=>sqlite.exec("UPDATE ecosystem_job_result SET result_json='null'"));assert.throws(()=>sqlite.exec("DELETE FROM ecosystem_job_result"));}finally{sqlite.close();}});
+
+const emptyCycle={observations:[],previous:[],references:[],signals:[],marketSignals:[],channels:[],feedback:[]};
+const cyclePolicy={costs:{collect:10,verify:10,archive:5,analyze:20},ttlMs:1000,marketWindowMs:1000,adaptation:{windowMs:1000,minSamples:5,minIntervalMs:10,maxIntervalMs:1000}};
+test("restart reconciles a committed result even when checkpoint still lists the job",async()=>{const {db,sqlite}=database();try{await new D1Checkpoints(db).save("edge",null,state,10);const l=new JobLeases(db);await l.claim("edge","j","a",10,20);await l.completeWithResult("edge","j","a",11,"{}");const r=await persistentCycle(db,"edge",state,emptyCycle,12,cyclePolicy);assert.ok(r.committed);if(r.committed)assert.deepEqual(r.result.state.outstanding,[]);assert.equal((await new D1Checkpoints(db).load("edge"))?.state.outstanding.length,0);}finally{sqlite.close();}});
+test("restart preserves unfinished jobs and results belonging to another scope",async()=>{const {db,sqlite}=database();try{await new D1Checkpoints(db).save("edge",null,state,10);const l=new JobLeases(db);await l.claim("other","j","a",10,20);await l.completeWithResult("other","j","a",11,"{}");const r=await persistentCycle(db,"edge",state,emptyCycle,12,cyclePolicy);assert.ok(r.committed);if(r.committed)assert.deepEqual(r.result.state.outstanding,state.outstanding);}finally{sqlite.close();}});
