@@ -1,0 +1,16 @@
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { recover, recordSuccess, type SourceHealth, type Attempt, type RetryPolicy } from "./recovery";
+const a:SourceHealth={id:"a",capability:"sold-prices",failures:0,blockedUntil:0,disabled:false};
+const b:SourceHealth={...a,id:"b"};
+const job:Attempt={id:"task",capability:"sold-prices",attempts:1,sourceId:"a"};
+const p:RetryPolicy={baseMs:100,maxDelayMs:1000,maxAttempts:5,circuitThreshold:3,cooldownMs:5000};
+test("compatible alternative is preferred",()=>{const r=recover([a,b],job,"transient",0,p);assert.equal(r.action,"failover");assert.equal(r.sourceId,"b");assert.equal(r.state[0].blockedUntil,100);});
+test("incompatible source is not used",()=>{const r=recover([a,{...b,capability:"asking-prices"}],job,"transient",0,p);assert.equal(r.action,"retry");assert.equal(r.sourceId,"a");});
+test("exponential retry is capped",()=>assert.equal(recover([a],{...job,attempts:4},"transient",0,{...p,maxDelayMs:500}).dueAt,500));
+test("rate limit honors longer provider delay",()=>assert.equal(recover([a],job,"rate_limited",0,p,10000).dueAt,10000));
+test("repeated failures open cooldown",()=>{const r=recover([{...a,failures:2}],job,"transient",0,p);assert.equal(r.action,"defer");assert.equal(r.dueAt,5000);});
+test("permanent failure disables the source",()=>{const r=recover([a],job,"permanent",0,p);assert.equal(r.action,"quarantine");assert.equal(r.state[0].disabled,true);});
+test("attempt cap applies even with alternative",()=>assert.equal(recover([a,b],{...job,attempts:5},"transient",0,p).action,"quarantine"));
+test("successful probe clears failure count after cooldown",()=>{const s={...a,failures:3,blockedUntil:500};assert.throws(()=>recordSuccess(s,499));assert.deepEqual(recordSuccess(s,500),a);});
+test("invalid policies are rejected",()=>assert.throws(()=>recover([a],job,"transient",0,{...p,baseMs:0})));
