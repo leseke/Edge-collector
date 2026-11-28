@@ -1,5 +1,11 @@
 name: Ecosystem validation
 on:
+  workflow_dispatch:
+    inputs:
+      remote_staging:
+        description: Validate dedicated remote D1 staging database
+        type: boolean
+        default: false
   push:
     branches: ['edge/autonomous-ecosystem-001']
   pull_request:
@@ -29,3 +35,28 @@ jobs:
           EDGE_VALIDATION_PREFIX: ${{ runner.temp }}/edge-validation
           EDGE_COMPILED: ${{ runner.temp }}/edge-compiled
         run: node ecosystem/d1-runtime-check.cjs
+  remote-staging:
+    needs: ecosystem
+    if: github.ref == 'refs/heads/edge/autonomous-ecosystem-001' && ((github.event_name == 'workflow_dispatch' && inputs.remote_staging) || (github.event_name == 'push' && vars.EDGE_ENABLE_REMOTE_STAGING == 'true'))
+    environment: edge-ecosystem-staging
+    concurrency:
+      group: edge-ecosystem-staging
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compile isolated ecosystem
+        run: |
+          npm install --prefix "${RUNNER_TEMP}/edge-validation" --no-audit --no-fund --ignore-scripts typescript@5.9.3 @types/node@24.10.0
+          "${RUNNER_TEMP}/edge-validation/node_modules/.bin/tsc" --strict --target ES2022 --module commonjs --moduleResolution node --types node --typeRoots "${RUNNER_TEMP}/edge-validation/node_modules/@types" --outDir "${RUNNER_TEMP}/edge-compiled" ecosystem/*.ts
+      - name: Verify dedicated remote staging D1
+        env:
+          EDGE_COMPILED: ${{ runner.temp }}/edge-compiled
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          EDGE_STAGING_D1_ID: ${{ vars.EDGE_STAGING_D1_ID }}
+        run: node ecosystem/d1-remote-check.cjs
