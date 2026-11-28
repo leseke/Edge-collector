@@ -70,9 +70,16 @@ const {dispatchRead}=require(resolve(compiled,"persistent-dispatcher.js"));
   if(replay.snapshotId===imported.snapshotId){assert.equal(replay.inserted,0);assert.equal(replay.duplicate,imported.inserted);}
   console.log("[D1] Published capture summary",JSON.stringify(imported));
   const {commercialVariations}=require(resolve(compiled,"commercial-variation.js"));
+  const {pullCommercialHistory}=require(resolve(compiled,"commercial-ingestion.js"));
+  // Known immutable publisher commits, verified during development; deterministic CI without API quota dependency.
+  const historical=await pullCommercialHistory(memory,Date.now(),["c012b45873589b964abd3de830e1a1f35b6d70bc","80906ee2b7a164c04463ed2b1cb7138c72a6baa2","1c59a0ae7a465d2f0013b3825e53285fb1b517fd"]);
+  assert.equal(historical.failures.length,0,JSON.stringify(historical.failures));
+  assert.equal(historical.results.length,3);
+  const subjects=[...new Set([...imported.subjects,...historical.subjects])];
   const variations=[];
-  for(const subject of imported.subjects) variations.push(...await commercialVariations(memory,subject,Date.now()));
-  console.log("[D1] Historical variation summary",JSON.stringify({subjects:imported.subjects.length,variations:variations.length,coverage:"current capture only; no historical movement implied"}));
+  for(const subject of subjects) variations.push(...await commercialVariations(memory,subject,Date.now()));
+  console.log("[D1] Historical capture summary",JSON.stringify(historical.results));
+  console.log("[D1] Historical variation summary",JSON.stringify({subjects:subjects.length,variations:variations.length,coverage:"three pinned historical captures plus latest; indicative changes only"}));
   for(const v of variations){assert.equal(v.executionAllowed,false);assert.ok(await memory.get(v.previousEvidenceId));assert.ok(await memory.get(v.currentEvidenceId));}
   console.log("D1 local runtime integration passed");
  }catch(error){console.error("[D1] Integration failure:",error);if(error?.cause)console.error("[D1] Underlying cause:",error.cause);throw error;}finally{await mf.dispose();}
