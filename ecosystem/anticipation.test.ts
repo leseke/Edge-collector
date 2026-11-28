@@ -1,0 +1,12 @@
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { anticipate, type MarketSignal } from "./anticipation";
+const signal=(id:string,family:MarketSignal["family"]="demand",overrides:Partial<MarketSignal>={}):MarketSignal=>({id,subject:"product",family,sourceGroup:id,eventKey:id,evidenceId:"e-"+id,recordedAt:10,direction:"positive",strength:1,verified:true,...overrides});
+test("converging independent families trigger preshot review",()=>{const r=anticipate([signal("a"),signal("b","supply")],20,100)[0];assert.equal(r.status,"PRESHOT_REVIEW");assert.equal(r.score,50);assert.equal(r.executionAllowed,false);});
+test("one origin does not qualify as independent confirmation",()=>{assert.equal(anticipate([signal("a"),signal("b","supply",{sourceGroup:"a"})],20,100)[0].status,"WATCH");});
+test("repeated coverage cannot inflate an event",()=>{const a=signal("a");const b=signal("b","demand",{eventKey:"a"});assert.equal(anticipate([a,b],20,100)[0].score,25);});
+test("weak and unverified leads remain discoverable",()=>{const r=anticipate([signal("a","demand",{verified:false,strength:0.2})],20,100)[0];assert.equal(r.status,"WATCH");assert.equal(r.verifiedCount,0);});
+test("risks reduce score without deleting a positive lead",()=>{const r=anticipate([signal("a"),signal("b","risk",{direction:"negative"})],20,100)[0];assert.equal(r.score,10);assert.deepEqual(r.risks,["e-b"]);});
+test("expired evidence is ignored and future evidence rejected",()=>{assert.deepEqual(anticipate([signal("a")],120,100),[]);assert.throws(()=>anticipate([signal("a")],9,100));});
+test("different subjects cannot reinforce each other",()=>{const r=anticipate([signal("a"),signal("b","supply",{subject:"other"})],20,100);assert.equal(r.length,2);assert.ok(r.every(x=>x.status==="WATCH"));});
+test("contradictory event classifications are rejected",()=>assert.throws(()=>anticipate([signal("a"),signal("b","supply",{eventKey:"a"})],20,100)));
