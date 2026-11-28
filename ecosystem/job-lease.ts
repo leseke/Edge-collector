@@ -11,6 +11,13 @@ export class JobLeases {
   if(!r.success||typeof r.meta?.changes!=="number")throw new Error("claim failed");
   return r.meta.changes===1;
  }
+ async completeWithResult(scope:string,id:string,token:string,now:number,resultJson:string){
+  this.validate(scope,id,token,now);
+  JSON.parse(resultJson);
+  const r=await this.db.prepare("INSERT INTO ecosystem_job_result(scope,job_id,token,completed_at,result_json) SELECT scope,job_id,token,?,? FROM ecosystem_job_lease WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>? ON CONFLICT(scope,job_id) DO NOTHING").bind(now,resultJson,scope,id,token,now).run();
+  if(!r.success||typeof r.meta?.changes!=="number")throw new Error("result commit failed");
+  return r.meta.changes===1;
+ }
  async complete(scope:string,id:string,token:string,now:number){
   this.validate(scope,id,token,now);
   const r=await this.db.prepare("UPDATE ecosystem_job_lease SET completed_at=? WHERE scope=? AND job_id=? AND token=? AND completed_at IS NULL AND expires_at>?").bind(now,scope,id,token,now).run();
