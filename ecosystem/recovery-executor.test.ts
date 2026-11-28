@@ -1,0 +1,15 @@
+import { test } from "node:test";
+import { strict as assert } from "node:assert";
+import { executeRecoveryStep, type Work, type ReadAdapter } from "./recovery-executor";
+import type { SourceHealth, RetryPolicy } from "./recovery";
+const a:SourceHealth={id:"a",capability:"sold",failures:0,blockedUntil:0,disabled:false};
+const b:SourceHealth={...a,id:"b"};
+const work:Work={id:"j",capability:"sold",attempts:0,sourceId:"a",dueAt:0,status:"pending"};
+const p:RetryPolicy={baseMs:100,maxDelayMs:1000,maxAttempts:3,circuitThreshold:2,cooldownMs:5000};
+const good:ReadAdapter={async read(){return {ok:true,resultJson:'{"observations":[]}'};}};
+test("successful read completes work and resets source health",async()=>{const r=await executeRecoveryStep(work,[{...a,failures:1}],good,10,p);assert.equal(r.work.status,"completed");assert.equal(r.work.attempts,1);assert.equal(r.sources[0].failures,0);assert.ok(r.resultJson);});
+test("failed read selects compatible backup and can subsequently succeed",async()=>{const r=await executeRecoveryStep(work,[a,b],{async read(){return {ok:false,failure:"transient"};}},10,p);assert.equal(r.work.sourceId,"b");assert.equal(r.work.status,"pending");const s=await executeRecoveryStep(r.work,r.sources,good,10,p);assert.equal(s.work.status,"completed");assert.equal(s.work.attempts,2);});
+test("rate limited read waits for provider delay",async()=>{const r=await executeRecoveryStep(work,[a],{async read(){return {ok:false,failure:"rate_limited",retryAfterMs:10000};}},10,p);assert.equal(r.work.dueAt,10010);const s=await executeRecoveryStep(r.work,r.sources,{async read(){throw new Error("must not call");}},10009,p);assert.equal(s.reason,"not_due");});
+test("attempt limit quarantines without another read",async()=>{const r=await executeRecoveryStep({...work,attempts:3},[a],{async read(){throw new Error("must not call");}},10,p);assert.equal(r.work.status,"quarantined");});
+test("unknown transport outcomes are not marked successful",async()=>{await assert.rejects(executeRecoveryStep(work,[a],{async read(){throw new Error("transport");}},10,p));});
+test("completed or unavailable work does not invoke adapter",async()=>{const never:ReadAdapter={async read(){throw new Error("must not call");}};assert.equal((await executeRecoveryStep({...work,status:"completed"},[a],never,10,p)).reason,"not_due");assert.equal((await executeRecoveryStep(work,[{...a,blockedUntil:20}],never,10,p)).reason,"source_unavailable");});
