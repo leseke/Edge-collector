@@ -4,12 +4,13 @@ import { DatabaseSync } from "node:sqlite";
 import { readFileSync } from "node:fs";
 import { D1Memory, D1Checkpoints, type Database, type Statement } from "./d1-store";
 import { remember } from "./memory";
+import { JobLeases } from "./job-lease";
 import type { MemoryEntry } from "./memory";
 import type { CycleState } from "./homeostasis";
 function database(){
  const sqlite=new DatabaseSync(":memory:");
  sqlite.exec("PRAGMA foreign_keys=ON");
- for(const f of ["memory.sql","checkpoint.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
+ for(const f of ["memory.sql","checkpoint.sql","job-lease.sql"])sqlite.exec(readFileSync("ecosystem/"+f,"utf8"));
  type V=string|number|null;
  class Query implements Statement{
   constructor(readonly sql:string,readonly args:V[]=[]){}
@@ -28,3 +29,9 @@ test("memory survives adapter reconstruction and refuses conflicting ID",async()
 test("failed evidence insertion rolls back the whole batch",async()=>{const {db,sqlite}=database();try{const m=new D1Memory(db);await assert.rejects(m.append({...entry,id:"h",kind:"hypothesis",evidenceIds:["missing"]}));assert.equal(await m.get("h"),null);}finally{sqlite.close();}});
 test("immutable records cannot be updated or deleted through SQL",async()=>{const {db,sqlite}=database();try{await new D1Memory(db).append(entry);assert.throws(()=>sqlite.exec("UPDATE ecosystem_memory SET statement='changed'"));assert.throws(()=>sqlite.exec("DELETE FROM ecosystem_memory"));}finally{sqlite.close();}});
 test("checkpoint restores outstanding tasks and rejects stale concurrent writes",async()=>{const {db,sqlite}=database();try{const a=new D1Checkpoints(db),b=new D1Checkpoints(db);assert.equal(await a.save("edge",null,state,10),true);assert.equal(await b.save("edge",null,state,10),false);assert.deepEqual(await b.load("edge"),{version:0,state});assert.equal(await a.save("edge",0,state,11),true);assert.equal(await b.save("edge",0,{...state,outstanding:[]},12),false);assert.deepEqual(await b.load("edge"),{version:1,state});}finally{sqlite.close();}});
+
+test("simultaneous claims admit only one active owner",async()=>{const {db,sqlite}=database();try{const a=new JobLeases(db),b=new JobLeases(db);const claims=await Promise.all([a.claim("edge","j","a",10,100),b.claim("edge","j","b",10,100)]);assert.equal(claims.filter(Boolean).length,1);assert.equal(await b.claim("edge","j","c",109,100),false);}finally{sqlite.close();}});
+test("expired lease can be recovered and stale owner cannot complete",async()=>{const {db,sqlite}=database();try{const a=new JobLeases(db),b=new JobLeases(db);assert.equal(await a.claim("edge","j","a",10,20),true);assert.equal(await a.complete("edge","j","a",30),false);assert.equal(await b.claim("edge","j","b",30,20),true);assert.equal(await a.complete("edge","j","a",31),false);assert.equal(await b.complete("edge","j","b",31),true);assert.equal(await a.claim("edge","j","c",100,20),false);}finally{sqlite.close();}});
+test("completed jobs cannot be completed twice or reclaimed",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await l.claim("edge","j","a",10,20);assert.equal(await l.complete("edge","j","a",11),true);assert.equal(await l.complete("edge","j","a",12),false);assert.equal(await l.claim("edge","j","b",100,20),false);}finally{sqlite.close();}});
+test("leases are scoped by ecosystem and job identity",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);assert.equal(await l.claim("edge","j","a",10,20),true);assert.equal(await l.claim("other","j","b",10,20),true);assert.equal(await l.claim("edge","k","c",10,20),true);}finally{sqlite.close();}});
+test("invalid lease duration and completion without ownership are rejected",async()=>{const {db,sqlite}=database();try{const l=new JobLeases(db);await assert.rejects(l.claim("edge","j","a",10,0));assert.equal(await l.complete("edge","j","a",10),false);await l.claim("edge","j","b",10,20);assert.equal(await l.complete("edge","j","a",11),false);}finally{sqlite.close();}});
